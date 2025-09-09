@@ -10,14 +10,12 @@ inherit module
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://0001-writeback-instrumentation-Add-missing-provider-name-.patch \
-           file://0002-fix-percpu-repurpose-__percpu-tag-as-a-named-address.patch \
            "
 
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch \
                 "
-SRC_URI[sha256sum] = "f2261e738b1dd1027640e5ba3040dee292241b847d5745766b3ba640e168c94a"
+SRC_URI[sha256sum] = "a87684b8a58f426e9574c4aa7591d6e49d54469872f9641652df2b4a938f9a40"
 
 export INSTALL_MOD_DIR = "kernel/lttng-modules"
 
