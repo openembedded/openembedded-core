@@ -5,9 +5,10 @@
 #
 
 import subprocess
-import multiprocessing
 import traceback
 import errno
+
+from bb import multiprocessing
 
 def read_file(filename):
     try:
