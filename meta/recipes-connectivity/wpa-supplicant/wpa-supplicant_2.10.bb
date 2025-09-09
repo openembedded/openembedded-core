@@ -38,6 +38,11 @@ SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz \
            file://0001-SAE-Check-for-invalid-Rejected-Groups-element-length.patch \
            file://0002-SAE-Check-for-invalid-Rejected-Groups-element-length.patch \
            file://0003-SAE-Reject-invalid-Rejected-Groups-element-in-the-pa.patch \
+           file://CVE-2022-37660-0001.patch \
+           file://CVE-2022-37660-0002.patch \
+           file://CVE-2022-37660-0003.patch \
+           file://CVE-2022-37660-0004.patch \
+           file://CVE-2022-37660-0005.patch \
            "
 SRC_URI[sha256sum] = "20df7ae5154b3830355f8ab4269123a87affdea59fe74fe9292a91d0d7e17b2f"
 
