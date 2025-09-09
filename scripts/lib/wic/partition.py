@@ -178,7 +178,7 @@ class Partition():
         if self.source not in plugins:
             raise WicError("The '%s' --source specified for %s doesn't exist.\n\t"
                            "See 'wic list source-plugins' for a list of available"
-                           " --sources.\n\tSee 'wic help source-plugins' for "
+                           " --sources.\n\tSee 'wic help plugins' for "
                            "details on adding a new source plugin." %
                            (self.source, self.mountpoint))
 
