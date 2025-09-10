@@ -16,4 +16,4 @@ PE = "1"
 
 XORG_PN = "libXres"
 
-SRC_URI[sha256sum] = "9a7446f3484b9b7538ac5ee30d2c1ce9e5b7fbbaf1440e02f6cca186a1fa745f"
+SRC_URI[sha256sum] = "d2de8f5401d6c86a8992791654547eb8def585dfdc0c08cc16e24ef6aeeb69dc"
