@@ -10,14 +10,14 @@ HOMEPAGE = "https://www.intel.com/content/www/us/en/developer/topic-technology/o
 SECTION = "console/tools"
 
 LICENSE = "Intel | BSD-3-Clause | GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://source/compiler/aslcompile.c;beginline=7;endline=150;md5=05eb845b15a27440410f456adc2ed082"
+LIC_FILES_CHKSUM = "file://source/compiler/aslcompile.c;beginline=7;endline=150;md5=8566a414d226d05b68e41f30698f9624"
 
 COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
 
 DEPENDS = "m4-native flex-native bison-native"
 
-SRC_URI = "git://github.com/acpica/acpica;protocol=https;branch=master"
-SRCREV = "e80cbd7b52de20aa8c75bfba9845e9cb61f2e681"
+SRC_URI = "git://github.com/acpica/acpica;protocol=https;branch=master;tag=${PV}"
+SRCREV = "aa98db3bd149fc1f8d2a3017cb05b6b1982c3296"
 
 inherit update-alternatives
 
