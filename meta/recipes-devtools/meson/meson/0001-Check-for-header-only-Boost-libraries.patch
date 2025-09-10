@@ -1,0 +1,58 @@
+From f16897135c394d36656da0078613864076300e07 Mon Sep 17 00:00:00 2001
+From: Jussi Pakkanen <jussi.pakkanen@mailbox.org>
+Date: Fri, 29 Aug 2025 14:57:06 +0300
+Subject: [PATCH] Check for header only Boost libraries.
+
+Upstream-Status: Backport [https://github.com/mesonbuild/meson/commit/6a9a81619c139d0f6ae3d265f7366e61615d92a1]
+Signed-off-by: Peter Kjellerstedt <peter.kjellerstedt@axis.com>
+---
+ mesonbuild/dependencies/boost.py | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
+
+diff --git a/mesonbuild/dependencies/boost.py b/mesonbuild/dependencies/boost.py
+index 662f985..e153e8f 100644
+--- a/mesonbuild/dependencies/boost.py
++++ b/mesonbuild/dependencies/boost.py
+@@ -452,6 +452,10 @@ class BoostDependency(SystemDependency):
+                 break
+         libs = sorted(set(libs))
+ 
++        any_libs_found = len(libs) > 0
++        if not any_libs_found:
++            return False
++
+         modules = ['boost_' + x for x in self.modules]
+         for inc in inc_dirs:
+             mlog.debug(f'  - found boost {inc.version} include dir: {inc.path}')
+@@ -462,7 +466,7 @@ class BoostDependency(SystemDependency):
+                 mlog.debug(f'    - {j}')
+ 
+             #   3. Select the libraries matching the requested modules
+-            not_found: T.List[str] = []
++            not_found_as_libs: T.List[str] = []
+             selected_modules: T.List[BoostLibraryFile] = []
+             for mod in modules:
+                 found = False
+@@ -472,7 +476,21 @@ class BoostDependency(SystemDependency):
+                         found = True
+                         break
+                 if not found:
+-                    not_found += [mod]
++                    not_found_as_libs += [mod]
++
++            # If a lib is not found, but an include directory exists,
++            # assume it is a header only module.
++            not_found: T.List[str] = []
++            for boost_modulename in not_found_as_libs:
++                assert boost_modulename.startswith('boost_')
++                include_subdir = boost_modulename.replace('boost_', 'boost/', 1)
++                headerdir_found = False
++                for inc_dir in inc_dirs:
++                    if (inc_dir.path / include_subdir).is_dir():
++                        headerdir_found = True
++                        break
++                if not headerdir_found:
++                    not_found.append(boost_modulename)
+ 
+             # log the result
+             mlog.debug('  - found:')
