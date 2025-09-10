@@ -1,4 +1,4 @@
-From 45d866a863dc78f33104c5c265557886e6f27b45 Mon Sep 17 00:00:00 2001
+From acc6845a5fc31b64640dece7786293f782a33f35 Mon Sep 17 00:00:00 2001
 From: Jim Broadus <jbroadus@xevo.com>
 Date: Thu, 26 Mar 2020 16:05:53 -0700
 Subject: [PATCH] clang: Fix resource dir location for cross toolchains

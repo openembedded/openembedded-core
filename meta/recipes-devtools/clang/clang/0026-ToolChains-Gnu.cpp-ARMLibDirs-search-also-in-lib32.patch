@@ -1,4 +1,4 @@
-From 7ee4e023df4661e96d5132855165a1d79cb77736 Mon Sep 17 00:00:00 2001
+From fa56e3ce3bbd7b795ab553a1b5da4a0f90589fda Mon Sep 17 00:00:00 2001
 From: Martin Jansa <Martin.Jansa@gmail.com>
 Date: Thu, 31 Aug 2023 18:14:47 +0200
 Subject: [PATCH] ToolChains/Gnu.cpp: ARMLibDirs search also in lib32

@@ -1,4 +1,4 @@
-From 83994facdea30da795875b50a26d7f23035ae141 Mon Sep 17 00:00:00 2001
+From 2c1f2effb8a5489fbb384610d7bf515a2c5b9b68 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 10 May 2025 14:03:12 -0700
 Subject: [PATCH] compiler-rt: Exclude sync_fetch_and_* for any pre-ARMv6

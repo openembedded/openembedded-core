@@ -1,4 +1,4 @@
-From 26b241706a61448a49fcfca5b15683f75735f9c8 Mon Sep 17 00:00:00 2001
+From 7cff6198ade4591b8bf2bfe4e94d7fe57241f926 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Mon, 25 Jan 2021 16:14:35 +0800
 Subject: [PATCH] llvm/clang: Insert anchor for adding OE distro vendor names

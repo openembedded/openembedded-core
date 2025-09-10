@@ -1,4 +1,4 @@
-From 70c4615ab54e5380019955a7cb3381b977802b7d Mon Sep 17 00:00:00 2001
+From de5737078972d8ba89bc6194fc0f50421c8d5631 Mon Sep 17 00:00:00 2001
 From: David Spickett <david.spickett@linaro.org>
 Date: Tue, 29 Jul 2025 14:17:56 +0000
 Subject: [PATCH] Only build c-index-test when clang tests are included

@@ -1,4 +1,4 @@
-From cd679dff50adb4a96dae132ba54e74d7c7371074 Mon Sep 17 00:00:00 2001
+From 61cb0afd40ef8d6a5493cbd3bd60f49f61e8b34f Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@arm.com>
 Date: Wed, 16 Jul 2025 23:24:21 +0100
 Subject: [PATCH] allow external prepare_builtins

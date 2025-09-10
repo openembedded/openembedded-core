@@ -1,4 +1,4 @@
-From cda45a69a5fa5cd4106be8588c7e33e8f6535e17 Mon Sep 17 00:00:00 2001
+From c4e8df6a492de2d98be18093de2fe0d97e221d48 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 7 Jul 2025 19:22:07 -0700
 Subject: [PATCH] clang: Use sysroot relative paths for getArchSpecificLibPaths

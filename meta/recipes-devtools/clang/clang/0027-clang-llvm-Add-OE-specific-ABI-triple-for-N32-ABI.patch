@@ -1,4 +1,4 @@
-From cbd5f24fd6095f69134cb5536f8187e7264ceaa0 Mon Sep 17 00:00:00 2001
+From 6d381de086b2646c438af919f2f1ed2c46c8e89a Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 3 Feb 2024 16:47:10 -0800
 Subject: [PATCH] clang/llvm: Add OE specific ABI triple for N32 ABI

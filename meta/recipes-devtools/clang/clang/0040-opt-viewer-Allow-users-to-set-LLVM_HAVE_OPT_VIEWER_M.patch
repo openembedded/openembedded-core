@@ -1,4 +1,4 @@
-From 93a51605fccf0f99868f8bae212a08823d01b03a Mon Sep 17 00:00:00 2001
+From c2b576a49ed1b83def75578f7d2b2e8c3c54e60f Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 2 Aug 2025 17:58:20 -0700
 Subject: [PATCH] [opt-viewer] Allow users to set LLVM_HAVE_OPT_VIEWER_MODULES

@@ -1,4 +1,4 @@
-From 2df5d92a84396aeca1689e17a97e16a337a8a5df Mon Sep 17 00:00:00 2001
+From f2232b5332f650f4920e1f2a86530de9b26ef1fc Mon Sep 17 00:00:00 2001
 From: Ovidiu Panait <ovidiu.panait@windriver.com>
 Date: Fri, 31 Jan 2020 10:56:11 +0200
 Subject: [PATCH] cmake: Fix configure for packages using find_package()
