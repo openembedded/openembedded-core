@@ -15,7 +15,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz \
            file://malloc.patch \
            "
 
-SRC_URI[sha256sum] = "7f262f1a1224f437ede0f96a6932b582c8f5421ff207c04e3d9504dfa04c8b82"
+SRC_URI[sha256sum] = "be30d910e67f58d82e753231f1357f326a1a088acf126b21ff77e60aab19b90b"
 
 inherit autotools multilib_header github-releases
 
