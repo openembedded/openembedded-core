@@ -153,7 +153,7 @@ class KickStart():
         part.add_argument('--exclude-path', nargs='+')
         part.add_argument('--include-path', nargs='+', action='append')
         part.add_argument('--change-directory')
-        part.add_argument('--extra-filesystem-space', type=sizetype("M"))
+        part.add_argument('--extra-filesystem-space', '--extra-space', type=sizetype("M"))
         part.add_argument('--extra-partition-space', type=sizetype("M"))
         part.add_argument('--fsoptions', dest='fsopts')
         part.add_argument('--fspassno', dest='fspassno')
