@@ -82,10 +82,8 @@ do_compile:prepend () {
 
 do_install:class-native() {
 	autotools_do_install
-	# remove groups to fix conflict with shadow-native
-	rm -f ${D}${STAGING_BINDIR_NATIVE}/groups
 	# The return is a must since native doesn't need the
-	# do_install:append() in the below.
+	# do_install:append() below.
 	return
 }
 
