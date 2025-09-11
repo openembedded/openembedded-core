@@ -171,6 +171,10 @@ do_compile() {
             sed -i -e 's|\$(libdir)/traceevent/plugins|\$(libdir)/traceevent_${KERNEL_VERSION}/plugins|g' ${S}/tools/lib/traceevent/plugins/Makefile
 	test -e ${S}/tools/perf/Makefile.config && \
             sed -i -e 's|\$(libdir)/traceevent/plugins|\$(libdir)/traceevent_${KERNEL_VERSION}/plugins|g' ${S}/tools/perf/Makefile.config
+	# There are two copies of internal headers such as:
+	# libperf/include/internal/xyarray.h and tools/lib/perf/include/internal/xyarray.h
+	# For reproducibile binaries, we need to find one copy, hence force libperf to be created first
+	oe_runmake ${B}/libperf/libperf.a
 	oe_runmake all
 }
 
