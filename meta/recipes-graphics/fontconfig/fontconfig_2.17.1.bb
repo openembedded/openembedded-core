@@ -13,20 +13,21 @@ BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=fontconfig"
 
 LICENSE = "MIT & MIT & PD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=00252fd272bf2e722925613ad74cb6c7 \
-                    file://src/fcfreetype.c;endline=45;md5=ef8702fbf3dc506715be8a9d69cb0252 \
+                    file://src/fcfreetype.c;endline=23;md5=f7c0140c1b0387cf4cf45420b059847c \
                     "
 
 SECTION = "libs"
 
 DEPENDS = "expat freetype zlib gperf-native util-linux"
 
-SRC_URI = "http://fontconfig.org/release/fontconfig-${PV}.tar.gz \
+SRC_URI = "https://gitlab.freedesktop.org/api/v4/projects/890/packages/generic/fontconfig/${PV}/fontconfig-${PV}.tar.xz \
            file://revert-static-pkgconfig.patch \
+           file://musl-fix.patch \
            "
+SRC_URI[sha256sum] = "9f5cae93f4fffc1fbc05ae99cdfc708cd60dfd6612ffc0512827025c026fa541"
 
-SRC_URI[sha256sum] = "f5f359d6332861bd497570848fcb42520964a9e83d5e3abe397b6b6db9bcaaf4"
-
-UPSTREAM_CHECK_REGEX = "fontconfig-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
+UPSTREAM_CHECK_URI = "https://gitlab.freedesktop.org/fontconfig/fontconfig/-/tags"
+UPSTREAM_CHECK_REGEX = "releases/(?P<pver>.+)"
 
 do_configure:prepend() {
     # work around https://bugs.freedesktop.org/show_bug.cgi?id=101280
@@ -56,7 +57,7 @@ RREPLACES:fontconfig-utils = "libfontconfig-utils"
 RCONFLICTS:fontconfig-utils = "libfontconfig-utils"
 DEBIAN_NOAUTONAME:fontconfig-utils = "1"
 
-inherit autotools pkgconfig relative_symlinks gettext
+inherit meson pkgconfig relative_symlinks gettext
 
 FONTCONFIG_CACHE_DIR ?= "${localstatedir}/cache/fontconfig"
 
@@ -64,6 +65,6 @@ FONTCONFIG_CACHE_DIR ?= "${localstatedir}/cache/fontconfig"
 # /usr/share/fonts is already included by default (you can change it with --with-default-fonts)
 FONTCONFIG_FONT_DIRS ?= "no"
 
-EXTRA_OECONF = " --disable-docs --with-default-fonts=${datadir}/fonts --with-cache-dir=${FONTCONFIG_CACHE_DIR} --with-add-fonts=${FONTCONFIG_FONT_DIRS}"
+EXTRA_OEMESON = " -Ddoc=disabled -Ddefault-fonts-dirs=${datadir}/fonts -Dcache-dir=${FONTCONFIG_CACHE_DIR} -Dadditional-fonts-dirs=${FONTCONFIG_FONT_DIRS}"
 
 BBCLASSEXTEND = "native nativesdk"
