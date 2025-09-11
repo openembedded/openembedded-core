@@ -1338,6 +1338,7 @@ python do_qa_unpack() {
         bb.warn('%s: the directory %s (%s) pointed to by the S variable doesn\'t exist - please set S within the recipe to point to where the source has been unpacked to' % (d.getVar('PN'), d.getVar('S', False), s_dir))
 
     unpack_check_src_uri(d.getVar('PN'), d)
+    oe.qa.exit_if_errors(d)
 }
 
 # The Staging Func, to check all staging
