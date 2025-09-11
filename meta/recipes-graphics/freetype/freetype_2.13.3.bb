@@ -27,6 +27,7 @@ EXTRA_AUTORECONF += "--exclude=autoheader --exclude=automake -I ."
 
 PACKAGECONFIG ??= "zlib pixmap"
 
+PACKAGECONFIG[brotli] = "--with-brotli,--without-brotli,brotli"
 PACKAGECONFIG[bzip2] = "--with-bzip2,--without-bzip2,bzip2"
 # harfbuzz results in a circular dependency so enabling is non-trivial
 PACKAGECONFIG[harfbuzz] = "--with-harfbuzz,--without-harfbuzz,harfbuzz"
