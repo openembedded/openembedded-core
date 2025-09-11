@@ -9,10 +9,9 @@ LICENSE = "MIT"
 
 inherit meson pkgconfig
 
-SRCREV = "edf352a96646c8d793f0c1eb11795112f9bde725"
+SRCREV = "4871829d8b7117553eb2dc1bdb9a0d18de428a98"
 
-SRC_URI = "git://gitlab.freedesktop.org/drm/igt-gpu-tools.git;protocol=https;branch=master \
-           file://0001-lib-igt_aux.c-address-procps-4.0.5-compatibility.patch \
+SRC_URI = "git://gitlab.freedesktop.org/drm/igt-gpu-tools.git;protocol=https;branch=master;tag=v${PV} \
            "
 
 DEPENDS += "libdrm libpciaccess cairo udev glib-2.0 procps libunwind kmod openssl elfutils alsa-lib json-c bison-native"
