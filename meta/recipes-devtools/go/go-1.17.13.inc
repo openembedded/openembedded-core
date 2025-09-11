@@ -70,7 +70,8 @@ SRC_URI[main.sha256sum] = "a1a48b23afb206f95e7bbaa9b898d965f90826f6f1d1fc0c1d784
 # Upstream don't believe it is a signifiant real world issue and will only
 # fix in 1.17 onwards where we can drop this.
 # https://github.com/golang/go/issues/30999#issuecomment-910470358
-CVE_CHECK_IGNORE += "CVE-2021-29923"
+# CVE-2024-24790:  net/netip module was introduced in go1.18beta1 via a59e33224e42d60a97fa720a45e1b74eb6aaa3d0
+CVE_CHECK_IGNORE += "CVE-2021-29923 CVE-2024-24790"
 
 # This are specific to Microsoft Windows
 CVE_CHECK_IGNORE += "CVE-2022-41716 CVE-2023-45283 CVE-2023-45284 CVE-2025-0913"
