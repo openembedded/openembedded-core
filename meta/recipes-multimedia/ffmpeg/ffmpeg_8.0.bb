@@ -12,19 +12,19 @@ LICENSE:libavdevice = "${@bb.utils.contains('PACKAGECONFIG', 'gpl', 'GPL-2.0-or-
 LICENSE:libavfilter = "${@bb.utils.contains('PACKAGECONFIG', 'gpl', 'GPL-2.0-or-later', 'LGPL-2.1-or-later', d)}"
 LICENSE:libavformat = "${@bb.utils.contains('PACKAGECONFIG', 'gpl', 'GPL-2.0-or-later', 'LGPL-2.1-or-later', d)}"
 LICENSE:libavutil = "${@bb.utils.contains('PACKAGECONFIG', 'gpl', 'GPL-2.0-or-later', 'LGPL-2.1-or-later', d)}"
-LICENSE:libpostproc = "GPL-2.0-or-later"
 LICENSE:libswresample = "${@bb.utils.contains('PACKAGECONFIG', 'gpl', 'GPL-2.0-or-later', 'LGPL-2.1-or-later', d)}"
 LICENSE:libswscale = "${@bb.utils.contains('PACKAGECONFIG', 'gpl', 'GPL-2.0-or-later', 'LGPL-2.1-or-later', d)}"
 LICENSE_FLAGS = "commercial"
 
 LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://COPYING.GPLv3;md5=d32239bcb673463ab874e80d47fae504 \
-                    file://COPYING.LGPLv2.1;md5=bd7a443320af8c812e4c18d1b79df004 \
-                    file://COPYING.LGPLv3;md5=e6a600fd5e1d9cbde2d983680233ad02"
+                    file://COPYING.LGPLv2.1;md5=eed22b3456132611e3d4aa7a7ec64dac \
+                    file://COPYING.LGPLv3;md5=e6a600fd5e1d9cbde2d983680233ad02 \
+                    "
 
 SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz"
 
-SRC_URI[sha256sum] = "733984395e0dbbe5c046abda2dc49a5544e7e0e1e2366bba849222ae9e3a03b1"
+SRC_URI[sha256sum] = "b2751fccb6cc4c77708113cd78b561059b6fa904b24162fa0be2d60273d27b8e"
 
 # Build fails when thumb is enabled: https://bugzilla.yoctoproject.org/show_bug.cgi?id=7717
 ARM_INSTRUCTION_SET:armv4 = "arm"
@@ -32,15 +32,14 @@ ARM_INSTRUCTION_SET:armv5 = "arm"
 ARM_INSTRUCTION_SET:armv6 = "arm"
 
 # Should be API compatible with libav (which was a fork of ffmpeg)
-# libpostproc was previously packaged from a separate recipe
-PROVIDES = "libav libpostproc"
+PROVIDES = "libav"
 
 DEPENDS:append:x86 = " nasm-native"
 DEPENDS:append:x86-64 = " nasm-native"
 
 inherit autotools pkgconfig
 
-PACKAGECONFIG ??= "avdevice avfilter avcodec avformat swresample swscale postproc \
+PACKAGECONFIG ??= "avdevice avfilter avcodec avformat swresample swscale \
                    alsa bzlib lzma theora zlib \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xv xcb', '', d)}"
 
@@ -51,7 +50,6 @@ PACKAGECONFIG[avcodec] = "--enable-avcodec,--disable-avcodec"
 PACKAGECONFIG[avformat] = "--enable-avformat,--disable-avformat"
 PACKAGECONFIG[swresample] = "--enable-swresample,--disable-swresample"
 PACKAGECONFIG[swscale] = "--enable-swscale,--disable-swscale"
-PACKAGECONFIG[postproc] = "--enable-postproc,--disable-postproc"
 
 # features to support
 PACKAGECONFIG[alsa] = "--enable-alsa,--disable-alsa,alsa-lib"
@@ -154,7 +152,6 @@ PACKAGES =+ "libavcodec \
              libavfilter \
              libavformat \
              libavutil \
-             libpostproc \
              libswresample \
              libswscale \
              ${PN}-examples"
@@ -164,7 +161,6 @@ FILES:libavdevice = "${libdir}/libavdevice${SOLIBS}"
 FILES:libavfilter = "${libdir}/libavfilter${SOLIBS}"
 FILES:libavformat = "${libdir}/libavformat${SOLIBS}"
 FILES:libavutil = "${libdir}/libavutil${SOLIBS}"
-FILES:libpostproc = "${libdir}/libpostproc${SOLIBS}"
 FILES:libswresample = "${libdir}/libswresample${SOLIBS}"
 FILES:libswscale = "${libdir}/libswscale${SOLIBS}"
 FILES:${PN}-examples = "${datadir}/${BPN}/examples"
