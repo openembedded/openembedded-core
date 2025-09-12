@@ -244,9 +244,19 @@ class DpkgPM(OpkgDpkgPM):
             output = subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
             bb.note(output.decode("utf-8"))
         except subprocess.CalledProcessError as e:
+            e_output = e.output.decode("utf-8")
+            extra_info = ""
+            for e_line in e_output.split('\n'):
+                if 'has no installation candidate' in e_line or 'Unable to locate package' in e_line:
+                    match = re.search(r"E: Package '([a-z0-9+\-\._]+)' has no installation candidate", e_line)
+                    if match:
+                        pkg = match.group(1)
+                    else:
+                        pkg = re.search(r"E: Unable to locate package ([a-z0-9+\-\._]+)", e_line).group(1)
+                    extra_info += self.get_missing_pkg_reason(pkg)
             (bb.fatal, bb.warn)[attempt_only]("Unable to install packages. "
-                                              "Command '%s' returned %d:\n%s" %
-                                              (cmd, e.returncode, e.output.decode("utf-8")))
+                                              "Command '%s' returned %d:\n%s%s" %
+                                              (cmd, e.returncode, e_output, extra_info))
 
         # rename *.dpkg-new files/dirs
         for root, dirs, files in os.walk(self.target_rootfs):
