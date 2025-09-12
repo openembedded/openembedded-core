@@ -279,8 +279,6 @@ def buildcfg_neededvars(d):
 addhandler base_eventhandler
 base_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.MultiConfigParsed bb.event.BuildStarted bb.event.RecipePreFinalise bb.event.RecipeParsed bb.event.RecipePreDeferredInherits"
 python base_eventhandler() {
-    import bb.runqueue
-
     if isinstance(e, bb.event.RecipePreDeferredInherits):
         # Use this to snoop on class extensions and set these up before the deferred inherits
         # are processed which allows overrides on conditional variables.
