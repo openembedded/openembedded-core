@@ -73,14 +73,14 @@ PACKAGECONFIG[libclang-python] = "-DCLANG_PYTHON_BINDINGS_VERSIONS=${PYTHON_BASE
 OECMAKE_SOURCEPATH = "${S}/llvm"
 
 # By default we build all the supported CPU architectures, and the GPU targets
-# if the opengl or vulkan DISTRO_FEATURES are enabled.
+# if the opencl, opengl or vulkan DISTRO_FEATURES are enabled.
 #
 # For target builds we default to building that specific architecture, BPF, and the GPU targets if required.
 #
 # The available target list can be seen in the source code
 # in the LLVM_ALL_TARGETS assignment:
 # https://github.com/llvm/llvm-project/blob/main/llvm/CMakeLists.txt
-LLVM_TARGETS_GPU ?= "${@bb.utils.contains_any('DISTRO_FEATURES', 'opengl vulkan', 'AMDGPU;NVPTX;SPIRV', '', d)}"
+LLVM_TARGETS_GPU ?= "${@bb.utils.contains_any('DISTRO_FEATURES', 'opencl opengl vulkan', 'AMDGPU;NVPTX;SPIRV', '', d)}"
 LLVM_TARGETS_TO_BUILD ?= "AArch64;ARM;BPF;Mips;PowerPC;RISCV;X86;LoongArch;${LLVM_TARGETS_GPU}"
 LLVM_TARGETS_TO_BUILD:class-target ?= "${@get_clang_host_arch(bb, d)};BPF;${LLVM_TARGETS_GPU}"
 
