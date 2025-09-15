@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
+import json
 import os
 import shutil
 import unittest
@@ -33,6 +34,21 @@ class RustCompileTest(OESDKTestCase):
     def test_cargo_build(self):
         self._run('cd %s/hello; cargo add zstd' % (self.tc.sdk_dir))
         self._run('cd %s/hello; cargo build' % self.tc.sdk_dir)
+    def test_check_cargo_build_default_target(self):
+        result_env = self._run("echo $RUST_TARGET_SYS_VALUE")
+        rust_target_sys = result_env.strip()
+        result = self._run("cd %s/hello; cargo build --message-format=json | jq -rc 'select(.executable != null) | .executable'" % (self.tc.sdk_dir))
+        lines = result.strip().splitlines()
+        last_path = lines[-1]
+        parts = last_path.split(os.sep)
+        target_index = parts.index("target")
+        target_triple = parts[target_index + 1]
+
+        self.assertEqual(
+            rust_target_sys,
+            target_triple,
+            f"Target triple mismatch: env '{rust_target_sys}' != path '{target_triple}'"
+        )
 
 class RustHostCompileTest(OESDKTestCase):
     td_vars = ['MACHINE', 'SDK_SYS']
