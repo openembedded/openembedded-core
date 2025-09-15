@@ -17,7 +17,6 @@ LICENSE:${PN}-colcrt = "BSD-4-Clause-UC"
 LICENSE:${PN}-colrm = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
 LICENSE:${PN}-column = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
 LICENSE:${PN}-coresched = "EUPL-1.2 & ${LIBCOMMON_LICENSES}"
-LICENSE:${PN}-fcntl-lock = "MIT"
 LICENSE:${PN}-fdisk = "GPL-1.0-or-later & ${DEFAULT_LICENSES}"
 LICENSE:${PN}-fsfreeze = "GPL-1.0-or-later"
 LICENSE:${PN}-hexdump = "BSD-4-Clause-UC & ${LIBCOMMON_LICENSES}"
@@ -227,11 +226,6 @@ do_compile:prepend () {
 	[ -e ${S}/libsmartcols/src/filter-parser.c ] && touch ${S}/libsmartcols/src/filter-parser.c
 }
 
-do_compile:append () {
-	cp ${UNPACKDIR}/fcntl-lock.c ${S}/fcntl-lock.c
-	${CC} ${CFLAGS} ${LDFLAGS} ${S}/fcntl-lock.c -o ${B}/fcntl-lock
-}
-
 do_install:append () {
 	mkdir -p ${D}${base_bindir}
 
@@ -261,8 +255,6 @@ do_install:append () {
 	echo 'MOUNTALL="-t nonfs,nosmbfs,noncpfs"' > ${D}${sysconfdir}/default/mountall
 
 	rm -f ${D}${bindir}/chkdupexe
-
-	install -m 0755 ${B}/fcntl-lock ${D}${bindir}
 }
 
 do_install:append:class-target () {
