@@ -150,8 +150,8 @@ class TestMetadata(base.Metadata):
                 "%s-%s-%s" % (self.shortid(), patchtest_patterns.metadata_src_uri, pn)
             ].split()
 
-            pretest_files = set([os.path.basename(patch) for patch in pretest_src_uri if patch.startswith('file://')])
-            test_files    = set([os.path.basename(patch) for patch in test_src_uri    if patch.startswith('file://')])
+            pretest_files = set([os.path.basename(patch.split(';')[0]) for patch in pretest_src_uri if patch.startswith('file://')])
+            test_files    = set([os.path.basename(patch.split(';')[0]) for patch in test_src_uri    if patch.startswith('file://')])
 
             # check if files were removed
             if len(test_files) < len(pretest_files):
