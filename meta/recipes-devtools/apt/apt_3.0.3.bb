@@ -58,6 +58,10 @@ PACKAGECONFIG ??= ""
 # the system doesn't have merged /usr folders.
 PACKAGECONFIG[usrmerge] = "-DREQUIRE_MERGED_USR=ON,-DREQUIRE_MERGED_USR=OFF"
 
+# Needed until https://salsa.debian.org/apt-team/apt/-/merge_requests/511 is fixed
+CXXFLAGS:append:toolchain-clang = " -stdlib=libstdc++"
+LDFLAGS:append:toolchain-clang = " -stdlib=libstdc++"
+
 do_configure:prepend() {
 	echo "set( CMAKE_FIND_ROOT_PATH_MODE_INCLUDE BOTH )" >>  ${WORKDIR}/toolchain.cmake
 }
