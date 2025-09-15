@@ -59,6 +59,15 @@ do_install () {
 
     cat <<- EOF > "${RUST_ENV_SETUP_SH}"
 	export RUST_TARGET_SYS_VALUE="${RUST_TARGET_SYS}"
+	case "\${RUST_TARGET_SYS_VALUE}" in
+	*x86_64*)   SDKLOADER="ld-linux-x86-64.so.2" ;;
+	*i686*)     SDKLOADER="ld-linux.so.2" ;;
+	*aarch64*)  SDKLOADER="ld-linux-aarch64.so.1" ;;
+	*arm*)      SDKLOADER="ld-linux-armhf.so.3" ;;
+	*ppc64le*)  SDKLOADER="ld64.so.2" ;;
+	*riscv64*)  SDKLOADER="ld-linux-riscv64-lp64d.so.1" ;;
+	*)          SDKLOADER="" ;;
+	esac
 	if echo "\$RUST_TARGET_SYS_VALUE" | grep -qE '(32)'; then
 	    LIBDIR="lib"    # For 32-bit targets
 	else
@@ -67,6 +76,7 @@ do_install () {
 	LIB_PATH="\$OECORE_TARGET_SYSROOT/usr/\${LIBDIR}/rustlib/${RUST_TARGET_SYS}/lib"
 	export CARGO_TARGET_${RUST_TARGET_TRIPLE}_RUSTFLAGS="--sysroot=\$OECORE_TARGET_SYSROOT/usr -C link-arg=--sysroot=\$OECORE_TARGET_SYSROOT -L \$LIB_PATH"
 	export RUST_TARGET_PATH="\$OECORE_NATIVE_SYSROOT/usr/lib/${TARGET_SYS}/rustlib"
+	export CARGO_TARGET_${RUST_TARGET_TRIPLE}_RUNNER="\$OECORE_TARGET_SYSROOT/\${LIBDIR}/\${SDKLOADER} --library-path \$OECORE_TARGET_SYSROOT/\${LIBDIR}"
 	EOF
 
     chown -R root.root ${D}
