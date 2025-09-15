@@ -163,12 +163,20 @@ toolchain_shared_env_script () {
 # Append environment subscripts
 if [ -d "\$OECORE_TARGET_SYSROOT/environment-setup.d" ]; then
     for envfile in \$OECORE_TARGET_SYSROOT/environment-setup.d/*.sh; do
+	    echo "Sourcing target env file: \$(basename "\$envfile")"
 	    . \$envfile
     done
 fi
 if [ -d "\$OECORE_NATIVE_SYSROOT/environment-setup.d" ]; then
     for envfile in \$OECORE_NATIVE_SYSROOT/environment-setup.d/*.sh; do
+	    echo "Sourcing target env file: \$(basename "\$envfile")"
 	    . \$envfile
+    done
+fi
+if [ -d "\$OECORE_NATIVE_SYSROOT/${TARGET_SYS}_environment-setup.d" ]; then
+    for envfile in \$OECORE_NATIVE_SYSROOT/${TARGET_SYS}_environment-setup.d/*.sh; do
+	    echo "Sourcing target env file: \$(basename "\$envfile")"
+            . \$envfile
     done
 fi
 EOF
