@@ -90,7 +90,7 @@ class TestMbox(base.Base):
                 " for master branch. Target detected is %s"
                 % PatchtestParser.repo.patch.branch
             )
-        if not PatchtestParser.repo.canbemerged:
+        if not PatchtestParser.repo.canbemerged():
             commithash, author, date, shortlog = headlog()
             self.fail(
                 "Series does not apply on top of target branch %s"

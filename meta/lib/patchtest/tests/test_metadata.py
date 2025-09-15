@@ -110,7 +110,7 @@ class TestMetadata(base.Metadata):
 
     def pretest_src_uri_left_files(self):
         # these tests just make sense on patches that can be merged
-        if not PatchtestParser.repo.canbemerged:
+        if not PatchtestParser.repo.canbemerged():
             self.skip("Patch cannot be merged")
         if not self.modified:
             self.skip('No modified recipes, skipping pretest')
@@ -127,7 +127,7 @@ class TestMetadata(base.Metadata):
 
     def test_src_uri_left_files(self):
         # these tests just make sense on patches that can be merged
-        if not PatchtestParser.repo.canbemerged:
+        if not PatchtestParser.repo.canbemerged():
             self.skip("Patch cannot be merged")
         if not self.modified:
             self.skip('No modified recipes, skipping pretest')
