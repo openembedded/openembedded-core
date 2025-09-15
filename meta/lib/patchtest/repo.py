@@ -52,7 +52,7 @@ class PatchTestRepo(object):
         self._patchcanbemerged = True
         try:
             # Make sure to get the absolute path of the file
-            self.repo.git.execute(['git', 'apply', '--check', os.path.abspath(self.patch.path)], with_exceptions=True)
+            self.repo.git.execute(['git', '-C', self.repodir, 'apply', '--check', os.path.abspath(self.patch.path)], with_exceptions=True)
         except git.exc.GitCommandError as ce:
             self._patchcanbemerged = False
 
@@ -76,7 +76,7 @@ class PatchTestRepo(object):
 
     def merge(self):
         if self._patchcanbemerged:
-            self.repo.git.execute(['git', 'am', '--keep-cr', os.path.abspath(self.patch.path)])
+            self.repo.git.execute(['git', '-C', self.repodir, 'am', '--keep-cr', os.path.abspath(self.patch.path)])
             self._patchmerged = True
 
     def clean(self):
