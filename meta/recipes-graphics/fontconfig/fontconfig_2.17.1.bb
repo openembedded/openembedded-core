@@ -57,7 +57,7 @@ RREPLACES:fontconfig-utils = "libfontconfig-utils"
 RCONFLICTS:fontconfig-utils = "libfontconfig-utils"
 DEBIAN_NOAUTONAME:fontconfig-utils = "1"
 
-inherit meson pkgconfig relative_symlinks gettext
+inherit meson pkgconfig gettext
 
 FONTCONFIG_CACHE_DIR ?= "${localstatedir}/cache/fontconfig"
 
