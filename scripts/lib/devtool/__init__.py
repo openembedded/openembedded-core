@@ -66,20 +66,13 @@ def exec_watch(cmd, **options):
             sys.stdout.write(out)
             sys.stdout.flush()
             buf += out
-        elif out == '' and process.poll() != None:
+        elif out == '' and process.poll() is not None:
             break
 
     if process.returncode != 0:
         raise bb.process.ExecutionError(cmd, process.returncode, buf, None)
 
     return buf, None
-
-def exec_fakeroot(d, cmd, **kwargs):
-    """Run a command under fakeroot (pseudo, in fact) so that it picks up the appropriate file permissions"""
-    # Grab the command and check it actually exists
-    fakerootcmd = d.getVar('FAKEROOTCMD')
-    fakerootenv = d.getVar('FAKEROOTENV')
-    exec_fakeroot_no_d(fakerootcmd, fakerootenv, cmd, kwargs)
 
 def exec_fakeroot_no_d(fakerootcmd, fakerootenv, cmd, **kwargs):
     if not os.path.exists(fakerootcmd):
