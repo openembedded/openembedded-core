@@ -1462,8 +1462,10 @@ FILES:${PN}-wlcommon = " \
   ${nonarch_base_libdir}/firmware/ti-connectivity/wl127x-nvs.bin* \
   ${nonarch_base_libdir}/firmware/ti-connectivity/wl1271-nvs.bin* \
 "
+# All wl12* but wl125* which go to wl1251 package
 FILES:${PN}-wl12xx = " \
-  ${nonarch_base_libdir}/firmware/ti-connectivity/wl12* \
+  ${nonarch_base_libdir}/firmware/ti-connectivity/wl12[012346789]* \
+  ${nonarch_base_libdir}/firmware/ti-connectivity/wl12[a-z]* \
 "
 FILES:${PN}-wl18xx = " \
   ${nonarch_base_libdir}/firmware/ti-connectivity/wl18* \
