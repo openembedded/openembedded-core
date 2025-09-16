@@ -19,11 +19,12 @@ PE = "1"
 # upstream considers a release.
 UPSTREAM_CHECK_GITTAGREGEX = "sdk-(?P<pver>\d+(\.\d+)+)"
 
-inherit cmake
+inherit cmake lib_package
 
 DEPENDS = "spirv-headers"
 
 EXTRA_OECMAKE += "\
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DSPIRV-Headers_SOURCE_DIR=${STAGING_EXECPREFIXDIR} \
     -DSPIRV_TOOLS_BUILD_STATIC=OFF \
     -DBUILD_SHARED_LIBS=ON \
@@ -45,9 +46,5 @@ do_install:append:class-target() {
 # all the libraries are unversioned, so don't pack it on PN-dev
 SOLIBS = ".so"
 FILES_SOLIBSDEV = ""
-
-PACKAGES =+ "${PN}-lesspipe"
-FILES:${PN}-lesspipe = "${base_bindir}/spirv-lesspipe.sh"
-RDEPENDS:${PN}-lesspipe += "${PN} bash"
 
 BBCLASSEXTEND = "native nativesdk"
