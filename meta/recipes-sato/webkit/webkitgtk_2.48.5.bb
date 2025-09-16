@@ -98,10 +98,6 @@ EXTRA_OECMAKE = " \
                  -DENABLE_RELEASE_LOG=ON \
                  "
 
-# Unless DEBUG_BUILD is enabled, pass -g1 to massively reduce the size of the
-# debug symbols (4.3GB to 700M at time of writing)
-DEBUG_LEVELFLAG = "-g1"
-
 # Javascript JIT is not supported on ARC
 EXTRA_OECMAKE:append:arc = " -DENABLE_JIT=OFF "
 # By default 25-bit "medium" calls are used on ARC
