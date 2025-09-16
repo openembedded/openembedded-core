@@ -26,7 +26,7 @@ class DevtoolError(Exception):
 
 def exec_build_env_command(init_path, builddir, cmd, watch=False, **options):
     """Run a program in bitbake build context"""
-    import bb
+    import bb.process
     if not 'cwd' in options:
         options["cwd"] = builddir
     if init_path:
@@ -50,7 +50,7 @@ def exec_build_env_command(init_path, builddir, cmd, watch=False, **options):
 
 def exec_watch(cmd, **options):
     """Run program with stdout shown on sys.stdout"""
-    import bb
+    import bb.process
     if isinstance(cmd, str) and not "shell" in options:
         options["shell"] = True
 
@@ -122,6 +122,7 @@ def setup_tinfoil(config_only=False, basepath=None, tracking=False):
 
 def parse_recipe(config, tinfoil, pn, appends, filter_workspace=True):
     """Parse the specified recipe"""
+    import bb.providers
     try:
         recipefile = tinfoil.get_recipe_file(pn)
     except bb.providers.NoProvider as e:
@@ -178,6 +179,7 @@ def use_external_build(same_dir, no_same_dir, d):
     """
     Determine if we should use B!=S (separate build and source directories) or not
     """
+    import bb.data
     b_is_s = True
     if no_same_dir:
         logger.info('Using separate build directory since --no-same-dir specified')
@@ -320,6 +322,7 @@ def replace_from_file(path, old, new):
     try:
         rdata = read_file(path)
     except IOError as e:
+        import errno
         # if file does not exit, just quit, otherwise raise an exception
         if e.errno == errno.ENOENT:
             return
@@ -339,6 +342,7 @@ def replace_from_file(path, old, new):
 def update_unlockedsigs(basepath, workspace, fixed_setup, extra=None):
     """ This function will make unlocked-sigs.inc match the recipes in the
     workspace plus any extras we want unlocked. """
+    import bb.utils
 
     if not fixed_setup:
         # Only need to write this out within the eSDK
@@ -390,11 +394,13 @@ def check_prerelease_version(ver, operation):
 
 def check_git_repo_dirty(repodir):
     """Check if a git repository is clean or not"""
+    import bb.process
     stdout, _ = bb.process.run('git status --porcelain', cwd=repodir)
     return stdout
 
 def check_git_repo_op(srctree, ignoredirs=None):
     """Check if a git repository is in the middle of a rebase"""
+    import bb.process
     stdout, _ = bb.process.run('git rev-parse --show-toplevel', cwd=srctree)
     topleveldir = stdout.strip()
     if ignoredirs and topleveldir in ignoredirs:
