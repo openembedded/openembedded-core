@@ -11,7 +11,7 @@ rasterize fonts."
 HOMEPAGE = "http://www.fontconfig.org"
 BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=fontconfig"
 
-LICENSE = "MIT & MIT & PD"
+LICENSE = "MIT & PD"
 LIC_FILES_CHKSUM = "file://COPYING;md5=00252fd272bf2e722925613ad74cb6c7 \
                     file://src/fcfreetype.c;endline=23;md5=f7c0140c1b0387cf4cf45420b059847c \
                     "
