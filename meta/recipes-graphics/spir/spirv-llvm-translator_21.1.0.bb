@@ -15,19 +15,12 @@ UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
 DEPENDS = "llvm spirv-tools spirv-headers"
 
-inherit cmake pkgconfig python3native
+inherit cmake pkgconfig lib_package
 
-# Specify any options you want to pass to cmake using EXTRA_OECMAKE:
-# for CMAKE_SHARED_LIBS=OFF see https://github.com/KhronosGroup/SPIRV-LLVM-Translator/issues/1868
 EXTRA_OECMAKE = "\
     -DBASE_LLVM_VERSION='${@oe.utils.trim_version('${PV}', 3)}' \
+    -DCMAKE_SKIP_BUILD_RPATH=ON \
     -DBUILD_SHARED_LIBS=ON \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
-    -DCMAKE_SKIP_RPATH=ON \
-    -DLLVM_EXTERNAL_LIT=lit \
-    -DLLVM_INCLUDE_TESTS=ON \
-    -Wno-dev \
     -DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=${STAGING_INCDIR}/.. \
 "
 
