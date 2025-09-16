@@ -295,32 +295,18 @@ def get_bbclassextend_targets(recipefile, pn):
 
 def replace_from_file(path, old, new):
     """Replace strings on a file"""
-
-    def read_file(path):
-        data = None
-        with open(path) as f:
-            data = f.read()
-        return data
-
-    def write_file(path, data):
-        if data is None:
-            return
-        wdata = data.rstrip() + "\n"
-        with open(path, "w") as f:
-            f.write(wdata)
-
-    # In case old is None, return immediately
     if old is None:
         return
+
     try:
-        rdata = read_file(path)
+        with open(path) as f:
+            rdata = f.read()
     except IOError as e:
         import errno
         # if file does not exit, just quit, otherwise raise an exception
         if e.errno == errno.ENOENT:
             return
-        else:
-            raise
+        raise
 
     old_contents = rdata.splitlines()
     new_contents = []
@@ -329,7 +315,10 @@ def replace_from_file(path, old, new):
             new_contents.append(old_content.replace(old, new))
         except ValueError:
             pass
-    write_file(path, "\n".join(new_contents))
+
+    wdata = ("\n".join(new_contents)).rstrip() + "\n"
+    with open(path, "w") as f:
+        f.write(wdata)
 
 
 def update_unlockedsigs(basepath, workspace, fixed_setup, extra=None):
