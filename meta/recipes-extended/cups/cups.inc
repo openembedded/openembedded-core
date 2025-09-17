@@ -15,11 +15,6 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/cups-${PV}-source.tar.gz \
            file://0004-cups-fix-multilib-install-file-conflicts.patch \
            file://volatiles.99_cups \
            file://cups-volatiles.conf \
-           file://CVE-2024-47175-1.patch \
-           file://CVE-2024-47175-2.patch \
-           file://CVE-2024-47175-3.patch \
-           file://CVE-2024-47175-4.patch \
-           file://CVE-2024-47175-5.patch \
            "
 
 GITHUB_BASE_URI = "https://github.com/OpenPrinting/cups/releases"
@@ -101,7 +96,7 @@ do_install () {
 PACKAGES =+ "${PN}-lib ${PN}-libimage ${PN}-webif"
 
 RDEPENDS:${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'procps', '', d)}"
-FILES:${PN} += "${libexecdir}/cups/"
+FILES:${PN} += "${libexecdir}/cups/ ${systemd_system_unitdir}/system-cups.slice"
 
 FILES:${PN}-lib = "${libdir}/libcups.so.*"
 
