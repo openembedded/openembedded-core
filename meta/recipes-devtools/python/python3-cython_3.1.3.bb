@@ -11,6 +11,10 @@ SRC_URI[sha256sum] = "10ee785e42328924b78f75a74f66a813cb956b4a9bc91c44816d089d59
 
 inherit pypi setuptools3 cython
 
+SRC_URI += " \
+    file://0001-Replace-not-predictable-build-path-prefix-with-hardc.patch \
+"
+
 # No need to depend on self
 DEPENDS:remove = "python3-cython-native"
 
