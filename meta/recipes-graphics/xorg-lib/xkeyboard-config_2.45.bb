@@ -20,7 +20,7 @@ DEPENDS = "util-macros libxslt-native"
 
 FILES:${PN} += "${datadir}/X11/xkb ${datadir}/xkeyboard-config-2"
 
-inherit meson pkgconfig gettext python3native
+inherit meson pkgconfig gettext python3native relative_symlinks
 
 EXTRA_OEMESON += "-Dxorg-rules-symlinks=true"
 
