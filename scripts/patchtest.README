@@ -20,8 +20,9 @@ which environment you prefer. If you plan to test your own patches (a
 good practice before these are sent to the mailing list), the easiest
 way is to install and execute on your local host; on the other hand, if
 automatic testing is intended, the guest method is strongly recommended.
-The guest method requires the use of the patchtest layer, in addition to
-the tools available in oe-core: https://git.yoctoproject.org/patchtest/
+The guest method requires the use of the meta-patchtest layer, in
+addition to the tools available in oe-core:
+https://git.yoctoproject.org/meta-patchtest/
 
 ## Installation
 
@@ -43,7 +44,7 @@ To work with patchtest, you should have the following repositories cloned:
 
 1. https://git.openembedded.org/openembedded-core/ (or https://git.yoctoproject.org/poky/)
 2. https://git.openembedded.org/bitbake/ (if not using poky)
-3. https://git.yoctoproject.org/patchtest (if using guest mode)
+3. https://git.yoctoproject.org/meta-patchtest (if using guest mode)
 
 ## Usage
 
@@ -98,8 +99,8 @@ from the mailing lists. When executed this way, the test process is
 essentially running random code from the internet and could be
 catastrophic if malicious bits or even poorly-handled edge cases aren't
 protected against. In order to use this mode, the
-https://git.yoctoproject.org/patchtest/ repository must be cloned and
-the meta-patchtest layer added to bblayers.conf.
+https://git.yoctoproject.org/meta-patchtest/ repository must be cloned
+and added to bblayers.conf.
 
 The general flow of guest mode is:
 
