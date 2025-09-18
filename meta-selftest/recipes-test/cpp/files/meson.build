@@ -6,7 +6,8 @@
 
 project('meson-example', 'cpp',
     version: '1.0.0',
-    default_options: ['cpp_std=c++17']
+    default_options: ['cpp_std=c++17'],
+    meson_version: '>=1.1.0'
     )
 
 jsoncdep = dependency('json-c')
