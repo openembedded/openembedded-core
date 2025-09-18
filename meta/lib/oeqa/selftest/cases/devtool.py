@@ -18,12 +18,11 @@ from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var, create_temp_layer
 from oeqa.utils.commands import get_bb_vars, runqemu, runqemu_check_taps, get_test_layer
 from oeqa.core.decorator import OETestTag
+from bb.utils import mkdirhier, edit_bblayers_conf
 
 oldmetapath = None
 
 def setUpModule():
-    import bb.utils
-
     global templayerdir
     templayerdir = tempfile.mkdtemp(prefix='devtoolqa')
     corecopydir = os.path.join(templayerdir, 'core-copy')
@@ -79,12 +78,12 @@ def setUpModule():
                             shutil.copytree(pth, destdir, ignore=shutil.ignore_patterns('*.pyc', '__pycache__'))
                         else:
                             destdir = os.path.join(corecopydir, os.path.dirname(relpth))
-                            bb.utils.mkdirhier(destdir)
+                            mkdirhier(destdir)
                             shutil.copy2(pth, destdir)
             return newmetapath
         else:
             return layerpath
-    bb.utils.edit_bblayers_conf(bblayers_conf, None, None, bblayers_edit_cb)
+    edit_bblayers_conf(bblayers_conf, None, None, bblayers_edit_cb)
 
 def tearDownModule():
     if oldmetapath:
@@ -96,7 +95,7 @@ def tearDownModule():
             else:
                 return layerpath
         bblayers_conf = os.path.join(os.environ['BUILDDIR'], 'conf', 'bblayers.conf')
-        bb.utils.edit_bblayers_conf(bblayers_conf, None, None, bblayers_edit_cb)
+        edit_bblayers_conf(bblayers_conf, None, None, bblayers_edit_cb)
     shutil.rmtree(templayerdir)
 
 class DevtoolTestCase(OESelftestTestCase):
@@ -404,7 +403,7 @@ class DevtoolAddTests(DevtoolBase):
         test_file_content = "TEST CONTENT"
         test_file_package_root = os.path.join(tempdir, pn)
         test_file_dir_full = os.path.join(test_file_package_root, test_file_dir)
-        bb.utils.mkdirhier(test_file_dir_full)
+        mkdirhier(test_file_dir_full)
         with open(os.path.join(test_file_dir_full, test_file_name), "w") as f:
             f.write(test_file_content)
         bin_package_path = os.path.join(tempdir, "%s.tar.gz" % pn)
