@@ -267,6 +267,18 @@ bitbake) in local.conf to reduce runtime, as the bitbake startup process
 will otherwise add to it significantly when restarted for each test
 patch.
 
+If you have setup a Python virtual environment and sourced the
+oe-init-build-env script to run patchtest following the directions
+provided above in the "Installation" section, and you have added the
+meta-selftest layer (from oe-core or poky) to your build, running the
+patchtest selftest is as simple as:
+
+    (patchtest.venv) $ yocto/openembedded-core/meta/lib/patchtest/selftest/selftest
+
+or:
+
+    (patchtest.venv) $ yocto/poky/meta/lib/patchtest/selftest/selftest
+
 ## Contributing
 
 The yocto mailing list (openembedded-core@lists.openembedded.org) is used for questions,
