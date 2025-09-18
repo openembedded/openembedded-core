@@ -18,7 +18,7 @@ baseline for development of similar suites for other layers as needed.
 Patchtest can either run on a host or a guest machine, depending on
 which environment you prefer. If you plan to test your own patches (a
 good practice before these are sent to the mailing list), the easiest
-way is to install and execute on your local host; in the other hand, if
+way is to install and execute on your local host; on the other hand, if
 automatic testing is intended, the guest method is strongly recommended.
 The guest method requires the use of the patchtest layer, in addition to
 the tools available in oe-core: https://git.yoctoproject.org/patchtest/
@@ -33,7 +33,7 @@ by running `pip install -r meta/lib/patchtest/requirements.txt`. Note
 that git-pw is not automatically added to the user's PATH; by default,
 it is installed at ~/.local/bin/git-pw.
 
-For git-pw (and therefore scripts such as patchtest-get--series) to work, you need
+For git-pw (and therefore scripts such as patchtest-get-series) to work, you need
 to provide a Patchwork instance in your user's .gitconfig, like so (the project
 can be specified using the --project argument):
 
