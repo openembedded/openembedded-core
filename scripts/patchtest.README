@@ -5,8 +5,7 @@
 Patchtest is a test framework for community patches based on the standard
 unittest python module. As input, it needs three elements to work properly:
 
-- a patch in mbox format (either created with `git format-patch` or fetched
-from 'patchwork')
+- one or more patches in separate, mbox-formated files
 - a test suite
 - a target repository
 
@@ -94,11 +93,15 @@ cmdline):
 
 ### Obtaining Patches
 
-Patch files can be obtained directly from cloned repositories using `git
-format-patch -N` (where N is the number of patches starting from HEAD to
-generate). git-pw can also be used with filters for users, patch/series IDs,
-and timeboxes if specific patches are desired. For more information, see the
-git-pw [documentation](https://patchwork.readthedocs.io/projects/git-pw/en/latest/).
+Separate, mbox-formatted patch files can be obtained in a number of
+ways:
+
+    - using b4 to obtain patches from a lore server
+    - using git-pw to obtain patches from a patchwork server
+    - using "git format-patch ..." to create patches from a git
+      repository
+    - using an email program, such as mutt or thunderbird, to obtain
+      patches from a mailing list
 
 Alternatively, `scripts/patchtest-get-series` can be used to pull mbox files from
 the Patchwork instance configured previously in .gitconfig. It uses a log file
@@ -108,6 +111,73 @@ it will pull up to five patch series from the last 30 minutes using oe-core as
 the target project, but these parameters can be configured using the `--limit`,
 `--interval`, and `--project` arguments respectively. For more information, run
 `patchtest-get-series -h`.
+
+#### git-pw
+
+git-pw can be used with filters for users, patch/series IDs, and
+timeboxes if specific patches are desired. For more information, see the
+git-pw [documentation](https://patchwork.readthedocs.io/projects/git-pw/en/latest/).
+
+For example, to download a single patch from the Yocto Project's
+Patchwork server (and to demonstrate not having modified ~/.gitconfig):
+
+    (patchtest.venv) $ mkdir gawk
+    (patchtest.venv) $ git-pw --server https://patchwork.yoctoproject.org/api/1.2/ --project oe-core patch download --mbox 70101 gawk/
+
+To download a series, for example, try:
+
+    (patchtest.venv) $ mkdir clang
+    (patchtest.venv) $ git-pw --server https://patchwork.yoctoproject.org/api/1.2 --project oe-core series download --separate 38107 clang/
+
+#### git format-patch
+
+Patch files can be obtained directly from a git repository using `git
+format-patch -N` (where N is the number of patches starting from HEAD to
+generate) or using any other way of specifying a range of commit SHAs to
+git.
+
+This method would be the most likely used when testing patches in local
+mode before emailing them for review.
+
+#### b4
+
+In order to use b4, it needs to be installed. Fortunately it is a Python
+program that is hosted on pypi and can easily be installed into the same
+Python virtual environment that was created to run patchwork:
+
+    (patchtest.venv) $ pip install b4
+    (patchtest.venv) $ b4 --version
+    0.14.2
+
+To fetch the same single patch using b4 that was fetched with git-pw
+earlier, use:
+
+    (patchtest.venv) $ mkdir gawk-2
+    (patchtest.venv) $ b4 am -o gawk-2 https://lore.kernel.org/openembedded-core/20250912200740.2873851-1-Randy.MacLeod@windriver.com
+
+Fetching a patch series with b4 is a little more involved since b4 will
+create one mbox file with all the patches in the series in it. Given an
+mbox file with more than one patch in it, patchtest will only test the
+first one. So there needs to be a separate step to break apart the
+multiple patches into separate files:
+
+    (patchtest.venv) $ mkdir clang-2
+    (patchtest.venv) $ b4 am -o ross https://lore.kernel.org/openembedded-core/20250914133258.2625735-1-ross.burton@arm.com
+    (patchtest.venv) $ cat clang-2/v2_20250914_ross_burton_clang_improve_opt_viewer_packageconfig.mbx | formail -ds sh -c 'cat > ross/msg.$FILENO'
+
+NOTE: the formail utility is part of the procmail package for most Linux
+      distributions.
+
+#### mail user agents (MUA)
+
+Most email applications have a way of saving patch emails. Details for
+each MUA is beyond the scope of this document, but it is possible in
+most cases. The only catch is that each patch has to be saved in mbox
+format in its own individual file. Some client applications prefer to
+save emails in the Maildir format, and some programs will save a set of
+patches into one mbox file. The formail program from the procmail
+package is useful for manipulating and converting between formats and
+storage formats.
 
 ### Host Mode
 
