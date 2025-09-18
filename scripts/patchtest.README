@@ -181,27 +181,42 @@ storage formats.
 
 ### Host Mode
 
-To run patchtest on the host, do the following:
+To run patchtest in "host" mode, do the following:
 
-1. In openembedded-core/poky, do `source oe-init-build-env`
-2. Generate patch files from the target repository by doing `git format-patch -N`,
-   where N is the number of patches starting at HEAD, or by using git-pw
-   or patchtest-get-series
-3. Run patchtest on a patch file by doing the following:
+1. Using openembedded-core or poky, do the following if re-using the
+   installation given in the installation procedure above:
 
-        patchtest --patch /path/to/patch/file
+    $ . yocto/openembedded-core/oe-init-build-env build yocto/bitbake
+
+   or
+
+    $ . yocto/poky/oe-init-build-env
+
+2. Activate the Python virtual environment that was created using the
+   steps from the installation procedure given above:
+
+    $ . patchtest.venv/bin/activate
+
+3. Obtain one or more patches (see section above)
+
+4. Run patchtest on a patch file by doing the following:
+
+        (patchtest.venv) $ patchtest --patch /path/to/patch/file
 
     or, if you have stored the patch files in a directory, do:
 
-        patchtest --directory /path/to/patch/directory
+        (patchtest.venv) $ patchtest --directory /path/to/patch/directory
 
-    For example, to test `master-gcc-Fix--fstack-protector-issue-on-aarch64.patch` against the oe-core test suite:
+    For example, to test
+    `master-gcc-Fix--fstack-protector-issue-on-aarch64.patch` against the
+    oe-core test suite:
         
-        patchtest --patch master-gcc-Fix--fstack-protector-issue-on-aarch64.patch
+        (patchtest.venv) $ patchtest --patch master-gcc-Fix--fstack-protector-issue-on-aarch64.patch
 
-    If you want to use a different test suite or target repository, you can use the --testdir and --repodir flags:
+    If you want to use a different test suite or target repository, you
+    can use the --testdir and --repodir flags:
     
-        patchtest --patch /path/to/patch/file --repodir /path/to/repo --testdir /path/to/test/dir
+        (patchtest.venv) $ patchtest --patch /path/to/patch/file --repodir /path/to/repo --testdir /path/to/test/dir
 
 ### Guest Mode
 
