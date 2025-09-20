@@ -1,0 +1,59 @@
+From 3b2944f3d9f83129500571f9e44fb0779bf0987b Mon Sep 17 00:00:00 2001
+From: "Jason R. Coombs" <jaraco@jaraco.com>
+Date: Fri, 2 May 2025 20:07:13 -0400
+Subject: [PATCH] Remove support for special executable under a Python build.
+
+As far as I can tell, no one has complained about loss of this functionality.
+
+Upstream-Status: Backport
+[https://github.com/pypa/setuptools/commit/575445c672d78fcce22df1e459b7baf0304a38b9]
+
+Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
+---
+ setuptools/_distutils/command/build_scripts.py | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
+
+diff --git a/setuptools/_distutils/command/build_scripts.py b/setuptools/_distutils/command/build_scripts.py
+index 3f7aae0..b86ee6e 100644
+--- a/setuptools/_distutils/command/build_scripts.py
++++ b/setuptools/_distutils/command/build_scripts.py
+@@ -5,7 +5,6 @@ Implements the Distutils 'build_scripts' command."""
+ import os
+ import re
+ import tokenize
+-from distutils import sysconfig
+ from distutils._log import log
+ from stat import ST_MODE
+ from typing import ClassVar
+@@ -76,7 +75,7 @@ class build_scripts(Command):
+ 
+         return outfiles, updated_files
+ 
+-    def _copy_script(self, script, outfiles, updated_files):  # noqa: C901
++    def _copy_script(self, script, outfiles, updated_files):
+         shebang_match = None
+         script = convert_path(script)
+         outfile = os.path.join(self.build_dir, os.path.basename(script))
+@@ -106,18 +105,8 @@ class build_scripts(Command):
+         if shebang_match:
+             log.info("copying and adjusting %s -> %s", script, self.build_dir)
+             if not self.dry_run:
+-                if not sysconfig.python_build:
+-                    executable = self.executable
+-                else:
+-                    executable = os.path.join(
+-                        sysconfig.get_config_var("BINDIR"),
+-                        "python{}{}".format(
+-                            sysconfig.get_config_var("VERSION"),
+-                            sysconfig.get_config_var("EXE"),
+-                        ),
+-                    )
+                 post_interp = shebang_match.group(1) or ''
+-                shebang = "#!" + executable + post_interp + "\n"
++                shebang = "#!" + self.executable + post_interp + "\n"
+                 self._validate_shebang(shebang, f.encoding)
+                 with open(outfile, "w", encoding=f.encoding) as outf:
+                     outf.write(shebang)
+-- 
+2.34.1
+

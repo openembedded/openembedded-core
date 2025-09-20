@@ -1,0 +1,63 @@
+From a8d07038ec4813a743bdc0313556c9b0fd65ba88 Mon Sep 17 00:00:00 2001
+From: "Jason R. Coombs" <jaraco@jaraco.com>
+Date: Fri, 2 May 2025 20:01:23 -0400
+Subject: [PATCH] Revert "Merge pull request pypa/distutils#332 from
+ pypa/debt/unify-shebang"
+
+This reverts commit 5589d7527044a75ff681ceb4e1e97641578a0c87, reversing
+changes made to 250c300096abbf4147be62a428bd25a98abc487e.
+
+Closes pypa/setuptools#4934
+
+Upstream-Status: Backport
+[https://github.com/pypa/setuptools/commit/3f94782c5ede0689cfc216693ddb9a79087d6c91]
+
+Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
+---
+ setuptools/_distutils/command/build_scripts.py | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
+
+diff --git a/setuptools/_distutils/command/build_scripts.py b/setuptools/_distutils/command/build_scripts.py
+index 127c51d..3f7aae0 100644
+--- a/setuptools/_distutils/command/build_scripts.py
++++ b/setuptools/_distutils/command/build_scripts.py
+@@ -5,6 +5,7 @@ Implements the Distutils 'build_scripts' command."""
+ import os
+ import re
+ import tokenize
++from distutils import sysconfig
+ from distutils._log import log
+ from stat import ST_MODE
+ from typing import ClassVar
+@@ -75,7 +76,7 @@ class build_scripts(Command):
+ 
+         return outfiles, updated_files
+ 
+-    def _copy_script(self, script, outfiles, updated_files):
++    def _copy_script(self, script, outfiles, updated_files):  # noqa: C901
+         shebang_match = None
+         script = convert_path(script)
+         outfile = os.path.join(self.build_dir, os.path.basename(script))
+@@ -105,8 +106,18 @@ class build_scripts(Command):
+         if shebang_match:
+             log.info("copying and adjusting %s -> %s", script, self.build_dir)
+             if not self.dry_run:
++                if not sysconfig.python_build:
++                    executable = self.executable
++                else:
++                    executable = os.path.join(
++                        sysconfig.get_config_var("BINDIR"),
++                        "python{}{}".format(
++                            sysconfig.get_config_var("VERSION"),
++                            sysconfig.get_config_var("EXE"),
++                        ),
++                    )
+                 post_interp = shebang_match.group(1) or ''
+-                shebang = f"#!python{post_interp}\n"
++                shebang = "#!" + executable + post_interp + "\n"
+                 self._validate_shebang(shebang, f.encoding)
+                 with open(outfile, "w", encoding=f.encoding) as outf:
+                     outf.write(shebang)
+-- 
+2.34.1
+

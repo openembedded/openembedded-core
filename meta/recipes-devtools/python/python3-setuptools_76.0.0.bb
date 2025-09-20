@@ -14,6 +14,8 @@ SRC_URI += " \
             file://0001-_distutils-sysconfig.py-make-it-possible-to-substite.patch \
             file://CVE-2025-47273-pre1.patch \
             file://CVE-2025-47273.patch \
+            file://0001-Revert-Merge-pull-request-pypa-distutils-332-from-py.patch \
+            file://0002-Remove-support-for-special-executable-under-a-Python.patch \
 "
 
 SRC_URI[sha256sum] = "43b4ee60e10b0d0ee98ad11918e114c70701bc6051662a9a675a0496c1a158f4"
