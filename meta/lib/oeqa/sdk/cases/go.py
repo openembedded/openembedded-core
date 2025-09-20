@@ -12,6 +12,7 @@ from oeqa.core.utils.path import remove_safe
 from oeqa.sdk.case import OESDKTestCase
 
 from oeqa.utils.subprocesstweak import errors_have_output
+from oe.go import map_arch
 errors_have_output()
 
 class GoCompileTest(OESDKTestCase):
@@ -55,22 +56,6 @@ class GoCompileTest(OESDKTestCase):
 class GoHostCompileTest(OESDKTestCase):
     td_vars = ['MACHINE', 'SDK_SYS', 'TARGET_ARCH']
 
-    # Architecture mapping from Yocto/Poky to Go
-    ARCH_MAP = {
-        'aarch64': 'arm64',
-        'cortexa57': 'arm64',  # ARM Cortex-A57 is ARM64
-        'cortexa72': 'arm64',  # ARM Cortex-A72 is ARM64
-        'cortexa53': 'arm64',  # ARM Cortex-A53 is ARM64
-        'x86_64': 'amd64',
-        'i586': '386',
-        'i686': '386',
-        'mips': 'mips',
-        'mipsel': 'mipsle',
-        'powerpc64': 'ppc64',
-        'powerpc64le': 'ppc64le',
-        'riscv64': 'riscv64',
-    }
-
     @classmethod
     def setUpClass(self):
         # Copy test.go file to SDK directory (same as GCC test uses files_dir)
@@ -94,12 +79,8 @@ class GoHostCompileTest(OESDKTestCase):
         sdksys = self.td.get("SDK_SYS")
         arch = sdksys.split('-')[0]
 
-        # Handle ARM variants
-        if arch.startswith('arm'):
-            return 'arm'
-
         # Use mapping for other architectures
-        return self.ARCH_MAP.get(arch, arch)
+        return map_arch(arch)
 
     def test_go_cross_compile(self):
         """Test Go cross-compilation for target"""
@@ -117,12 +98,10 @@ class GoHostCompileTest(OESDKTestCase):
         # Clean up files with dynamic architecture names
         files = [os.path.join(self.tc.sdk_dir, f) \
                 for f in ['test.go', 'go.mod', 'go.sum']]
-        # Add architecture-specific files using the same mapping
-        for arch in self.ARCH_MAP.values():
+        # Add common architecture-specific files that might be created
+        common_archs = ['arm64', 'arm', 'amd64', '386', 'mips', 'mipsle', 'ppc64', 'ppc64le', 'riscv64']
+        for arch in common_archs:
             files.extend([os.path.join(self.tc.sdk_dir, f) \
                          for f in ['test-%s' % arch, 'hello-go-%s' % arch]])
-        # Add 'arm' for ARM variants
-        files.extend([os.path.join(self.tc.sdk_dir, f) \
-                     for f in ['test-arm', 'hello-go-arm']])
         for f in files:
             remove_safe(f)
