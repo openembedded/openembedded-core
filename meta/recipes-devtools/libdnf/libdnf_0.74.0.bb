@@ -19,16 +19,12 @@ UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(?!4\.90)\d+(\.\d+)+)"
 
 DEPENDS = "glib-2.0 libsolv librepo rpm gtk-doc libmodulemd json-c swig-native util-linux"
 
-inherit gtk-doc gobject-introspection cmake pkgconfig setuptools3-base
+inherit gtk-doc cmake pkgconfig setuptools3-base
 
 EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR} -DWITH_MAN=OFF -DPYTHON_DESIRED=3 \
-                  ${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-DWITH_GIR=ON', '-DWITH_GIR=OFF', d)} \
                   -DWITH_TESTS=OFF \
                   -DWITH_ZCHUNK=OFF \
                   -DWITH_HTML=OFF \
                 "
-EXTRA_OECMAKE:append:class-native = " -DWITH_GIR=OFF"
-EXTRA_OECMAKE:append:class-nativesdk = " -DWITH_GIR=OFF"
-
 BBCLASSEXTEND = "native nativesdk"
 SKIP_RECIPE[libdnf] ?= "${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', '', 'Does not build without package_rpm in PACKAGE_CLASSES due disabled rpm support in libsolv', d)}"
