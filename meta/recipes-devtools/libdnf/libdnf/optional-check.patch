@@ -1,0 +1,52 @@
+From a4abd42a6b92f6aa16490c0f482bf08c4a6c2864 Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@arm.com>
+Date: Thu, 18 Sep 2025 11:23:33 +0100
+Subject: [PATCH] Move libcheck dependency to tests/
+
+If we're not building the tests then there's no point in depending on
+libcheck, so move the pkg_check_modules() call to tests/CMakeLists.
+
+Upstream-Status: Backport [https://github.com/rpm-software-management/libdnf/commit/6a127aec78d2ef837776e0e5a8e3636101a54ab0]
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ CMakeLists.txt       | 1 -
+ tests/CMakeLists.txt | 7 +++----
+ 2 files changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index a489ea73..d1969899 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -59,7 +59,6 @@ find_package(LibSolv 0.7.21 REQUIRED COMPONENTS ext)
+ 
+ 
+ # build dependencies via pkg-config
+-pkg_check_modules(CHECK REQUIRED check)
+ pkg_check_modules(GLIB REQUIRED gio-unix-2.0>=2.46.0)
+ include_directories(${GLIB_INCLUDE_DIRS})
+ pkg_check_modules(JSONC REQUIRED json-c)
+diff --git a/tests/CMakeLists.txt b/tests/CMakeLists.txt
+index e4909682..78743f4e 100644
+--- a/tests/CMakeLists.txt
++++ b/tests/CMakeLists.txt
+@@ -1,3 +1,6 @@
++pkg_check_modules(CHECK REQUIRED check)
++pkg_check_modules(CPPUNIT REQUIRED cppunit)
++
+ add_subdirectory(libdnf/conf)
+ add_subdirectory(libdnf/module/modulemd)
+ add_subdirectory(libdnf/module)
+@@ -7,10 +10,6 @@ add_subdirectory(libdnf/sack)
+ add_subdirectory(hawkey)
+ add_subdirectory(libdnf)
+ 
+-
+-
+-pkg_check_modules(CPPUNIT REQUIRED cppunit)
+-
+ set(LIBDNF_TEST_SOURCES
+     ${LIBDNF_TEST_SOURCES}
+     ${CMAKE_CURRENT_SOURCE_DIR}/run_tests.cpp
+-- 
+2.43.0
+
