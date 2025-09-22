@@ -5,7 +5,6 @@ LICENSE = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=dnf-4-master;protocol=https \
-           file://0001-FindGtkDoc.cmake-drop-the-requirement-for-GTKDOC_SCA.patch \
            file://0004-Set-libsolv-variables-with-pkg-config-cmake-s-own-mo.patch \
            file://0001-Get-parameters-for-both-libsolv-and-libsolvext-libdn.patch \
            file://enable_test_data_dir_set.patch \
@@ -17,14 +16,16 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=dnf-4-master;p
 SRCREV = "91a0bf9aada36a722855051526f012e0b5ab1af9"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(?!4\.90)\d+(\.\d+)+)"
 
-DEPENDS = "glib-2.0 libsolv librepo rpm gtk-doc libmodulemd json-c swig-native util-linux"
+DEPENDS = "glib-2.0 libsolv librepo rpm libmodulemd json-c swig-native util-linux"
 
-inherit gtk-doc cmake pkgconfig setuptools3-base
+inherit cmake pkgconfig setuptools3-base gettext
 
-EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR} -DWITH_MAN=OFF -DPYTHON_DESIRED=3 \
+EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR} -DPYTHON_DESIRED=3 \
+                  -DWITH_GTKDOC=OFF -DWITH_MAN=OFF -DWITH_HTML=OFF \
                   -DWITH_TESTS=OFF \
                   -DWITH_ZCHUNK=OFF \
-                  -DWITH_HTML=OFF \
                 "
+
 BBCLASSEXTEND = "native nativesdk"
+
 SKIP_RECIPE[libdnf] ?= "${@bb.utils.contains('PACKAGE_CLASSES', 'package_rpm', '', 'Does not build without package_rpm in PACKAGE_CLASSES due disabled rpm support in libsolv', d)}"
