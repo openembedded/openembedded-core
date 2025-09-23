@@ -1075,7 +1075,7 @@ def get_recipe_upstream_version(rd):
             try:
                 revision = ud.method.latest_revision(ud, rd, 'default')
                 upversion = pv
-                if revision != rd.getVar("SRCREV"):
+                if revision != ud.revision:
                     upversion = upversion + "-new-commits-available"
             except bb.fetch2.FetchError as e:
                 bb.warn("Unable to obtain latest revision: {}".format(e))
