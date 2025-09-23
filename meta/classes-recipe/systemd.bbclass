@@ -74,8 +74,9 @@ if type systemctl >/dev/null 2>/dev/null; then
 		fi
 
 		# same as above, --global flag is not supported for stop so do disable only
-		[ -n "${@systemd_filter_services("${SYSTEMD_SERVICE_ESCAPED}", True, d)}" ] && \
+		if [ -n "${@systemd_filter_services("${SYSTEMD_SERVICE_ESCAPED}", True, d)}" ]; then
 			systemctl --global disable ${@systemd_filter_services("${SYSTEMD_SERVICE_ESCAPED}", True, d)}
+		fi
 	fi
 fi
 }
