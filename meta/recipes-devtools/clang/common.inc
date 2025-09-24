@@ -60,6 +60,7 @@ SRC_URI = "\
     file://0037-Revert-libc-Remap-headers-in-the-debug-info-when-bui.patch \
     file://0038-Prevent-revisiting-block-when-searching-for-noreturn.patch \
     file://0039-Only-build-c-index-test-when-clang-tests-are-include.patch \
+    file://0001-Install-lldb-tblgen.patch \
 "
 # Fallback to no-PIE if not set
 GCCPIE ??= ""
