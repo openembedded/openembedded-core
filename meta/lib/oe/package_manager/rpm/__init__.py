@@ -275,6 +275,14 @@ class RpmPM(PackageManager):
                 elif os.path.isfile(source_dir):
                     shutil.copy2(source_dir, target_dir)
 
+    def list_all(self):
+        output = self._invoke_dnf(["repoquery", "--all", "--queryformat", "Packages: %{name} %{arch} %{version}"], print_output = False)
+        all_pkgs_lines = []
+        for line in output.splitlines():
+            if line.startswith("Packages: "):
+                all_pkgs_lines.append(line.replace("Packages: ", ""))
+        return "\n".join(all_pkgs_lines)
+
     def list_installed(self):
         output = self._invoke_dnf(["repoquery", "--installed", "--queryformat", "Package: %{name} %{arch} %{version} %{name}-%{version}-%{release}.%{arch}.rpm\nDependencies:\n%{requires}\nRecommendations:\n%{recommends}\nDependenciesEndHere:\n"],
                                   print_output = False)
