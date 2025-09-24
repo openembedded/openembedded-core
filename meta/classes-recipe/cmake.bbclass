@@ -122,6 +122,7 @@ cmake_do_generate_toolchain_file() {
 	if [ "${BUILD_SYS}" = "${HOST_SYS}" ]; then
 		cmake_crosscompiling="set( CMAKE_CROSSCOMPILING FALSE )"
 	else
+		cmake_crosscompiling="set( CMAKE_CROSSCOMPILING TRUE )"
 		cmake_sysroot="set( CMAKE_SYSROOT \"${RECIPE_SYSROOT}\" )"
 	fi
 
