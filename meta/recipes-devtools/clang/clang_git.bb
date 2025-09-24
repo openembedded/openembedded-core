@@ -59,7 +59,7 @@ PACKAGECONFIG[libedit] = "-DLLVM_ENABLE_LIBEDIT=ON,-DLLVM_ENABLE_LIBEDIT=OFF,lib
 PACKAGECONFIG[libomp] = "-DCLANG_DEFAULT_OPENMP_RUNTIME=libomp,,"
 PACKAGECONFIG[lld] = "-DCLANG_DEFAULT_LINKER=lld,,,"
 PACKAGECONFIG[lto] = "-DLLVM_ENABLE_LTO=Full -DLLVM_BINUTILS_INCDIR=${STAGING_INCDIR},,binutils,"
-PACKAGECONFIG[opt-viewer] = "-DLLVM_HAVE_OPT_VIEWER_MODULES=ON,-DLLVM_HAVE_OPT_VIEWER_MODULES=OFF, \
+PACKAGECONFIG[opt-viewer] = "-DLLVM_TOOL_OPT_VIEWER_BUILD=ON,-DLLVM_TOOL_OPT_VIEWER_BUILD=OFF, \
                              python3-pyyaml-native python3-pygments-native python3-pyyaml python3-pygments, \
                              python3-pyyaml python3-pygments,"
 PACKAGECONFIG[pfm] = "-DLLVM_ENABLE_LIBPFM=ON,-DLLVM_ENABLE_LIBPFM=OFF,libpfm,"

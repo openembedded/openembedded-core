@@ -60,7 +60,6 @@ SRC_URI = "\
     file://0037-Revert-libc-Remap-headers-in-the-debug-info-when-bui.patch \
     file://0038-Prevent-revisiting-block-when-searching-for-noreturn.patch \
     file://0039-Only-build-c-index-test-when-clang-tests-are-include.patch \
-    file://0040-opt-viewer-Allow-users-to-set-LLVM_HAVE_OPT_VIEWER_M.patch \
 "
 # Fallback to no-PIE if not set
 GCCPIE ??= ""
