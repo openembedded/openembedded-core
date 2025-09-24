@@ -55,3 +55,9 @@ FILES:${PN}-prompt = " \
 "
 
 FILES:${PN}-dev += "${datadir}/glade/"
+
+# Causes failures at build time on eg qemuarm;
+# Bail out! VTE:ERROR:../sources/vte-0.80.3/src/vtegtk.cc:158:void style_provider_parsing_error_cb(GtkCssProvider *, void *, GError *): assertion failed (error == NULL): Expected an identifier (gtk-css-parser-error-quark, 1)
+# qemu: uncaught target signal 6 (Aborted) - core dumped
+# https://gitlab.gnome.org/GNOME/vte/-/issues/2910
+GI_DATA_ENABLED:toolchain-clang:arm = "False"
