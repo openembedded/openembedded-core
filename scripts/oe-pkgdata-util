@@ -51,6 +51,15 @@ def glob(args):
 
     skippedpkgs = set()
     mappedpkgs = set()
+    allpkgs = set()
+    if args.allpkgs:
+        with open(args.allpkgs, 'r') as f:
+            for line in f:
+                fields = line.rstrip().split()
+                if not fields:
+                    continue
+                else:
+                    allpkgs.add(fields[0])
     with open(args.pkglistfile, 'r') as f:
         for line in f:
             fields = line.rstrip().split()
@@ -135,6 +144,10 @@ def glob(args):
                         # Package doesn't even exist...
                         logger.debug("%s is not a valid package!" % (pkg))
                         break
+
+                if args.allpkgs:
+                    if mappedpkg not in allpkgs:
+                        continue
 
                 if mappedpkg:
                     logger.debug("%s (%s) -> %s" % (pkg, g, mappedpkg))
@@ -592,6 +605,7 @@ def main():
     parser_glob.add_argument('pkglistfile', help='File listing packages (one package name per line)')
     parser_glob.add_argument('glob', nargs="+", help='Glob expression for package names, e.g. *-dev')
     parser_glob.add_argument('-x', '--exclude', help='Exclude packages matching specified regex from the glob operation')
+    parser_glob.add_argument('-a', '--allpkgs', help='File listing all available packages (one package name per line)')
     parser_glob.set_defaults(func=glob)
 
 
