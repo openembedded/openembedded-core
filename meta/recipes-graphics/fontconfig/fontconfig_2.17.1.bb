@@ -65,6 +65,12 @@ FONTCONFIG_CACHE_DIR ?= "${localstatedir}/cache/fontconfig"
 # /usr/share/fonts is already included by default (you can change it with --with-default-fonts)
 FONTCONFIG_FONT_DIRS ?= "no"
 
-EXTRA_OEMESON = " -Ddoc=disabled -Ddefault-fonts-dirs=${datadir}/fonts -Dcache-dir=${FONTCONFIG_CACHE_DIR} -Dadditional-fonts-dirs=${FONTCONFIG_FONT_DIRS}"
+EXTRA_OEMESON = "\
+    -Dadditional-fonts-dirs=${FONTCONFIG_FONT_DIRS} \
+    -Dcache-dir=${FONTCONFIG_CACHE_DIR} \
+    -Ddefault-fonts-dirs=${datadir}/fonts \
+    -Ddoc=disabled \
+    -Dtests=disabled \
+"
 
 BBCLASSEXTEND = "native nativesdk"
