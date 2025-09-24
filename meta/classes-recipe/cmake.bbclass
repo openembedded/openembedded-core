@@ -56,7 +56,7 @@ OECMAKE_NATIVE_C_COMPILER_LAUNCHER ?= "${@oecmake_map_compiler('BUILD_CC', d)[1]
 OECMAKE_NATIVE_CXX_COMPILER ?= "${@oecmake_map_compiler('BUILD_CXX', d)[0]}"
 OECMAKE_NATIVE_CXX_COMPILER_LAUNCHER ?= "${@oecmake_map_compiler('BUILD_CXX', d)[1]}"
 OECMAKE_NATIVE_AR ?= "${BUILD_AR}"
-OECMAKE_NATIVE_RANLIB ?= "${BUILD_RANLIB}"
+OECMAKE_NATIVE_RANLIB ?= "${@d.getVar('BUILD_RANLIB').split()[0]}"
 OECMAKE_NATIVE_NM ?= "${BUILD_NM}"
 
 # Native compiler flags
