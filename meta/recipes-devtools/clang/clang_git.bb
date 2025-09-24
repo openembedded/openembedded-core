@@ -222,13 +222,11 @@ do_install:append:class-nativesdk () {
     if ${@bb.utils.contains('PACKAGECONFIG', 'clangd', 'true', 'false', d)}; then
         install -Dm 0755 ${B}${BINPATHPREFIX}/bin/clangd-indexer ${D}${bindir}/clangd-indexer
     fi
-    install -Dm 0755 ${B}${BINPATHPREFIX}/bin/clang-tblgen ${D}${bindir}/clang-tblgen
+
     for f in `find ${D}${bindir} -executable -type f -not -type l`; do
         test -n "`file -b $f|grep -i ELF`" && ${STRIP} $f
     done
-    ln -sf clang-tblgen ${D}${bindir}/clang-tblgen${PV}
-    ln -sf llvm-tblgen ${D}${bindir}/llvm-tblgen${PV}
-    ln -sf llvm-config ${D}${bindir}/llvm-config${PV}
+
     rm -rf ${D}${datadir}/llvm/cmake
     rm -rf ${D}${datadir}/llvm
 
