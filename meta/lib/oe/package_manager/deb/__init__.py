@@ -112,6 +112,29 @@ class PMPkgsList(PkgsList):
 
         return opkg_query(cmd_output)
 
+    def list_all_pkgs(self, apt_conf_file=None):
+        if not apt_conf_file:
+            apt_conf_file = self.d.expand("${APTCONF_TARGET}/apt/apt.conf")
+        os.environ['APT_CONFIG'] = apt_conf_file
+
+        cmd = [bb.utils.which(os.getenv('PATH'), "apt"), "list"]
+
+        try:
+            cmd_output = subprocess.check_output(cmd, stderr=subprocess.STDOUT).strip().decode("utf-8")
+        except subprocess.CalledProcessError as e:
+            bb.fatal("Cannot get the all packages list. Command '%s' "
+                     "returned %d:\n%s" % (' '.join(cmd), e.returncode, e.output.decode("utf-8")))
+
+        all_pkgs_lines = []
+        for line in cmd_output.splitlines():
+            line_parts = line.split()
+            # the valid lines takes the format of something like "findutils-locale-ga/unknown 4.10.0-r0 amd64"
+            if len(line_parts) != 3:
+                continue
+            line_parts[0] = line_parts[0].split('/')[0]
+            new_line = ' '.join(line_parts)
+            all_pkgs_lines.append(new_line)
+        return "\n".join(all_pkgs_lines)
 
 class DpkgPM(OpkgDpkgPM):
     def __init__(self, d, target_rootfs, archs, base_archs, apt_conf_dir=None, deb_repo_workdir="oe-rootfs-repo", filterbydependencies=True):
@@ -435,6 +458,9 @@ class DpkgPM(OpkgDpkgPM):
 
     def list_installed(self):
         return PMPkgsList(self.d, self.target_rootfs).list_pkgs()
+
+    def list_all(self):
+        return PMPkgsList(self.d, self.target_rootfs).list_all_pkgs(apt_conf_file=self.apt_conf_file)
 
     def package_info(self, pkg):
         """
