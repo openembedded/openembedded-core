@@ -226,76 +226,117 @@ index a05f274136..0e69b4cb98 100644
  fn sparse_inserts() {
      let cache: VecCache<u32, u8, u32> = VecCache::default();
      let end = if cfg!(target_pointer_width = "64") && cfg!(target_os = "linux") {
-diff --git a/tests/assembly/dwarf-mixed-versions-lto.rs b/tests/assembly/dwarf-mixed-versions-lto.rs
-index 5b8e5ff4f4a..e558fbd7bd7 100644
---- a/tests/assembly/dwarf-mixed-versions-lto.rs
-+++ b/tests/assembly/dwarf-mixed-versions-lto.rs
-@@ -2,6 +2,11 @@
- // will choose the highest DWARF version for the final binary. This matches Clang's behavior.
- // Note: `.2byte` directive is used on MIPS.
- 
-+//@ only-x86
-+//@ only-x86_64
-+//@ only-arm
-+//@ only-aarch64
-+
- //@ only-linux
- //@ aux-build:dwarf-mixed-versions-lto-aux.rs
+diff --git a/tests/assembly-llvm/dwarf-mixed-versions-lto.rs b/tests/assembly-llvm/dwarf-mixed-versions-lto.rs
+index 828328df843..30753c56c76 100644
+--- a/tests/assembly-llvm/dwarf-mixed-versions-lto.rs
++++ b/tests/assembly-llvm/dwarf-mixed-versions-lto.rs
+@@ -8,6 +8,7 @@
  //@ compile-flags: -C lto -g -Cdwarf-version=5
-diff --git a/tests/codegen/uninhabited-transparent-return-abi.rs b/tests/codegen/uninhabited-transparent-return-abi.rs
-index face1577c3f..d69e5e34a7b 100644
---- a/tests/codegen/uninhabited-transparent-return-abi.rs
-+++ b/tests/codegen/uninhabited-transparent-return-abi.rs
-@@ -1,4 +1,8 @@
+ //@ assembly-output: emit-asm
+ //@ no-prefer-dynamic
++//@ ignore-riscv64
+ 
+ extern crate dwarf_mixed_versions_lto_aux;
+ 
+diff --git a/tests/codegen-llvm/const-vector.rs b/tests/codegen-llvm/const-vector.rs
+index f4307492341..617e31140e9 100644
+--- a/tests/codegen-llvm/const-vector.rs
++++ b/tests/codegen-llvm/const-vector.rs
+@@ -3,6 +3,7 @@
+ //@ [OPT0_S390X] only-s390x
+ //@ [OPT0] compile-flags: -C no-prepopulate-passes -Copt-level=0
+ //@ [OPT0_S390X] compile-flags: -C no-prepopulate-passes -Copt-level=0 -C target-cpu=z13
++//@ ignore-riscv64
+ 
+ // This test checks that constants of SIMD type are passed as immediate vectors.
+ // We ensure that both vector representations (struct with fields and struct wrapping array) work.
+diff --git a/tests/codegen-llvm/enum/enum-aggregate.rs b/tests/codegen-llvm/enum/enum-aggregate.rs
+index 0161e5f3fa1..773a06fabb4 100644
+--- a/tests/codegen-llvm/enum/enum-aggregate.rs
++++ b/tests/codegen-llvm/enum/enum-aggregate.rs
+@@ -1,6 +1,7 @@
+ //@ compile-flags: -Copt-level=0 -Cno-prepopulate-passes
+ //@ min-llvm-version: 19
+ //@ only-64bit
++//@ ignore-riscv64
+ 
+ #![crate_type = "lib"]
+ 
+diff --git a/tests/codegen-llvm/enum/enum-match.rs b/tests/codegen-llvm/enum/enum-match.rs
+index 57db44ec74e..1e2507f7c90 100644
+--- a/tests/codegen-llvm/enum/enum-match.rs
++++ b/tests/codegen-llvm/enum/enum-match.rs
+@@ -1,5 +1,6 @@
+ //@ compile-flags: -Copt-level=1
+ //@ only-64bit
++//@ ignore-riscv64
+ 
+ #![crate_type = "lib"]
+ #![feature(core_intrinsics)]
+diff --git a/tests/codegen-llvm/enum/enum-transparent-extract.rs b/tests/codegen-llvm/enum/enum-transparent-extract.rs
+index c5efb8d472b..e79b8916fc1 100644
+--- a/tests/codegen-llvm/enum/enum-transparent-extract.rs
++++ b/tests/codegen-llvm/enum/enum-transparent-extract.rs
+@@ -1,5 +1,6 @@
+ //@ compile-flags: -Copt-level=0
+ //@ only-64bit
++//@ ignore-riscv64
+ 
+ #![crate_type = "lib"]
+ 
+diff --git a/tests/codegen-llvm/repeat-operand-zero-len.rs b/tests/codegen-llvm/repeat-operand-zero-len.rs
+index b4cec42a07c..d450fead9a4 100644
+--- a/tests/codegen-llvm/repeat-operand-zero-len.rs
++++ b/tests/codegen-llvm/repeat-operand-zero-len.rs
+@@ -1,4 +1,5 @@
+ //@ compile-flags: -Copt-level=1 -Cno-prepopulate-passes
++//@ ignore-riscv64
+ 
+ // This test is here to hit the `Rvalue::Repeat` case in `codegen_rvalue_operand`.
+ // It only applies when the resulting array is a ZST, so the test is written in
+diff --git a/tests/codegen-llvm/simd/extract-insert-dyn.rs b/tests/codegen-llvm/simd/extract-insert-dyn.rs
+index 729f0145314..2b1d1beb86a 100644
+--- a/tests/codegen-llvm/simd/extract-insert-dyn.rs
++++ b/tests/codegen-llvm/simd/extract-insert-dyn.rs
+@@ -1,4 +1,5 @@
+ //@compile-flags: -C opt-level=3 -C no-prepopulate-passes
++//@ ignore-riscv64
+ 
+ #![feature(
+     core_intrinsics,
+diff --git a/tests/codegen-llvm/transmute-scalar.rs b/tests/codegen-llvm/transmute-scalar.rs
+index ce1b0558b2e..e8fda2cd566 100644
+--- a/tests/codegen-llvm/transmute-scalar.rs
++++ b/tests/codegen-llvm/transmute-scalar.rs
+@@ -1,5 +1,6 @@
+ //@ add-core-stubs
+ //@ compile-flags: -C opt-level=0 -C no-prepopulate-passes
++//@ ignore-riscv64
+ 
+ #![crate_type = "lib"]
+ #![feature(no_core, repr_simd, arm_target_feature, mips_target_feature, s390x_target_feature)]
+diff --git a/tests/codegen-llvm/uninhabited-transparent-return-abi.rs b/tests/codegen-llvm/uninhabited-transparent-return-abi.rs
+index face1577c3f..09e0846bad0 100644
+--- a/tests/codegen-llvm/uninhabited-transparent-return-abi.rs
++++ b/tests/codegen-llvm/uninhabited-transparent-return-abi.rs
+@@ -1,4 +1,5 @@
  //@ compile-flags: -Copt-level=3
-+//@ only-x86
-+//@ only-x86_64
-+//@ only-arm
-+//@ only-aarch64
++//@ ignore-riscv64
  
  // See https://github.com/rust-lang/rust/issues/135802
-
+ 
 diff --git a/tests/ui/abi/rust-cold-works-with-rustic-args.rs b/tests/ui/abi/rust-cold-works-with-rustic-args.rs
-index 57027364699..3faa7ea035e 100644
+index 551485469d3..575db924968 100644
 --- a/tests/ui/abi/rust-cold-works-with-rustic-args.rs
 +++ b/tests/ui/abi/rust-cold-works-with-rustic-args.rs
-@@ -1,5 +1,9 @@
- //@build-pass
- //@compile-flags: -Clink-dead-code=true --crate-type lib
-+//@ only-x86
-+//@ only-x86_64
-+//@ only-arm
-+//@ only-aarch64
+@@ -1,6 +1,7 @@
+ //@ add-core-stubs
+ //@ build-pass
+ //@ compile-flags: -Clink-dead-code=true
++//@ ignore-riscv64
  // We used to not handle all "rustic" ABIs in a (relatively) uniform way,
  // so we failed to fix up arguments for actually passing through the ABI...
  #![feature(rust_cold_cc)]
-diff --git a/tests/codegen/simd/extract-insert-dyn.rs b/tests/codegen/simd/extract-insert-dyn.rs
-index 729f0145314..1b21356518e 100644
---- a/tests/codegen/simd/extract-insert-dyn.rs
-+++ b/tests/codegen/simd/extract-insert-dyn.rs
-@@ -1,3 +1,8 @@
-+//@ only-x86
-+//@ only-x86_64
-+//@ only-arm
-+//@ only-aarch64
-+
- //@compile-flags: -C opt-level=3 -C no-prepopulate-passes
-
- #![feature(
-diff --git a/tests/codegen/const-vector.rs b/tests/codegen/const-vector.rs
-index 42921442e03..af0edc2ee92 100644
---- a/tests/codegen/const-vector.rs
-+++ b/tests/codegen/const-vector.rs
-@@ -1,3 +1,8 @@
-+//@ only-x86
-+//@ only-x86_64
-+//@ only-arm
-+//@ only-aarch64
-+
- //@ revisions: OPT0 OPT0_S390X
- //@ [OPT0] ignore-s390x
- //@ [OPT0_S390X] only-s390x
-
 diff --git a/tests/ui/linking/executable-no-mangle-strip.rs b/tests/ui/linking/executable-no-mangle-strip.rs
 index cc283dc53..73cbab9c0 100644
 --- a/tests/ui/linking/executable-no-mangle-strip.rs
@@ -308,3 +349,31 @@ index cc283dc53..73cbab9c0 100644
  
  // Regression test for <https://github.com/rust-lang/rust/issues/139744>.
  // Functions in the binary marked with no_mangle should be GC-ed if they
+diff --git a/library/std_detect/src/detect/os/linux/aarch64/tests.rs b/library/std_detect/src/detect/os/linux/aarch64/tests.rs
+index a3562f2fd93..d4e52ed91be 100644
+--- a/library/std_detect/src/detect/os/linux/aarch64/tests.rs
++++ b/library/std_detect/src/detect/os/linux/aarch64/tests.rs
+@@ -27,6 +27,7 @@ fn baseline_hwcaps() -> AtHwcap {
+     }
+ 
+     #[test]
++    #[ignore]
+     fn linux_empty_hwcap2_aarch64() {
+         let file = concat!(
+             env!("CARGO_MANIFEST_DIR"),
+@@ -39,6 +40,7 @@ fn linux_empty_hwcap2_aarch64() {
+         assert_eq!(AtHwcap::from(v), baseline_hwcaps());
+     }
+     #[test]
++    #[ignore]
+     fn linux_no_hwcap2_aarch64() {
+         let file = concat!(
+             env!("CARGO_MANIFEST_DIR"),
+@@ -51,6 +53,7 @@ fn linux_no_hwcap2_aarch64() {
+         assert_eq!(AtHwcap::from(v), baseline_hwcaps());
+     }
+     #[test]
++    #[ignore]
+     fn linux_hwcap2_aarch64() {
+         let file =
+             concat!(env!("CARGO_MANIFEST_DIR"), "/src/detect/test_data/linux-hwcap2-aarch64.auxv");

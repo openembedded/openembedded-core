@@ -4,7 +4,7 @@ HOMEPAGE = "http://www.rust-lang.org"
 
 # check src/llvm-project/llvm/CMakeLists.txt for llvm version in use
 #
-LLVM_RELEASE = "20.1.5"
+LLVM_RELEASE = "20.1.8"
 
 require rust-source.inc
 
