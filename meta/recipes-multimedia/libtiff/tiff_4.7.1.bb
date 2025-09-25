@@ -3,23 +3,15 @@ DESCRIPTION = "Library provides support for the Tag Image File Format \
 (TIFF), a widely used format for storing image data.  This library \
 provide means to easily access and create TIFF image files."
 HOMEPAGE = "http://www.libtiff.org/"
-LICENSE = "libtiff"
-LIC_FILES_CHKSUM = "file://LICENSE.md;md5=a3e32d664d6db1386b4689c8121531c3"
+LICENSE = "libtiff & BSD-4.3TAHOE"
+LIC_FILES_CHKSUM = "file://LICENSE.md;md5=4ab490c3088a0acff254eb2f8c577547"
 
 CVE_PRODUCT = "libtiff"
 
 SRC_URI = "http://download.osgeo.org/libtiff/tiff-${PV}.tar.gz \
-	   file://CVE-2024-13978_1.patch \
-	   file://CVE-2024-13978_2.patch \
-	   file://CVE-2025-8176_1.patch \
-	   file://CVE-2025-8176_2.patch \
-	   file://CVE-2025-8176_3.patch \
-	   file://CVE-2025-8177_1.patch \
-	   file://CVE-2025-8177_2.patch \
-           file://CVE-2025-8534.patch \
 	   "
 
-SRC_URI[sha256sum] = "67160e3457365ab96c5b3286a0903aa6e78bdc44c4bc737d2e486bcecb6ba976"
+SRC_URI[sha256sum] = "f698d94f3103da8ca7438d84e0344e453fe0ba3b7486e04c5bf7a9a3fabe9b69"
 
 # exclude betas
 UPSTREAM_CHECK_REGEX = "tiff-(?P<pver>\d+(\.\d+)+).tar"
