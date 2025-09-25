@@ -1,4 +1,4 @@
-From 16a1647fc26953fab659de5f55d4c0defdfb894f Mon Sep 17 00:00:00 2001
+From 83d2ed3fd203868a8f287d2ebedc7c304c74fbb4 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sat, 22 Mar 2025 17:56:19 -0700
 Subject: [PATCH] getopt: Fix signature of getenv function
@@ -13,27 +13,32 @@ Upstream-Status: Submitted [https://lists.gnu.org/archive/html/which-bugs/2025-0
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  getopt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ getopt.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/getopt.c b/getopt.c
+index 9ac2ed6..b1aa322 100644
 --- a/getopt.c
 +++ b/getopt.c
-@@ -209,7 +209,7 @@ static char *posixly_correct;
+@@ -205,7 +205,7 @@ static char *posixly_correct;
  /* Avoid depending on library functions or files
     whose names are inconsistent.  */
  
--char *getenv ();
+-char *getenv();
 +char *getenv (const char*);
  
- static char *
- my_index (str, chr)
+ static char *my_index(str, chr) const char *str;
+ int chr;
+diff --git a/getopt.h b/getopt.h
+index f080053..e04e3ca 100644
 --- a/getopt.h
 +++ b/getopt.h
-@@ -103,7 +103,7 @@ struct option
+@@ -102,7 +102,7 @@ struct option {
     errors, only prototype getopt for the GNU C library.  */
- extern int getopt (int argc, char *const *argv, const char *shortopts);
- #else /* not __GNU_LIBRARY__ */
--extern int getopt ();
+ extern int getopt(int argc, char *const *argv, const char *shortopts);
+ #else  /* not __GNU_LIBRARY__ */
+-extern int getopt();
 +extern int getopt (int, char * const [], const char *);
  #endif /* __GNU_LIBRARY__ */
- extern int getopt_long (int argc, char *const *argv, const char *shortopts,
- 		        const struct option *longopts, int *longind);
+ extern int getopt_long(int argc, char *const *argv, const char *shortopts, const struct option *longopts, int *longind);
+ extern int getopt_long_only(int argc, char *const *argv, const char *shortopts, const struct option *longopts,

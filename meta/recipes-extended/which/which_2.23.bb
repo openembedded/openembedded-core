@@ -9,21 +9,18 @@ HOMEPAGE = "https://carlowood.github.io/which/"
 LICENSE = "GPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504\
                     file://which.c;beginline=1;endline=17;md5=a9963693af2272e7a8df6f231164e7a2"
-DEPENDS     = "cwautomacros-native"
 
-inherit autotools texinfo update-alternatives
-
-EXTRA_OECONF = "--disable-iberty"
+inherit meson update-alternatives
 
 SRC_URI = "${GNU_MIRROR}/which/which-${PV}.tar.gz \
-           file://automake.patch \
+           file://meson.build \
            file://0001-getopt-Fix-signature-of-getenv-function.patch \
            "
 
-SRC_URI[sha256sum] = "f4a245b94124b377d8b49646bf421f9155d36aa7614b6ebf83705d3ffc76eaad"
+SRC_URI[sha256sum] = "a2c558226fc4d9e4ce331bd2fd3c3f17f955115d2c00e447618a4ef9978a2a73"
 
 do_configure:prepend() {
-	sed -i -e 's%@ACLOCAL_CWFLAGS@%-I ${STAGING_DIR_NATIVE}/usr/share/cwautomacros/m4%g' ${S}/Makefile.am ${S}/tilde/Makefile.am
+       cp ${UNPACKDIR}/meson.build ${S}
 }
 
 ALTERNATIVE:${PN} = "which"
