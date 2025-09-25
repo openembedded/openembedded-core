@@ -77,4 +77,8 @@ CVE_STATUS_STABLE_BACKPORT[status] = "cpe-stable-backport: these CVEs are patche
 
 CVE_STATUS[CVE-2025-2759] = "not-applicable-platform: affects installation packages for non Linux OSes"
 
+CVE_STATUS_GROUPS += "CVE_STATUS_PLUGINS_BAD"
+CVE_STATUS_PLUGINS_BAD = "CVE-2025-3887"
+CVE_STATUS_PLUGINS_BAD[status] = "cpe-incorrect: these CVEs is patched in current version of gstreamer1.0-plugins-bad"
+
 PTEST_BUILD_HOST_FILES = ""
