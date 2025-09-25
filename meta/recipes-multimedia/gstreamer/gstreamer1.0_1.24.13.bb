@@ -75,4 +75,6 @@ CVE_STATUS_GROUPS += "CVE_STATUS_STABLE_BACKPORT"
 CVE_STATUS_STABLE_BACKPORT = "CVE-2025-47183 CVE-2025-47219 CVE-2025-47806 CVE-2025-47807 CVE-2025-47808"
 CVE_STATUS_STABLE_BACKPORT[status] = "cpe-stable-backport: these CVEs are patched in current version"
 
+CVE_STATUS[CVE-2025-2759] = "not-applicable-platform: affects installation packages for non Linux OSes"
+
 PTEST_BUILD_HOST_FILES = ""
