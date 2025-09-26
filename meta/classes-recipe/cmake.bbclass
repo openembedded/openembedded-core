@@ -212,6 +212,15 @@ set( CMAKE_LIBRARY_PATH ${STAGING_BASE_LIBDIR_NATIVE} ${STAGING_LIBDIR_NATIVE})
 list(APPEND CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES ${STAGING_INCDIR_NATIVE})
 list(APPEND CMAKE_CXX_IMPLICIT_INCLUDE_DIRECTORIES ${STAGING_INCDIR_NATIVE})
 
+# The assignmens above override CFLAGS and CXXFLAGS from the environment but
+# not LDFLAGS, which ends up in CMAKE_EXE_LINKER_FLAGS. This then means our
+# native builds use target flags, and can fail.
+#
+# As there are a number of variables that are set from LDFLAGS,
+# clear it at source.
+#
+# https://cmake.org/cmake/help/latest/envvar/LDFLAGS.html
+unset(ENV{LDFLAGS})
 EOF
 }
 
