@@ -14,10 +14,8 @@ SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/meson-${PV}.tar.gz \
            file://0001-python-module-do-not-manipulate-the-environment-when.patch \
            file://0001-Make-CPU-family-warnings-fatal.patch \
            file://0002-Support-building-allarch-recipes-again.patch \
-           file://0001-Check-for-header-only-Boost-libraries.patch \
-           file://0002-Boost-python-must-have-a-library-component.patch \
            "
-SRC_URI[sha256sum] = "cd27277649b5ed50d19875031de516e270b22e890d9db65ed9af57d18ebc498d"
+SRC_URI[sha256sum] = "4e076606f2afff7881d195574bddcd8d89286f35a17b4977a216f535dc0c74ac"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)$"
 
 inherit python_setuptools_build_meta github-releases
