@@ -42,7 +42,6 @@ inherit autotools gettext github-releases pkgconfig
 export CONFIG_SHELL = "/bin/sh"
 
 EXTRA_OECONF += " \
-                 --with-group-name-max-length=24 \
                  --enable-subordinate-ids=yes \
                  --without-sssd \
                  ${NSCDOPT}"
