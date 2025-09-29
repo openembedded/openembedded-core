@@ -246,7 +246,7 @@ LIC_FILES_CHKSUM = "file://LICENCE.Abilis;md5=b5ee3f410780e56711ad48eadc22b8bc \
                     "
 # WHENCE checksum is defined separately to ease overriding it if
 # class-devupstream is selected.
-WHENCE_CHKSUM  = "714332457b96406b3ccff321b60680b1"
+WHENCE_CHKSUM  = "a12ddaaab7162785af9d79b76132d185"
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
 # so that the license files will be copied from fetched source
@@ -372,6 +372,7 @@ PE = "1"
 
 SRC_URI = "\
   ${KERNELORG_MIRROR}/linux/kernel/firmware/${BPN}-${PV}.tar.xz \
+  file://0001-qcom-move-LEMANS-EVK-firmware-to-correct-location.patch \
 "
 
 BBCLASSEXTEND = "devupstream:target"
