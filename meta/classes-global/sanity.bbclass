@@ -505,18 +505,15 @@ def check_userns():
                  "See https://discourse.ubuntu.com/t/ubuntu-24-04-lts-noble-numbat-release-notes/39890#unprivileged-user-namespace-restrictions for more information.")
 
 
-# Require at least gcc version 8.0
-#
-# This can be fixed on CentOS-7 with devtoolset-6+
-# https://www.softwarecollections.org/en/scls/rhscl/devtoolset-6/
+# Require at least gcc version 10.1
 #
 # A less invasive fix is with scripts/install-buildtools (or with user
 # built buildtools-extended-tarball)
 #
 def check_gcc_version(sanity_data):
     version = oe.utils.get_host_gcc_version(sanity_data)
-    if bb.utils.vercmp_string_op(version, "8.0", "<"):
-        return "Your version of gcc is older than 8.0 and will break builds. Please install a newer version of gcc (you could use the project's buildtools-extended-tarball or use scripts/install-buildtools).\n"
+    if bb.utils.vercmp_string_op(version, "10.1", "<"):
+        return "Your version of gcc is older than 10.1 and will break builds. Please install a newer version of gcc (you could use the project's buildtools-extended-tarball or use scripts/install-buildtools).\n"
     return None
 
 # Tar version 1.24 and onwards handle overwriting symlinks correctly
