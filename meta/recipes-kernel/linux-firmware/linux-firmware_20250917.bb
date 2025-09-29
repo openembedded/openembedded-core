@@ -2353,7 +2353,10 @@ python populate_packages:prepend () {
 
 # Firmware files are generally not ran on the CPU, so they can be
 # allarch despite being architecture specific
-INSANE_SKIP = "arch"
+INSANE_SKIP += "arch"
+
+# They can also be ELF files, but obviously won't have the linkage we expect
+INSANE_SKIP += "ldflags"
 
 # Don't warn about already stripped files
 INSANE_SKIP:${PN} = "already-stripped"
