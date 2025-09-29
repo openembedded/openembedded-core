@@ -112,7 +112,7 @@ EXTRA_OECMAKE += "-DLLVM_ENABLE_ASSERTIONS=OFF \
                   -DFFI_INCLUDE_DIR=$(pkg-config --variable=includedir libffi) \
                   -DLLVM_BUILD_EXTERNAL_COMPILER_RT=ON \
                   -DCMAKE_SYSTEM_NAME=Linux \
-                  -DCMAKE_BUILD_TYPE=Release \
+                  -DCMAKE_BUILD_TYPE=MinSizeRel \
                   -DLLVM_ENABLE_PROJECTS='${LLVM_PROJECTS}' \
                   -DLLVM_BINUTILS_INCDIR=${STAGING_INCDIR} \
                   -DLLVM_VERSION_SUFFIX='${VER_SUFFIX}' \
@@ -175,7 +175,7 @@ do_install:append() {
 
 do_install:append:class-target () {
     # Allow bin path to change based on YOCTO_ALTERNATE_EXE_PATH
-    sed -i 's;${_IMPORT_PREFIX}/bin;${_IMPORT_PREFIX_BIN};g' ${D}${libdir}/cmake/llvm/LLVMExports-release.cmake
+    sed -i 's;${_IMPORT_PREFIX}/bin;${_IMPORT_PREFIX_BIN};g' ${D}${libdir}/cmake/llvm/LLVMExports-*.cmake
 
     # Insert function to populate Import Variables
     sed -i "4i\
@@ -183,7 +183,7 @@ if(DEFINED ENV{YOCTO_ALTERNATE_EXE_PATH})\n\
   execute_process(COMMAND \"llvm-config\" \"--bindir\" OUTPUT_VARIABLE _IMPORT_PREFIX_BIN OUTPUT_STRIP_TRAILING_WHITESPACE)\n\
 else()\n\
   set(_IMPORT_PREFIX_BIN \"\${_IMPORT_PREFIX}/bin\")\n\
-endif()\n" ${D}${libdir}/cmake/llvm/LLVMExports-release.cmake
+endif()\n" ${D}${libdir}/cmake/llvm/LLVMExports-*.cmake
 
     if [ -n "${LLVM_LIBDIR_SUFFIX}" ]; then
         mkdir -p ${D}${nonarch_libdir}
