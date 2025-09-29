@@ -21,7 +21,7 @@ B_NATIVE = "${B}-native"
 # Semicolon-separated list of targets to build
 LIBCLC_TARGETS ?= "all"
 
-EXTRA_OECMAKE = "-DLIBCLC_TARGETS_TO_BUILD=${LIBCLC_TARGETS}"
+EXTRA_OECMAKE += "-DLIBCLC_TARGETS_TO_BUILD=${LIBCLC_TARGETS}"
 EXTRA_OECMAKE:append:class-target = " -DPREPARE_BUILTINS=${B_NATIVE}/prepare_builtins"
 EXTRA_OECMAKE:append:class-nativesdk = " -DPREPARE_BUILTINS=${B_NATIVE}/prepare_builtins"
 

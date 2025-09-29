@@ -19,8 +19,8 @@ OECMAKE_SOURCEPATH = "${S}/lld"
 #
 # Explicitly enable symlinks as the lld build doesn't call into the llvm setup
 # and turn that on.
-EXTRA_OECMAKE = "-DCMAKE_SKIP_BUILD_RPATH=ON \
-                 -DLLVM_INCLUDE_TESTS=OFF -DLLVM_USE_SYMLINKS=ON \
-                 -DLLVM_TABLEGEN_EXE=${STAGING_BINDIR_NATIVE}/llvm-tblgen"
+EXTRA_OECMAKE += "-DCMAKE_SKIP_BUILD_RPATH=ON \
+                  -DLLVM_INCLUDE_TESTS=OFF -DLLVM_USE_SYMLINKS=ON \
+                  -DLLVM_TABLEGEN_EXE=${STAGING_BINDIR_NATIVE}/llvm-tblgen"
 
 BBCLASSEXTEND = "native nativesdk"

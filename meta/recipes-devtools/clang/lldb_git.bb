@@ -16,15 +16,15 @@ DEPENDS = "llvm-tblgen-native clang"
 
 OECMAKE_SOURCEPATH = "${S}/lldb"
 
-EXTRA_OECMAKE = "-DLLDB_INCLUDE_TESTS=OFF \
-                 -DLLDB_ENABLE_LUA=OFF \
-                 -DLLDB_PYTHON_RELATIVE_PATH=${PYTHON_SITEPACKAGES_DIR} \
-                 -DLLDB_PYTHON_EXE_RELATIVE_PATH=${PYTHON_PN} \
-                 -DLLDB_PYTHON_EXT_SUFFIX=${SOLIBSDEV} \
-                 -DLLVM_DIR=${STAGING_LIBDIR}/cmake/llvm/ \
-                 -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
-                 -DLLDB_TABLEGEN_EXE=${STAGING_BINDIR_NATIVE}/lldb-tblgen \
-                 -DLLDB_NO_INSTALL_DEFAULT_RPATH=ON \
+EXTRA_OECMAKE += "-DLLDB_INCLUDE_TESTS=OFF \
+                  -DLLDB_ENABLE_LUA=OFF \
+                  -DLLDB_PYTHON_RELATIVE_PATH=${PYTHON_SITEPACKAGES_DIR} \
+                  -DLLDB_PYTHON_EXE_RELATIVE_PATH=${PYTHON_PN} \
+                  -DLLDB_PYTHON_EXT_SUFFIX=${SOLIBSDEV} \
+                  -DLLVM_DIR=${STAGING_LIBDIR}/cmake/llvm/ \
+                  -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
+                  -DLLDB_TABLEGEN_EXE=${STAGING_BINDIR_NATIVE}/lldb-tblgen \
+                  -DLLDB_NO_INSTALL_DEFAULT_RPATH=ON \
 "
 
 PACKAGECONFIG ??= "libedit libxml2 lzma"
