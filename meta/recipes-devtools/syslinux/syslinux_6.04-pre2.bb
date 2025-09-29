@@ -96,11 +96,6 @@ do_install() {
 #
 # Tasks for target which ship the precompiled bootloader and installer
 #
-do_configure:class-target() {
-	# No need to do anything as we're mostly shipping the precompiled binaries
-	:
-}
-
 do_compile:class-target() {
 	# No need to do anything as we're mostly shipping the precompiled binaries
 	:
