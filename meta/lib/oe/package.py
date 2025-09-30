@@ -1016,7 +1016,7 @@ def copydebugsources(debugsrcdir, sources, d):
             cmd += "fgrep -zw '%s' | " % prefixmap[pmap]
             # Remove prefix in the source paths
             cmd += "sed 's#%s/##g' | " % (prefixmap[pmap])
-            cmd += "(cd '%s' ; cpio -pd0mlL --no-preserve-owner '%s%s' 2>/dev/null)" % (pmap, dvar, prefixmap[pmap])
+            cmd += "(cd '%s' ; cpio -pd0mlLu --no-preserve-owner '%s%s' 2>/dev/null)" % (pmap, dvar, prefixmap[pmap])
 
             try:
                 subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
