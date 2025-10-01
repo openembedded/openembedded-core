@@ -131,7 +131,7 @@ python split_kernel_module_packages () {
         if modconf and basename in modconflist:
             os.makedirs(os.path.dirname(name), exist_ok=True)
             with open(name, 'w') as f:
-                f.write("%s\n" % modconf)
+                f.write("%s\n" % modconf.encode().decode('unicode-escape'))
         elif modconf:
             bb.error("Please ensure module %s is listed in KERNEL_MODULE_PROBECONF since module_conf_%s is set" % (basename, basename))
         # If the .conf file exits, then add it to FILES:* and CONFFILES:*.
