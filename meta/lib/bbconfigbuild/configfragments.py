@@ -179,7 +179,7 @@ class ConfigFragmentsPlugin(LayerPlugin):
             print("All fragments removed from {}.".format(args.confpath))
 
     def register_commands(self, sp):
-        default_confpath = os.path.join(os.environ["BBPATH"], "conf/auto.conf")
+        default_confpath = os.path.join(os.environ["BBPATH"], "conf/local.conf")
 
         parser_list_fragments = self.add_command(sp, 'list-fragments', self.do_list_fragments, parserecipes=False)
         parser_list_fragments.add_argument("--confpath", default=default_confpath, help='Configuration file which contains a list of enabled fragments (default is {}).'.format(default_confpath))
