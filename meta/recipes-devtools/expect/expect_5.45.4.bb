@@ -41,7 +41,7 @@ S = "${WORKDIR}/${BPN}${PV}"
 
 EXTRA_AUTORECONF += "--exclude=aclocal"
 
-CFLAGS += "-std=gnu17"
+CFLAGS:append = " -std=gnu17"
 
 do_install:append() {
     mv ${D}${libdir}/expect${PV}/libexpect*.so ${D}${libdir}/
