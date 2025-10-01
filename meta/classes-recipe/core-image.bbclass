@@ -33,6 +33,7 @@
 #                         LICENSE_CREATE_PACKAGE="1" to be set when building packages too
 # - doc-pkgs            - documentation packages for all installed packages in the rootfs
 # - bash-completion-pkgs - bash-completion packages for recipes using bash-completion bbclass
+# - zsh-completion-pkgs - zsh-completion packages
 # - ptest-pkgs          - ptest packages for all ptest-enabled recipes
 # - read-only-rootfs    - tweaks an image to support read-only rootfs
 # - stateless-rootfs    - systemctl-native not run, image populated by systemd at runtime
