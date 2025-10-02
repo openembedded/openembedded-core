@@ -104,8 +104,11 @@ class ConfigFragmentsPlugin(LayerPlugin):
                   return True
         return False
 
+    def fragment_prefix(self, fragmentname):
+        return fragmentname.split("/",1)[0]
+
     def builtin_fragment_exists(self, fragmentname):
-        fragment_prefix = fragmentname.split("/",1)[0]
+        fragment_prefix = self.fragment_prefix(fragmentname)
         fragment_prefix_defs = set([f.split(':')[0] for f in self.tinfoil.config_data.getVar('OE_FRAGMENTS_BUILTIN').split()])
         return fragment_prefix in fragment_prefix_defs
 
@@ -128,6 +131,8 @@ class ConfigFragmentsPlugin(LayerPlugin):
                 if f in enabled_fragments:
                     print("Fragment {} already included in {}".format(f, args.confpath))
                 else:
+                    # first filter out all built-in fragments with the same prefix as the one that is being enabled
+                    enabled_fragments = [fragment for fragment in enabled_fragments if not(self.builtin_fragment_exists(fragment) and self.fragment_prefix(fragment) == self.fragment_prefix(f))]
                     enabled_fragments.append(f)
             return " ".join(enabled_fragments), None, 0, True
 
