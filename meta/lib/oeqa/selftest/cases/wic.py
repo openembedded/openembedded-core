@@ -18,6 +18,7 @@ from glob import glob
 from shutil import rmtree, copy
 from tempfile import NamedTemporaryFile
 from tempfile import TemporaryDirectory
+from textwrap import dedent
 
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.core.decorator import OETestTag
@@ -1021,7 +1022,7 @@ class Wic2(WicTestCase):
         wicvars = wicvars.difference(('DEPLOY_DIR_IMAGE', 'IMAGE_BOOT_FILES',
                                       'INITRD', 'INITRD_LIVE', 'ISODIR','INITRAMFS_IMAGE',
                                       'INITRAMFS_IMAGE_BUNDLE', 'INITRAMFS_LINK_NAME',
-                                      'APPEND', 'IMAGE_EFI_BOOT_FILES'))
+                                      'APPEND', 'IMAGE_EFI_BOOT_FILES', 'IMAGE_EXTRA_PARTITION_FILES'))
         with open(path) as envfile:
             content = dict(line.split("=", 1) for line in envfile)
             # test if variables used by wic present in the .env file
@@ -1646,6 +1647,46 @@ INITRAMFS_IMAGE = "core-image-initramfs-boot"
             cmd = "cat /boot/loader/entries/boot.conf"
             status, output = qemu.run_serial(cmd)
             self.assertEqual(1, status, 'Failed to run command "%s": %s' % (cmd, output))
+
+    def test_extra_partition_plugin(self):
+        """Test extra partition plugin"""
+        config = dedent("""\
+        IMAGE_EXTRA_PARTITION_FILES_label-foo = "bar.conf;foo.conf"
+        IMAGE_EXTRA_PARTITION_FILES_uuid-e7d0824e-cda3-4bed-9f54-9ef5312d105d = "bar.conf;foobar.conf"
+        IMAGE_EXTRA_PARTITION_FILES = "foo/*"
+        WICVARS:append = "\
+            IMAGE_EXTRA_PARTITION_FILES_label-foo \
+            IMAGE_EXTRA_PARTITION_FILES_uuid-e7d0824e-cda3-4bed-9f54-9ef5312d105d \
+        "
+        """)
+        self.append_config(config)
+
+        deploy_dir = get_bb_var('DEPLOY_DIR_IMAGE')
+
+        testfile = open(os.path.join(deploy_dir, "bar.conf"), "w")
+        testfile.write("test")
+        testfile.close()
+
+        os.mkdir(os.path.join(deploy_dir, "foo"))
+        testfile = open(os.path.join(deploy_dir, "foo", "bar.conf"), "w")
+        testfile.write("test")
+        testfile.close()
+
+        with NamedTemporaryFile("w", suffix=".wks") as wks:
+            wks.writelines(['part / --source extra_partition --ondisk sda --fstype=ext4 --label foo --align 4 --size 5M\n',
+                            'part / --source extra_partition --ondisk sda --fstype=ext4 --uuid e7d0824e-cda3-4bed-9f54-9ef5312d105d --align 4 --size 5M\n',
+                            'part / --source extra_partition --ondisk sda --fstype=ext4 --label bar --align 4 --size 5M\n'])
+            wks.flush()
+            _, wicimg = self._get_wic(wks.name)
+
+            result = runCmd("wic ls %s | wc -l" % wicimg)
+            self.assertEqual('4', result.output, msg="Expect 3 partitions, not %s" % result.output)
+
+            for part, file in enumerate(["foo.conf", "foobar.conf", "bar.conf"]):
+                result = runCmd("wic ls %s:%d | grep -q \"%s\"" % (wicimg, part + 1, file))
+                self.assertEqual(0, result.status, msg="File '%s' not found in the partition #%d" % (file, part))
+
+        self.remove_config(config)
 
     def test_fs_types(self):
         """Test filesystem types for empty and not empty partitions"""
