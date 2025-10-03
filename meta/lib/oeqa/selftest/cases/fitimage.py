@@ -787,7 +787,7 @@ FIT_CONF_PREFIX = "foo-"
 
         config = """
 DISTRO = "poky"
-MACHINE = "beaglebone-yocto"
+MACHINE:forcevariable = "beaglebone-yocto"
 """
         self.write_config(config)
 
@@ -828,7 +828,7 @@ MACHINE = "beaglebone-yocto"
         """
         config = """
 # Enable creation of fitImage
-MACHINE = "beaglebone-yocto"
+MACHINE:forcevariable = "beaglebone-yocto"
 # Add a devicetree overlay which does not need kernel sources
 PREFERRED_PROVIDER_virtual/dtb = "bbb-dtbs-as-ext"
 """
@@ -855,7 +855,7 @@ PREFERRED_PROVIDER_virtual/dtb = "bbb-dtbs-as-ext"
         # Generate a configuration section which gets included into the local.conf file
         config = """
 # Enable creation of fitImage
-MACHINE = "beaglebone-yocto"
+MACHINE:forcevariable = "beaglebone-yocto"
 UBOOT_SIGN_ENABLE = "1"
 UBOOT_SIGN_KEYDIR = "${TOPDIR}/signing-keys"
 UBOOT_SIGN_KEYNAME = "dev"
@@ -903,7 +903,7 @@ FIT_CONF_DEFAULT_DTB = "am335x-bonegreen.dtb"
         # Generate a configuration section which gets included into the local.conf file
         config = """
 # Enable creation of fitImage
-MACHINE = "beaglebone-yocto"
+MACHINE:forcevariable = "beaglebone-yocto"
 UBOOT_SIGN_ENABLE = "1"
 FIT_GENERATE_KEYS = "1"
 UBOOT_SIGN_KEYDIR = "${TOPDIR}/signing-keys"
@@ -939,7 +939,7 @@ UBOOT_MKIMAGE_SIGN_ARGS = "-c 'a smart comment'"
 
         config = """
 DISTRO = "poky"
-MACHINE = "beaglebone-yocto"
+MACHINE:forcevariable = "beaglebone-yocto"
 INITRAMFS_IMAGE = "core-image-minimal-initramfs"
 INITRAMFS_SCRIPTS = ""
 UBOOT_MACHINE = "am335x_evm_defconfig"
@@ -993,7 +993,7 @@ FIT_HASH_ALG = "sha256"
 
         config = """
 DISTRO = "poky"
-MACHINE = "beaglebone-yocto"
+MACHINE:forcevariable = "beaglebone-yocto"
 INITRAMFS_IMAGE_BUNDLE = "1"
 INITRAMFS_IMAGE = "core-image-minimal-initramfs"
 INITRAMFS_SCRIPTS = ""
@@ -1412,7 +1412,7 @@ class UBootFitImageTests(FitImageTestCase):
         """
         config = """
 # We need at least CONFIG_SPL_LOAD_FIT and CONFIG_SPL_OF_CONTROL set
-MACHINE = "qemuarm"
+MACHINE:forcevariable = "qemuarm"
 UBOOT_MACHINE = "am57xx_evm_defconfig"
 SPL_BINARY = "MLO"
 
@@ -1451,7 +1451,7 @@ UBOOT_FIT_DESC = "A model description"
         config = """
 # There's no U-boot defconfig with CONFIG_FIT_SIGNATURE yet, so we need at
 # least CONFIG_SPL_LOAD_FIT and CONFIG_SPL_OF_CONTROL set
-MACHINE = "qemuarm"
+MACHINE:forcevariable = "qemuarm"
 UBOOT_MACHINE = "am57xx_evm_defconfig"
 SPL_BINARY = "MLO"
 # Enable creation and signing of the U-Boot fitImage
@@ -1498,7 +1498,7 @@ UBOOT_FIT_HASH_ALG = "sha256"
         config = """
 # There's no U-boot deconfig with CONFIG_FIT_SIGNATURE yet, so we need at
 # least CONFIG_SPL_LOAD_FIT and CONFIG_SPL_OF_CONTROL set
-MACHINE = "qemuarm"
+MACHINE:forcevariable = "qemuarm"
 UBOOT_MACHINE = "am57xx_evm_defconfig"
 SPL_BINARY = "MLO"
 # Enable creation and signing of the U-Boot fitImage
@@ -1546,7 +1546,7 @@ UBOOT_SIGN_KEYNAME = "cfg-oe-selftest"
         """
         config = """
 # We need at least CONFIG_SPL_LOAD_FIT and CONFIG_SPL_OF_CONTROL set
-MACHINE = "qemuarm"
+MACHINE:forcevariable = "qemuarm"
 UBOOT_MACHINE = "am57xx_evm_defconfig"
 SPL_BINARY = "MLO"
 
@@ -1612,7 +1612,7 @@ UBOOT_FIT_ARM_TRUSTED_FIRMWARE_ENTRYPOINT = "0x80280000"
         config = """
 # There's no U-boot deconfig with CONFIG_FIT_SIGNATURE yet, so we need at
 # least CONFIG_SPL_LOAD_FIT and CONFIG_SPL_OF_CONTROL set
-MACHINE = "qemuarm"
+MACHINE:forcevariable = "qemuarm"
 UBOOT_MACHINE = "am57xx_evm_defconfig"
 SPL_BINARY = "MLO"
 # Enable creation and signing of the U-Boot fitImage
@@ -1676,7 +1676,7 @@ UBOOT_FIT_ARM_TRUSTED_FIRMWARE_ENTRYPOINT = "0x80280000"
         """
         config = """
 # Enable creation of fitImage
-MACHINE = "beaglebone-yocto"
+MACHINE:forcevariable = "beaglebone-yocto"
 UBOOT_SIGN_ENABLE = "1"
 UBOOT_SIGN_KEYDIR = "${TOPDIR}/signing-keys"
 UBOOT_SIGN_KEYNAME = "the-kernel-config-key"
@@ -1715,7 +1715,7 @@ FIT_SIGN_INDIVIDUAL = "1"
         config = """
 # There's no U-boot defconfig with CONFIG_FIT_SIGNATURE yet, so we need at
 # least CONFIG_SPL_LOAD_FIT and CONFIG_SPL_OF_CONTROL set
-MACHINE = "qemuarm"
+MACHINE:forcevariable = "qemuarm"
 UBOOT_MACHINE = "am57xx_evm_defconfig"
 # Enable creation and signing of the U-Boot fitImage (no SPL)
 UBOOT_FITIMAGE_ENABLE = "1"
