@@ -1330,41 +1330,47 @@ run_wic_cmd() {
     def test_extra_partition_space(self):
         native_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "wic-tools")
 
-        with NamedTemporaryFile("w", suffix=".wks") as tempf:
-            tempf.write("bootloader --ptable gpt\n" \
-                        "part                 --ondisk hda --size 10M        --extra-partition-space 10M --fstype=ext4\n" \
-                        "part                 --ondisk hda --fixed-size 20M  --extra-partition-space 10M --fstype=ext4\n" \
-                        "part --source rootfs --ondisk hda                   --extra-partition-space 10M --fstype=ext4\n" \
-                        "part --source rootfs --ondisk hda --fixed-size 200M --extra-partition-space 10M --fstype=ext4\n")
-            tempf.flush()
+        oldpath = os.environ['PATH']
+        os.environ['PATH'] = get_bb_var("PATH", "wic-tools")
 
-            _, wicimg = self._get_wic(tempf.name)
+        try:
+            with NamedTemporaryFile("w", suffix=".wks") as tempf:
+                tempf.write("bootloader --ptable gpt\n" \
+                            "part                 --ondisk hda --size 10M        --extra-partition-space 10M --fstype=ext4\n" \
+                            "part                 --ondisk hda --fixed-size 20M  --extra-partition-space 10M --fstype=ext4\n" \
+                            "part --source rootfs --ondisk hda                   --extra-partition-space 10M --fstype=ext4\n" \
+                            "part --source rootfs --ondisk hda --fixed-size 200M --extra-partition-space 10M --fstype=ext4\n")
+                tempf.flush()
 
-            res = runCmd("parted -m %s unit b p" % wicimg,
-                            native_sysroot=native_sysroot, stderr=subprocess.PIPE)
+                _, wicimg = self._get_wic(tempf.name)
 
-            # parse parted output which looks like this:
-            # BYT;\n
-            # /var/tmp/wic/build/tmpfwvjjkf_-201611101222-hda.direct:200MiB:file:512:512:msdos::;\n
-            # 1:0.00MiB:200MiB:200MiB:ext4::;\n
-            partlns = res.output.splitlines()[2:]
+                res = runCmd("parted -m %s unit b p" % wicimg,
+                                native_sysroot=native_sysroot, stderr=subprocess.PIPE)
 
-            self.assertEqual(4, len(partlns))
+                # parse parted output which looks like this:
+                # BYT;\n
+                # /var/tmp/wic/build/tmpfwvjjkf_-201611101222-hda.direct:200MiB:file:512:512:msdos::;\n
+                # 1:0.00MiB:200MiB:200MiB:ext4::;\n
+                partlns = res.output.splitlines()[2:]
 
-            # Test for each partitions that the extra part space exists
-            for part in range(0, len(partlns)):
-                part_file = os.path.join(self.resultdir, "selftest_img.part%d" % (part + 1))
-                partln = partlns[part].split(":")
-                self.assertEqual(7, len(partln))
-                self.assertRegex(partln[3], r'^[0-9]+B$')
-                part_size = int(partln[3].rstrip("B"))
-                start = int(partln[1].rstrip("B")) / 512
-                length = part_size / 512
-                runCmd("dd if=%s of=%s skip=%d count=%d" %
-                                            (wicimg, part_file, start, length))
-                res = runCmd("dumpe2fs %s -h | grep \"^Block count\"" % part_file)
-                fs_size = int(res.output.split(":")[1].strip()) * 1024
-                self.assertLessEqual(fs_size + 10485760, part_size, "part file: %s" % part_file)
+                self.assertEqual(4, len(partlns))
+
+                # Test for each partitions that the extra part space exists
+                for part in range(0, len(partlns)):
+                    part_file = os.path.join(self.resultdir, "selftest_img.part%d" % (part + 1))
+                    partln = partlns[part].split(":")
+                    self.assertEqual(7, len(partln))
+                    self.assertRegex(partln[3], r'^[0-9]+B$')
+                    part_size = int(partln[3].rstrip("B"))
+                    start = int(partln[1].rstrip("B")) / 512
+                    length = part_size / 512
+                    runCmd("dd if=%s of=%s skip=%d count=%d" %
+                                                (wicimg, part_file, start, length))
+                    res = runCmd("dumpe2fs %s -h | grep \"^Block count\"" % part_file)
+                    fs_size = int(res.output.split(":")[1].strip()) * 1024
+                    self.assertLessEqual(fs_size + 10485760, part_size, "part file: %s" % part_file)
+        finally:
+            os.environ['PATH'] = oldpath
 
     # TODO this test could also work on aarch64
     @skipIfNotArch(['i586', 'i686', 'x86_64'])
