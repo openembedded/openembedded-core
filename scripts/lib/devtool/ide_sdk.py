@@ -268,7 +268,7 @@ class RecipeNotModified:
 
 class RecipeModified:
     """Handling of recipes in the workspace created by devtool modify"""
-    OE_INIT_BUILD_ENV = 'oe-init-build-env'
+    OE_INIT_BUILD_ENV = 'init-build-env'
 
     VALID_BASH_ENV_NAME_CHARS = re.compile(r"^[a-zA-Z0-9_]*$")
 
