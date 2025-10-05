@@ -297,6 +297,7 @@ class RecipeModified:
         self.package_debug_split_style = None
         self.path = None
         self.pn = None
+        self.recipe_id = None
         self.recipe_sysroot = None
         self.recipe_sysroot_native = None
         self.staging_incdir = None
@@ -305,7 +306,6 @@ class RecipeModified:
         self.target_dbgsrc_dir = None
         self.topdir = None
         self.workdir = None
-        self.recipe_id = None
         # replicate bitbake build environment
         self.exported_vars = None
         self.cmd_compile = None
