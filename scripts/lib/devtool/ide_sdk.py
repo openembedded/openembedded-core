@@ -710,14 +710,15 @@ class RecipeModified:
 
     def gen_install_deploy_script(self, args):
         """Generate a script which does install and deploy"""
-        cmd_lines = ['#!/bin/bash']
+        cmd_lines = ['#!/bin/sh']
 
         # . oe-init-build-env $BUILDDIR
-        # Note: Sourcing scripts with arguments requires bash
+        # Using 'set' to pass the build directory to oe-init-build-env in sh syntax
         cmd_lines.append('cd "%s" || { echo "cd %s failed"; exit 1; }' % (
             self.oe_init_dir, self.oe_init_dir))
-        cmd_lines.append('. "%s" "%s" || { echo ". %s %s failed"; exit 1; }' % (
-            self.oe_init_build_env, self.topdir, self.oe_init_build_env, self.topdir))
+        cmd_lines.append('set ' + self.topdir)
+        cmd_lines.append('. "%s" || { echo ". %s %s failed"; exit 1; }' % (
+            self.oe_init_build_env, self.oe_init_build_env, self.topdir))
 
         # bitbake -c install
         cmd_lines.append(
