@@ -286,6 +286,7 @@ class RecipeModified:
         self.b = None
         self.base_libdir = None
         self.bblayers = None
+        self.bitbakepath = None
         self.bpn = None
         self.d = None
         self.debug_build = None
@@ -346,6 +347,7 @@ class RecipeModified:
         self.b = recipe_d.getVar('B')
         self.base_libdir = recipe_d.getVar('base_libdir')
         self.bblayers = recipe_d.getVar('BBLAYERS').split()
+        self.bitbakepath = recipe_d.getVar('BITBAKEPATH')
         self.bpn = recipe_d.getVar('BPN')
         self.cxx = recipe_d.getVar('CXX')
         self.d = recipe_d.getVar('D')
@@ -712,11 +714,11 @@ class RecipeModified:
         """Generate a script which does install and deploy"""
         cmd_lines = ['#!/bin/sh']
 
-        # . oe-init-build-env $BUILDDIR
+        # . oe-init-build-env $BUILDDIR $BITBAKEDIR
         # Using 'set' to pass the build directory to oe-init-build-env in sh syntax
         cmd_lines.append('cd "%s" || { echo "cd %s failed"; exit 1; }' % (
             self.oe_init_dir, self.oe_init_dir))
-        cmd_lines.append('set ' + self.topdir)
+        cmd_lines.append('set %s %s' % (self.topdir, self.bitbakepath.rstrip('/bin')))
         cmd_lines.append('. "%s" || { echo ". %s %s failed"; exit 1; }' % (
             self.oe_init_build_env, self.oe_init_build_env, self.topdir))
 
