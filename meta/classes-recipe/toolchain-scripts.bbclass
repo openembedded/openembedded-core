@@ -87,11 +87,12 @@ toolchain_create_sdk_env_script () {
 # Caller must ensure CONFIG_SITE is setup
 toolchain_create_tree_env_script () {
 	script=${B}/environment-setup-${REAL_MULTIMACH_TARGET_SYS}
+	bitbakedir=$(readlink -f ${BITBAKEPATH}/..)
 	rm -f $script
 	touch $script
 	echo 'standalone_sysroot_target="${STAGING_DIR}/${MACHINE}"' >> $script
 	echo 'standalone_sysroot_native="${STAGING_DIR}/${BUILD_ARCH}"' >> $script
-	echo 'orig=`pwd`; cd ${COREBASE}; . ./oe-init-build-env ${TOPDIR}; cd $orig' >> $script
+	echo "orig=`pwd`; cd ${COREBASE}; . ./oe-init-build-env ${TOPDIR} $bitbakedir; cd \$orig" >> $script
 	echo 'export PATH=$standalone_sysroot_native/${bindir_native}:$standalone_sysroot_native/${bindir_native}/${TARGET_SYS}:$PATH' >> $script
 	echo 'export PKG_CONFIG_SYSROOT_DIR=$standalone_sysroot_target' >> $script
 	echo 'export PKG_CONFIG_PATH=$standalone_sysroot_target'"$libdir"'/pkgconfig:$standalone_sysroot_target'"$prefix"'/share/pkgconfig' >> $script
