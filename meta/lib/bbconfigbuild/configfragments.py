@@ -115,7 +115,7 @@ class ConfigFragmentsPlugin(LayerPlugin):
     def create_conf(self, confpath):
         if not os.path.exists(confpath):
             with open(confpath, 'w') as f:
-                f.write('')
+                f.write('# Automated config file controlled by tools\n')
         with open(confpath, 'r') as f:
             lines = f.read()
         if "OE_FRAGMENTS += " not in lines:
@@ -184,7 +184,7 @@ class ConfigFragmentsPlugin(LayerPlugin):
             print("All fragments removed from {}.".format(args.confpath))
 
     def register_commands(self, sp):
-        default_confpath = os.path.join(os.environ["BBPATH"], "conf/auto.conf")
+        default_confpath = os.path.join(os.environ["BBPATH"], "conf/toolcfg.conf")
 
         parser_list_fragments = self.add_command(sp, 'list-fragments', self.do_list_fragments, parserecipes=False)
         parser_list_fragments.add_argument("--confpath", default=default_confpath, help='Configuration file which contains a list of enabled fragments (default is {}).'.format(default_confpath))
