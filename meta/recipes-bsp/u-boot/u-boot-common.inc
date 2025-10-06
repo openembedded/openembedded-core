@@ -12,15 +12,9 @@ PE = "1"
 
 # We use the revision in order to avoid having to fetch it from the
 # repo during parse
-SRCREV = "e37de002fac3895e8d0b60ae2015e17bb33e2b5b"
+SRCREV = "e50b1e8715011def8aff1588081a2649a2c6cd47"
 
-SRC_URI = "\
-    git://source.denx.de/u-boot/u-boot.git;protocol=https;branch=master;tag=v${PV} \
-    file://0001-Makefile-add-dependency-from-lib-to-arch-ARCH-lib.patch \
-    file://0001-nxp-Prepare-macros-for-KVM-changes.patch \
-    file://0002-arm-io.h-Fix-io-accessors-for-KVM.patch \
-    file://0003-qemu-arm-Enable-virtualizable-IO-accessors.patch \
-"
+SRC_URI = "git://source.denx.de/u-boot/u-boot.git;protocol=https;branch=master;tag=v${PV}"
 
 SRC_URI_RISCV = "\
     file://u-boot-riscv-isa_clear.cfg \
