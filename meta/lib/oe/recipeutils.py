@@ -1073,7 +1073,7 @@ def get_recipe_upstream_version(rd):
             upversion = None
             revision = None
             try:
-                revision = ud.method.latest_revision(ud, rd, 'default')
+                revision = ud.method.latest_revision(ud, rd, ud.name)
                 upversion = pv
                 if revision != ud.revision:
                     upversion = upversion + "-new-commits-available"
