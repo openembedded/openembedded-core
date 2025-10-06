@@ -884,7 +884,7 @@ to your build configuration.
         self.set('QB_MEM', qb_mem)
 
         mach = self.get('MACHINE')
-        if not mach.startswith(('qemumips', 'qemux86', 'qemuloongarch64')):
+        if not mach.startswith(('qemumips', 'qemux86', 'qemuloongarch64')) and self.get('QB_DTB') == "":
             self.kernel_cmdline_script += ' mem=%s' % self.get('QB_MEM').replace('-m','').strip() + 'M'
 
         self.qemu_opt_script += ' %s' % self.get('QB_MEM')
