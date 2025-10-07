@@ -62,6 +62,8 @@ SRC_URI = "\
     file://0039-Only-build-c-index-test-when-clang-tests-are-include.patch \
     file://0001-Install-lldb-tblgen.patch \
     file://0001-dont-expose-LLVM_HAVE_OPT_VIEWER_MODULES.patch \
+    file://0001-clang-Support-building-native-tools-when-cross-compi.patch \
+    file://clang-no-tblgen.patch \
 "
 # Fallback to no-PIE if not set
 GCCPIE ??= ""

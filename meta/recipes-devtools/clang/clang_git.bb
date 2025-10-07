@@ -19,81 +19,37 @@ require common-source.inc
 
 BPN = "clang"
 
-CVE_PRODUCT += "llvm:clang"
-
-INHIBIT_DEFAULT_DEPS:class-native = "1"
+CVE_PRODUCT = "llvm:clang"
 
 LDFLAGS:append:class-target:riscv32 = " -Wl,--no-as-needed -latomic -Wl,--as-needed"
 LDFLAGS:append:class-target:mips = " -Wl,--no-as-needed -latomic -Wl,--as-needed"
 
 inherit cmake pkgconfig multilib_header python3-dir
 
-PACKAGECONFIG_CLANG_COMMON = "build-id eh libedit rtti shared-libs libclang-python \
-                              ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', 'lld', '', d)} \
-                              ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcplusplus libomp unwindlib', '', d)} \
-                              "
-
-PACKAGECONFIG ??= "${PACKAGECONFIG_CLANG_COMMON} \
+PACKAGECONFIG ??= "build-id clangd libclang-python \
                    ${@bb.utils.filter('DISTRO_FEATURES', 'lto thin-lto', d)} \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', 'lld', '', d)} \
+                   ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcplusplus libomp unwindlib', '', d)} \
                    "
-PACKAGECONFIG:class-native = "clangd \
-                              ${PACKAGECONFIG_CLANG_COMMON} \
-                              "
-PACKAGECONFIG:class-nativesdk = "clangd \
-                                 ${PACKAGECONFIG_CLANG_COMMON} \
-                                 ${@bb.utils.filter('DISTRO_FEATURES', 'lto thin-lto', d)} \
-                                 "
+PACKAGECONFIG:remove:class-native = "lto thin-lto"
 
 PACKAGECONFIG[build-id] = "-DENABLE_LINKER_BUILD_ID=ON,-DENABLE_LINKER_BUILD_ID=OFF,,"
 PACKAGECONFIG[clangd] = "-DCLANG_ENABLE_CLANGD=ON,-DCLANG_ENABLE_CLANGD=OFF,,"
-
 # Activate to build the dexp tool in clangd
 # Disabled by default for -native since it is known to trigger compiler failure on Debian 11
 # See: https://bugzilla.yoctoproject.org/show_bug.cgi?id=15803
 PACKAGECONFIG[clangd-dexp] = "-DCLANGD_BUILD_DEXP=ON,-DCLANGD_BUILD_DEXP=OFF,,"
-
 PACKAGECONFIG[compiler-rt] = "-DCLANG_DEFAULT_RTLIB=compiler-rt,,"
-PACKAGECONFIG[eh] = "-DLLVM_ENABLE_EH=ON,-DLLVM_ENABLE_EH=OFF,,"
-PACKAGECONFIG[exegesis] = "-DLLVM_TOOL_LLVM_EXEGESIS_BUILD=ON,-DLLVM_TOOL_LLVM_EXEGESIS_BUILD=OFF"
 PACKAGECONFIG[libcplusplus] = "-DCLANG_DEFAULT_CXX_STDLIB=libc++,,"
-PACKAGECONFIG[libedit] = "-DLLVM_ENABLE_LIBEDIT=ON,-DLLVM_ENABLE_LIBEDIT=OFF,libedit libedit-native"
 PACKAGECONFIG[libomp] = "-DCLANG_DEFAULT_OPENMP_RUNTIME=libomp,,"
 PACKAGECONFIG[lld] = "-DCLANG_DEFAULT_LINKER=lld,,,"
 PACKAGECONFIG[lto] = "-DLLVM_ENABLE_LTO=Full -DLLVM_BINUTILS_INCDIR=${STAGING_INCDIR},,binutils,"
-PACKAGECONFIG[opt-viewer] = "-DLLVM_TOOL_OPT_VIEWER_BUILD=ON,-DLLVM_TOOL_OPT_VIEWER_BUILD=OFF, \
-                             python3-pyyaml-native python3-pygments-native python3-pyyaml python3-pygments, \
-                             python3-pyyaml python3-pygments,"
-PACKAGECONFIG[pfm] = "-DLLVM_ENABLE_LIBPFM=ON,-DLLVM_ENABLE_LIBPFM=OFF,libpfm,"
-PACKAGECONFIG[rtti] = "-DLLVM_ENABLE_RTTI=ON,-DLLVM_ENABLE_RTTI=OFF,,"
-PACKAGECONFIG[shared-libs] = "-DLLVM_BUILD_LLVM_DYLIB=ON -DLLVM_LINK_LLVM_DYLIB=ON,,,"
-PACKAGECONFIG[split-dwarf] = "-DLLVM_USE_SPLIT_DWARF=ON,-DLLVM_USE_SPLIT_DWARF=OFF,,"
 PACKAGECONFIG[thin-lto] = "-DLLVM_ENABLE_LTO=Thin -DLLVM_BINUTILS_INCDIR=${STAGING_INCDIR},,binutils,"
 PACKAGECONFIG[unwindlib] = "-DCLANG_DEFAULT_UNWINDLIB=libunwind,-DCLANG_DEFAULT_UNWINDLIB=libgcc,,"
 PACKAGECONFIG[libclang-python] = "-DCLANG_PYTHON_BINDINGS_VERSIONS=${PYTHON_BASEVERSION},,"
 
-OECMAKE_SOURCEPATH = "${S}/llvm"
+OECMAKE_SOURCEPATH = "${S}/clang"
 
-# By default we build all the supported CPU architectures, and the GPU targets
-# if the opencl, opengl or vulkan DISTRO_FEATURES are enabled.
-#
-# For target builds we default to building that specific architecture, BPF, and the GPU targets if required.
-#
-# The available target list can be seen in the source code
-# in the LLVM_ALL_TARGETS assignment:
-# https://github.com/llvm/llvm-project/blob/main/llvm/CMakeLists.txt
-LLVM_TARGETS_GPU ?= "${@bb.utils.contains_any('DISTRO_FEATURES', 'opencl opengl vulkan', 'AMDGPU;NVPTX;SPIRV', '', d)}"
-LLVM_TARGETS_TO_BUILD ?= "AArch64;ARM;BPF;Mips;PowerPC;RISCV;X86;LoongArch;${LLVM_TARGETS_GPU}"
-LLVM_TARGETS_TO_BUILD:class-target ?= "${@get_clang_host_arch(bb, d)};BPF;${LLVM_TARGETS_GPU}"
-
-LLVM_EXPERIMENTAL_TARGETS_TO_BUILD ?= ""
-
-HF = ""
-HF:class-target = "${@ bb.utils.contains('TUNE_CCARGS_MFLOAT', 'hard', 'hf', '', d)}"
-HF[vardepvalue] = "${HF}"
-
-# Ensure that LLVM_PROJECTS does not contain compiler runtime components e.g. libcxx etc
-# they are enabled via LLVM_ENABLE_RUNTIMES
-LLVM_PROJECTS ?= "clang;clang-tools-extra"
 
 # linux hosts (.so) on Windows .pyd
 SOLIBSDEV:mingw32 = ".pyd"
@@ -102,89 +58,43 @@ SOLIBSDEV:mingw32 = ".pyd"
 
 EXTRA_OECMAKE += "-DLLVM_ENABLE_ASSERTIONS=OFF \
                   -DLLVM_APPEND_VC_REV=OFF \
-                  -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=OFF \
-                  -DLLVM_ENABLE_EXPENSIVE_CHECKS=OFF \
                   -DLLVM_ENABLE_PIC=ON \
                   -DCLANG_DEFAULT_PIE_ON_LINUX=ON \
-                  -DLLVM_BINDINGS_LIST='' \
-                  -DLLVM_ENABLE_FFI=ON \
-                  -DLLVM_ENABLE_ZSTD=ON \
                   -DFFI_INCLUDE_DIR=$(pkg-config --variable=includedir libffi) \
                   -DLLVM_BUILD_EXTERNAL_COMPILER_RT=ON \
                   -DCMAKE_SYSTEM_NAME=Linux \
                   -DCMAKE_BUILD_TYPE=MinSizeRel \
-                  -DLLVM_ENABLE_PROJECTS='${LLVM_PROJECTS}' \
-                  -DLLVM_BINUTILS_INCDIR=${STAGING_INCDIR} \
                   -DLLVM_VERSION_SUFFIX='${VER_SUFFIX}' \
-                  -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON \
-                  -DLLVM_TARGETS_TO_BUILD='${LLVM_TARGETS_TO_BUILD}' \
-                  -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD='${LLVM_EXPERIMENTAL_TARGETS_TO_BUILD}' \
+                  -DLLVM_CMAKE_DIR=${STAGING_LIBDIR}/cmake/llvm \
                   -DLLVM_NATIVE_TOOL_DIR=${STAGING_BINDIR_NATIVE} \
-                  -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
                   -DLLVM_TABLEGEN_EXE=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
+                  -DCLANG_TABLEGEN_EXE=${STAGING_BINDIR_NATIVE}/clang-tblgen \
                   -DLLVM_INCLUDE_TESTS=OFF \
                   -DCROSS_TOOLCHAIN_FLAGS_NATIVE='-DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain-native.cmake' \
-"
-
-EXTRA_OECMAKE:append:class-nativesdk = "\
-                  -DCMAKE_RANLIB=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-ranlib \
-                  -DCMAKE_AR=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-ar \
-                  -DCMAKE_NM=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-nm \
-                  -DCMAKE_STRIP=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-strip \
-"
-EXTRA_OECMAKE:append:class-target = "\
-                  -DCMAKE_RANLIB=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-ranlib \
-                  -DCMAKE_AR=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-ar \
-                  -DCMAKE_NM=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-nm \
-                  -DCMAKE_STRIP=${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}llvm-strip \
-                  -DLLVM_TARGET_ARCH=${HOST_ARCH} \
-                  -DLLVM_DEFAULT_TARGET_TRIPLE=${TARGET_SYS}${HF} \
-                  -DLLVM_HOST_TRIPLE=${TARGET_SYS}${HF} \
                   -DLLVM_LIBDIR_SUFFIX=${LLVM_LIBDIR_SUFFIX} \
+                  -DCMAKE_AR=${STAGING_BINDIR_NATIVE}/llvm-ar \
+                  -DCMAKE_NM=${STAGING_BINDIR_NATIVE}/llvm-nm \
+                  -DCMAKE_RANLIB=${STAGING_BINDIR_NATIVE}/llvm-ranlib \
+                  -DCMAKE_STRIP=${STAGING_BINDIR_NATIVE}/llvm-strip \
 "
 
-DEPENDS = "binutils zlib zstd libffi libxml2 libxml2-native llvm-tblgen-native"
-DEPENDS:append:class-nativesdk = " clang-crosssdk-${SDK_SYS} virtual/nativesdk-cross-binutils"
-DEPENDS:append:class-target = " ${MLPREFIX}clang-cross-${TARGET_ARCH} ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcxx', '', d)}"
+DEPENDS = "llvm-tblgen-native llvm-native llvm binutils zlib zstd libffi libxml2 libxml2-native"
+DEPENDS:append:class-target = " ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', 'compiler-rt libcxx', '', d)}"
 
 RDEPENDS:${PN}:append:class-target = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', ' lld', '', d)}"
 RRECOMMENDS:${PN}:append:class-target = "binutils ${@bb.utils.contains('TC_CXX_RUNTIME', 'llvm', ' libcxx-dev', '', d)}"
 
-# patch out build host paths for reproducibility
-reproducible_build_variables() {
-    sed -i -e "s,${DEBUG_PREFIX_MAP},,g" \
-        -e "s,--sysroot=${RECIPE_SYSROOT},,g" \
-        -e "s,${STAGING_DIR_HOST},,g" \
-        -e "s,${S}/llvm,,g"  \
-        -e "s,${B},,g" \
-        ${B}/tools/llvm-config/BuildVariables.inc
-}
-
-do_configure:append:class-target() {
-    reproducible_build_variables
-}
-
-do_configure:append:class-nativesdk() {
-    reproducible_build_variables
+do_configure:prepend() {
+  # Link clang-tools-extra into the clang tree as clang will look for it here
+  # if it's doing a standalone build.
+  ln -srf ${S}/clang-tools-extra ${S}/clang/tools/extra
 }
 
 do_install:append() {
-    oe_multilib_header llvm/Config/llvm-config.h
     oe_multilib_header clang/Config/config.h
 }
 
 do_install:append:class-target () {
-    # Allow bin path to change based on YOCTO_ALTERNATE_EXE_PATH
-    sed -i 's;${_IMPORT_PREFIX}/bin;${_IMPORT_PREFIX_BIN};g' ${D}${libdir}/cmake/llvm/LLVMExports-*.cmake
-
-    # Insert function to populate Import Variables
-    sed -i "4i\
-if(DEFINED ENV{YOCTO_ALTERNATE_EXE_PATH})\n\
-  execute_process(COMMAND \"llvm-config\" \"--bindir\" OUTPUT_VARIABLE _IMPORT_PREFIX_BIN OUTPUT_STRIP_TRAILING_WHITESPACE)\n\
-else()\n\
-  set(_IMPORT_PREFIX_BIN \"\${_IMPORT_PREFIX}/bin\")\n\
-endif()\n" ${D}${libdir}/cmake/llvm/LLVMExports-*.cmake
-
     if [ -n "${LLVM_LIBDIR_SUFFIX}" ]; then
         mkdir -p ${D}${nonarch_libdir}
         mv ${D}${libdir}/clang ${D}${nonarch_libdir}/clang
@@ -195,53 +105,16 @@ endif()\n" ${D}${libdir}/cmake/llvm/LLVMExports-*.cmake
         llvm-addr2line llvm-dwp llvm-size llvm-strings llvm-cov; do
         ln -sf $t ${D}${bindir}/${TARGET_PREFIX}$t
     done
-
-    # reproducibility
-    sed -i -e 's,${B},,g' ${D}${libdir}/cmake/llvm/LLVMConfig.cmake
-}
-
-do_install:append:class-native () {
-    if ${@bb.utils.contains('PACKAGECONFIG', 'clangd', 'true', 'false', d)}; then
-        install -Dm 0755 ${B}${BINPATHPREFIX}/bin/clangd-indexer ${D}${bindir}/clangd-indexer
-    fi
-
-    for f in `find ${D}${bindir} -executable -type f -not -type l`; do
-        test -n "`file -b $f|grep -i ELF`" && ${STRIP} $f
-        echo "stripped $f"
-    done
-    ln -sf llvm-config ${D}${bindir}/llvm-config${PV}
-
-    # These are provided by llvm-tblgen-native
-    rm ${D}${bindir}/*-tblgen
 }
 
 do_install:append:class-nativesdk () {
-    if [ -e ${D}${libdir}/cmake/llvm/LLVMConfig.cmake ] ; then
-        sed -i -e "s|${B}/./bin/||g" ${D}${libdir}/cmake/llvm/LLVMConfig.cmake
-    fi
-    if ${@bb.utils.contains('PACKAGECONFIG', 'clangd', 'true', 'false', d)}; then
-        install -Dm 0755 ${B}${BINPATHPREFIX}/bin/clangd-indexer ${D}${bindir}/clangd-indexer
-    fi
-
-    for f in `find ${D}${bindir} -executable -type f -not -type l`; do
-        test -n "`file -b $f|grep -i ELF`" && ${STRIP} $f
-    done
-
-    rm -rf ${D}${datadir}/llvm/cmake
-    rm -rf ${D}${datadir}/llvm
-
     #reproducibility
     if [ -e ${D}${libdir}/cmake/llvm/LLVMConfig.cmake ] ; then
         sed -i -e 's,${B},,g' ${D}${libdir}/cmake/llvm/LLVMConfig.cmake
     fi
 }
 
-PROVIDES:append:class-native = " llvm-native"
-PROVIDES:append:class-target = " llvm"
-PROVIDES:append:class-nativesdk = " nativesdk-llvm"
-
-PACKAGES =+ "${PN}-libllvm ${PN}-libclang-python ${PN}-libclang-cpp ${PN}-tidy ${PN}-format ${PN}-tools \
-             libclang llvm-linker-tools"
+PACKAGES =+ "${PN}-libclang-python ${PN}-libclang-cpp ${PN}-tidy ${PN}-format ${PN}-tools libclang"
 
 BBCLASSEXTEND = "native nativesdk"
 
@@ -258,8 +131,6 @@ RDEPENDS:${PN}-tools += "\
 "
 
 RRECOMMENDS:${PN}-tidy += "${PN}-tools"
-
-FILES:llvm-linker-tools = "${libdir}/LLVMgold* ${libdir}/libLTO.so.* ${libdir}/LLVMPolly*"
 
 FILES:${PN}-libclang-cpp = "${libdir}/libclang-cpp.so.*"
 
@@ -323,12 +194,6 @@ FILES:${PN} += "\
   ${nonarch_libdir}/${BPN}/*/include/ \
 "
 
-FILES:${PN}-libllvm =+ "\
-  ${libdir}/libLLVM.so.${MAJOR_VER}.${MINOR_VER} \
-  ${libdir}/libLLVM-${MAJOR_VER}.so \
-  ${libdir}/libRemarks.so.* \
-"
-
 FILES:libclang = "\
   ${libdir}/libclang.so.* \
 "
@@ -349,7 +214,6 @@ FILES:${PN}:remove = "${libdir}/${BPN}/*"
 
 INSANE_SKIP:${PN} += "already-stripped"
 #INSANE_SKIP:${PN}-dev += "dev-elf"
-INSANE_SKIP:${PN}-libllvm = "dev-so"
 
 #Avoid SSTATE_SCAN_COMMAND running sed over llvm-config.
 SSTATE_SCAN_FILES:remove = "*-config"
@@ -363,15 +227,17 @@ SYSROOT_PREPROCESS_FUNCS:append:class-target = " clang_sysroot_preprocess"
 SYSROOT_PREPROCESS_FUNCS:append:class-nativesdk = " clang_sysroot_preprocess"
 
 clang_sysroot_preprocess() {
-	install -d ${SYSROOT_DESTDIR}${bindir_crossscripts}/
-	install -m 0755 ${S}/llvm/tools/llvm-config/llvm-config ${SYSROOT_DESTDIR}${bindir_crossscripts}/
-	ln -sf llvm-config ${SYSROOT_DESTDIR}${bindir_crossscripts}/llvm-config${PV}
+	install -d ${SYSROOT_DESTDIR}${bindir}/
 
+	# clang and clang-tools
 	binaries="diagtool clang-${MAJOR_VER} clang-format clang-offload-packager
-	                clang-offload-bundler clang-scan-deps clang-repl
-	                clang-refactor clang-check clang-extdef-mapping clang-apply-replacements
-	                clang-reorder-fields clang-tidy clang-change-namespace clang-doc clang-include-fixer
-	                find-all-symbols clang-move clang-query pp-trace modularize"
+	          clang-offload-bundler clang-scan-deps clang-repl
+	          clang-refactor clang-check clang-extdef-mapping"
+
+	# clang-extra-tools
+	binaries="${binaries} clang-apply-replacements clang-reorder-fields
+	          clang-tidy clang-change-namespace clang-doc clang-include-fixer
+	          find-all-symbols clang-move clang-query pp-trace modularize"
 
 	if ${@bb.utils.contains('PACKAGECONFIG', 'clangd', 'true', 'false', d)}; then
 	        binaries="${binaries} clangd"
