@@ -528,6 +528,8 @@ do_uboot_assemble_fitimage() {
 				fi
 			done
 
+			builddir="${config}-${type}"
+
 			for binary in ${UBOOT_BINARIES}; do
 				k=$(expr $k + 1);
 				if [ $k -eq $i ]; then
@@ -535,7 +537,7 @@ do_uboot_assemble_fitimage() {
 				fi
 			done
 
-			cd ${B}/${config}
+			cd ${B}/${builddir}
 			uboot_assemble_fitimage_helper ${type} ${binary}
 		done
 	else
@@ -584,7 +586,8 @@ do_deploy:prepend() {
 			for type in ${UBOOT_CONFIG}; do
 				j=$(expr $j + 1);
 				if [ $j -eq $i ]; then
-					cd ${B}/${config}
+					builddir="${config}-${type}"
+					cd ${B}/${builddir}
 					deploy_helper ${type}
 				fi
 			done

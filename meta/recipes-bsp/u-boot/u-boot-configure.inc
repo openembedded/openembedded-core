@@ -33,6 +33,8 @@ uboot_configure_config () {
     config=$1
     type=$2
 
+    builddir="${config}-${type}"
+
     unset k
     IFS="?"
     uboot_config_make_opts="${UBOOT_CONFIG_MAKE_OPTS}"
@@ -45,10 +47,10 @@ uboot_configure_config () {
     unset IFS
     unset k
 
-    oe_runmake -C ${S} O=${B}/${config} ${config_make_opts} ${UBOOT_MAKE_OPTS} ${config}
+    oe_runmake -C ${S} O=${B}/${builddir} ${config_make_opts} ${UBOOT_MAKE_OPTS} ${config}
     if [ -n "${@' '.join(find_cfgs(d))}" ]; then
-        merge_config.sh -m -O ${B}/${config} ${B}/${config}/.config ${@" ".join(find_cfgs(d))}
-        oe_runmake -C ${S} O=${B}/${config} oldconfig
+        merge_config.sh -m -O ${B}/${builddir} ${B}/${builddir}/.config ${@" ".join(find_cfgs(d))}
+        oe_runmake -C ${S} O=${B}/${builddir} oldconfig
     fi
 }
 
