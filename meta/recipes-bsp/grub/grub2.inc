@@ -70,6 +70,8 @@ CVE_CHECK_IGNORE += "CVE-2019-14865"
 CVE_CHECK_IGNORE += "CVE-2021-46705"
 # not-applicable-platform: Applies only to RHEL/Fedora
 CVE_CHECK_IGNORE += "CVE-2024-1048 CVE-2023-4001"
+# not-applicable-platform: Applies only to Ubuntu
+CVE_CHECK_IGNORE += "CVE-2024-2312"
 
 DEPENDS = "flex-native bison-native gettext-native"
 
