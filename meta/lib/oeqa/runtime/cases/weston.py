@@ -16,7 +16,7 @@ class WestonTest(OERuntimeTestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.tc.target.run('rm %s' % cls.weston_log_file)
+        cls.tc.target.run('rm %s' % cls.weston_log_file, ignore_ssh_fails=True)
 
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     @OEHasPackage(['weston'])

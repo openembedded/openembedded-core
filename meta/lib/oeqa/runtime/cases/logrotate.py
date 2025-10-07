@@ -15,12 +15,13 @@ class LogrotateTest(OERuntimeTestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.tc.target.run('cp /etc/logrotate.d/wtmp $HOME/wtmp.oeqabak')
+        cls.tc.target.run('cp /etc/logrotate.d/wtmp $HOME/wtmp.oeqabak',
+                          ignore_ssh_fails=True)
 
     @classmethod
     def tearDownClass(cls):
-        cls.tc.target.run('mv -f $HOME/wtmp.oeqabak /etc/logrotate.d/wtmp && rm -rf /var/log//logrotate_dir')
-        cls.tc.target.run('rm -rf /var/log/logrotate_testfile && rm -rf /etc/logrotate.d/logrotate_testfile')
+        cls.tc.target.run('mv -f $HOME/wtmp.oeqabak /etc/logrotate.d/wtmp && rm -rf /var/log//logrotate_dir', ignore_ssh_fails=True)
+        cls.tc.target.run('rm -rf /var/log/logrotate_testfile && rm -rf /etc/logrotate.d/logrotate_testfile', ignore_ssh_fails=True)
 
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     @OEHasPackage(['logrotate'])
