@@ -37,7 +37,7 @@ class MetaIDE(OESelftestTestCase):
 
     def test_meta_ide_can_compile_c_program(self):
         runCmd('cp %s/test.c %s' % (self.tc.files_dir, self.tmpdir_metaideQA))
-        runCmd("cd %s; . %s; $CC test.c -lm" % (self.tmpdir_metaideQA, self.environment_script_path))
+        runCmd(". %s; cd %s; $CC test.c -lm" % (self.environment_script_path, self.tmpdir_metaideQA))
         compiled_file = '%s/a.out' % self.tmpdir_metaideQA
         self.assertExists(compiled_file)
 
