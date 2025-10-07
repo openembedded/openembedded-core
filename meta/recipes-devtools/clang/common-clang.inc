@@ -44,4 +44,8 @@ def get_clang_host_arch(bb, d):
 def get_clang_target_arch(bb, d):
     return get_clang_arch(bb, d, 'TARGET_ARCH')
 
+# Don't put build-time RPATHs in the binaries, whilst they'll be stripped on
+# install they cause non-deterministic binaries.
+EXTRA_OECMAKE += "-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON"
+
 require common.inc
