@@ -1744,11 +1744,7 @@ to your build configuration.
                 cmd = 'MACHINE=%s bitbake -e %s %s' % (mach, multiconfig, target)
             else:
                 cmd = 'bitbake -e %s %s' % (multiconfig, target)
-            try:
-                return subprocess.check_output(cmd, shell=True).decode('utf-8')
-            except subprocess.CalledProcessError as err:
-                logger.warning("Couldn't run '%s' to gather environment information, giving up with 'bitbake -e':\n%s" % (cmd, err.output.decode('utf-8')))
-                return ''
+            return subprocess.check_output(cmd, shell=True).decode('utf-8')
 
 
     def load_bitbake_env(self, mach=None, target=None):
