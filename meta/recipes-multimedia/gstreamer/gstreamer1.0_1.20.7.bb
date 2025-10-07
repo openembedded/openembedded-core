@@ -88,4 +88,7 @@ CVE_CHECK_IGNORE += " \
     CVE-2024-47777 CVE-2024-47778 CVE-2024-47834 CVE-2025-47183 CVE-2025-47219 \
 "
 
+# not-applicable-platform: affects installation packages for non Linux OSes
+CVE_CHECK_IGNORE += "CVE-2025-2759"
+
 PTEST_BUILD_HOST_FILES = ""
