@@ -33,7 +33,19 @@ uboot_configure_config () {
     config=$1
     type=$2
 
-    oe_runmake -C ${S} O=${B}/${config} ${config}
+    unset k
+    IFS="?"
+    uboot_config_make_opts="${UBOOT_CONFIG_MAKE_OPTS}"
+    for config_make_opts in $uboot_config_make_opts; do
+        k=$(expr $k + 1);
+        if [ $k -eq $i ]; then
+            break
+        fi
+    done
+    unset IFS
+    unset k
+
+    oe_runmake -C ${S} O=${B}/${config} ${config_make_opts} ${UBOOT_MAKE_OPTS} ${config}
     if [ -n "${@' '.join(find_cfgs(d))}" ]; then
         merge_config.sh -m -O ${B}/${config} ${B}/${config}/.config ${@" ".join(find_cfgs(d))}
         oe_runmake -C ${S} O=${B}/${config} oldconfig
@@ -42,9 +54,9 @@ uboot_configure_config () {
 
 uboot_configure () {
     if [ -n "${UBOOT_MACHINE}" ]; then
-        oe_runmake -C ${S} O=${B} ${UBOOT_MACHINE}
+        oe_runmake -C ${S} O=${B} ${UBOOT_MAKE_OPTS} ${UBOOT_MACHINE}
     else
-        oe_runmake -C ${S} O=${B} oldconfig
+        oe_runmake -C ${S} O=${B} ${UBOOT_MAKE_OPTS} oldconfig
     fi
     merge_config.sh -m .config ${@" ".join(find_cfgs(d))}
     cml1_do_configure

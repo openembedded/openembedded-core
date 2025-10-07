@@ -35,6 +35,7 @@ UBOOT_BINARYNAME ?= "${@os.path.splitext(d.getVar("UBOOT_BINARY"))[0]}"
 UBOOT_IMAGE ?= "${UBOOT_BINARYNAME}-${MACHINE}-${UBOOT_VERSION}.${UBOOT_SUFFIX}"
 UBOOT_SYMLINK ?= "${UBOOT_BINARYNAME}-${MACHINE}.${UBOOT_SUFFIX}"
 UBOOT_MAKE_TARGET ?= "all"
+UBOOT_MAKE_OPTS ?= ""
 
 # Output the ELF generated. Some platforms can use the ELF file and directly
 # load it (JTAG booting, QEMU) additionally the ELF can be used for debugging
@@ -103,6 +104,7 @@ python () {
     ubootconfigflags = d.getVarFlags('UBOOT_CONFIG')
     ubootbinary = d.getVar('UBOOT_BINARY')
     ubootbinaries = d.getVar('UBOOT_BINARIES')
+    ubootconfigmakeopts = d.getVar('UBOOT_CONFIG_MAKE_OPTS')
     # The "doc" varflag is special, we don't want to see it here
     ubootconfigflags.pop('doc', None)
     ubootconfig = (d.getVar('UBOOT_CONFIG') or "").split()
@@ -120,6 +122,9 @@ python () {
     if ubootconfigflags and ubootbinaries:
         raise bb.parse.SkipRecipe("You cannot use UBOOT_BINARIES as it is internal to uboot_config.bbclass.")
 
+    if ubootconfigflags and ubootconfigmakeopts:
+        raise bb.parse.SkipRecipe("You cannot use UBOOT_CONFIG_MAKE_OPTS as it is internal to uboot_config.bbclass.")
+
     if len(ubootconfig) > 0:
         for config in ubootconfig:
             found = False
@@ -127,8 +132,8 @@ python () {
                 if config == f: 
                     found = True
                     items = v.split(',')
-                    if items[0] and len(items) > 3:
-                        raise bb.parse.SkipRecipe('Only config,images,binary can be specified!')
+                    if items[0] and len(items) > 4:
+                        raise bb.parse.SkipRecipe('Only config,images,binary,make_opts can be specified!')
                     d.appendVar('UBOOT_MACHINE', ' ' + items[0])
                     # IMAGE_FSTYPES appending
                     if len(items) > 1 and items[1]:
@@ -140,6 +145,12 @@ python () {
                     else:
                         bb.debug(1, "Appending '%s' to UBOOT_BINARIES." % ubootbinary)
                         d.appendVar('UBOOT_BINARIES', ' ' + ubootbinary)
+                    if len(items) > 3 and items[3]:
+                        bb.debug(1, "Appending '%s' to UBOOT_CONFIG_MAKE_OPTS." % items[3])
+                        d.appendVar('UBOOT_CONFIG_MAKE_OPTS', items[3] + " ? ")
+                    else:
+                        bb.debug(1, "Appending '%s' to UBOOT_CONFIG_MAKE_OPTS." % "")
+                        d.appendVar('UBOOT_CONFIG_MAKE_OPTS', " ? ")
                     break
 
             if not found:
