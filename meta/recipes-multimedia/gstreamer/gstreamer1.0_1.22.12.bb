@@ -96,4 +96,6 @@ CVE_STATUS_PLUGINS_GOOD = " \
 "
 CVE_STATUS_PLUGINS_GOOD[status] = "cpe-incorrect: this is patched in gstreamer1.0-plugins-good"
 
+CVE_STATUS[CVE-2025-2759] = "not-applicable-platform: affects installation packages for non Linux OSes"
+
 PTEST_BUILD_HOST_FILES = ""
