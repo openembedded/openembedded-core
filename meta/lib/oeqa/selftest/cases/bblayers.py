@@ -157,7 +157,9 @@ class BitbakeLayers(OESelftestTestCase):
         with open(jsonfile) as f:
             data = json.load(f)
         for s in data['sources']:
-            if s == 'meta-yocto':
+            if s == 'poky':
+                data['sources'][s]['git-remote']['rev'] = '5200799866b92259e855051112520006e1aaaac0'
+            elif s == 'meta-yocto':
                 data['sources'][s]['git-remote']['rev'] = '913bd8ba4dd1d5d2a38261bde985b64a36e36281'
             else:
                 data['sources'][s]['git-remote']['rev'] = '744a2277844ec9a384a9ca7dae2a634d5a0d3590'
