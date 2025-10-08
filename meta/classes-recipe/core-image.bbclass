@@ -11,20 +11,20 @@
 #
 # Available IMAGE_FEATURES:
 #
+# - eclipse-debug       - Eclipse remote debugging support
+# - hwcodecs            - Install hardware acceleration codecs
+# - nfs-client          - NFS client
+# - nfs-server          - NFS server
+# - ssh-server-dropbear - SSH server (dropbear)
+# - ssh-server-openssh  - SSH server (openssh)
+# - tools-debug         - debugging tools
+# - tools-profile       - profiling tools
+# - tools-sdk           - SDK (C/C++ compiler, autotools, etc.)
+# - tools-testapps      - tools usable to make some device tests
 # - weston              - Weston Wayland compositor
 # - x11                 - X server
 # - x11-base            - X server with minimal environment
 # - x11-sato            - OpenedHand Sato environment
-# - tools-debug         - debugging tools
-# - eclipse-debug       - Eclipse remote debugging support
-# - tools-profile       - profiling tools
-# - tools-testapps      - tools usable to make some device tests
-# - tools-sdk           - SDK (C/C++ compiler, autotools, etc.)
-# - nfs-server          - NFS server
-# - nfs-client          - NFS client
-# - ssh-server-dropbear - SSH server (dropbear)
-# - ssh-server-openssh  - SSH server (openssh)
-# - hwcodecs            - Install hardware acceleration codecs
 # - package-management  - installs package management tools and preserves the package manager database
 # - serial-autologin-root - with 'empty-root-password': autologin 'root' on the serial console
 # - dev-pkgs            - development packages (headers, etc.) for all installed packages in the rootfs
@@ -45,21 +45,20 @@
 # - allow-root-login     - the root user can login
 # - post-install-logging - log the output of postinstall scriptlets
 #
+FEATURE_PACKAGES_eclipse-debug = "packagegroup-core-eclipse-debug"
+FEATURE_PACKAGES_hwcodecs = "${MACHINE_HWCODECS}"
+FEATURE_PACKAGES_nfs-client = "packagegroup-core-nfs-client"
+FEATURE_PACKAGES_nfs-server = "packagegroup-core-nfs-server"
+FEATURE_PACKAGES_ssh-server-dropbear = "packagegroup-core-ssh-dropbear"
+FEATURE_PACKAGES_ssh-server-openssh = "packagegroup-core-ssh-openssh"
+FEATURE_PACKAGES_tools-debug = "packagegroup-core-tools-debug"
+FEATURE_PACKAGES_tools-profile = "packagegroup-core-tools-profile"
+FEATURE_PACKAGES_tools-sdk = "packagegroup-core-sdk packagegroup-core-standalone-sdk-target"
+FEATURE_PACKAGES_tools-testapps = "packagegroup-core-tools-testapps"
 FEATURE_PACKAGES_weston = "packagegroup-core-weston"
 FEATURE_PACKAGES_x11 = "packagegroup-core-x11"
 FEATURE_PACKAGES_x11-base = "packagegroup-core-x11-base"
 FEATURE_PACKAGES_x11-sato = "packagegroup-core-x11-sato"
-FEATURE_PACKAGES_tools-debug = "packagegroup-core-tools-debug"
-FEATURE_PACKAGES_eclipse-debug = "packagegroup-core-eclipse-debug"
-FEATURE_PACKAGES_tools-profile = "packagegroup-core-tools-profile"
-FEATURE_PACKAGES_tools-testapps = "packagegroup-core-tools-testapps"
-FEATURE_PACKAGES_tools-sdk = "packagegroup-core-sdk packagegroup-core-standalone-sdk-target"
-FEATURE_PACKAGES_nfs-server = "packagegroup-core-nfs-server"
-FEATURE_PACKAGES_nfs-client = "packagegroup-core-nfs-client"
-FEATURE_PACKAGES_ssh-server-dropbear = "packagegroup-core-ssh-dropbear"
-FEATURE_PACKAGES_ssh-server-openssh = "packagegroup-core-ssh-openssh"
-FEATURE_PACKAGES_hwcodecs = "${MACHINE_HWCODECS}"
-
 
 # IMAGE_FEATURES_REPLACES_foo = 'bar1 bar2'
 # Including image feature foo would replace the image features bar1 and bar2
