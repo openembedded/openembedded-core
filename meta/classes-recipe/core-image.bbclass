@@ -11,10 +11,13 @@
 #
 # Available IMAGE_FEATURES:
 #
+# These features install additional packages into the rootfs:
 # - eclipse-debug       - Eclipse remote debugging support
 # - hwcodecs            - Install hardware acceleration codecs
 # - nfs-client          - NFS client
 # - nfs-server          - NFS server
+# - package-management  - installs package management tools and preserves the package manager database
+# - splash              - bootup splash screen
 # - ssh-server-dropbear - SSH server (dropbear)
 # - ssh-server-openssh  - SSH server (openssh)
 # - tools-debug         - debugging tools
@@ -25,25 +28,29 @@
 # - x11                 - X server
 # - x11-base            - X server with minimal environment
 # - x11-sato            - OpenedHand Sato environment
-# - package-management  - installs package management tools and preserves the package manager database
-# - serial-autologin-root - with 'empty-root-password': autologin 'root' on the serial console
-# - dev-pkgs            - development packages (headers, etc.) for all installed packages in the rootfs
+#
+# These features install complementary packages for all installed packages in the rootfs:
 # - dbg-pkgs            - debug symbol packages for all installed packages in the rootfs
+# - dev-pkgs            - development packages (headers, etc.) for all installed packages in the rootfs
+# - doc-pkgs            - documentation packages for all installed packages in the rootfs
 # - lic-pkgs            - license packages for all installed pacakges in the rootfs, requires
 #                         LICENSE_CREATE_PACKAGE="1" to be set when building packages too
-# - doc-pkgs            - documentation packages for all installed packages in the rootfs
+# - ptest-pkgs          - ptest packages for all ptest-enabled recipes
+#
+# These features install complementary development packages:
 # - bash-completion-pkgs - bash-completion packages for recipes using bash-completion bbclass
 # - zsh-completion-pkgs - zsh-completion packages
-# - ptest-pkgs          - ptest packages for all ptest-enabled recipes
+#
+# These features tweak the behavior of the rootfs:
 # - read-only-rootfs    - tweaks an image to support read-only rootfs
 # - stateless-rootfs    - systemctl-native not run, image populated by systemd at runtime
-# - splash              - bootup splash screen
 #
-# Features for development purposes (previously part of debug-tweaks):
-# - empty-root-password  - the root user has no password set
+# These features are for development purposes (some were previously part of the debug-tweaks feature):
 # - allow-empty-password - users can have an empty password
 # - allow-root-login     - the root user can login
+# - empty-root-password  - the root user has no password set
 # - post-install-logging - log the output of postinstall scriptlets
+# - serial-autologin-root - with 'empty-root-password': autologin 'root' on the serial console
 #
 FEATURE_PACKAGES_eclipse-debug = "packagegroup-core-eclipse-debug"
 FEATURE_PACKAGES_hwcodecs = "${MACHINE_HWCODECS}"
