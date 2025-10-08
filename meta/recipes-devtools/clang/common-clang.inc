@@ -48,4 +48,8 @@ def get_clang_target_arch(bb, d):
 # install they cause non-deterministic binaries.
 EXTRA_OECMAKE += "-DCMAKE_BUILD_WITH_INSTALL_RPATH=ON"
 
+# Don't embed found git information into the version string as this
+# will include the git server URL.
+EXTRA_OECMAKE += "-DLLVM_APPEND_VC_REV=OFF"
+
 require common.inc

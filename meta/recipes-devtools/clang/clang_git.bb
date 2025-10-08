@@ -57,7 +57,6 @@ SOLIBSDEV:mingw32 = ".pyd"
 #CMAKE_VERBOSE = "VERBOSE=1"
 
 EXTRA_OECMAKE += "-DLLVM_ENABLE_ASSERTIONS=OFF \
-                  -DLLVM_APPEND_VC_REV=OFF \
                   -DLLVM_ENABLE_PIC=ON \
                   -DCLANG_DEFAULT_PIE_ON_LINUX=ON \
                   -DFFI_INCLUDE_DIR=$(pkg-config --variable=includedir libffi) \
