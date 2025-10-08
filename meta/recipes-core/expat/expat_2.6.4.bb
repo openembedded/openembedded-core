@@ -13,6 +13,9 @@ SRC_URI = "${GITHUB_BASE_URI}/download/R_${VERSION_TAG}/expat-${PV}.tar.bz2  \
            file://0001-tests-Cover-indirect-entity-recursion.patch;striplevel=2 \
            file://CVE-2024-8176-01.patch;striplevel=2 \
            file://CVE-2024-8176-02.patch;striplevel=2 \
+           file://CVE-2024-8176-03.patch \
+           file://CVE-2024-8176-04.patch \
+           file://CVE-2024-8176-05.patch \
            "
 
 GITHUB_BASE_URI = "https://github.com/libexpat/libexpat/releases/"
