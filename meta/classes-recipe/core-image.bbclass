@@ -41,7 +41,9 @@
 # - zsh-completion-pkgs - zsh-completion packages
 #
 # These features tweak the behavior of the rootfs:
+# - overlayfs-etc       - sets up /etc in overlayfs
 # - read-only-rootfs    - tweaks an image to support a read-only rootfs
+# - read-only-rootfs-delayed-postinsts - supports post-install scripts with read-only-rootfs
 # - stateless-rootfs    - systemctl-native is not run, image is populated by systemd at runtime
 #
 # These features are for development purposes (some were previously part of the debug-tweaks feature):
