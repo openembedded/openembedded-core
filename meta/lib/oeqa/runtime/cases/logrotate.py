@@ -12,17 +12,6 @@ from oeqa.core.decorator.depends import OETestDepends
 from oeqa.runtime.decorator.package import OEHasPackage
 
 class LogrotateTest(OERuntimeTestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.tc.target.run('cp /etc/logrotate.d/wtmp $HOME/wtmp.oeqabak',
-                          ignore_ssh_fails=True)
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.tc.target.run('mv -f $HOME/wtmp.oeqabak /etc/logrotate.d/wtmp && rm -rf /var/log/logrotate_dir', ignore_ssh_fails=True)
-        cls.tc.target.run('rm -rf /var/log/logrotate_testfile && rm -rf /etc/logrotate.d/logrotate_testfile', ignore_ssh_fails=True)
-
     @OETestDepends(['ssh.SSHTest.test_ssh'])
     @OEHasPackage(['logrotate'])
     def test_logrotate_wtmp(self):
@@ -33,6 +22,7 @@ class LogrotateTest(OERuntimeTestCase):
 
         # Create a folder to store rotated file and add the corresponding
         # configuration option
+        self.addCleanup(self.target.run, 'rm -rf /var/log/logrotate_dir')
         status, output = self.target.run('mkdir /var/log/logrotate_dir')
         msg = ('Could not create logrotate_dir. Output: %s' % output)
         self.assertEqual(status, 0, msg = msg)
@@ -55,10 +45,17 @@ class LogrotateTest(OERuntimeTestCase):
         self.assertEqual(status, 0, msg = msg)
 
         # Create a new configuration file dedicated to a /var/log/logrotate_testfile
+        self.addCleanup(self.target.run, 'rm -f /var/log/logrotate_testfile')
         status, output = self.target.run('echo "/var/log/logrotate_testfile {\n missingok \n monthly \n rotate 1}" > /etc/logrotate.d/logrotate_testfile')
         msg = ('Could not write to /etc/logrotate.d/logrotate_testfile')
         self.assertEqual(status, 0, msg = msg)
 
+        self.addCleanup(self.target.run, 'rm -rf /var/log/logrotate_dir')
+        status, output = self.target.run('mkdir /var/log/logrotate_dir')
+        msg = ('Could not create logrotate_dir. Output: %s' % output)
+        self.assertEqual(status, 0, msg = msg)
+
+        self.addCleanup(self.target.run, 'rm -f /etc/logrotate.d/logrotate_testfile')
         status, output = self.target.run('echo "create \n olddir /var/log/logrotate_dir \n include /etc/logrotate.d/logrotate_testfile" > /tmp/logrotate-test2.conf')
         msg = ('Could not write to /tmp/logrotate_test2.conf')
         self.assertEqual(status, 0, msg = msg)
