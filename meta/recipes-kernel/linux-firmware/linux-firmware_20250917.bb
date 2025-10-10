@@ -3311,8 +3311,14 @@ LICENSE:${PN} = "\
     & WHENCE \
 "
 
+# The goal for this recipe is to creata bunch of breakout packages for the
+# firmware so that you can choose which files to include and not have to pull
+# them all in.  To that end, we do want any files to be part of the
+# linux-firmware package.  So set it to "".  Do not change this.
+FILES:${PN} = ""
+ALLOW_EMPTY:${PN} = "1"
+
 FILES:${PN}-license += "${nonarch_base_libdir}/firmware/LICEN*"
-FILES:${PN} += "${nonarch_base_libdir}/firmware/*"
 RDEPENDS:${PN} += "${PN}-license"
 RDEPENDS:${PN} += "${PN}-whence-license"
 
