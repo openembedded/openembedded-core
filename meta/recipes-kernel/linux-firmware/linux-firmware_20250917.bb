@@ -5,6 +5,57 @@ that contains firmware binary blobs necessary for partial or full functionality 
 of certain hardware devices."
 SECTION = "kernel"
 
+REMOVE_UNLICENSED = ""
+
+# For acenic - Alteon AceNIC Gigabit Ethernet card
+REMOVE_UNLICENSED += "acenic/tg1.bin acenic/tg2.bin"
+
+# For emi62 - EMI 6|2m USB Audio interface
+REMOVE_UNLICENSED += "emi62/bitstream.fw emi62/loader.fw emi62/midi.fw emi62/spdif.fw"
+
+# For snd-maestro3 - ESS Allegro Maestro3 audio device
+REMOVE_UNLICENSED += "ess/maestro3_assp_kernel.fw ess/maestro3_assp_minisrc.fw"
+
+# For s2255drv
+REMOVE_UNLICENSED += "f2255usb.bin"
+
+# For snd-korg1212 - Korg 1212 IO audio device
+REMOVE_UNLICENSED += "korg/k1212.dsp"
+
+# For lgs8gxx - Legend Silicon GB20600 demodulator driver
+REMOVE_UNLICENSED += "lgs8g75.fw"
+
+# For ti_usb_3410_5052 - Multi-Tech USB cell modems
+REMOVE_UNLICENSED += "mts_cdma.fw mts_gsm.fw mts_edge.fw mts_mt9234mu.fw mts_mt9234zba.fw"
+
+# For myri_sbus - MyriCOM Gigabit Ethernet
+REMOVE_UNLICENSED += "myricom/lanai.bin"
+
+# For qlogicpti - PTI Qlogic, ISP Driver
+REMOVE_UNLICENSED += "qlogic/isp1000.bin"
+
+# For cassini - Sun Cassini
+REMOVE_UNLICENSED += "sun/cassini.bin"
+
+# For dvb-ttusb-budget - Technotrend/Hauppauge Nova-USB devices
+REMOVE_UNLICENSED += "ttusb-budget/dspbootcode.bin"
+
+# For ueagle-atm - Driver for USB ADSL Modems based on Eagle I,II,III
+REMOVE_UNLICENSED += "ueagle-atm/930-fpga.bin ueagle-atm/CMVeiWO.bin ueagle-atm/CMVepFR10.bin ueagle-atm/DSP9p.bin ueagle-atm/eagleIII.fw ueagle-atm/adi930.fw ueagle-atm/CMVep.bin ueagle-atm/CMVepFR.bin ueagle-atm/DSPei.bin ueagle-atm/CMV9i.bin ueagle-atm/CMVepES03.bin ueagle-atm/CMVepIT.bin ueagle-atm/DSPep.bin ueagle-atm/CMV9p.bin ueagle-atm/CMVepES.bin ueagle-atm/CMVepWO.bin ueagle-atm/eagleI.fw ueagle-atm/CMVei.bin ueagle-atm/CMVepFR04.bin ueagle-atm/DSP9i.bin ueagle-atm/eagleII.fw"
+
+# For vicam - USB 3com HomeConnect (aka vicam)
+REMOVE_UNLICENSED += "vicam/firmware.fw"
+
+# For yam - YAM driver for AX.25
+REMOVE_UNLICENSED += "yam/1200.bin yam/9600.bin"
+
+# For snd-wavefront - ISA WaveFront sound card
+REMOVE_UNLICENSED += "yamaha/yss225_registers.bin"
+
+# For snd-ymfpci - Yamaha YMF724/740/744/754 audio devices
+REMOVE_UNLICENSED += "yamaha/ds1_ctrl.fw yamaha/ds1_dsp.fw yamaha/ds1e_ctrl.fw"
+
+
 LICENSE = "\
     Firmware-Abilis \
     & Firmware-adsp_sst \
@@ -429,6 +480,21 @@ do_install() {
         fi
         cp LICEN[CS]E.* WHENCE ${D}${nonarch_base_libdir}/firmware/
         cp wfx/LICEN[CS]E.* ${D}${nonarch_base_libdir}/firmware/wfx/
+
+        # Remove all unlicensed firmware
+        for file in ${REMOVE_UNLICENSED}; do
+                echo "Remove unlicensed firmware: $file"
+                rm ${D}${nonarch_base_libdir}/firmware/$file
+                path_to_file=$(dirname $file)
+                while [ "${path_to_file}" != "." ]; do
+                        num_files=$(ls -A1 ${D}${nonarch_base_libdir}/firmware/$path_to_file | wc -l)
+                        if [ "$num_files" = "0" ]; then
+                                echo "Remove empty dir: $path_to_file"
+                                rm -rf ${D}${nonarch_base_libdir}/firmware/$path_to_file
+                        fi
+                        path_to_file=$(dirname $path_to_file)
+                done
+        done
 }
 
 PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
