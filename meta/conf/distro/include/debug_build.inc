@@ -44,3 +44,6 @@ CXXFLAGS:append:pn-vulkan-validation-layers = " -DXXH_NO_INLINE_HINTS=1"
 # No strip sysroot for cross and native
 INHIBIT_SYSROOT_STRIP:class-cross ?= "1"
 INHIBIT_SYSROOT_STRIP:class-native ?= "1"
+
+# For meson.bbclass
+MESON_BUILDTYPE ?= "debug"
