@@ -47,3 +47,7 @@ INHIBIT_SYSROOT_STRIP:class-native ?= "1"
 
 # For meson.bbclass
 MESON_BUILDTYPE ?= "debug"
+
+# For cargo.bbclass
+BUILD_MODE ?= ""
+BUILD_DIR ?= "debug"
