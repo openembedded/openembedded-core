@@ -1048,7 +1048,7 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
 
             ## thread-safe counter
             cnt_tasks_done = itertools.count(start = 1)
-            progress = len(tasklist) >= 100
+            progress = summary or len(tasklist) >= 100
             if progress:
                 msg = "Checking sstate mirror object availability"
                 bb.event.fire(bb.event.ProcessStarted(msg, len(tasklist)), d)
