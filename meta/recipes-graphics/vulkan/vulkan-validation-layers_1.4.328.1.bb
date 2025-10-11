@@ -8,8 +8,8 @@ SECTION = "libs"
 LICENSE = "Apache-2.0 & MIT & BSL-1.0 "
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=b1a17d548e004bfbbfaa0c40988b6b31"
 
-SRC_URI = "git://github.com/KhronosGroup/Vulkan-ValidationLayers.git;branch=vulkan-sdk-1.4.321;protocol=https"
-SRCREV = "fee7b2b4a926355e48668e29570be129eb82cb36"
+SRC_URI = "git://github.com/KhronosGroup/Vulkan-ValidationLayers.git;branch=vulkan-sdk-1.4.328;protocol=https"
+SRCREV = "83bcbddf0813cbe5cbf1b916b612e493e2cacd70"
 
 REQUIRED_DISTRO_FEATURES = "vulkan"
 

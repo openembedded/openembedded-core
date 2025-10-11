@@ -9,9 +9,9 @@ SECTION = "libs"
 
 LICENSE = "Apache-2.0 & MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=1bc355d8c4196f774c8b87ed1a8dd625"
-SRC_URI = "git://github.com/KhronosGroup/Vulkan-Headers.git;branch=main;protocol=https"
+SRC_URI = "git://github.com/KhronosGroup/Vulkan-Headers.git;branch=vulkan-sdk-1.4.328;protocol=https"
 
-SRCREV = "2cd90f9d20df57eac214c148f3aed885372ddcfe"
+SRCREV = "19725e4d48082fe78e26622b15d3080ccd54112b"
 
 inherit cmake
 

@@ -7,9 +7,8 @@ SECTION = "graphics"
 LICENSE  = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-SRCREV = "33e02568181e3312f49a3cf33df470bf96ef293a"
-SRC_URI = "git://github.com/KhronosGroup/SPIRV-Tools.git;branch=main;protocol=https \
-           file://0001-SPV_INTEL_function_variants-basic-asm-dis-support-61.patch \
+SRCREV = "7f2d9ee926f98fc77a3ed1e1e0f113b8c9c49458"
+SRC_URI = "git://github.com/KhronosGroup/SPIRV-Tools.git;branch=vulkan-sdk-1.4.328;protocol=https \
            "
 PE = "1"
 # These recipes need to be updated in lockstep with each other:
