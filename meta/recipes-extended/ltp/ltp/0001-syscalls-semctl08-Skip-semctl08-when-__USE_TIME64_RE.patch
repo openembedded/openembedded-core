@@ -1,4 +1,4 @@
-From 55b48d66857a43c2609fc351293b5601e2eb955d Mon Sep 17 00:00:00 2001
+From 09364a758df9d89a0968894376f82f636441addb Mon Sep 17 00:00:00 2001
 From: Jiaying Song <jiaying.song.cn@windriver.com>
 Date: Fri, 23 May 2025 15:17:49 +0800
 Subject: [PATCH] syscalls/semctl08: Skip semctl08 when __USE_TIME64_REDIRECTS
@@ -20,10 +20,10 @@ Signed-off-by: Jiaying Song <jiaying.song.cn@windriver.com>
  1 file changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/testcases/kernel/syscalls/ipc/semctl/semctl08.c b/testcases/kernel/syscalls/ipc/semctl/semctl08.c
-index 1878bd4..3b799fa 100644
+index f4549adf4..28776f266 100644
 --- a/testcases/kernel/syscalls/ipc/semctl/semctl08.c
 +++ b/testcases/kernel/syscalls/ipc/semctl/semctl08.c
-@@ -10,7 +10,11 @@
+@@ -12,7 +12,11 @@
  #include "tst_test.h"
  #include "libnewipc.h"
  
@@ -36,13 +36,10 @@ index 1878bd4..3b799fa 100644
  
  static void run(void)
  {
-@@ -47,6 +51,4 @@ static struct tst_test test = {
+@@ -49,6 +53,4 @@ static struct tst_test test = {
  	.test_all = run,
  	.needs_tmpdir = 1,
  };
 -#else
 -TST_TEST_TCONF("test requires struct semid64_ds to have the time_high fields");
  #endif
--- 
-2.34.1
-
