@@ -1,0 +1,41 @@
+From 4fed044aaed5911fdc58d2a634f34a7186836935 Mon Sep 17 00:00:00 2001
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Sun, 12 Oct 2025 23:54:25 +0300
+Subject: [PATCH] glx: provide glx.pc
+
+New Vulkan CTS 1.4.4 started requiring glx.pc pkg-config file. Provide
+one if GLVND is not used in order to let VK CTS and other programs find
+Mesa GLX implementation.
+
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Upstream-Status: Submitted [https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/37834]
+---
+ src/glx/meson.build | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/src/glx/meson.build b/src/glx/meson.build
+index 04fdf26ba6a2..28313f83a783 100644
+--- a/src/glx/meson.build
++++ b/src/glx/meson.build
+@@ -134,6 +134,18 @@ libgl = shared_library(
+   install : true,
+ )
+ 
++if not with_glvnd
++  pkg.generate(
++    name : 'glx',
++    description : 'Mesa GLX Library',
++    version : meson.project_version(),
++    libraries : libgl,
++    libraries_private : gl_priv_libs,
++    requires_private : gl_priv_reqs,
++    variables : ['glx_tls=yes'],
++  )
++endif
++
+ if with_symbols_check
+   libgl_symbols_file = with_glvnd ? 'glvnd-symbols.txt' : 'libgl-symbols.txt'
+ 
+-- 
+2.51.0
+
