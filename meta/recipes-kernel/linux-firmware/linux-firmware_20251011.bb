@@ -92,6 +92,7 @@ LICENSE = "\
     & Firmware-cxgb3 \
     & Firmware-cypress \
     & Firmware-dabusb \
+    & Firmware-dell \
     & Firmware-dib0700 \
     & Firmware-drxk \
     & Firmware-e100 \
@@ -99,8 +100,8 @@ LICENSE = "\
     & Firmware-ene_firmware \
     & Firmware-fw_sst_0f28 \
     & Firmware-go7007 \
-    & Firmware-go7007-s2250 \
     & Firmware-hfi1_firmware \
+    & Firmware-HP \
     & Firmware-i915 \
     & Firmware-ib_qib \
     & Firmware-ibt_firmware \
@@ -158,6 +159,7 @@ LICENSE = "\
     & Firmware-rtlwifi_firmware \
     & Firmware-imx-sdma_firmware \
     & Firmware-s5p-mfc \
+    & Firmware-sensoray \
     & Firmware-siano \
     & Firmware-tehuti \
     & Firmware-ti-connectivity \
@@ -220,6 +222,7 @@ LIC_FILES_CHKSUM = "file://LICENCE.Abilis;md5=b5ee3f410780e56711ad48eadc22b8bc \
                     file://LICENCE.cxgb3;md5=1cf82d9e2a4b301e20c7936e61cd0e45 \
                     file://LICENCE.cypress;md5=48cd9436c763bf873961f9ed7b5c147b \
                     file://LICENCE.dabusb;md5=fd785fc5f935c950a3423e4b1b996657 \
+                    file://LICENSE.dell;md5=032c317c0483dd3364f478d2bf9d9818 \
                     file://LICENSE.dib0700;md5=f7411825c8a555a1a3e5eab9ca773431 \
                     file://LICENSE.drxk;md5=87a325e2e9740837036af3f04efa0d0f \
                     file://LICENCE.e100;md5=ec0f84136766df159a3ae6d02acdf5a8 \
@@ -227,8 +230,8 @@ LIC_FILES_CHKSUM = "file://LICENCE.Abilis;md5=b5ee3f410780e56711ad48eadc22b8bc \
                     file://LICENCE.ene_firmware;md5=ed67f0f62f8f798130c296720b7d3921 \
                     file://LICENCE.fw_sst_0f28;md5=6353931c988ad52818ae733ac61cd293 \
                     file://LICENCE.go7007;md5=c0bb9f6aaaba55b0529ee9b30aa66beb \
-                    file://LICENCE.go7007-s2250;md5=2273a7fed8223f6d3ef3e65f508f22eb \
                     file://LICENSE.hfi1_firmware;md5=5e7b6e586ce7339d12689e49931ad444 \
+                    file://LICENCE.HP;md5=3506ce9cd4bedeaa4afb2d8fe24e0688 \
                     file://LICENSE.i915;md5=2b0b2e0d20984affd4490ba2cba02570 \
                     file://LICENSE.ib_qib;md5=b909c90fca84c507766601ecb6f3b9d9 \
                     file://LICENCE.ibt_firmware;md5=fdbee1ddfe0fb7ab0b2fcd6b454a366b \
@@ -287,6 +290,7 @@ LIC_FILES_CHKSUM = "file://LICENCE.Abilis;md5=b5ee3f410780e56711ad48eadc22b8bc \
                     file://LICENCE.rtlwifi_firmware.txt;md5=00d06cfd3eddd5a2698948ead2ad54a5 \
                     file://LICENSE.s5p-mfc;md5=5bdad20069b5c0268245609045374639 \
                     file://LICENSE.sdma_firmware;md5=51e8c19ecc2270f4b8ea30341ad63ce9 \
+                    file://LICENCE.sensoray;md5=2273a7fed8223f6d3ef3e65f508f22eb \
                     file://LICENCE.siano;md5=4556c1bf830067f12ca151ad953ec2a5 \
                     file://LICENSE.tehuti;md5=2b0ebf8cdc4a1c4a49b8ad18c7cb2492 \
                     file://LICENCE.ti-connectivity;md5=3b1e9cf54aba8146dad4b735777d406f \
@@ -308,7 +312,7 @@ LIC_FILES_CHKSUM = "file://LICENCE.Abilis;md5=b5ee3f410780e56711ad48eadc22b8bc \
                     "
 # WHENCE checksum is defined separately to ease overriding it if
 # class-devupstream is selected.
-WHENCE_CHKSUM  = "a12ddaaab7162785af9d79b76132d185"
+WHENCE_CHKSUM  = "585c66ed89dcbaacae7023deb32b6bd2"
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
 # so that the license files will be copied from fetched source
@@ -347,6 +351,7 @@ NO_GENERIC_LICENSE[Firmware-cw1200-sdd] = "LICENCE.cw1200-sdd"
 NO_GENERIC_LICENSE[Firmware-cxgb3] = "LICENCE.cxgb3"
 NO_GENERIC_LICENSE[Firmware-cypress] = "LICENCE.cypress"
 NO_GENERIC_LICENSE[Firmware-dabusb] = "LICENCE.dabusb"
+NO_GENERIC_LICENSE[Firmware-dell] = "LICENSE.dell"
 NO_GENERIC_LICENSE[Firmware-dib0700] = "LICENSE.dib0700"
 NO_GENERIC_LICENSE[Firmware-drxk] = "LICENSE.drxk"
 NO_GENERIC_LICENSE[Firmware-e100] = "LICENCE.e100"
@@ -354,8 +359,8 @@ NO_GENERIC_LICENSE[Firmware-emi26] = "LICENCE.emi26"
 NO_GENERIC_LICENSE[Firmware-ene_firmware] = "LICENCE.ene_firmware"
 NO_GENERIC_LICENSE[Firmware-fw_sst_0f28] = "LICENCE.fw_sst_0f28"
 NO_GENERIC_LICENSE[Firmware-go7007] = "LICENCE.go7007"
-NO_GENERIC_LICENSE[Firmware-go7007-s2250] = "LICENCE.go7007-s2250"
 NO_GENERIC_LICENSE[Firmware-hfi1_firmware] = "LICENSE.hfi1_firmware"
+NO_GENERIC_LICENSE[Firmware-HP] = "LICENCE.HP"
 NO_GENERIC_LICENSE[Firmware-i915] = "LICENSE.i915"
 NO_GENERIC_LICENSE[Firmware-ib_qib] = "LICENSE.ib_qib"
 NO_GENERIC_LICENSE[Firmware-ibt_firmware] = "LICENCE.ibt_firmware"
@@ -412,6 +417,7 @@ NO_GENERIC_LICENSE[Firmware-rsi] = "LICENSE.rsi"
 NO_GENERIC_LICENSE[Firmware-rt1320] = "LICENSE.rt1320"
 NO_GENERIC_LICENSE[Firmware-rtlwifi_firmware] = "LICENCE.rtlwifi_firmware.txt"
 NO_GENERIC_LICENSE[Firmware-s5p-mfc] = "LICENSE.s5p-mfc"
+NO_GENERIC_LICENSE[Firmware-sensoray] = "LICENCE.sensoray"
 NO_GENERIC_LICENSE[Firmware-siano] = "LICENCE.siano"
 NO_GENERIC_LICENSE[Firmware-imx-sdma_firmware] = "LICENSE.sdma_firmware"
 NO_GENERIC_LICENSE[Firmware-tehuti] = "LICENSE.tehuti"
@@ -436,7 +442,6 @@ PE = "1"
 
 SRC_URI = "\
   ${KERNELORG_MIRROR}/linux/kernel/firmware/${BPN}-${PV}.tar.xz \
-  file://0001-qcom-move-LEMANS-EVK-firmware-to-correct-location.patch \
 "
 
 BBCLASSEXTEND = "devupstream:target"
@@ -444,7 +449,7 @@ SRC_URI:class-devupstream = "git://git.kernel.org/pub/scm/linux/kernel/git/firmw
 # Pin this to the 20220509 release, override this in local.conf
 SRCREV:class-devupstream ?= "b19cbdca78ab2adfd210c91be15a22568e8b8cae"
 
-SRC_URI[sha256sum] = "120575b756915a11e736f599316a756b6a29a76d6135ad86208868b21c58fb75"
+SRC_URI[sha256sum] = "b6c9a9c112b88417d985b87d6521b677fa2fa0d5d7ee5219c76dc8ca66945ad3"
 
 inherit allarch
 
@@ -693,13 +698,16 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-qcom-adreno-a2xx ${PN}-qcom-adreno-a3xx ${PN}-qcom-adreno-a4xx ${PN}-qcom-adreno-a530 \
              ${PN}-qcom-adreno-a612 ${PN}-qcom-adreno-a623 ${PN}-qcom-adreno-a630 \
              ${PN}-qcom-adreno-a650 ${PN}-qcom-adreno-a660 ${PN}-qcom-adreno-a663 \
-             ${PN}-qcom-adreno-a702 ${PN}-qcom-adreno-g715 ${PN}-qcom-adreno-g750 \
+             ${PN}-qcom-adreno-a702 ${PN}-qcom-adreno-g715 ${PN}-qcom-adreno-g705 \
+             ${PN}-qcom-adreno-g802 \
              ${PN}-qcom-apq8016-modem ${PN}-qcom-apq8016-wifi \
              ${PN}-qcom-apq8096-adreno ${PN}-qcom-apq8096-audio ${PN}-qcom-apq8096-modem \
+             ${PN}-qcom-kaanapali-adreno ${PN}-qcom-kaanapali-compute \
              ${PN}-qcom-qcm2290-adreno ${PN}-qcom-qcm2290-audio ${PN}-qcom-qcm2290-modem \
              ${PN}-qcom-qcm6490-adreno ${PN}-qcom-qcm6490-audio ${PN}-qcom-qcm6490-compute \
              ${PN}-qcom-qcm6490-ipa ${PN}-qcom-qcm6490-wifi ${PN}-qcom-qcm6490-qupv3fw \
              ${PN}-qcom-qcs615-adreno ${PN}-qcom-qcs615-audio ${PN}-qcom-qcs615-compute \
+             ${PN}-qcom-qcs6490-radxa-dragon-q6a-audio \
              ${PN}-qcom-qcs8300-adreno ${PN}-qcom-qcs8300-audio ${PN}-qcom-qcs8300-compute \
              ${PN}-qcom-qcs8300-generalpurpose ${PN}-qcom-qcs8300-qupv3fw \
              ${PN}-qcom-qrb4210-adreno \
@@ -737,6 +745,8 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-xc5000c-license ${PN}-xc5000c \
              ${PN}-typhoon-license ${PN}-typhoon \
              ${PN}-intel-license ${PN}-ish-lnlm \
+             ${PN}-dell-license ${PN}-ish-lnlm-39ceeaf8 \
+             ${PN}-hp-license ${PN}-ish-lnlm-dba6b120-152c3222 \
              ${PN}-lenovo-license ${PN}-ish-lnlm-53c4ffad-2a17559f \
              ${PN}-advansys-license ${PN}-advansys \
              ${PN}-aeonsemi-license ${PN}-as21xxx \
@@ -773,7 +783,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-emi26-license ${PN}-emi26 \
              ${PN}-ene-firmware-license ${PN}-ene-ub6250 \
              ${PN}-snd-maestro3 \
-             ${PN}-go7007-s2250-license ${PN}-go7007-s2250 \
+             ${PN}-sensoray-license ${PN}-go7007-s2250 \
              ${PN}-go7007-license ${PN}-go7007 \
              ${PN}-hfi1-license ${PN}-hfi1 \
              ${PN}-inside-secure-license ${PN}-inside-secure \
@@ -2259,13 +2269,16 @@ LICENSE:${PN}-qcom-adreno-a650 = "Firmware-qcom"
 LICENSE:${PN}-qcom-adreno-a660 = "Firmware-qcom"
 LICENSE:${PN}-qcom-adreno-a663 = "Firmware-qcom"
 LICENSE:${PN}-qcom-adreno-a702 = "Firmware-qcom"
+LICENSE:${PN}-qcom-adreno-g705 = "Firmware-qcom"
 LICENSE:${PN}-qcom-adreno-g715 = "Firmware-qcom"
-LICENSE:${PN}-qcom-adreno-g750 = "Firmware-qcom"
+LICENSE:${PN}-qcom-adreno-g802 = "Firmware-qcom"
 LICENSE:${PN}-qcom-apq8016-modem = "Firmware-qcom"
 LICENSE:${PN}-qcom-apq8016-wifi = "Firmware-qcom"
 LICENSE:${PN}-qcom-apq8096-audio = "Firmware-qcom"
 LICENSE:${PN}-qcom-apq8096-adreno = "Firmware-qcom"
 LICENSE:${PN}-qcom-apq8096-modem = "Firmware-qcom"
+LICENSE:${PN}-qcom-kaanapali-adreno = "Firmware-qcom"
+LICENSE:${PN}-qcom-kaanapali-compute = "Firmware-qcom"
 LICENSE:${PN}-qcom-qcm2290-adreno = "Firmware-qcom"
 LICENSE:${PN}-qcom-qcm2290-audio = "Firmware-qcom"
 LICENSE:${PN}-qcom-qcm2290-modem = "Firmware-qcom"
@@ -2279,6 +2292,7 @@ LICENSE:${PN}-qcom-qcm6490-qupv3fw = "Firmware-qcom"
 LICENSE:${PN}-qcom-qcs615-adreno = "Firmware-qcom"
 LICENSE:${PN}-qcom-qcs615-audio = "Firmware-qcom"
 LICENSE:${PN}-qcom-qcs615-compute = "Firmware-qcom"
+LICENSE:${PN}-qcom-qcs6490-radxa-dragon-q6a-audio = "Firmware-qcom & Firmware-linaro"
 LICENSE:${PN}-qcom-qcs8300-adreno = "Firmware-qcom"
 LICENSE:${PN}-qcom-qcs8300-audio = "Firmware-qcom-2 & Firmware-linaro"
 LICENSE:${PN}-qcom-qcs8300-compute = "Firmware-qcom-2"
@@ -2313,7 +2327,7 @@ LICENSE:${PN}-qcom-sm8550-audio-tplg = "Firmware-linaro"
 LICENSE:${PN}-qcom-sm8650-audio-tplg = "Firmware-linaro"
 LICENSE:${PN}-qcom-sm8350-adreno = "Firmware-qcom"
 LICENSE:${PN}-qcom-x1e80100-adreno = "Firmware-qcom"
-LICENSE:${PN}-qcom-x1e80100-audio = "Firmware-qcom"
+LICENSE:${PN}-qcom-x1e80100-audio = "Firmware-qcom & Firmware-linaro"
 LICENSE:${PN}-qcom-x1e80100-compute = "Firmware-qcom"
 LICENSE:${PN}-qcom-x1e80100-lenovo-t14s-g6-adreno = "Firmware-qcom"
 LICENSE:${PN}-qcom-x1e80100-lenovo-t14s-g6-audio = "Firmware-qcom & Firmware-linaro"
@@ -2353,13 +2367,16 @@ FILES:${PN}-qcom-adreno-a650 = "${nonarch_base_libdir}/firmware/qcom/a650*.*"
 FILES:${PN}-qcom-adreno-a660 = "${nonarch_base_libdir}/firmware/qcom/a660*.*"
 FILES:${PN}-qcom-adreno-a663 = "${nonarch_base_libdir}/firmware/qcom/a663*.*"
 FILES:${PN}-qcom-adreno-a702 = "${nonarch_base_libdir}/firmware/qcom/a702*.*"
-FILES:${PN}-qcom-adreno-g750 = "${nonarch_base_libdir}/firmware/qcom/gen70500_*.*"
+FILES:${PN}-qcom-adreno-g705 = "${nonarch_base_libdir}/firmware/qcom/gen70500_*.*"
 FILES:${PN}-qcom-adreno-g715 = "${nonarch_base_libdir}/firmware/qcom/gen71500_*.*"
+FILES:${PN}-qcom-adreno-g802 = "${nonarch_base_libdir}/firmware/qcom/gen80200_*.*"
 FILES:${PN}-qcom-apq8016-modem = "${nonarch_base_libdir}/firmware/qcom/apq8016/mba.mbn* ${nonarch_base_libdir}/firmware/qcom/apq8016/modem.mbn*"
 FILES:${PN}-qcom-apq8016-wifi = "${nonarch_base_libdir}/firmware/qcom/apq8016/wcnss.mbn* ${nonarch_base_libdir}/firmware/qcom/apq8016/WCNSS*"
 FILES:${PN}-qcom-apq8096-adreno = "${nonarch_base_libdir}/firmware/qcom/apq8096/a530_zap.mbn* ${nonarch_base_libdir}/firmware/qcom/a530_zap.mdt*"
 FILES:${PN}-qcom-apq8096-audio = "${nonarch_base_libdir}/firmware/qcom/apq8096/adsp*.*"
 FILES:${PN}-qcom-apq8096-modem = "${nonarch_base_libdir}/firmware/qcom/apq8096/mba.mbn* ${nonarch_base_libdir}/firmware/qcom/apq8096/modem*.* ${nonarch_base_libdir}/firmware/qcom/apq8096/wlanmdsp.mbn*"
+FILES:${PN}-qcom-kaanapali-adreno = "${nonarch_base_libdir}/firmware/qcom/kaanapali/gen80200_zap.mbn*"
+FILES:${PN}-qcom-kaanapali-compute = "${nonarch_base_libdir}/firmware/qcom/kaanapali/cdsp*.*"
 FILES:${PN}-qcom-qcm2290-adreno = "${nonarch_base_libdir}/firmware/qcom/qcm2290/a702_zap.mbn*"
 FILES:${PN}-qcom-qcm2290-audio = "${nonarch_base_libdir}/firmware/qcom/qcm2290/adsp*.*"
 FILES:${PN}-qcom-qcm2290-modem = "${nonarch_base_libdir}/firmware/qcom/qcm2290/modem*.*"
@@ -2373,6 +2390,10 @@ FILES:${PN}-qcom-qcm6490-qupv3fw = "${nonarch_base_libdir}/firmware/qcom/qc[ms]6
 FILES:${PN}-qcom-qcs615-adreno = "${nonarch_base_libdir}/firmware/qcom/qcs615/a612_zap.mbn*"
 FILES:${PN}-qcom-qcs615-audio = "${nonarch_base_libdir}/firmware/qcom/qcs615/adsp*.*"
 FILES:${PN}-qcom-qcs615-compute = "${nonarch_base_libdir}/firmware/qcom/qcs615/cdsp*.*"
+FILES:${PN}-qcom-qcs6490-radxa-dragon-q6a-audio = " \
+    ${nonarch_base_libdir}/firmware/qcom/qcs6490/radxa/dragon-q6a/adsp*.* \
+    ${nonarch_base_libdir}/firmware/qcom/qcs6490/QCS6490-Radxa-Dragon-Q6A-tplg.bin*\
+    "
 FILES:${PN}-qcom-qcs8300-adreno = "${nonarch_base_libdir}/firmware/qcom/qcs8300/a623_zap.mbn*"
 FILES:${PN}-qcom-qcs8300-audio = "${nonarch_base_libdir}/firmware/qcom/qcs8300/adsp*.* ${nonarch_base_libdir}/firmware/qcom/qcs8300/MONACO-EVK-tplg.bin*"
 FILES:${PN}-qcom-qcs8300-compute = "${nonarch_base_libdir}/firmware/qcom/qcs8300/cdsp*.*"
@@ -2413,7 +2434,11 @@ FILES:${PN}-qcom-sm8550-audio-tplg = "${nonarch_base_libdir}/firmware/qcom/sm855
 FILES:${PN}-qcom-sm8650-audio-tplg = "${nonarch_base_libdir}/firmware/qcom/sm8650/*tplg.bin*"
 FILES:${PN}-qcom-sm8350-adreno = "${nonarch_base_libdir}/firmware/qcom/sm8350/a660_zap.mbn*"
 FILES:${PN}-qcom-x1e80100-adreno = "${nonarch_base_libdir}/firmware/qcom/x1e80100/gen70500_zap.mbn*"
-FILES:${PN}-qcom-x1e80100-audio = "${nonarch_base_libdir}/firmware/qcom/x1e80100/adsp*.* ${nonarch_base_libdir}/firmware/qcom/x1e80100/battmgr.jsn"
+FILES:${PN}-qcom-x1e80100-audio = " \
+    ${nonarch_base_libdir}/firmware/qcom/x1e80100/adsp*.* \
+    ${nonarch_base_libdir}/firmware/qcom/x1e80100/battmgr.jsn \
+    ${nonarch_base_libdir}/firmware/qcom/x1e80100/X1E80100-EVK-tplg.bin* \
+    "
 FILES:${PN}-qcom-x1e80100-compute = "${nonarch_base_libdir}/firmware/qcom/x1e80100/cdsp*.*"
 FILES:${PN}-qcom-x1e80100-lenovo-t14s-g6-adreno = "${nonarch_base_libdir}/firmware/qcom/x1e80100/LENOVO/21N1/qcdxkmsuc8380.mbn*"
 FILES:${PN}-qcom-x1e80100-lenovo-t14s-g6-audio = "${nonarch_base_libdir}/firmware/qcom/x1e80100/LENOVO/21N1/*adsp*.* ${nonarch_base_libdir}/firmware/qcom/x1e80100/LENOVO/21N1/battmgr.jsn* ${nonarch_base_libdir}/firmware/qcom/x1e80100/LENOVO/21N1/X1E80100-LENOVO-Thinkpad-T14s-tplg.bin* ${nonarch_base_libdir}/firmware/qcom/x1e80100/X1E80100-LENOVO-Thinkpad-T14s-tplg.bin*"
@@ -2445,13 +2470,16 @@ RDEPENDS:${PN}-qcom-adreno-a650 = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-adreno-a660 = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-adreno-a663 = "${PN}-qcom-license ${PN}-qcom-adreno-a660"
 RDEPENDS:${PN}-qcom-adreno-a702 = "${PN}-qcom-license"
+RDEPENDS:${PN}-qcom-adreno-g705 = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-adreno-g715 = "${PN}-qcom-license"
-RDEPENDS:${PN}-qcom-adreno-g750 = "${PN}-qcom-license"
+RDEPENDS:${PN}-qcom-adreno-g802 = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-apq8016-modem = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-apq8016-wifi = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-apq8096-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-apq8096-audio = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-apq8096-modem = "${PN}-qcom-license"
+RDEPENDS:${PN}-qcom-kaanapali-adreno = "${PN}-qcom-license"
+RDEPENDS:${PN}-qcom-kaanapali-compute = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-qcm2290-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-qcm2290-audio = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-qcm2290-modem = "${PN}-qcom-license"
@@ -2469,6 +2497,7 @@ RDEPENDS:${PN}-qcom-qcm6490-qupv3fw = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-qcs615-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-qcs615-audio = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-qcs615-compute = "${PN}-qcom-license"
+RDEPENDS:${PN}-qcom-qcs6490-radxa-dragon-q6a-audio = "${PN}-qcom-license ${PN}-linaro-license"
 RDEPENDS:${PN}-qcom-qcs8300-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-qcs8300-audio = "${PN}-qcom-2-license ${PN}-linaro-license"
 RDEPENDS:${PN}-qcom-qcs8300-compute = "${PN}-qcom-2-license"
@@ -2505,7 +2534,7 @@ RDEPENDS:${PN}-qcom-sm8550-audio-tplg = "${PN}-linaro-license"
 RDEPENDS:${PN}-qcom-sm8650-audio-tplg = "${PN}-linaro-license"
 RDEPENDS:${PN}-qcom-sm8350-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-x1e80100-adreno = "${PN}-qcom-license"
-RDEPENDS:${PN}-qcom-x1e80100-audio = "${PN}-qcom-license"
+RDEPENDS:${PN}-qcom-x1e80100-audio = "${PN}-qcom-license ${PN}-linaro-license"
 RDEPENDS:${PN}-qcom-x1e80100-compute = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-x1e80100-lenovo-t14s-g6-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-x1e80100-lenovo-t14s-g6-audio = "${PN}-qcom-license ${PN}-linaro-license"
@@ -2558,6 +2587,28 @@ FILES:${PN}-intel-license = "${nonarch_base_libdir}/firmware/LICENSE.intel"
 LICENSE:${PN}-ish-lnlm = "Firmware-intel"
 FILES:${PN}-ish-lnlm = "${nonarch_base_libdir}/firmware/intel/ish/ish_lnlm.bin"
 RDEPENDS:${PN}-ish-lnlm = "${PN}-intel-license"
+
+# For Dell ish - Intel Integrated Sensor Hub
+LICENSE:${PN}-dell-license = "Firmware-dell"
+FILES:${PN}-dell-license = "${nonarch_base_libdir}/firmware/LICENSE.dell"
+
+LICENSE:${PN}-ish-lnlm-39ceeaf8 = "Firmware-dell"
+FILES:${PN}-ish-lnlm-39ceeaf8 =  "\
+    ${nonarch_base_libdir}/firmware/intel/ish/ish_lnlm_39ceeaf8.bin \
+    ${nonarch_base_libdir}/firmware/dell/ish/ish_lnlm_39ceeaf8_*.bin \
+"
+RDEPENDS:${PN}-ish-lnlm-39ceeaf8 = "${PN}-dell-license"
+
+# For HP ish - Intel Integrated Sensor Hub
+LICENSE:${PN}-hp-license = "Firmware-HP"
+FILES:${PN}-hp-license = "${nonarch_base_libdir}/firmware/LICENSE.HP"
+
+LICENSE:${PN}-ish-lnlm-dba6b120-152c3222 = "Firmware-HP"
+FILES:${PN}-ish-lnlm-dba6b120-152c3222 = " \
+    ${nonarch_base_libdir}/firmware/intel/ish/ish_lnlm_dba6b120_152c3222.bin \
+    ${nonarch_base_libdir}/firmware/HP/ish/ish_lnlm_dba6b120_152c3222.bin \
+"
+RDEPENDS:${PN}-ish-lnlm-dba6b120-152c3222 = "${PN}-hp-license"
 
 # For LENOVO ish - Intel Integrated Sensor Hub
 LICENSE:${PN}-lenovo-license = "Firmware-lenovo"
@@ -2878,15 +2929,15 @@ FILES:${PN}-ene-ub6250 = "${nonarch_base_libdir}/firmware/ene-ub6250/*"
 RDEPENDS:${PN}-ene-ub6250 = "${PN}-ene-firmware-license"
 
 # For go7007-s2250
-LICENSE:${PN}-go7007-s2250-license = "Firmware-go7007-s2250"
-FILES:${PN}-go7007-s2250-license = "${nonarch_base_libdir}/firmware/LICENCE.go7007-s2250"
+LICENSE:${PN}-sensoray-license = "Firmware-sensoray"
+FILES:${PN}-sensoray-license = "${nonarch_base_libdir}/firmware/LICENCE.sensoray"
 
-LICENSE:${PN}-go7007-s2250 = "Firmware-go7007-s2250"
+LICENSE:${PN}-go7007-s2250 = "Firmware-sensoray"
 FILES:${PN}-go7007-s2250 = " \
     ${nonarch_base_libdir}/firmware/go7007/s2250* \
     ${nonarch_base_libdir}/firmware/s2250* \
 "
-RDEPENDS:${PN}-go7007-s2250 = "${PN}-go7007-s2250-license"
+RDEPENDS:${PN}-go7007-s2250 = "${PN}-sensoray-license"
 
 # For go7007
 LICENSE:${PN}-go7007-license = "Firmware-go7007"
@@ -3225,6 +3276,7 @@ LICENSE:${PN} = "\
     & Firmware-cw1200-sdd \
     & Firmware-cxgb3 \
     & Firmware-dabusb \
+    & Firmware-dell \
     & Firmware-dib0700 \
     & Firmware-drxk \
     & Firmware-e100 \
@@ -3232,8 +3284,8 @@ LICENSE:${PN} = "\
     & Firmware-ene_firmware \
     & Firmware-fw_sst_0f28 \
     & Firmware-go7007 \
-    & Firmware-go7007-s2250 \
     & Firmware-hfi1_firmware \
+    & Firmware-HP \
     & Firmware-ib_qib \
     & Firmware-ibt_firmware \
     & Firmware-inside-secure \
@@ -3272,6 +3324,7 @@ LICENSE:${PN} = "\
     & Firmware-rt1320 \
     & Firmware-imx-sdma_firmware \
     & Firmware-s5p-mfc \
+    & Firmware-sensoray \
     & Firmware-siano \
     & Firmware-tehuti \
     & Firmware-ti-connectivity \
