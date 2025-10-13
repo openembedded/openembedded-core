@@ -434,11 +434,14 @@ def check_sanity_validmachine(sanity_data):
 def check_patch_version(sanity_data):
     import re, subprocess
 
+    patch_minimum_version = "2.7"
+
     try:
         result = subprocess.check_output(["patch", "--version"], stderr=subprocess.STDOUT).decode('utf-8')
         version = re.search(r"[0-9.]+", result.splitlines()[0]).group()
-        if bb.utils.vercmp_string_op(version, "2.7", "<"):
-            return "Your version of patch is older than 2.7 and has bugs which will break builds. Please install a newer version of patch.\n"
+        if bb.utils.vercmp_string_op(version, patch_minimum_version, "<"):
+            return ("Your version of patch is older than %s and has bugs which will break builds. "
+                "Please install a newer version of patch.\n" % patch_minimum_version)
         else:
             return None
     except subprocess.CalledProcessError as e:
@@ -446,6 +449,7 @@ def check_patch_version(sanity_data):
 
 # Glibc needs make 4.0 or later, we may as well match at this point
 def check_make_version(sanity_data):
+    make_minimum_version = "4.0"
     import subprocess
 
     try:
@@ -453,8 +457,8 @@ def check_make_version(sanity_data):
     except subprocess.CalledProcessError as e:
         return "Unable to execute make --version, exit code %d\n%s\n" % (e.returncode, e.output)
     version = result.split()[2]
-    if bb.utils.vercmp_string_op(version, "4.0", "<"):
-        return "Please install a make version of 4.0 or later.\n"
+    if bb.utils.vercmp_string_op(version, make_minimum_version, "<"):
+        return "Please install a make version of %s or later.\n" % make_minimum_version
 
     if bb.utils.vercmp_string_op(version, "4.2.1", "=="):
         distro = oe.lsb.distro_identifier()
@@ -511,9 +515,12 @@ def check_userns():
 # built buildtools-extended-tarball)
 #
 def check_gcc_version(sanity_data):
+    gcc_minimum_version = "10.1"
     version = oe.utils.get_host_gcc_version(sanity_data)
-    if bb.utils.vercmp_string_op(version, "10.1", "<"):
-        return "Your version of gcc is older than 10.1 and will break builds. Please install a newer version of gcc (you could use the project's buildtools-extended-tarball or use scripts/install-buildtools).\n"
+    if bb.utils.vercmp_string_op(version, gcc_minimum_version, "<"):
+        return ("Your version of gcc is older than %s and will break builds. Please install a newer "
+            "version of gcc (you could use the project's buildtools-extended-tarball or use "
+            "scripts/install-buildtools).\n" % gcc_minimum_version)
     return None
 
 # Tar version 1.24 and onwards handle overwriting symlinks correctly
@@ -521,6 +528,7 @@ def check_gcc_version(sanity_data):
 # Version 1.28 is needed so opkg-build works correctly when reproducible builds are enabled
 # Gtar is assumed at to be used as tar in poky
 def check_tar_version(sanity_data):
+    tar_minimum_version = "1.28"
     import subprocess
     try:
         result = subprocess.check_output(["tar", "--version"], stderr=subprocess.STDOUT).decode('utf-8')
@@ -529,8 +537,10 @@ def check_tar_version(sanity_data):
     if not "GNU" in result:
         return "Your version of tar is not gtar. Please install gtar (you could use the project's buildtools-tarball from our last release or use scripts/install-buildtools).\n"
     version = result.split()[3]
-    if bb.utils.vercmp_string_op(version, "1.28", "<"):
-        return "Your version of tar is older than 1.28 and does not have the support needed to enable reproducible builds. Please install a newer version of tar (you could use the project's buildtools-tarball from our last release or use scripts/install-buildtools).\n"
+    if bb.utils.vercmp_string_op(version, tar_minimum_version, "<"):
+        return ("Your version of tar is older than %s and does not have the support needed to enable reproducible "
+            "builds. Please install a newer version of tar (you could use the project's buildtools-tarball from "
+            "our last release or use scripts/install-buildtools).\n" % tar_minimum_version)
 
     try:
         result = subprocess.check_output(["tar", "--help"], stderr=subprocess.STDOUT).decode('utf-8')
@@ -545,14 +555,16 @@ def check_tar_version(sanity_data):
 # The kernel tools assume git >= 1.8.3.1 (verified needed > 1.7.9.5) see #6162 
 # The git fetcher also had workarounds for git < 1.7.9.2 which we've dropped
 def check_git_version(sanity_data):
+    git_minimum_version = "1.8.3.1"
     import subprocess
     try:
         result = subprocess.check_output(["git", "--version"], stderr=subprocess.DEVNULL).decode('utf-8')
     except subprocess.CalledProcessError as e:
         return "Unable to execute git --version, exit code %d\n%s\n" % (e.returncode, e.output)
     version = result.split()[2]
-    if bb.utils.vercmp_string_op(version, "1.8.3.1", "<"):
-        return "Your version of git is older than 1.8.3.1 and has bugs which will break builds. Please install a newer version of git.\n"
+    if bb.utils.vercmp_string_op(version, git_minimum_version, "<"):
+        return ("Your version of git is older than %s and has bugs which will break builds. "
+            "Please install a newer version of git.\n" % git_minimum_version)
     return None
 
 # Check the required perl modules which may not be installed by default
