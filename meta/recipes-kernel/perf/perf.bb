@@ -105,7 +105,7 @@ EXTRA_OEMAKE = '\
     LDSHARED="${CC} -shared" \
     AR="${AR}" \
     LD="${LD}" \
-    EXTRA_CFLAGS="-ldw -I${S} -I${S}/libperf/include -I${S}/tools/lib/perf/include" \
+    EXTRA_CFLAGS="-ldw -I${S}" \
     YFLAGS='-y --file-prefix-map=${WORKDIR}=${TARGET_DBGSRC_DIR}' \
     EXTRA_LDFLAGS="${PERF_EXTRA_LDFLAGS}" \
     perfexecdir=${libexecdir} \
@@ -173,7 +173,11 @@ do_compile() {
             sed -i -e 's|\$(libdir)/traceevent/plugins|\$(libdir)/traceevent_${KERNEL_VERSION}/plugins|g' ${S}/tools/perf/Makefile.config
 	# There are two copies of internal headers such as:
 	# libperf/include/internal/xyarray.h and tools/lib/perf/include/internal/xyarray.h
-	# For reproducibile binaries, we need to find one copy, hence force libperf to be created first
+	# For reproducibile binaries, we need to find one copy, hence force libXXX to be created first
+	for i in api bpf subcmd symbol
+	do
+		oe_runmake -C ${S}/tools/lib/$i DESTDIR=${B}/lib$i prefix= install_headers V=1
+	done
 	oe_runmake ${B}/libperf/libperf.a V=1
 	oe_runmake all V=1
 }
