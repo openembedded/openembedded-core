@@ -606,7 +606,6 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-ath10k-qca9984 \
              ${PN}-ath10k-qca99x0 \
              ${PN}-ath10k-wcn3990 \
-             ${PN}-ath10k-misc \
              ${PN}-ath11k \
              ${PN}-ath11k-ipq5018 \
              ${PN}-ath11k-ipq6018 \
@@ -617,11 +616,9 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-ath11k-qcn9074 \
              ${PN}-ath11k-wcn6750 \
              ${PN}-ath11k-wcn6855 \
-             ${PN}-ath11k-misc \
              ${PN}-ath12k \
              ${PN}-ath12k-qcn9274 \
              ${PN}-ath12k-wcn7850 \
-             ${PN}-ath12k-misc \
              ${PN}-qca \
              ${PN}-qca-qca61x4-serial \
              ${PN}-qca-qca61x4-usb \
@@ -894,7 +891,6 @@ LICENSE:${PN}-ath10k-qca988x = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath10k-qca9984 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath10k-qca99x0 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath10k-wcn3990 = "Firmware-qualcommAthos_ath10k"
-LICENSE:${PN}-ath10k-misc    = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath10k-license = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath11k = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath11k-ipq5018 = "Firmware-qualcommAthos_ath10k"
@@ -906,11 +902,9 @@ LICENSE:${PN}-ath11k-qca6698aq = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath11k-qcn9074 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath11k-wcn6750 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath11k-wcn6855 = "Firmware-qualcommAthos_ath10k"
-LICENSE:${PN}-ath11k-misc    = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath12k = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath12k-qcn9274 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath12k-wcn7850 = "Firmware-qualcommAthos_ath10k"
-LICENSE:${PN}-ath12k-misc = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-qca61x4-serial = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-qca61x4-usb = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-qca6390 = "Firmware-qualcommAthos_ath10k"
@@ -938,12 +932,8 @@ FILES:${PN}-ath10k-qca988x = "${nonarch_base_libdir}/firmware/ath10k/QCA988X"
 FILES:${PN}-ath10k-qca9984 = "${nonarch_base_libdir}/firmware/ath10k/QCA9984"
 FILES:${PN}-ath10k-qca99x0 = "${nonarch_base_libdir}/firmware/ath10k/QCA99X0"
 FILES:${PN}-ath10k-wcn3990 = "${nonarch_base_libdir}/firmware/ath10k/WCN3990"
-FILES:${PN}-ath10k-misc = "${nonarch_base_libdir}/firmware/ath10k/*"
 # -ath10k is a virtual package that depends upon all ath10k packages.
 ALLOW_EMPTY:${PN}-ath10k = "1"
-# -ath10k-misc is a catch all package that includes all the ath10k
-# firmwares that are not already included in other -ath10k- packages.
-ALLOW_EMPTY:${PN}-ath10k-misc = "1"
 
 FILES:${PN}-ath11k-ipq5018 = "${nonarch_base_libdir}/firmware/ath11k/IPQ5018"
 FILES:${PN}-ath11k-ipq6018 = "${nonarch_base_libdir}/firmware/ath11k/IPQ6018"
@@ -954,21 +944,13 @@ FILES:${PN}-ath11k-qca6698aq = "${nonarch_base_libdir}/firmware/ath11k/QCA6698AQ
 FILES:${PN}-ath11k-qcn9074 = "${nonarch_base_libdir}/firmware/ath11k/QCN9074"
 FILES:${PN}-ath11k-wcn6750 = "${nonarch_base_libdir}/firmware/ath11k/WCN6750"
 FILES:${PN}-ath11k-wcn6855 = "${nonarch_base_libdir}/firmware/ath11k/WCN6855"
-FILES:${PN}-ath11k-misc = "${nonarch_base_libdir}/firmware/ath11k/*"
 # -ath11k is a virtual package that depends upon all ath11k packages.
 ALLOW_EMPTY:${PN}-ath11k = "1"
-# -ath11k-misc is a catch all package that includes all the ath11k
-# firmwares that are not already included in other -ath11k- packages.
-ALLOW_EMPTY:${PN}-ath11k-misc = "1"
 
 FILES:${PN}-ath12k-qcn9274 = "${nonarch_base_libdir}/firmware/ath12k/QCN9274"
 FILES:${PN}-ath12k-wcn7850 = "${nonarch_base_libdir}/firmware/ath12k/WCN7850"
-FILES:${PN}-ath12k-misc = "${nonarch_base_libdir}/firmware/ath12k/*"
 # -ath12k is a virtual package that depends upon all ath12k packages.
 ALLOW_EMPTY:${PN}-ath12k = "1"
-# -ath12k-misc is a catch all package that includes all the ath12k
-# firmwares that are not already included in other -ath12k- packages.
-ALLOW_EMPTY:${PN}-ath12k-misc = "1"
 
 FILES:${PN}-qca-qca61x4-serial = " \
   ${nonarch_base_libdir}/firmware/qca/nvm_0*.bin* \
@@ -1078,7 +1060,6 @@ RDEPENDS:${PN}-ath10k-qca988x += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath10k-qca9984 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath10k-qca99x0 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath10k-wcn3990 += "${PN}-ath10k-license"
-RDEPENDS:${PN}-ath10k-misc += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath11k += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath11k-ipq5018 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath11k-ipq6018 += "${PN}-ath10k-license"
@@ -1089,11 +1070,9 @@ RDEPENDS:${PN}-ath11k-qca6698aq += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath11k-qcn9074 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath11k-wcn6750 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath11k-wcn6855 += "${PN}-ath10k-license"
-RDEPENDS:${PN}-ath11k-misc += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath12k += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath12k-qcn9274 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath12k-wcn7850 += "${PN}-ath10k-license"
-RDEPENDS:${PN}-ath12k-misc += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca += "${PN}-ath10k-license ${PN}-qcom-license"
 RDEPENDS:${PN}-qca-qca61x4-serial += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca-qca61x4-usb += "${PN}-ath10k-license"
