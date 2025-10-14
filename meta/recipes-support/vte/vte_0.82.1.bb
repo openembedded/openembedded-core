@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = " \
     file://COPYING.XTERM;md5=d7fc3a23c16c039afafe2e042030f057 \
 "
 
-DEPENDS = "fastfloat glib-2.0 glib-2.0-native gtk+3 libpcre2 libxml2-native gperf-native icu lz4"
+DEPENDS = "fastfloat fmt glib-2.0 glib-2.0-native gtk+3 libpcre2 libxml2-native gperf-native icu lz4"
 
 GIR_MESON_OPTION = 'gir'
 GIDOCGEN_MESON_OPTION = "docs"
