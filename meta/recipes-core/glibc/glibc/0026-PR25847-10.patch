@@ -1,0 +1,54 @@
+From 4f78382dd671f381db6d1f452e6f1593d17b177e Mon Sep 17 00:00:00 2001
+From: Florian Weimer <fweimer@redhat.com>
+Date: Tue, 14 Oct 2025 06:53:40 -0700
+Subject: [PATCH] nptl: PTHREAD_COND_INITIALIZER compatibility with pre-2.41
+ versions (bug 32786)
+
+The new initializer and struct layout does not initialize the
+__g_signals field in the old struct layout before the change in
+commit c36fc50781995e6758cae2b6927839d0157f213c ("nptl: Remove
+g_refs from condition variables").  Bring back fields at the end
+of struct __pthread_cond_s, so that they are again zero-initialized.
+
+The following commits have been cherry-picked from Glibc master branch:
+Bug : https://sourceware.org/bugzilla/show_bug.cgi?id=25847
+commit: dbc5a50d12eff4cb3f782129029d04b8a76f58e7
+
+Upstream-Status: Submitted
+[https://sourceware.org/pipermail/libc-stable/2025-July/002282.html]
+
+Signed-off-by: Sunil Dora <sunilkumar.dora@windriver.com>
+---
+ sysdeps/nptl/bits/thread-shared-types.h | 2 ++
+ sysdeps/nptl/pthread.h                  | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/sysdeps/nptl/bits/thread-shared-types.h b/sysdeps/nptl/bits/thread-shared-types.h
+index 6f17afa4..2354ea21 100644
+--- a/sysdeps/nptl/bits/thread-shared-types.h
++++ b/sysdeps/nptl/bits/thread-shared-types.h
+@@ -99,6 +99,8 @@ struct __pthread_cond_s
+   unsigned int __g1_orig_size;
+   unsigned int __wrefs;
+   unsigned int __g_signals[2];
++  unsigned int __unused_initialized_1;
++  unsigned int __unused_initialized_2;
+ };
+ 
+ typedef unsigned int __tss_t;
+diff --git a/sysdeps/nptl/pthread.h b/sysdeps/nptl/pthread.h
+index bbb36540..8d6d24ff 100644
+--- a/sysdeps/nptl/pthread.h
++++ b/sysdeps/nptl/pthread.h
+@@ -152,7 +152,7 @@ enum
+ 
+ 
+ /* Conditional variable handling.  */
+-#define PTHREAD_COND_INITIALIZER { { {0}, {0}, {0, 0}, 0, 0, {0, 0} } }
++#define PTHREAD_COND_INITIALIZER { { {0}, {0}, {0, 0}, 0, 0, {0, 0}, 0, 0 } }
+ 
+ 
+ /* Cleanup buffers */
+-- 
+2.49.0
+
