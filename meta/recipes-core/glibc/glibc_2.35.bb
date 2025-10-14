@@ -62,14 +62,6 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0022-sysdeps-gnu-configure.ac-Set-libc_cv_rootsbindir-onl.patch \
            file://0023-timezone-Make-shell-interpreter-overridable-in-tzsel.patch \
            file://0024-fix-create-thread-failed-in-unprivileged-process-BZ-.patch \
-           file://0026-PR25847-1.patch \
-           file://0026-PR25847-2.patch \
-           file://0026-PR25847-3.patch \
-           file://0026-PR25847-4.patch \
-           file://0026-PR25847-5.patch \
-           file://0026-PR25847-6.patch \
-           file://0026-PR25847-7.patch \
-           file://0026-PR25847-8.patch \
            \
            file://0001-Revert-Linux-Implement-a-useful-version-of-_startup_.patch \
            file://0002-get_nscd_addresses-Fix-subscript-typos-BZ-29605.patch \
