@@ -9,6 +9,10 @@ HOMEPAGE = "https://perf.wiki.kernel.org/index.php/Main_Page"
 
 LICENSE = "GPL-2.0-only"
 
+# remove at next version upgrade or when output changes
+PR = "r1"
+HASHEQUIV_HASH_VERSION .= ".1"
+
 # zstd is required for kernels 6.14+ when libelf-zstd is detected
 # Respect the coresight machine feature, but note this causes a
 # dependency on meta-arm.
