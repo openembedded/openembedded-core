@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=11a3899825f4376896e438c8c753f8dc"
 inherit rust
 inherit cargo_common
 
-DEPENDS += "rust-llvm"
+DEPENDS += "llvm"
 # native rust uses cargo/rustc from binary snapshots to bootstrap
 # but everything else should use our native builds
 DEPENDS:append:class-target = " cargo-native rust-native"
@@ -28,8 +28,8 @@ PV .= "${@bb.utils.contains('RUST_CHANNEL', 'stable', '', '-${RUST_CHANNEL}', d)
 
 export FORCE_CRATE_HASH = "${BB_TASKHASH}"
 
-RUST_ALTERNATE_EXE_PATH ?= "${STAGING_LIBDIR}/llvm-rust/bin/llvm-config"
-RUST_ALTERNATE_EXE_PATH_NATIVE = "${STAGING_LIBDIR_NATIVE}/llvm-rust/bin/llvm-config"
+RUST_ALTERNATE_EXE_PATH ?= "${STAGING_BINDIR}/llvm-config"
+RUST_ALTERNATE_EXE_PATH_NATIVE = "${STAGING_BINDIR_NATIVE}/llvm-config"
 
 # We don't want to use bitbakes vendoring because the rust sources do their
 # own vendoring.
@@ -188,6 +188,37 @@ python do_configure() {
     bb.build.exec_func("setup_cargo_environment", d)
 }
 
+# llvm-config expects static libraries to be in the 'lib' directory rather than 'lib64' when
+# multilibs enabled. Since we are copying the natively built llvm-config into the target sysroot
+# and executing it there, it will default to searching in 'lib', as it is unaware of the 'lib64'
+# directory. To ensure llvm-config can locate the necessary libraries, create a symlink from 'lib'
+do_compile:append:class-target() {
+    # Ensure llvm-config can find static libraries in multilib setup
+    lib64_dir="${STAGING_DIR_TARGET}/usr/lib64"
+    lib_dir="${STAGING_DIR_TARGET}/usr/lib"
+
+    if [ -d "$lib64_dir" ]; then
+        # If lib does not exist, symlink it to lib64
+        if [ ! -e "$lib_dir" ]; then
+            ln -s lib64 "$lib_dir"
+        fi
+
+        # Only do per-file symlinking if lib is a real directory (not symlink)
+        if [ -d "$lib_dir" ] && [ ! -L "$lib_dir" ]; then
+            for lib64_file in "${lib64_dir}"/libLLVM*.a; do
+                if [ -e "$lib64_file" ]; then
+                    lib_name=$(basename "${lib64_file}")
+                    target_link="${lib_dir}/${lib_name}"
+
+                    if [ ! -e "${target_link}" ]; then
+                        ln -s "../lib64/${lib_name}" "${target_link}"
+                    fi
+                fi
+            done
+        fi
+    fi
+}
+
 rust_runx () {
     echo "COMPILE ${PN}" "$@"
 
@@ -199,7 +230,7 @@ rust_runx () {
     unset CXXFLAGS
     unset CPPFLAGS
 
-    export RUSTFLAGS="${RUST_DEBUG_REMAP}"
+    export RUSTFLAGS="${RUST_DEBUG_REMAP} -Clink-arg=-lz -Clink-arg=-lzstd"
 
     # Copy the natively built llvm-config into the target so we can run it. Horrible,
     # but works!
