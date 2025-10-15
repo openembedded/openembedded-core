@@ -10,8 +10,8 @@ HOMEPAGE = "https://perf.wiki.kernel.org/index.php/Main_Page"
 LICENSE = "GPL-2.0-only"
 
 # remove at next version upgrade or when output changes
-PR = "r1"
-HASHEQUIV_HASH_VERSION .= ".1"
+PR = "r2"
+HASHEQUIV_HASH_VERSION .= ".2"
 
 # zstd is required for kernels 6.14+ when libelf-zstd is detected
 # Respect the coresight machine feature, but note this causes a
@@ -178,11 +178,10 @@ do_compile() {
 	# There are two copies of internal headers such as:
 	# libperf/include/internal/xyarray.h and tools/lib/perf/include/internal/xyarray.h
 	# For reproducibile binaries, we need to find one copy, hence force libXXX to be created first
-	for i in api bpf subcmd symbol
+	for i in api bpf subcmd symbol perf
 	do
 		oe_runmake -C ${S}/tools/lib/$i DESTDIR=${B}/lib$i prefix= install_headers V=1
 	done
-	oe_runmake ${B}/libperf/libperf.a V=1
 	oe_runmake all V=1
 }
 
