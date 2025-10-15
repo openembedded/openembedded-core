@@ -5,13 +5,12 @@ HOMEPAGE = "https://github.com/NixOS/patchelf"
 LICENSE = "GPL-3.0-only"
 
 SRC_URI = "git://github.com/NixOS/patchelf;protocol=https;branch=master \
-    file://0001-Set-interpreter-only-when-necessary.patch \
-    file://0002-align-startOffset-with-p_align-instead-of-pagesize-f.patch \
-    file://0003-make-LOAD-segment-extensions-based-on-p_align-instea.patch \
 "
-SRCREV = "99c24238981b7b1084313aca8f5c493bb46f302c"
+SRCREV = "b49de1b3384e7928bf0df9a889fe5a4e7b3fbddf"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
+PV = "0.18.0+git"
+
+LIC_FILES_CHKSUM = "file://COPYING;md5=c678957b0c8e964aa6c70fd77641a71e"
 
 inherit autotools
 
