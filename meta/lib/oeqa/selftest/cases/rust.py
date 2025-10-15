@@ -102,8 +102,9 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
         testargs =  exclude_fail_tests + " --no-doc --no-fail-fast --bless"
 
         # wrap the execution with a qemu instance.
-        # Tests are run with 512 tasks in parallel to execute all tests very quickly
-        with runqemu("core-image-minimal", runqemuparams = "nographic", qemuparams = "-m 512") as qemu:
+        # Set QEMU RAM to 1024MB to support running unit tests for the compiler crate, including larger
+        # test cases and parallel execution in the test environment.
+        with runqemu("core-image-minimal", runqemuparams = "nographic", qemuparams = "-m 1024") as qemu:
             # Copy remote-test-server to image through scp
             host_sys = get_bb_var("RUST_BUILD_SYS", "rust")
             ssh = SSHControl(ip=qemu.ip, logfile=qemu.sshlog, user="root")
