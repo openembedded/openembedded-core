@@ -1,0 +1,94 @@
+From 820e4bb46d7e72ba2b14b15819166919c2e81205 Mon Sep 17 00:00:00 2001
+From: Adrian Perez de Castro <aperez@igalia.com>
+Date: Wed, 15 Oct 2025 00:58:59 +0300
+Subject: [PATCH] [libpas] Build fails with libc implementations that lack
+ execinfo.h https://bugs.webkit.org/show_bug.cgi?id=300701
+
+Reviewed by NOBODY (OOPS!).
+
+Change guards to use backtrace() and execinfo.h on Linux only when using
+glibc as the C library. The PlayStation and Windows cases no longer need
+to be matched, as they are neither Linux nor Darwin, both of which are now
+explicitly listed. The Android check is kept as it was.
+
+* Source/bmalloc/libpas/src/libpas/pas_probabilistic_guard_malloc_allocator.c:
+* Source/bmalloc/libpas/src/test/PGMTests.cpp:
+(addPGMTests):
+
+
+Fixes the following error in OE, when compiled with musl:
+
+| ${UNPACKDIR}/webkitgtk-2.50.0/Source/bmalloc/libpas/src/libpas/pas_probabilistic_guard_malloc_allocator.c:52:10: fatal error: execinfo.h: No such file or directory
+|    52 | #include <execinfo.h>
+
+
+Upstream-Status: Backport [https://github.com/WebKit/WebKit/pull/52300]
+Signed-off-by: Gyorgy Sarvari <skandigraun@gmail.com>
+
+---
+ .../pas_probabilistic_guard_malloc_allocator.c      |  4 ++--
+ Source/bmalloc/libpas/src/test/PGMTests.cpp         | 13 ++++++-------
+ 2 files changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/Source/bmalloc/libpas/src/libpas/pas_probabilistic_guard_malloc_allocator.c b/Source/bmalloc/libpas/src/libpas/pas_probabilistic_guard_malloc_allocator.c
+index ff3adefa7dcc..58ec32eb4fed 100644
+--- a/Source/bmalloc/libpas/src/libpas/pas_probabilistic_guard_malloc_allocator.c
++++ b/Source/bmalloc/libpas/src/libpas/pas_probabilistic_guard_malloc_allocator.c
+@@ -43,8 +43,8 @@
+ #include <unistd.h>
+ #endif
+ 
+-/* PlayStation does not currently support the backtrace API. Android API versions < 33 don't, either. Windows does not either. */
+-#if !PAS_PLATFORM(PLAYSTATION) && (!PAS_OS(ANDROID) || __ANDROID_API__ >= 33) && !PAS_OS(WINDOWS)
++/* PlayStation does not currently support the backtrace API. Android API versions < 33 don't, either. Windows does not either. Linux only with GLibc and not uCLibc/Musl. */
++#if (PAS_OS(ANDROID) && __ANDROID_API__ >= 33) || PAS_OS(DARWIN) || (PAS_OS(LINUX) && defined(__GLIBC__) && !defined(__UCLIBC__))
+ #include <execinfo.h>
+ #else
+ size_t backtrace(void** buffer, size_t size)
+diff --git a/Source/bmalloc/libpas/src/test/PGMTests.cpp b/Source/bmalloc/libpas/src/test/PGMTests.cpp
+index 0432f46ba3b0..dfbf957a3421 100644
+--- a/Source/bmalloc/libpas/src/test/PGMTests.cpp
++++ b/Source/bmalloc/libpas/src/test/PGMTests.cpp
+@@ -43,9 +43,9 @@
+ #include "pas_report_crash.h"
+ #include "pas_root.h"
+ 
+-#if !PAS_PLATFORM(PLAYSTATION)
++#if (PAS_OS(ANDROID) && __ANDROID_API__ >= 33) || PAS_OS(DARWIN) || (PAS_OS(LINUX) && defined(__GLIBC__) && !defined(__UCLIBC__))
+ #include <execinfo.h>
+-#endif // !PAS_PLATFORM(PLAYSTATION)
++#endif
+ 
+ using namespace std;
+ 
+@@ -383,8 +383,7 @@ void testPGMMetadataVectorManagementFewDeallocations()
+     pas_heap_lock_unlock();
+ }
+ 
+-/* Backtrace API is currently not supported on PlayStation. */
+-#if !PAS_PLATFORM(PLAYSTATION)
++#if (PAS_OS(ANDROID) && __ANDROID_API__ >= 33) || PAS_OS(DARWIN) || (PAS_OS(LINUX) && defined(__GLIBC__) && !defined(__UCLIBC__))
+ void testPGMMetadataDoubleFreeBehavior()
+ {
+     pas_probabilistic_guard_malloc_initialize_pgm_as_enabled(1);
+@@ -583,7 +582,7 @@ void testPGMAllocMetadataOnly()
+         CHECK(!dealloc_metadata);
+     }
+ }
+-#endif // !PAS_PLATFORM(PLAYSTATION)
++#endif
+ 
+ } // anonymous namespace
+ 
+@@ -598,9 +597,9 @@ void addPGMTests()
+     ADD_TEST(testPGMMetadataVectorManagement());
+     ADD_TEST(testPGMMetadataVectorManagementFewDeallocations());
+     ADD_TEST(testPGMMetadataVectorManagementRehash());
+-#if !PAS_PLATFORM(PLAYSTATION)
++#if (PAS_OS(ANDROID) && __ANDROID_API__ >= 33) || PAS_OS(DARWIN) || (PAS_OS(LINUX) && defined(__GLIBC__) && !defined(__UCLIBC__))
+     ADD_TEST(testPGMMetadataDoubleFreeBehavior());
+     ADD_TEST(testPGMBmallocAllocationBacktrace());
+     ADD_TEST(testPGMAllocMetadataOnly());
+-#endif // !PAS_PLATFORM(PLAYSTATION)
++#endif
+ }
