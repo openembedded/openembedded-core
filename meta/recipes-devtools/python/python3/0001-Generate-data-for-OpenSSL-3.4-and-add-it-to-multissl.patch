@@ -1441,8 +1441,8 @@ index eae0e0c..fb06f63 100755
 +++ b/Tools/ssl/multissltests.py
 @@ -51,6 +51,7 @@ OPENSSL_RECENT_VERSIONS = [
      "3.1.7",
-     "3.2.3",
-     "3.3.2",
+     "3.2.6",
+     "3.3.5",
 +    "3.4.0",
  ]
  
