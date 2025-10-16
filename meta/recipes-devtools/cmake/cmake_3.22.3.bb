@@ -12,6 +12,7 @@ SRC_URI:append:class-nativesdk = " \
     file://0001-CMakeDetermineSystem-use-oe-environment-vars-to-load.patch \
     file://0001-ctest-Allow-arbitrary-characters-in-test-names-of-CT.patch \
 "
+SRC_URI += "file://CVE-2025-9301.patch"
 
 LICENSE:append = " & BSD-1-Clause & MIT"
 LIC_FILES_CHKSUM:append = " \
