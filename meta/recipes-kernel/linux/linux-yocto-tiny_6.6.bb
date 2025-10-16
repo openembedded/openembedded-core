@@ -8,7 +8,7 @@ require recipes-kernel/linux/linux-yocto.inc
 # CVE exclusions
 include recipes-kernel/linux/cve-exclusion_6.6.inc
 
-LINUX_VERSION ?= "6.6.100"
+LINUX_VERSION ?= "6.6.101"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
 
 DEPENDS += "${@bb.utils.contains('ARCH', 'x86', 'elfutils-native', '', d)}"
@@ -17,8 +17,8 @@ DEPENDS += "openssl-native util-linux-native"
 KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "2"
 
-SRCREV_machine ?= "fefda6092153d01adb8574acd075d7d3f4182442"
-SRCREV_meta ?= "d2387ec7cf374ccffe480f7a00102f46b990d529"
+SRCREV_machine ?= "fe405475e21ba69486139227f55cbc3a507b073b"
+SRCREV_meta ?= "cdadebd03ef4e7a129f8525938385dba54e32e80"
 
 PV = "${LINUX_VERSION}+git"
 
