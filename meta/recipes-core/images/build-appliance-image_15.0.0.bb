@@ -26,7 +26,7 @@ inherit core-image setuptools3 features_check
 
 REQUIRED_DISTRO_FEATURES += "xattr"
 
-SRCREV ?= "b003af4cb779d02bbc75cba4874ad68585b41159"
+SRCREV ?= "a6666d530a9eab84359a1d4d9baff5c4afad79be"
 SRC_URI = "git://git.yoctoproject.org/poky;branch=master;destsuffix=poky \
            file://Yocto_Build_Appliance.vmx \
            file://Yocto_Build_Appliance.vmxf \
