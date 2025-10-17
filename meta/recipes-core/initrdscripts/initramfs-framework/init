@@ -80,8 +80,8 @@ EFI_DIR=/sys/firmware/efi  # place to store device firmware information
 # make mount stop complaining about missing /etc/fstab
 touch /etc/fstab
 
-# initialize /proc, /sys, /run/lock and /var/lock
-mkdir -p /proc /sys /run /var/lock
+# initialize /proc, /sys and /run/lock
+mkdir -p /proc /sys /run
 mount -t proc proc /proc
 mount -t sysfs sysfs /sys
 mount -t tmpfs tmpfs /run
