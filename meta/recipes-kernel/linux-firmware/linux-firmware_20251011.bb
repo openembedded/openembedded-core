@@ -472,6 +472,14 @@ def fw_compr_suffix(d):
         compr = 'zst'
     return '-' + compr
 
+def fw_compr_file_suffix(d):
+    compr = d.getVar('FIRMWARE_COMPRESSION')
+    if compr == '':
+        return ''
+    if compr == 'zstd':
+        compr = 'zst'
+    return '.' + compr
+
 do_compile() {
 	:
 }
@@ -489,7 +497,7 @@ do_install() {
         # Remove all unlicensed firmware
         for file in ${REMOVE_UNLICENSED}; do
                 echo "Remove unlicensed firmware: $file"
-                rm ${D}${nonarch_base_libdir}/firmware/$file
+                rm ${D}${nonarch_base_libdir}/firmware/$file${@fw_compr_file_suffix(d)}
                 path_to_file=$(dirname $file)
                 while [ "${path_to_file}" != "." ]; do
                         num_files=$(ls -A1 ${D}${nonarch_base_libdir}/firmware/$path_to_file | wc -l)
@@ -1386,11 +1394,7 @@ FILES:${PN}-sd8897 = " \
 do_install:append() {
     # The kernel 5.6.x driver still uses the old name, provide a symlink for
     # older kernels
-    COMPR=$(echo ${@fw_compr_suffix(d)} | tr -d '-')
-    if [ -n "$COMPR" ]; then
-        COMPR=".$COMPR"
-    fi
-    ln -fs sdsd8997_combo_v4.bin$COMPR ${D}${nonarch_base_libdir}/firmware/mrvl/sd8997_uapsta.bin$COMPR
+    ln -fs sdsd8997_combo_v4.bin${@fw_compr_file_suffix(d)} ${D}${nonarch_base_libdir}/firmware/mrvl/sd8997_uapsta.bin${@fw_compr_file_suffix(d)}
 }
 FILES:${PN}-sd8997 = " \
   ${nonarch_base_libdir}/firmware/mrvl/sd8997_uapsta.bin* \
