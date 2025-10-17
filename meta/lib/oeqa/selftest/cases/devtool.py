@@ -1832,7 +1832,7 @@ class DevtoolDeployTargetTests(DevtoolBase):
         result = runCmd('devtool deploy-target -n %s root@localhost' % testrecipe)
         self.assertIn('  %s' % testfile, result.output)
         # Boot the image
-        with runqemu(testimage) as qemu:
+        with runqemu(testimage, runqemuparams='nographic') as qemu:
             # Now really test deploy-target
             for extra_opt in ['', '--strip']:
                 deploy_cmd= 'devtool deploy-target -c %s root@%s %s' % (testrecipe, qemu.ip, extra_opt)
