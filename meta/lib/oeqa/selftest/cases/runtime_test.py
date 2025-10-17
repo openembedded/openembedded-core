@@ -42,7 +42,7 @@ class TestExport(OESelftestTestCase):
         isdir = os.path.isdir(testexport_dir)
         self.assertEqual(True, isdir, 'Failed to create testexport dir: %s' % testexport_dir)
 
-        with runqemu('core-image-minimal') as qemu:
+        with runqemu('core-image-minimal', runqemuparams='nographic') as qemu:
             # Attempt to run runexported.py to perform ping test
             test_path = os.path.join(testexport_dir, "oe-test")
             data_file = os.path.join(testexport_dir, 'data', 'testdata.json')
@@ -318,7 +318,7 @@ class Postinst(OESelftestTestCase):
                 self.assertTrue(os.path.isfile(os.path.join(hosttestdir, "rootfs")),
                                 "rootfs state file was not created")
 
-                with runqemu('core-image-minimal') as qemu:
+                with runqemu('core-image-minimal', runqemuparams='nographic') as qemu:
                     # Make the test echo a string and search for that as
                     # run_serial()'s status code is useless.'
                     for filename in ("rootfs", "delayed-a", "delayed-b"):
@@ -441,7 +441,7 @@ IMAGE_INSTALL:append = " systemtap-runtime"
             systemtap_examples = os.path.join(get_bb_var("WORKDIR","systemtap-native"), "usr/share/systemtap/examples")
             bitbake(self.image)
 
-            with runqemu(self.image) as qemu:
+            with runqemu(self.image, runqemuparams='nographic') as qemu:
                 cmd = "crosstap -r root@192.168.7.2 -s %s/general/helloworld.stp " % systemtap_examples 
                 result = runCmd(cmd)
                 self.assertEqual(0, result.status, 'crosstap helloworld returned a non 0 status:%s' % result.output)
@@ -453,7 +453,7 @@ IMAGE_INSTALL:append = " systemtap-runtime"
             systemtap_examples = os.path.join(get_bb_var("WORKDIR","systemtap-native"), "usr/share/systemtap/examples")
             bitbake(self.image)
 
-            with runqemu(self.image) as qemu:
+            with runqemu(self.image, runqemuparams='nographic') as qemu:
                 cmd = "crosstap -r root@192.168.7.2 -s %s/process/pstree.stp" % systemtap_examples
                 result = runCmd(cmd)
                 self.assertEqual(0, result.status, 'crosstap pstree returned a non 0 status:%s' % result.output)
@@ -465,7 +465,7 @@ IMAGE_INSTALL:append = " systemtap-runtime"
             systemtap_examples = os.path.join(get_bb_var("WORKDIR","systemtap-native"), "usr/share/systemtap/examples")
             bitbake(self.image)
 
-            with runqemu(self.image) as qemu:
+            with runqemu(self.image, runqemuparams='nographic') as qemu:
                 cmd = "crosstap -r root@192.168.7.2 -s %s/process/ syscalls_by_proc.stp" % systemtap_examples
                 result = runCmd(cmd)
                 self.assertEqual(0, result.status, 'crosstap  syscalls_by_proc returned a non 0 status:%s' % result.output)
@@ -477,7 +477,7 @@ IMAGE_INSTALL:append = " systemtap-runtime"
             systemtap_examples = os.path.join(get_bb_var("WORKDIR","systemtap-native"), "usr/share/systemtap/examples")
             bitbake(self.image)
 
-            with runqemu(self.image) as qemu:
+            with runqemu(self.image, runqemuparams='nographic') as qemu:
                 cmd = "crosstap -r root@192.168.7.2 -s %s/process/ syscalls_by_pid.stp" % systemtap_examples
                 result = runCmd(cmd)
                 self.assertEqual(0, result.status, 'crosstap  syscalls_by_pid returned a non 0 status:%s' % result.output)
