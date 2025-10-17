@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=8a15a0759ef07f2682d2ba4b893c9afe"
 
 DEPENDS = "llvm-tblgen-native libffi libxml2 zlib zstd"
 
-inherit cmake pkgconfig lib_package
+inherit cmake pkgconfig lib_package multilib_header
 
 OECMAKE_SOURCEPATH = "${S}/llvm"
 
@@ -109,6 +109,8 @@ do_install:append() {
 
     # Reproducibility fixes
     sed -i -e 's,${WORKDIR},,g' ${D}/${libdir}/cmake/llvm/LLVMConfig.cmake
+
+    oe_multilib_header llvm/Config/llvm-config.h
 }
 
 do_install:append:class-native() {
