@@ -36,7 +36,7 @@ class ImageFeatures(OESelftestTestCase):
         # Build a core-image-minimal
         bitbake('core-image-minimal')
 
-        with runqemu("core-image-minimal") as qemu:
+        with runqemu("core-image-minimal", runqemuparams='nographic') as qemu:
             # Attempt to ssh with each user into qemu with empty password
             for user in [self.root_user, self.test_user]:
                 ssh = SSHControl(ip=qemu.ip, logfile=qemu.sshlog, user=user)
@@ -62,7 +62,7 @@ class ImageFeatures(OESelftestTestCase):
         # Build a core-image-minimal
         bitbake('core-image-minimal')
 
-        with runqemu("core-image-minimal") as qemu:
+        with runqemu("core-image-minimal", runqemuparams='nographic') as qemu:
             # Attempt to ssh with each user into qemu with empty password
             for user in [self.root_user, self.test_user]:
                 ssh = SSHControl(ip=qemu.ip, logfile=qemu.sshlog, user=user)
