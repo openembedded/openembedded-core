@@ -35,6 +35,10 @@ do_configure[noexec] = "1"
 UBOOT_MKIMAGE_KERNEL_TYPE ?= "kernel"
 KERNEL_IMAGEDEST ?= "/boot"
 
+FIT_KERNEL_SIGN_ENABLE ?= "${UBOOT_SIGN_ENABLE}"
+FIT_KERNEL_SIGN_KEYNAME ?= "${UBOOT_SIGN_KEYNAME}"
+FIT_KERNEL_SIGN_KEYDIR ?= "${UBOOT_SIGN_KEYDIR}"
+
 python do_compile() {
     import shutil
     import oe.fitimage
@@ -50,11 +54,11 @@ python do_compile() {
     root_node = oe.fitimage.ItsNodeRootKernel(
         d.getVar("FIT_DESC"), d.getVar("FIT_ADDRESS_CELLS"),
         d.getVar('HOST_PREFIX'), d.getVar('UBOOT_ARCH'),  d.getVar("FIT_CONF_PREFIX"),
-        oe.types.boolean(d.getVar('UBOOT_SIGN_ENABLE')), d.getVar("UBOOT_SIGN_KEYDIR"),
+        oe.types.boolean(d.getVar('FIT_KERNEL_SIGN_ENABLE')), d.getVar("FIT_KERNEL_SIGN_KEYDIR"),
         d.getVar("UBOOT_MKIMAGE"), d.getVar("UBOOT_MKIMAGE_DTCOPTS"),
         d.getVar("UBOOT_MKIMAGE_SIGN"), d.getVar("UBOOT_MKIMAGE_SIGN_ARGS"),
         d.getVar('FIT_HASH_ALG'), d.getVar('FIT_SIGN_ALG'), d.getVar('FIT_PAD_ALG'),
-        d.getVar('UBOOT_SIGN_KEYNAME'),
+        d.getVar('FIT_KERNEL_SIGN_KEYNAME'),
         oe.types.boolean(d.getVar('FIT_SIGN_INDIVIDUAL')), d.getVar('UBOOT_SIGN_IMG_KEYNAME')
     )
 
