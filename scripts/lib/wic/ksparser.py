@@ -196,6 +196,7 @@ class KickStart():
         bootloader.add_argument('--configfile')
         bootloader.add_argument('--ptable', choices=('msdos', 'gpt', 'gpt-hybrid'),
                                 default='msdos')
+        bootloader.add_argument('--diskid', type=lambda x: int(x, 0))
         bootloader.add_argument('--timeout', type=int)
         bootloader.add_argument('--source')
 
