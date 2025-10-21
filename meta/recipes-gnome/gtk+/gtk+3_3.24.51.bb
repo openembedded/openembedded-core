@@ -18,12 +18,12 @@ LICENSE = "LGPL-2.0-only & LGPL-2.0-or-later & LGPL-2.1-or-later"
 inherit meson gettext pkgconfig gtk-doc update-alternatives gtk-immodules-cache gsettings features_check gobject-introspection
 
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
-SRC_URI = "http://ftp.gnome.org/pub/gnome/sources/gtk+/${MAJ_VER}/gtk+-${PV}.tar.xz \
+SRC_URI = "${GNOME_MIRROR}/gtk/${MAJ_VER}/gtk-${PV}.tar.xz \
            file://opengl.patch \
            "
-SRC_URI[sha256sum] = "7e04f0648515034b806b74ae5d774d87cffb1a2a96c468cb5be476d51bf2f3c7"
+SRC_URI[sha256sum] = "0013877c6bd23c2dbe42ad7c70a053d0e449be66736574e37867c49c5f905a4f"
 
-S = "${UNPACKDIR}/gtk+-${PV}"
+S = "${UNPACKDIR}/gtk-${PV}"
 
 BBCLASSEXTEND = "native nativesdk"
 
