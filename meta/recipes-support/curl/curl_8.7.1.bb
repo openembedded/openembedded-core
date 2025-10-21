@@ -94,10 +94,12 @@ PACKAGECONFIG[zstd] = "--with-zstd,--without-zstd,zstd"
 EXTRA_OECONF = " \
     --disable-libcurl-option \
     --disable-ntlm-wb \
-    --with-ca-bundle=${sysconfdir}/ssl/certs/ca-certificates.crt \
     --without-libpsl \
     --enable-optimize \
     ${@'--without-ssl' if (bb.utils.filter('PACKAGECONFIG', 'gnutls mbedtls openssl', d) == '') else ''} \
+"
+EXTRA_OECONF:append:class-target = " \
+    --with-ca-bundle=${sysconfdir}/ssl/certs/ca-certificates.crt \
 "
 
 fix_absolute_paths () {
