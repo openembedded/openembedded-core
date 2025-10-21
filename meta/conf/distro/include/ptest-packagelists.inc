@@ -19,6 +19,7 @@ PTESTS_FAST = "\
     expect \
     findutils \
     flex \
+    fmt \
     gawk \
     gdbm \
     gdk-pixbuf \
