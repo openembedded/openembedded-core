@@ -78,6 +78,8 @@ do_install:append() {
         ln -sf ${sbindir}/xtables-nft-multi ${D}${sbindir}/iptables 
         ln -sf ${sbindir}/xtables-nft-multi ${D}${sbindir}/iptables-save
         ln -sf ${sbindir}/xtables-nft-multi ${D}${sbindir}/iptables-restore
+        # ethertypes is provided by the netbase package
+        rm -f ${D}${sysconfdir}/ethertypes
     fi
 }
 
