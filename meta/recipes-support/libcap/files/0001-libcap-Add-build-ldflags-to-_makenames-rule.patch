@@ -1,0 +1,29 @@
+From e52d3232882c263f5bd4b1980195ac633d706a53 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Tue, 21 Oct 2025 18:27:51 -0700
+Subject: [PATCH] libcap: Add build ldflags to _makenames rule
+
+its calling compiler and linker in single step
+ensure that build ldflags are respected as it
+might have important information like which runtime
+to use.
+
+Upstream-Status: Backport [https://git.kernel.org/pub/scm/libs/libcap/libcap.git/commit/?id=c3ddf45d9afaab85d3b7db0dc7bfd1aafb8fde50]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ libcap/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libcap/Makefile b/libcap/Makefile
+index e90a950..f0eb87e 100644
+--- a/libcap/Makefile
++++ b/libcap/Makefile
+@@ -80,7 +80,7 @@ $(PSXTITLE).pc: $(PSXTITLE).pc.in
+ 		$< >$@
+
+ _makenames: _makenames.c cap_names.list.h
+-	$(BUILD_CC) $(BUILD_CFLAGS) $(BUILD_CPPFLAGS) $< -o $@
++	$(BUILD_CC) $(BUILD_CFLAGS) $(BUILD_CPPFLAGS) $< -o $@ $(BUILD_LDFLAGS)
+
+ cap_names.h: _makenames
+ 	./_makenames > cap_names.h

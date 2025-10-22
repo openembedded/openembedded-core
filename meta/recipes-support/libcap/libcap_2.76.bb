@@ -12,7 +12,9 @@ LIC_FILES_CHKSUM = "file://License;md5=2965a646645b72ecee859b43c592dcaa \
 
 DEPENDS = "hostperl-runtime-native gperf-native"
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/libs/security/linux-privs/${BPN}2/${BPN}-${PV}.tar.xz"
+SRC_URI = "${KERNELORG_MIRROR}/linux/libs/security/linux-privs/${BPN}2/${BPN}-${PV}.tar.xz \
+           file://0001-libcap-Add-build-ldflags-to-_makenames-rule.patch \
+		   "
 SRC_URI:append:class-nativesdk = " \
            file://0001-nativesdk-libcap-Raise-the-size-of-arrays-containing.patch \
            "
@@ -37,6 +39,8 @@ EXTRA_OEMAKE = " \
 do_compile() {
 	oe_runmake \
 		AR="${AR}" \
+		BUILD_CC="${BUILD_CC}" \
+		BUILD_LDFLAGS="${BUILD_LDFLAGS}" \
 		CC="${CC}" \
 		RANLIB="${RANLIB}" \
 		OBJCOPY="${OBJCOPY}"
