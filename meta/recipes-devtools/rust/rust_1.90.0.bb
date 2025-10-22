@@ -237,11 +237,7 @@ rust_runx () {
     if [ ${RUST_ALTERNATE_EXE_PATH_NATIVE} != ${RUST_ALTERNATE_EXE_PATH} -a ! -f ${RUST_ALTERNATE_EXE_PATH} ]; then
         mkdir -p `dirname ${RUST_ALTERNATE_EXE_PATH}`
         cp ${RUST_ALTERNATE_EXE_PATH_NATIVE} ${RUST_ALTERNATE_EXE_PATH}
-        if [ -e ${STAGING_LIBDIR_NATIVE}/libc++.so.1 ]; then
-            patchelf --set-rpath \$ORIGIN/../../../../../`basename ${STAGING_DIR_NATIVE}`${libdir_native} ${RUST_ALTERNATE_EXE_PATH}
-        else
-            patchelf --remove-rpath ${RUST_ALTERNATE_EXE_PATH}
-        fi
+        patchelf --remove-rpath ${RUST_ALTERNATE_EXE_PATH}
     fi
 
     oe_cargo_fix_env
