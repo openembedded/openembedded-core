@@ -11,6 +11,7 @@ BINV = "15.2.0"
 FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc:${FILE_DIRNAME}/gcc/backport:"
 
 TOOLCHAIN = "gcc"
+TOOLCHAIN_NATIVE = "gcc"
 
 DEPENDS =+ "mpfr gmp libmpc zlib zstd flex-native"
 NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native flex-native zstd-native"
