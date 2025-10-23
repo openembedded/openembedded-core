@@ -236,6 +236,26 @@ def read_spdx3(spdx):
             cfiles.add(filename)
     return cfiles
 
+def read_debugsources(file_path):
+    '''
+    Read zstd file from pkgdata to extract sources
+    '''
+    import zstandard as zstd
+    import itertools
+    # Decompress the .zst file
+    cfiles = set()
+    with open(file_path, 'rb') as fh:
+        dctx = zstd.ZstdDecompressor()
+        with dctx.stream_reader(fh) as reader:
+            decompressed_bytes = reader.read()
+            json_data = json.loads(decompressed_bytes)
+            # We need to remove one level from the debug sources
+            for source_list in json_data.values():
+                for source in source_list:
+                    src = source.split("/",1)[1]
+                    cfiles.add(src)
+    return cfiles
+
 def check_kernel_compiled_files(compiled_files, cve_info):
     """
     Return if a CVE affected us depending on compiled files
@@ -373,6 +393,10 @@ def main():
         help="SPDX2/3 for the kernel. Needs to include compiled sources",
     )
     parser.add_argument(
+        "--debug-sources-file",
+        help="Debug sources zstd file generated from Yocto",
+    )
+    parser.add_argument(
         "--datadir",
         type=pathlib.Path,
         help="Directory where CVE data is",
@@ -414,6 +438,9 @@ def main():
     compiled_files = []
     if args.spdx:
         compiled_files = read_spdx(args.spdx)
+        logging.info("Total compiled files %d", len(compiled_files))
+    if args.debug_sources_file:
+        compiled_files = read_debugsources(args.debug_sources_file)
         logging.info("Total compiled files %d", len(compiled_files))
 
     if args.old_cve_report:
