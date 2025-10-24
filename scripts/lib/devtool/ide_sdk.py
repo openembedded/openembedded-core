@@ -104,7 +104,7 @@ class RecipeNative:
 
 
 class RecipeGdbCross(RecipeNative):
-    """Handle handle gdb-cross on the host and the gdbserver on the target device"""
+    """Handle gdb-cross on the host and the gdbserver on the target device"""
 
     def __init__(self, args, target_arch, target_device):
         super().__init__('gdb-cross-' + target_arch, target_arch)
