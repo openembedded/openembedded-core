@@ -21,8 +21,9 @@ class BitbakeLayers(OESelftestTestCase):
         bitbake("-c addto_recipe_sysroot python3-jsonschema-native")
 
         # Fetch variables used in multiple test cases
-        bb_vars = get_bb_vars(['COREBASE'])
+        bb_vars = get_bb_vars(['COREBASE', 'BITBAKEPATH'])
         cls.corebase = bb_vars['COREBASE']
+        cls.bitbakepath = bb_vars['BITBAKEPATH']
         cls.jsonschema_staging_bindir = get_bb_var('STAGING_BINDIR', 'python3-jsonschema-native')
 
     def test_bitbakelayers_layerindexshowdepends(self):
@@ -160,6 +161,19 @@ class BitbakeLayers(OESelftestTestCase):
     def test_validate_examplelayersjson(self):
         json = os.path.join(self.corebase, "meta/files/layers.example.json")
         self.validate_layersjson(json)
+
+    def test_validate_bitbake_setup_default_registry(self):
+        jsonschema = "bitbake-setup.schema.json"
+
+        default_registry_path = os.path.join(self.bitbakepath, "..", "default-registry", "configurations")
+
+        for root, _, files in os.walk(default_registry_path):
+            for f in files:
+                if not f.endswith(".conf.json"):
+                    continue
+                json = os.path.join(root, f)
+                self.logger.debug("Validating %s", json)
+                self.validate_json(json, jsonschema)
 
     def test_bitbakelayers_setup(self):
         result = runCmd('bitbake-layers create-layers-setup {}'.format(self.testlayer_path))
