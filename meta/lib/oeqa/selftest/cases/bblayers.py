@@ -20,6 +20,11 @@ class BitbakeLayers(OESelftestTestCase):
         bitbake("python3-jsonschema-native")
         bitbake("-c addto_recipe_sysroot python3-jsonschema-native")
 
+        # Fetch variables used in multiple test cases
+        bb_vars = get_bb_vars(['COREBASE'])
+        cls.corebase = bb_vars['COREBASE']
+        cls.jsonschema_staging_bindir = get_bb_var('STAGING_BINDIR', 'python3-jsonschema-native')
+
     def test_bitbakelayers_layerindexshowdepends(self):
         result = runCmd('bitbake-layers layerindex-show-depends meta-poky')
         find_in_contents = re.search("openembedded-core", result.output)
@@ -58,7 +63,7 @@ class BitbakeLayers(OESelftestTestCase):
         self.assertTrue(find_in_contents, msg = "Flattening layers did not work. bitbake-layers flatten output: %s" % result.output)
 
     def test_bitbakelayers_add_remove(self):
-        test_layer = os.path.join(get_bb_var('COREBASE'), 'meta-skeleton')
+        test_layer = os.path.join(self.corebase, 'meta-skeleton')
         result = runCmd('bitbake-layers show-layers')
         self.assertNotIn('meta-skeleton', result.output, "This test cannot run with meta-skeleton in bblayers.conf. bitbake-layers show-layers output: %s" % result.output)
         result = runCmd('bitbake-layers add-layer %s' % test_layer)
@@ -136,14 +141,24 @@ class BitbakeLayers(OESelftestTestCase):
         self.assertTrue(os.path.isfile(recipe_file), msg = "Can't find recipe file for %s" % recipe)
         return os.path.basename(recipe_file)
 
+    def validate_json(self, json, jsonschema):
+        python = os.path.join(self.jsonschema_staging_bindir, 'nativepython3')
+        jsonvalidator = os.path.join(self.jsonschema_staging_bindir, 'jsonschema')
+        schemas_dir = os.path.join(self.corebase, "meta/files/")
+        if not os.path.isabs(jsonschema):
+            jsonschema = os.path.join(schemas_dir, jsonschema)
+
+        result = runCmd(
+            "{} {} -i {} --base-uri file://{}/ {}".format(
+                python, jsonvalidator, json, schemas_dir, jsonschema
+            )
+        )
+
     def validate_layersjson(self, json):
-        python = os.path.join(get_bb_var('STAGING_BINDIR', 'python3-jsonschema-native'), 'nativepython3')
-        jsonvalidator = os.path.join(get_bb_var('STAGING_BINDIR', 'python3-jsonschema-native'), 'jsonschema')
-        jsonschema = os.path.join(get_bb_var('COREBASE'), 'meta/files/layers.schema.json')
-        result = runCmd("{} {} -i {} {}".format(python, jsonvalidator, json, jsonschema))
+        self.validate_json(json, "layers.schema.json")
 
     def test_validate_examplelayersjson(self):
-        json = os.path.join(get_bb_var('COREBASE'), "meta/files/layers.example.json")
+        json = os.path.join(self.corebase, "meta/files/layers.example.json")
         self.validate_layersjson(json)
 
     def test_bitbakelayers_setup(self):
@@ -173,7 +188,7 @@ class BitbakeLayers(OESelftestTestCase):
 
         # As setup-layers checkout out an old revision of poky, there is no setup-build symlink,
         # and we need to run oe-setup-build directly from the current poky tree under test
-        oe_setup_build = os.path.join(get_bb_var('COREBASE'), 'scripts/oe-setup-build')
+        oe_setup_build = os.path.join(self.corebase, 'scripts/oe-setup-build')
         oe_setup_build_l = os.path.join(testcheckoutdir, 'setup-build')
         os.symlink(oe_setup_build,oe_setup_build_l)
 
