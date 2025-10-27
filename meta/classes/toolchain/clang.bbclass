@@ -32,6 +32,7 @@ TUNE_CCARGS += "${@bb.utils.contains("DISTRO_FEATURES", "usrmerge", " --dyld-pre
 
 LDFLAGS:append:class-nativesdk:x86-64 = " -Wl,-dynamic-linker,${base_libdir}/ld-linux-x86-64.so.2"
 LDFLAGS:append:class-nativesdk:aarch64 = " -Wl,-dynamic-linker,${base_libdir}/ld-linux-aarch64.so.1"
+LDFLAGS:append:class-cross-canadian = " -Wl,-dynamic-linker,${base_libdir}/placeholder/to/be/rewritten/by/sdk/installer"
 
 # do_populate_sysroot needs STRIP, do_package_qa needs OBJDUMP
 POPULATESYSROOTDEPS:append:class-target = " llvm-native:do_populate_sysroot"
