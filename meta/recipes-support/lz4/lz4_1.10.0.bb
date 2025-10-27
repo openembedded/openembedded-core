@@ -14,7 +14,9 @@ SRCREV = "ebb370ca83af193212df4dcbadcc5d87bc0de2f0"
 
 SRC_URI = "git://github.com/lz4/lz4.git;branch=release;protocol=https \
            file://reproducibility.patch \
-           file://run-ptest"
+           file://run-ptest \
+           file://CVE-2025-62813.patch \
+"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>.*)"
 
 inherit ptest
