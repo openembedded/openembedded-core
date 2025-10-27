@@ -47,4 +47,4 @@ do_install:append() {
 
 FILES:${PN} += "${libdir}/xorg/protocol.txt"
 
-RDEPENDS:${PN} += "xkbcomp"
+RDEPENDS:${PN} += "xkbcomp ${@bb.utils.contains("DISTRO_FEATURES", "systemd", "", "x11-volatiles", d)}"
