@@ -315,7 +315,14 @@ class PartitionedImage():
                           # all partitions (in bytes)
         self.ptable_format = ptable_format  # Partition table format
         # Disk system identifier
-        if disk_id:
+        if disk_id and ptable_format in ('gpt', 'gpt-hybrid'):
+            self.disk_guid = disk_id
+        elif os.getenv('SOURCE_DATE_EPOCH'):
+            self.disk_guid = uuid.UUID(int=int(os.getenv('SOURCE_DATE_EPOCH')))
+        else:
+            self.disk_guid = uuid.uuid4()
+
+        if disk_id and ptable_format == 'msdos':
             self.identifier = disk_id
         elif os.getenv('SOURCE_DATE_EPOCH'):
             self.identifier = random.Random(int(os.getenv('SOURCE_DATE_EPOCH'))).randint(1, 0xffffffff)
@@ -545,11 +552,6 @@ class PartitionedImage():
 
     def _write_disk_guid(self):
         if self.ptable_format in ('gpt', 'gpt-hybrid'):
-            if os.getenv('SOURCE_DATE_EPOCH'):
-                self.disk_guid = uuid.UUID(int=int(os.getenv('SOURCE_DATE_EPOCH')))
-            else:
-                self.disk_guid = uuid.uuid4()
-
             logger.debug("Set disk guid %s", self.disk_guid)
             sfdisk_cmd = "sfdisk --sector-size %s --disk-id %s %s" % \
                         (self.sector_size, self.path, self.disk_guid)

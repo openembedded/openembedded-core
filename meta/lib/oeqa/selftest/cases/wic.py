@@ -1905,6 +1905,42 @@ INITRAMFS_IMAGE = "core-image-initramfs-boot"
             self.assertIn("Source parameter 'fill' only works with the '--fixed-size' option, exiting.", result.output)
             self.assertNotEqual(0, result.status)
 
+    def test_diskid_on_msdos_partition(self):
+        """Test diksid on msdos partions"""
+        img = 'core-image-minimal'
+        diskid = "0xdeadbbef"
+        with NamedTemporaryFile("w", suffix=".wks") as wks:
+            wks.writelines(['bootloader --ptable msdos --diskid %s\n' % diskid,
+                            'part /boot --size=100M --active --fstype=ext4 --label boot\n'
+                            'part /     --source rootfs      --fstype=ext4 --label root\n'])
+            wks.flush()
+            cmd = "wic create %s -e %s -o %s" % (wks.name, img, self.resultdir)
+            runCmd(cmd)
+            wksname = os.path.splitext(os.path.basename(wks.name))[0]
+            out = glob(os.path.join(self.resultdir, "%s-*direct" % wksname))
+            self.assertEqual(1, len(out))
+            sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+            result = runCmd("%s/usr/sbin/sfdisk -l %s | grep 'Disk identifier:'" % (sysroot, out[0]))
+            self.assertEqual("Disk identifier: %s" % diskid.lower(), result.output)
+
+    def test_diskid_on_gpt_partition(self):
+        """Test diksid on gpt partions"""
+        img = 'core-image-minimal'
+        diskid = "deadbeef-cafe-babe-f00d-cec2ea4eface"
+        with NamedTemporaryFile("w", suffix=".wks") as wks:
+            wks.writelines(['bootloader --ptable gpt --diskid %s\n' % diskid,
+                            'part /boot --size=100M --active --fstype=ext4 --label boot\n'
+                            'part /     --source rootfs      --fstype=ext4 --label root\n'])
+            wks.flush()
+            cmd = "wic create %s -e %s -o %s" % (wks.name, img, self.resultdir)
+            runCmd(cmd)
+            wksname = os.path.splitext(os.path.basename(wks.name))[0]
+            out = glob(os.path.join(self.resultdir, "%s-*direct" % wksname))
+            self.assertEqual(1, len(out))
+            sysroot = get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools')
+            result = runCmd("%s/usr/sbin/sfdisk -l %s | grep 'Disk identifier:'" % (sysroot, out[0]))
+            self.assertEqual("Disk identifier: %s" % diskid.upper(), result.output)
+
 class ModifyTests(WicTestCase):
     def test_wic_ls(self):
         """Test listing image content using 'wic ls'"""

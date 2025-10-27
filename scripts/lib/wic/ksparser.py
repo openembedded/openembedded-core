@@ -16,6 +16,7 @@ import os
 import shlex
 import logging
 import re
+import uuid
 
 from argparse import ArgumentParser, ArgumentError, ArgumentTypeError
 
@@ -196,7 +197,7 @@ class KickStart():
         bootloader.add_argument('--configfile')
         bootloader.add_argument('--ptable', choices=('msdos', 'gpt', 'gpt-hybrid'),
                                 default='msdos')
-        bootloader.add_argument('--diskid', type=lambda x: int(x, 0))
+        bootloader.add_argument('--diskid')
         bootloader.add_argument('--timeout', type=int)
         bootloader.add_argument('--source')
 
@@ -297,6 +298,24 @@ class KickStart():
                             if append_var:
                                 self.bootloader.append = ' '.join(filter(None, \
                                                          (self.bootloader.append, append_var)))
+                            if parsed.diskid:
+                                if parsed.ptable == "msdos":
+                                    try:
+                                        self.bootloader.diskid = int(parsed.diskid, 0)
+                                    except ValueError:
+                                        err = "with --ptbale msdos only 32bit integers " \
+                                              "are allowed for --diskid. %s could not " \
+                                              "be parsed" % self.ptable
+                                        raise KickStartError(err)
+                                else:
+                                    try:
+                                        self.bootloader.diskid = uuid.UUID(parsed.diskid)
+                                    except ValueError:
+                                        err = "with --ptable %s only valid uuids are " \
+                                              "allowed for --diskid. %s could not be " \
+                                              "parsed" % (parsed.ptable, parsed.diskid)
+                                        raise KickStartError(err)
+
                         else:
                             err = "%s:%d: more than one bootloader specified" \
                                       % (confpath, lineno)
