@@ -33,8 +33,6 @@ EXTRA_OECONF = "--program-prefix=eu-"
 # Only used at runtime for make check but we want deterministic makefiles for ptest so hardcode
 CACHED_CONFIGUREVARS += "ac_cv_prog_HAVE_BUNZIP2=yes"
 
-BUILD_CFLAGS += "-Wno-error=stringop-overflow"
-
 DEPENDS_BZIP2 = "bzip2-replacement-native"
 DEPENDS_BZIP2:class-target = "bzip2"
 
