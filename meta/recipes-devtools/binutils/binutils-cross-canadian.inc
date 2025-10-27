@@ -21,9 +21,10 @@ LDFLAGS:append:toolchain-clang = " -fuse-ld=bfd"
 do_install () {
 	autotools_do_install
 
-	# We're not interested in the libs or headers, these would come from the 
+	# We're not interested in the plugins, libs, or headers, these would come from the
 	# nativesdk or target version of the binutils recipe
 	rm -rf ${D}${prefix}/${TARGET_SYS}
+	rm -rf ${D}${libdir}/bfd-plugins
 	rm -f ${D}${libdir}/libbfd*
 	rm -f ${D}${libdir}/libiberty*
 	rm -f ${D}${libdir}/libopcodes*
