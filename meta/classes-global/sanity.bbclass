@@ -847,11 +847,6 @@ def check_sanity_everybuild(status, d):
     if sys.hexversion < 0x030900F0:
         status.addresult('The system requires at least Python 3.9 to run. Please update your Python interpreter.\n')
 
-    # Check the bitbake version meets minimum requirements
-    minversion = d.getVar('BB_MIN_VERSION')
-    if bb.utils.vercmp_string_op(bb.__version__, minversion, "<"):
-        status.addresult('Bitbake version %s is required and version %s was found\n' % (minversion, bb.__version__))
-
     sanity_check_locale(d)
 
     paths = d.getVar('PATH').split(":")
