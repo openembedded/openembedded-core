@@ -1,5 +1,5 @@
 #!/bin/sh
 
-for t in `ls ./*-test`; do
+for t in *-test; do
 	./$t && echo PASS: $t || echo FAIL: $t
 done

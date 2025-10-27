@@ -17,7 +17,7 @@ EXTRA_OECMAKE += "-DBUILD_SHARED_LIBS=ON"
 EXTRA_OECMAKE += "${@bb.utils.contains('PTEST_ENABLED', '1', '-DFMT_TEST=ON', '', d)}"
 
 do_install_ptest(){
-	for t in `ls ${B}/bin/*-test`; do
+	for t in ${B}/bin/*-test; do
 		install $t ${D}${PTEST_PATH}/
 	done
 }
