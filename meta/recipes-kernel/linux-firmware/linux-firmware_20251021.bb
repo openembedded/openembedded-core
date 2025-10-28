@@ -643,7 +643,6 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-qca-wcn6750 \
              ${PN}-qca-qca2066 \
              ${PN}-qca-wcn7850 \
-             ${PN}-qca-misc \
              \
              ${PN}-imx-sdma-license ${PN}-imx-sdma-imx6q ${PN}-imx-sdma-imx7d \
              \
@@ -934,7 +933,6 @@ LICENSE:${PN}-qca-wcn399x = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-wcn6750 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-qca2066 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-wcn7850 = "Firmware-qcom"
-LICENSE:${PN}-qca-misc = "Firmware-qualcommAthos_ath10k & Firmware-qcom"
 
 FILES:${PN}-ar3k-license = "${nonarch_base_libdir}/firmware/LICENSE.QualcommAtheros_ar3k"
 FILES:${PN}-ar3k = " \
@@ -1061,12 +1059,7 @@ FILES:${PN}-qca-wcn7850 = " \
   ${nonarch_base_libdir}/firmware/qca/hmtnv20.b112* \
   ${nonarch_base_libdir}/firmware/qca/hmtnv20.bin* \
 "
-FILES:${PN}-qca-misc = "${nonarch_base_libdir}/firmware/qca/*"
-# -qca is a virtual package that depends upon all qca packages.
 ALLOW_EMPTY:${PN}-qca = "1"
-# -qca-misc is a catch all package that includes all the qca
-# firmwares that are not already included in other -qca- packages.
-ALLOW_EMPTY:${PN}-qca-misc = "1"
 
 RDEPENDS:${PN}-ar3k += "${PN}-ar3k-license ${PN}-atheros-license"
 RDEPENDS:${PN}-ath10k += "${PN}-ath10k-license"
@@ -1103,7 +1096,6 @@ RDEPENDS:${PN}-qca-wcn399x += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca-wcn6750 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca-qca2066 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca-wcn7850 += "${PN}-qcom-license"
-RDEPENDS:${PN}-qca-misc += "${PN}-ath10k-license ${PN}-qcom-license"
 # For ralink
 LICENSE:${PN}-ralink = "Firmware-ralink-firmware"
 LICENSE:${PN}-ralink-license = "Firmware-ralink-firmware"
