@@ -400,7 +400,7 @@ do_install() {
     for ss in $(find $kerneldir/build/scripts -type f -name '*'); do
         sed -i 's,/usr/bin/python2,/usr/bin/env python3,' "$ss"
         sed -i 's,/usr/bin/env python2,/usr/bin/env python3,' "$ss"
-        sed -i 's,/usr/bin/python,/usr/bin/env python3,' "$ss"
+        sed -i 's,/usr/bin/python$,/usr/bin/env python3,' "$ss"
     done
 
     chown -R root:root ${D}
