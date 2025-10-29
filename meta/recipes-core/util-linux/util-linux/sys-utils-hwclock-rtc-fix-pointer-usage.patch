@@ -1,0 +1,27 @@
+From 7064cd275607a43223b2dbaef75c610f33f432ff Mon Sep 17 00:00:00 2001
+From: Karthikeyan Krishnasamy <karthikeyan@linumiz.com>
+Date: Sat, 23 Mar 2024 13:39:55 +0530
+Subject: [PATCH] sys-utils: hwclock-rtc: fix pointer usage
+
+passing double pointer doesn't fill param value
+
+Signed-off-by: Karthikeyan Krishnasamy <karthikeyan@linumiz.com>
+Upstream-Status: Backport [https://github.com/util-linux/util-linux/commit/1064a53e4ff357dc649a8c4a0a41dfb5a1191bba]
+Signed-off-by: Bastian Krause <bst@pengutronix.de>
+---
+ sys-utils/hwclock-rtc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sys-utils/hwclock-rtc.c b/sys-utils/hwclock-rtc.c
+index 7094cd0..c797397 100644
+--- a/sys-utils/hwclock-rtc.c
++++ b/sys-utils/hwclock-rtc.c
+@@ -424,7 +424,7 @@ static int resolve_rtc_param_alias(const char *alias, __u64 *value)
+ /* kernel uapi __u64 can be defined differently than uint64_t */
+ static int strtoku64(const char *str, __u64 *num, int base)
+ {
+-	return ul_strtou64(str, (uint64_t *) &num, base);
++	return ul_strtou64(str, (uint64_t *) num, base);
+ }
+ 
+ /*

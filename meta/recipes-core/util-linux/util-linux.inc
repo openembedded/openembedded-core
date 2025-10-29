@@ -43,6 +43,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
            file://CVE-2024-28085-0001.patch \
            file://CVE-2024-28085-0002.patch \
 	   file://fstab-isolation.patch \
+           file://sys-utils-hwclock-rtc-fix-pointer-usage.patch \
            "
 
 SRC_URI[sha256sum] = "7b6605e48d1a49f43cc4b4cfc59f313d0dd5402fa40b96810bd572e167dfed0f"
