@@ -1,0 +1,33 @@
+From b9afffcee8809e47d0564f3d6376de724ae820ae Mon Sep 17 00:00:00 2001
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Wed, 29 Oct 2025 22:26:16 +0200
+Subject: [PATCH] Add missing dependency for scanner.h
+
+Automake doesn't handle the header -> source dependency for lex
+scanners. This might result in the out-of-date header or it not being
+rebuilt in time. Provide a rule to make sure that the header is built
+properly.
+
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Upstream-Status: Submitted [https://github.com/hyperrealm/libconfig/pull/277]
+---
+ lib/Makefile.am | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 9ef984323af3..bd5d3dbe5aa3 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -36,6 +36,9 @@ libinc_cpp =  libconfig.h++
+ 
+ BUILT_SOURCES = scanner.c scanner.h grammar.c grammar.h
+ 
++scanner.h: scanner.c
++	@if test ! -f $@; then rm -f scanner.c; $(MAKE) $(AM_MAKEFLAGS) scanner.c; else :; fi
++
+ ## Build mode: C-only or C & C++
+ lib_LTLIBRARIES = libconfig.la
+ 
+-- 
+2.51.0
+
