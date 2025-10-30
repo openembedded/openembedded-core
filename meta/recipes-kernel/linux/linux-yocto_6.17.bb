@@ -9,14 +9,14 @@ include recipes-kernel/linux/cve-exclusion_6.17.inc
 # board specific branches
 KBRANCH:qemuarm  ?= "v6.17/standard/arm-versatile-926ejs"
 KBRANCH:qemuarm64 ?= "v6.17/standard/base"
-KBRANCH:qemumips ?= "v6.17/standard/mti-malta32"
+KBRANCH:qemumips ?= "v6.17/standard/mti-malta"
 KBRANCH:qemuppc  ?= "v6.17/standard/qemuppc"
 KBRANCH:qemuriscv64  ?= "v6.17/standard/base"
 KBRANCH:qemuriscv32  ?= "v6.17/standard/base"
 KBRANCH:qemux86  ?= "v6.17/standard/base"
 KBRANCH:qemux86-64 ?= "v6.17/standard/base"
 KBRANCH:qemuloongarch64  ?= "v6.17/standard/base"
-KBRANCH:qemumips64 ?= "v6.17/standard/mti-malta64"
+KBRANCH:qemumips64 ?= "v6.17/standard/mti-malta"
 
 SRCREV_machine:qemuarm ?= "23c78022fc97ea5ebc19ea8fb86d324c23a6fbaa"
 SRCREV_machine:qemuarm64 ?= "d76cb43db46c5d45e25df34484c87f5e545bf4c5"
