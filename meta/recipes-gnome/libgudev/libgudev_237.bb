@@ -22,7 +22,7 @@ GIR_MESON_DISABLE_FLAG = 'disabled'
 
 GTKDOC_MESON_OPTION = "gtk_doc"
 
-UPSTREAM_CHECK_URI = "http://ftp.gnome.org/pub/GNOME/sources/libgudev/"
+UPSTREAM_CHECK_URI = "${GNOME_MIRROR}/libgudev/"
 UPSTREAM_CHECK_REGEX = "(?P<pver>(\d+))"
 
 # This isn't a GNOME-style version do gnome_verdir fails. Just return the

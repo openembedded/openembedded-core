@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://Copyright;md5=0cd9a07afbeb24026c9b03aecfeba458"
 SECTION = "libs"
 DEPENDS = "libxml2"
 
-SRC_URI = "https://download.gnome.org/sources/libxslt/1.1/libxslt-${PV}.tar.xz \
+SRC_URI = "${GNOME_MIRROR}/libxslt/1.1/libxslt-${PV}.tar.xz \
            file://CVE-2024-55549.patch \
            file://CVE-2025-24855.patch \
            file://CVE-2023-40403-001.patch \
