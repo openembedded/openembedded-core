@@ -144,7 +144,11 @@ class ConfigFragmentsPlugin(LayerPlugin):
         self.create_conf(args.confpath)
         modified = bb.utils.edit_metadata_file(args.confpath, ["OE_FRAGMENTS"], enable_helper)
         if modified:
-            print("Fragment {} added to {}.".format(", ".join(args.fragmentname), args.confpath))
+            for f in args.fragmentname:
+                print("Fragment {} added to {}.".format(f, args.confpath))
+                f_info = self.get_fragment(f, fragments)
+                if f_info and not args.quiet:
+                    print('\nFragment summary: {}\n\nFragment description:\n{}\n'.format(f_info['summary'],f_info['description']))
 
     def do_disable_fragment(self, args):
         """ Disable a fragment in the local build configuration """
@@ -193,6 +197,7 @@ class ConfigFragmentsPlugin(LayerPlugin):
 
         parser_enable_fragment = self.add_command(sp, 'enable-fragment', self.do_enable_fragment, parserecipes=False)
         parser_enable_fragment.add_argument("--confpath", default=default_confpath, help='Configuration file which contains a list of enabled fragments (default is {}).'.format(default_confpath))
+        parser_list_fragments.add_argument('--quiet', '-q', action='store_true', help='Do not print descriptions of the newly enabled fragments')
         parser_enable_fragment.add_argument('fragmentname', help='The name of the fragment (use list-fragments to see them)', nargs='+')
 
         parser_disable_fragment = self.add_command(sp, 'disable-fragment', self.do_disable_fragment, parserecipes=False)
