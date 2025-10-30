@@ -97,12 +97,12 @@ class ConfigFragmentsPlugin(LayerPlugin):
                     print_fragment(f, args.verbose, is_enabled=False)
             print('')
 
-    def fragment_exists(self, fragmentname, fragments):
+    def get_fragment(self, fragmentname, fragments):
         for layername, layerdata in fragments.items():
             for f in layerdata['fragments']:
               if f['name'] == fragmentname:
-                  return True
-        return False
+                  return f
+        return None
 
     def fragment_prefix(self, fragmentname):
         return fragmentname.split("/",1)[0]
@@ -138,7 +138,7 @@ class ConfigFragmentsPlugin(LayerPlugin):
 
         fragments = self.discover_fragments()
         for f in args.fragmentname:
-            if not self.fragment_exists(f, fragments) and not self.builtin_fragment_exists(f):
+            if not self.get_fragment(f, fragments) and not self.builtin_fragment_exists(f):
                 raise Exception("Fragment {} does not exist; use 'list-fragments' to see the full list.".format(f))
 
         self.create_conf(args.confpath)
