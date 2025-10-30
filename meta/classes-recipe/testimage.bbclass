@@ -131,11 +131,21 @@ do_testimage[depends] += "${TESTIMAGEDEPENDS}"
 do_testimage[lockfiles] += "${TESTIMAGELOCK}"
 
 def testimage_sanity(d):
-    if (d.getVar('TEST_TARGET') == 'simpleremote'
+    test_target = d.getVar('TEST_TARGET')
+    if (test_target == 'simpleremote'
         and (not d.getVar('TEST_TARGET_IP')
              or not d.getVar('TEST_SERVER_IP'))):
         bb.fatal('When TEST_TARGET is set to "simpleremote" '
                  'TEST_TARGET_IP and TEST_SERVER_IP are needed too.')
+
+    image_features = d.getVar('IMAGE_FEATURES')
+    needed_features = "allow-empty-password empty-root-password allow-root-login"
+    present_features = set(image_features.split()) & set(needed_features.split())
+    if (test_target in ('simpleremote', 'qemu')
+        and (len(present_features) < len(needed_features.split()))):
+        bb.fatal("When TEST_TARGET is '{}', IMAGE_FEATURES need to include '{}', and they are currently set to '{}'. This can be done for all images in a local build by running\n\nbitbake-config-build enable-fragment core/yocto/root-login-with-empty-password\n\nand rebuilding the image-under-test."
+            .format(test_target, needed_features, image_features))
+
 
 def get_testimage_configuration(d, test_type, machine):
     import platform
