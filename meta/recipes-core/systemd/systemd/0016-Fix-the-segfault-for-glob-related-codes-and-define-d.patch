@@ -1,0 +1,409 @@
+From bedd0563f4b142aa6376a2ad1e2884d2c0dc3e45 Mon Sep 17 00:00:00 2001
+From: Chen Qi <Qi.Chen@windriver.com>
+Date: Mon, 13 Oct 2025 17:07:57 +0800
+Subject: [PATCH 16/16] Fix the segfault for glob related codes and define
+ dummy macros
+
+systemd switches to use its own free function to free gl_pathv
+located by glob() function. This causes segfault error for musl.
+
+The backtrace is like below:
+get_meta (p=p@entry=0x7ffff7b39fa8 "/proc/sys/net/ipv4/conf/all/rp_filter")
+    at /usr/src/debug/musl/1.2.5+git/src/malloc/mallocng/meta.h:131
+    131             assert(!((uintptr_t)p & 15));
+
+Why so? Because it's expected that people use globfree to do the memory
+freeing work. Invoking free on gl_pathv[*] is not freeing the correct
+memory address.
+
+The key line in musl's globfree is as below:
+  free(g->gl_pathv[g->gl_offs + i] - offsetof(struct match, name));
+
+So we can see the addree is not gl_pathv[*], it's
+gl_pathv[*] - offsetof(struct match, name).
+
+To address this issue, revert the following codes:
+1. Revert "glob-util: rework safe_glob()"
+   This reverts commit 2a5f950e5643a74bef70b1c3c46ec33ad0e3fd41.
+2. Revert "glob-util: drop unused _cleanup_globfree_"
+   This reverts commit f117272f6645fc2fe9751898770603ed07d15cea.
+
+There is no functional change.
+
+Also, define dummy macros to make things compile for musl.
+
+Note:
+If systemd later adopts some dramatic change for glob, we might
+need to adopt other methods instead of doing the revert. In this
+version, reverting is prefered because there is NO functional change.
+
+Upstream-Status: Inappropriate [musl specific]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ src/basic/glob-util.c       | 96 ++++++++++++++++++-------------------
+ src/basic/glob-util.h       | 12 ++---
+ src/core/exec-credential.c  |  6 +--
+ src/core/execute.c          |  8 ++--
+ src/include/override/glob.h |  6 +++
+ src/test/test-glob-util.c   | 27 ++++++-----
+ src/tmpfiles/tmpfiles.c     | 20 +++++---
+ 7 files changed, 95 insertions(+), 80 deletions(-)
+ create mode 100644 src/include/override/glob.h
+
+diff --git a/src/basic/glob-util.c b/src/basic/glob-util.c
+index 5843ef088f..a9c62151af 100644
+--- a/src/basic/glob-util.c
++++ b/src/basic/glob-util.c
+@@ -6,83 +6,81 @@
+ #include "dirent-util.h"
+ #include "errno-util.h"
+ #include "glob-util.h"
++#include "log.h"
+ #include "string-util.h"
+ #include "strv.h"
+ 
+-DEFINE_TRIVIAL_DESTRUCTOR(closedir_wrapper, void, closedir);
+-
+-int safe_glob_full(const char *path, int flags, opendir_t opendir_func, char ***ret) {
+-        _cleanup_(globfree) glob_t g = {
+-                .gl_closedir = closedir_wrapper,
+-                .gl_readdir = (struct dirent* (*)(void *)) readdir_no_dot,
+-                .gl_opendir = (void* (*)(const char *)) (opendir_func ?: opendir),
+-                .gl_lstat = lstat,
+-                .gl_stat = stat,
+-        };
+-        int r;
+-
+-        assert(path);
++static void closedir_wrapper(void* v) {
++        (void) closedir(v);
++}
+ 
++int safe_glob(const char *path, int flags, glob_t *pglob) {
++        int k;
++
++        /* We want to set GLOB_ALTDIRFUNC ourselves, don't allow it to be set. */
++        assert(!(flags & GLOB_ALTDIRFUNC));
++#ifdef __GLIBC__
++        if (!pglob->gl_closedir)
++                pglob->gl_closedir = closedir_wrapper;
++        if (!pglob->gl_readdir)
++                pglob->gl_readdir = (struct dirent *(*)(void *)) readdir_no_dot;
++        if (!pglob->gl_opendir)
++                pglob->gl_opendir = (void *(*)(const char *)) opendir;
++        if (!pglob->gl_lstat)
++                pglob->gl_lstat = lstat;
++        if (!pglob->gl_stat)
++                pglob->gl_stat = stat;
++#endif
+         errno = 0;
+-        r = glob(path, flags | GLOB_ALTDIRFUNC, NULL, &g);
+-        if (r == GLOB_NOMATCH)
++        k = glob(path, flags | GLOB_ALTDIRFUNC, NULL, pglob);
++        if (k == GLOB_NOMATCH)
+                 return -ENOENT;
+-        if (r == GLOB_NOSPACE)
++        if (k == GLOB_NOSPACE)
+                 return -ENOMEM;
+-        if (r != 0)
++        if (k != 0)
+                 return errno_or_else(EIO);
+-
+-        if (strv_isempty(g.gl_pathv))
++        if (strv_isempty(pglob->gl_pathv))
+                 return -ENOENT;
+ 
+-        if (ret) {
+-                *ret = g.gl_pathv;
+-                TAKE_STRUCT(g); /* To avoid the result being freed. */
+-        }
+-
+         return 0;
+ }
+ 
+-int glob_first(const char *path, char **ret) {
+-        _cleanup_strv_free_ char **v = NULL;
+-        int r;
++int glob_first(const char *path, char **ret_first) {
++        _cleanup_globfree_ glob_t g = {};
++        int k;
+ 
+         assert(path);
+ 
+-        r = safe_glob(path, GLOB_NOSORT|GLOB_BRACE, &v);
+-        if (r == -ENOENT) {
+-                if (ret)
+-                        *ret = NULL;
++        k = safe_glob(path, GLOB_NOSORT|GLOB_BRACE, &g);
++        if (k == -ENOENT) {
++                if (ret_first)
++                        *ret_first = NULL;
+                 return false;
+         }
+-        if (r < 0)
+-                return r;
+-
+-        assert(!strv_isempty(v));
++        if (k < 0)
++                return k;
+ 
+-        if (ret) {
+-                /* Free all results except for the first one. */
+-                STRV_FOREACH(p, strv_skip(v, 1))
+-                        *p = mfree(*p);
++        if (ret_first) {
++                assert(g.gl_pathv && g.gl_pathv[0]);
+ 
+-                /* Then, take the first result. */
+-                *ret = TAKE_PTR(*v);
++                char *first = strdup(g.gl_pathv[0]);
++                if (!first)
++                        return log_oom_debug();
++                *ret_first = first;
+         }
+ 
+         return true;
+ }
+ 
+ int glob_extend(char ***strv, const char *path, int flags) {
+-        char **v;
+-        int r;
+-
+-        assert(path);
++        _cleanup_globfree_ glob_t g = {};
++        int k;
+ 
+-        r = safe_glob(path, GLOB_NOSORT|GLOB_BRACE|flags, &v);
+-        if (r < 0)
+-                return r;
++        k = safe_glob(path, GLOB_NOSORT|GLOB_BRACE|flags, &g);
++        if (k < 0)
++                return k;
+ 
+-        return strv_extend_strv_consume(strv, v, /* filter_duplicates = */ false);
++        return strv_extend_strv(strv, g.gl_pathv, false);
+ }
+ 
+ int glob_non_glob_prefix(const char *path, char **ret) {
+diff --git a/src/basic/glob-util.h b/src/basic/glob-util.h
+index ea3e869319..4fa23f5048 100644
+--- a/src/basic/glob-util.h
++++ b/src/basic/glob-util.h
+@@ -5,18 +5,16 @@
+ 
+ #include "forward.h"
+ 
+-typedef DIR* (*opendir_t)(const char *);
+-
+-int safe_glob_full(const char *path, int flags, opendir_t opendir_func, char ***ret);
+-static inline int safe_glob(const char *path, int flags, char ***ret) {
+-        return safe_glob_full(path, flags, NULL, ret);
+-}
++/* Note: this function modifies pglob to set various functions. */
++int safe_glob(const char *path, int flags, glob_t *pglob);
+ 
+ /* Note: which match is returned depends on the implementation/system and not guaranteed to be stable */
+-int glob_first(const char *path, char **ret);
++int glob_first(const char *path, char **ret_first);
+ #define glob_exists(path) glob_first(path, NULL)
+ int glob_extend(char ***strv, const char *path, int flags);
+ 
+ int glob_non_glob_prefix(const char *path, char **ret);
+ 
++#define _cleanup_globfree_ _cleanup_(globfree)
++
+ bool string_is_glob(const char *p) _pure_;
+diff --git a/src/core/exec-credential.c b/src/core/exec-credential.c
+index 5e2bc8edd9..32cbb4d4d0 100644
+--- a/src/core/exec-credential.c
++++ b/src/core/exec-credential.c
+@@ -556,20 +556,20 @@ static int load_credential_glob(
+         assert(search_path);
+ 
+         STRV_FOREACH(d, search_path) {
+-                _cleanup_strv_free_ char **paths = NULL;
++                _cleanup_globfree_ glob_t pglob = {};
+                 _cleanup_free_ char *j = NULL;
+ 
+                 j = path_join(*d, ic->glob);
+                 if (!j)
+                         return -ENOMEM;
+ 
+-                r = safe_glob(j, /* flags = */ 0, &paths);
++                r = safe_glob(j, 0, &pglob);
+                 if (r == -ENOENT)
+                         continue;
+                 if (r < 0)
+                         return r;
+ 
+-                STRV_FOREACH(p, paths) {
++                FOREACH_ARRAY(p, pglob.gl_pathv, pglob.gl_pathc) {
+                         _cleanup_free_ char *fn = NULL;
+                         _cleanup_(erase_and_freep) char *data = NULL;
+                         size_t size;
+diff --git a/src/core/execute.c b/src/core/execute.c
+index c384e9dd63..3d6546c037 100644
+--- a/src/core/execute.c
++++ b/src/core/execute.c
+@@ -897,7 +897,7 @@ static int exec_context_load_environment(const Unit *unit, const ExecContext *c,
+         assert(ret);
+ 
+         STRV_FOREACH(i, c->environment_files) {
+-                _cleanup_strv_free_ char **paths = NULL;
++                _cleanup_globfree_ glob_t pglob = {};
+                 bool ignore = false;
+                 char *fn = *i;
+ 
+@@ -913,7 +913,7 @@ static int exec_context_load_environment(const Unit *unit, const ExecContext *c,
+                 }
+ 
+                 /* Filename supports globbing, take all matching files */
+-                r = safe_glob(fn, /* flags = */ 0, &paths);
++                r = safe_glob(fn, 0, &pglob);
+                 if (r < 0) {
+                         if (ignore)
+                                 continue;
+@@ -921,9 +921,9 @@ static int exec_context_load_environment(const Unit *unit, const ExecContext *c,
+                 }
+ 
+                 /* When we don't match anything, -ENOENT should be returned */
+-                assert(!strv_isempty(paths));
++                assert(pglob.gl_pathc > 0);
+ 
+-                STRV_FOREACH(path, paths) {
++                FOREACH_ARRAY(path, pglob.gl_pathv, pglob.gl_pathc) {
+                         _cleanup_strv_free_ char **p = NULL;
+ 
+                         r = load_env_file(NULL, *path, &p);
+diff --git a/src/include/override/glob.h b/src/include/override/glob.h
+new file mode 100644
+index 0000000000..a8f1829766
+--- /dev/null
++++ b/src/include/override/glob.h
+@@ -0,0 +1,6 @@
++#pragma once
++
++#include_next <glob.h>
++
++#define GLOB_BRACE 0
++#define GLOB_ALTDIRFUNC 0
+diff --git a/src/test/test-glob-util.c b/src/test/test-glob-util.c
+index a9880f15c8..754dc77447 100644
+--- a/src/test/test-glob-util.c
++++ b/src/test/test-glob-util.c
+@@ -9,7 +9,6 @@
+ #include "fs-util.h"
+ #include "glob-util.h"
+ #include "rm-rf.h"
+-#include "strv.h"
+ #include "tests.h"
+ #include "tmpfile-util.h"
+ 
+@@ -55,25 +54,31 @@ TEST(glob_exists) {
+ TEST(safe_glob) {
+         char template[] = "/tmp/test-glob-util.XXXXXXX";
+         const char *fn, *fn2, *fname;
+-        _cleanup_strv_free_ char **v = NULL;
+ 
+-        ASSERT_NOT_NULL(mkdtemp(template));
++        _cleanup_globfree_ glob_t g = {};
++        int r;
++
++        assert_se(mkdtemp(template));
+ 
+         fn = strjoina(template, "/*");
+-        ASSERT_ERROR(safe_glob(fn, /* flags = */ 0, &v), ENOENT);
++        r = safe_glob(fn, 0, &g);
++        assert_se(r == -ENOENT);
+ 
+         fn2 = strjoina(template, "/.*");
+-        ASSERT_ERROR(safe_glob(fn2, GLOB_NOSORT|GLOB_BRACE, &v), ENOENT);
++        r = safe_glob(fn2, GLOB_NOSORT|GLOB_BRACE, &g);
++        assert_se(r == -ENOENT);
+ 
+         fname = strjoina(template, "/.foobar");
+-        ASSERT_OK(touch(fname));
++        assert_se(touch(fname) == 0);
+ 
+-        ASSERT_ERROR(safe_glob(fn, /* flags = */ 0, &v), ENOENT);
++        r = safe_glob(fn, 0, &g);
++        assert_se(r == -ENOENT);
+ 
+-        ASSERT_OK(safe_glob(fn2, GLOB_NOSORT|GLOB_BRACE, &v));
+-        ASSERT_EQ(strv_length(v), 1u);
+-        ASSERT_STREQ(v[0], fname);
+-        ASSERT_NULL(v[1]);
++        r = safe_glob(fn2, GLOB_NOSORT|GLOB_BRACE, &g);
++        assert_se(r == 0);
++        assert_se(g.gl_pathc == 1);
++        ASSERT_STREQ(g.gl_pathv[0], fname);
++        ASSERT_NULL(g.gl_pathv[1]);
+ 
+         (void) rm_rf(template, REMOVE_ROOT|REMOVE_PHYSICAL);
+ }
+diff --git a/src/tmpfiles/tmpfiles.c b/src/tmpfiles/tmpfiles.c
+index 4342ed70ab..2e1fd87f54 100644
+--- a/src/tmpfiles/tmpfiles.c
++++ b/src/tmpfiles/tmpfiles.c
+@@ -2575,21 +2575,25 @@ finish:
+ }
+ 
+ static int glob_item(Context *c, Item *i, action_t action) {
+-        _cleanup_strv_free_ char **paths = NULL;
++        _cleanup_globfree_ glob_t g = {
++#ifdef __GLIBC__
++                .gl_opendir = (void *(*)(const char *)) opendir_nomod,
++#endif
++        };
+         int r;
+ 
+         assert(c);
+         assert(i);
+         assert(action);
+ 
+-        r = safe_glob_full(i->path, GLOB_NOSORT|GLOB_BRACE, opendir_nomod, &paths);
++        r = safe_glob(i->path, GLOB_NOSORT|GLOB_BRACE, &g);
+         if (r == -ENOENT)
+                 return 0;
+         if (r < 0)
+                 return log_error_errno(r, "Failed to glob '%s': %m", i->path);
+ 
+         r = 0;
+-        STRV_FOREACH(fn, paths)
++        STRV_FOREACH(fn, g.gl_pathv)
+                 /* We pass CREATION_EXISTING here, since if we are globbing for it, it always has to exist */
+                 RET_GATHER(r, action(c, i, *fn, CREATION_EXISTING));
+ 
+@@ -2601,21 +2605,25 @@ static int glob_item_recursively(
+                 Item *i,
+                 fdaction_t action) {
+ 
+-        _cleanup_strv_free_ char **paths = NULL;
++        _cleanup_globfree_ glob_t g = {
++#ifdef __GLIBC__
++                .gl_opendir = (void *(*)(const char *)) opendir_nomod,
++#endif
++        };
+         int r;
+ 
+         assert(c);
+         assert(i);
+         assert(action);
+ 
+-        r = safe_glob_full(i->path, GLOB_NOSORT|GLOB_BRACE, opendir_nomod, &paths);
++        r = safe_glob(i->path, GLOB_NOSORT|GLOB_BRACE, &g);
+         if (r == -ENOENT)
+                 return 0;
+         if (r < 0)
+                 return log_error_errno(r, "Failed to glob '%s': %m", i->path);
+ 
+         r = 0;
+-        STRV_FOREACH(fn, paths) {
++        STRV_FOREACH(fn, g.gl_pathv) {
+                 _cleanup_close_ int fd = -EBADF;
+ 
+                 /* Make sure we won't trigger/follow file object (such as device nodes, automounts, ...)
+-- 
+2.34.1
+

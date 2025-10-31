@@ -28,36 +28,26 @@ SRC_URI += " \
            file://systemd-pager.sh \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0002-implment-systemd-sysv-install-for-OE.patch \
-           file://0001-Do-not-create-var-log-README.patch \
+           file://0003-Do-not-create-var-log-README.patch \
            "
 
 # patches needed by musl
 SRC_URI:append:libc-musl = " ${SRC_URI_MUSL}"
 SRC_URI_MUSL = "\
-               file://0003-missing_type.h-add-comparison_fn_t.patch \
-               file://0004-add-fallback-parse_printf_format-implementation.patch \
-               file://0005-don-t-fail-if-GLOB_BRACE-and-GLOB_ALTDIRFUNC-is-not-.patch \
-               file://0006-add-missing-FTW_-macros-for-musl.patch \
-               file://0007-Use-uintmax_t-for-handling-rlim_t.patch \
-               file://0008-Define-glibc-compatible-basename-for-non-glibc-syste.patch \
-               file://0009-Do-not-disable-buffering-when-writing-to-oom_score_a.patch \
-               file://0010-distinguish-XSI-compliant-strerror_r-from-GNU-specif.patch \
-               file://0011-avoid-redefinition-of-prctl_mm_map-structure.patch \
-               file://0012-do-not-disable-buffer-in-writing-files.patch \
-               file://0013-Handle-__cpu_mask-usage.patch \
-               file://0014-Handle-missing-gshadow.patch \
-               file://0015-missing_syscall.h-Define-MIPS-ABI-defines-for-musl.patch \
-               file://0016-pass-correct-parameters-to-getdents64.patch \
-               file://0017-Adjust-for-musl-headers.patch \
-               file://0018-test-bus-error-strerror-is-assumed-to-be-GNU-specifi.patch \
-               file://0019-errno-util-Make-STRERROR-portable-for-musl.patch \
-               file://0020-sd-event-Make-malloc_trim-conditional-on-glibc.patch \
-               file://0021-shared-Do-not-use-malloc_info-on-musl.patch \
-               file://0022-avoid-missing-LOCK_EX-declaration.patch \
-               file://0023-include-signal.h-to-avoid-the-undeclared-error.patch \
-               file://0024-undef-stdin-for-references-using-stdin-as-a-struct-m.patch \
-               file://0025-adjust-header-inclusion-order-to-avoid-redeclaration.patch \
-               file://0026-build-path.c-avoid-boot-time-segfault-for-musl.patch \
+               file://0004-musl.h-introduce-header-file-and-add-__THROW.patch \
+               file://0005-add-fallback-parse_printf_format-implementation.patch \
+               file://0006-Make-mallinfo-related-contents-glibc-specific.patch \
+               file://0007-add-src-include-override-sys-prctl.h-to-avoid-redefi.patch \
+               file://0008-distinguish-XSI-compliant-strerror_r-from-GNU-specif.patch \
+               file://0009-errno-util-Make-STRERROR-portable-for-musl.patch \
+               file://0010-src-basic-format-util.h-define-RLIM_FMT-to-fit-musl-.patch \
+               file://0011-src-include-override-malloc.h-define-dummy-malloc_tr.patch \
+               file://0012-src-shared-condition.c-avoid-using-glibc-ConditionVe.patch \
+               file://0013-build-path.c-avoid-boot-time-segfault-for-musl.patch \
+               file://0014-Handle-missing-gshadow-for-musl.patch \
+               file://0015-Avoid-sequence-point-error.patch \
+               file://0016-Fix-the-segfault-for-glob-related-codes-and-define-d.patch \
+               file://0017-Always-include-netinet-if_ether.h-first.patch \
                "
 
 PAM_PLUGINS = " \
@@ -154,8 +144,6 @@ PACKAGECONFIG[firstboot] = "-Dfirstboot=true,-Dfirstboot=false"
 PACKAGECONFIG[repart] = "-Drepart=enabled,-Drepart=disabled"
 PACKAGECONFIG[homed] = "-Dhomed=enabled,-Dhomed=disabled"
 # Sign the journal for anti-tampering
-PACKAGECONFIG[gcrypt] = "-Dgcrypt=enabled,-Dgcrypt=disabled,libgcrypt"
-PACKAGECONFIG[gnutls] = "-Dgnutls=enabled,-Dgnutls=disabled,gnutls"
 PACKAGECONFIG[gshadow] = "-Dgshadow=true,-Dgshadow=false"
 PACKAGECONFIG[hibernate] = "-Dhibernate=true,-Dhibernate=false"
 PACKAGECONFIG[hostnamed] = "-Dhostnamed=true,-Dhostnamed=false"
@@ -252,6 +240,7 @@ EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Dtranslations=${@'false' if d.getVar('USE_NLS') == 'no' else 'true'} \
                   ${@bb.utils.contains('DISTRO_FEATURES', 'zeroconf', '-Ddefault-mdns=no -Ddefault-llmnr=no', '', d)} \
                   -Ddbus=disabled \
+                  -Dtests=false \
                   "
 
 # Hardcode target binary paths to avoid using paths from sysroot or worse
@@ -340,15 +329,6 @@ do_install() {
 	install -d ${D}${systemd_system_unitdir}/poweroff.target.wants
 	install -d ${D}${systemd_system_unitdir}/reboot.target.wants
 	install -d ${D}${systemd_system_unitdir}/rescue.target.wants
-
-	# Create symlinks for systemd-update-utmp-runlevel.service
-	if ${@bb.utils.contains('PACKAGECONFIG', 'utmp', 'true', 'false', d)} && ${@bb.utils.contains('PACKAGECONFIG', 'sysvinit', 'true', 'false', d)}; then
-		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_system_unitdir}/graphical.target.wants/systemd-update-utmp-runlevel.service
-		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_system_unitdir}/multi-user.target.wants/systemd-update-utmp-runlevel.service
-		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_system_unitdir}/poweroff.target.wants/systemd-update-utmp-runlevel.service
-		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_system_unitdir}/reboot.target.wants/systemd-update-utmp-runlevel.service
-		ln -sf ../systemd-update-utmp-runlevel.service ${D}${systemd_system_unitdir}/rescue.target.wants/systemd-update-utmp-runlevel.service
-	fi
 
 	# this file is needed to exist if networkd is disabled but timesyncd is still in use since timesyncd checks it
 	# for existence else it fails
@@ -552,6 +532,7 @@ FILES:${PN}-container = "${sysconfdir}/dbus-1/system.d/org.freedesktop.import1.c
                          ${systemd_system_unitdir}/org.freedesktop.machine1.busname \
                          ${systemd_system_unitdir}/systemd-importd.service \
                          ${systemd_system_unitdir}/systemd-machined.service \
+                         ${systemd_system_unitdir}/systemd-machined.socket \
                          ${systemd_system_unitdir}/dbus-org.freedesktop.machine1.service \
                          ${systemd_system_unitdir}/var-lib-machines.mount \
                          ${nonarch_libdir}/systemd/systemd-import \
@@ -614,10 +595,6 @@ FILES:${PN}-extra-utils = "\
                         ${systemd_system_unitdir}/systemd-pcrphase-sysinit.service \
                         ${systemd_system_unitdir}/systemd-suspend.service \
                         ${systemd_system_unitdir}/sleep.target \
-                        ${nonarch_libdir}/systemd/systemd-initctl \
-                        ${systemd_system_unitdir}/systemd-initctl.service \
-                        ${systemd_system_unitdir}/systemd-initctl.socket \
-                        ${systemd_system_unitdir}/sockets.target.wants/systemd-initctl.socket \
                         ${nonarch_libdir}/systemd/system-generators/systemd-gpt-auto-generator \
                         ${nonarch_libdir}/systemd/systemd-cgroups-agent \
 "
@@ -668,8 +645,6 @@ FILES:${PN} = " ${base_bindir}/* \
                 ${base_sbindir}/shutdown \
                 ${base_sbindir}/halt \
                 ${base_sbindir}/poweroff \
-                ${base_sbindir}/runlevel \
-                ${base_sbindir}/telinit \
                 ${base_sbindir}/resolvconf \
                 ${base_sbindir}/reboot \
                 ${base_sbindir}/init \
@@ -790,6 +765,7 @@ FILES:udev += "${base_sbindir}/udevd \
                ${nonarch_libdir}/udev/rules.d/60-infiniband.rules \
                ${nonarch_libdir}/udev/rules.d/60-input-id.rules \
                ${nonarch_libdir}/udev/rules.d/60-persistent-alsa.rules \
+               ${nonarch_libdir}/udev/rules.d/60-persistent-hidraw.rules \
                ${nonarch_libdir}/udev/rules.d/60-persistent-input.rules \
                ${nonarch_libdir}/udev/rules.d/60-persistent-storage.rules \
                ${nonarch_libdir}/udev/rules.d/60-persistent-storage-mtd.rules \
@@ -810,7 +786,9 @@ FILES:udev += "${base_sbindir}/udevd \
                ${nonarch_libdir}/udev/rules.d/78-sound-card.rules \
                ${nonarch_libdir}/udev/rules.d/80-drivers.rules \
                ${nonarch_libdir}/udev/rules.d/80-net-setup-link.rules \
+               ${nonarch_libdir}/udev/rules.d/81-net-bridge.rules \
                ${nonarch_libdir}/udev/rules.d/81-net-dhcp.rules \
+               ${nonarch_libdir}/udev/rules.d/90-image-dissect.rules \
                ${nonarch_libdir}/udev/rules.d/90-vconsole.rules \
                ${nonarch_libdir}/udev/rules.d/90-iocost.rules \
                ${nonarch_libdir}/udev/rules.d/README \
@@ -855,7 +833,6 @@ python do_warn_musl() {
 addtask warn_musl before do_configure
 
 ALTERNATIVE:${PN} = "halt reboot shutdown poweroff \
-                     ${@bb.utils.contains('PACKAGECONFIG', 'sysvinit', 'runlevel', '', d)} \
                      ${@bb.utils.contains('PACKAGECONFIG', 'resolved', 'resolv-conf', '', d)}"
 
 ALTERNATIVE_TARGET[resolv-conf] = "${sysconfdir}/resolv-conf.systemd"
@@ -877,10 +854,6 @@ ALTERNATIVE_PRIORITY[shutdown] ?= "300"
 ALTERNATIVE_TARGET[poweroff] = "${base_bindir}/systemctl"
 ALTERNATIVE_LINK_NAME[poweroff] = "${base_sbindir}/poweroff"
 ALTERNATIVE_PRIORITY[poweroff] ?= "300"
-
-ALTERNATIVE_TARGET[runlevel] = "${base_bindir}/systemctl"
-ALTERNATIVE_LINK_NAME[runlevel] = "${base_sbindir}/runlevel"
-ALTERNATIVE_PRIORITY[runlevel] ?= "300"
 
 pkg_postinst:${PN}:append () {
 	if ${@bb.utils.contains('PACKAGECONFIG', 'set-time-epoch', 'true', 'false', d)}; then

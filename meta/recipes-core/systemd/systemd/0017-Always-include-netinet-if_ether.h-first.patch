@@ -1,0 +1,40 @@
+From 675460e529f7373d042db581da3fdc3c9c25bf63 Mon Sep 17 00:00:00 2001
+From: Chen Qi <Qi.Chen@windriver.com>
+Date: Wed, 15 Oct 2025 15:48:09 +0800
+Subject: [PATCH 17/17] Always include netinet/if_ether.h first
+
+When compiling systemd with musl, we get many ethhdr redinition
+errors. This is because netinet/if_ether.h in musl does not check
+__UAPI_DEF_ETHHDR and expects programs to include it before other
+kernel headers.
+See https://www.openwall.com/lists/musl/2025/10/14/2
+
+To avoid this redefinition error, and to avoid resolving conflicts
+every time we upgrade systemd, use '-include netinet/if_ether.h' to
+make sure this file header is included first.
+
+The major consideration behind such method is maintenance.
+
+Upstream-Status: Inappropriate [musl specific]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/meson.build b/meson.build
+index 0df7ecbe67..842f058f04 100644
+--- a/meson.build
++++ b/meson.build
+@@ -2006,7 +2006,7 @@ config_h = configure_file(
+         output : 'config.h',
+         configuration : conf)
+ 
+-userspace_c_args += ['-include', 'config.h']
++userspace_c_args += ['-include', 'config.h', '-include', 'netinet/if_ether.h']
+ 
+ jinja2_cmdline = [meson_render_jinja2, config_h]
+ 
+-- 
+2.34.1
+

@@ -1,0 +1,35 @@
+From 5dbeaee2085d3edcf20983fce4208eb174e46422 Mon Sep 17 00:00:00 2001
+From: Chen Qi <Qi.Chen@windriver.com>
+Date: Thu, 9 Oct 2025 15:19:09 +0800
+Subject: [PATCH 15/16] Avoid sequence-point error
+
+See https://www.openwall.com/lists/musl/2025/09/30/4
+
+Upstream-Status: Inappropriate [musl specific]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ src/shared/cpu-set-util.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/shared/cpu-set-util.c b/src/shared/cpu-set-util.c
+index 7a155c12d4..a9c57fc31c 100644
+--- a/src/shared/cpu-set-util.c
++++ b/src/shared/cpu-set-util.c
+@@ -97,9 +97,11 @@ char* cpu_set_to_mask_string(const CPUSet *c) {
+         for (size_t i = c->allocated * 8; i > 0; ) {
+                 uint32_t m = 0;
+ 
+-                for (int j = (i % 32 ?: 32) - 1; j >= 0; j--)
+-                        if (CPU_ISSET_S(--i, c->allocated, c->set))
++                for (int j = (i % 32 ?: 32) - 1; j >= 0; j--) {
++                        --i;
++                        if (CPU_ISSET_S(i, c->allocated, c->set))
+                                 SET_BIT(m, j);
++                }
+ 
+                 if (!found_nonzero) {
+                         if (m == 0)
+-- 
+2.34.1
+

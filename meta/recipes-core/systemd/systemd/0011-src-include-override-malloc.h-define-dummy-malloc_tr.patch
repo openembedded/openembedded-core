@@ -1,0 +1,41 @@
+From 9173921022c74067f35078d0a4de686cc504e182 Mon Sep 17 00:00:00 2001
+From: Chen Qi <Qi.Chen@windriver.com>
+Date: Mon, 29 Sep 2025 14:49:13 +0800
+Subject: [PATCH 11/16] src/include/override/malloc.h: define dummy
+ malloc_trim/malloc_info for musl
+
+For malloc_trim:
+As we're not releasing any stack, just return 0 to match the
+malloc_trim's meaning in glibc.
+
+For malloc_info:
+There's no real malloc_info implementation in musl, define a dummy
+one which always return -1 to indicate error.
+
+Upstream-Status: Inappropriate [musl specific]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ src/include/override/malloc.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/include/override/malloc.h b/src/include/override/malloc.h
+index c129713831..0b09bf6de6 100644
+--- a/src/include/override/malloc.h
++++ b/src/include/override/malloc.h
+@@ -37,4 +37,12 @@ static inline struct mallinfo2 mallinfo2(void) {
+         };
+ }
+ #endif
++#else
++#include <stdio.h>
++static inline int malloc_trim(size_t s) {
++        return 0;
++}
++static inline int malloc_info(int options, FILE *stream) {
++        return -1;
++}
+ #endif
+-- 
+2.34.1
+

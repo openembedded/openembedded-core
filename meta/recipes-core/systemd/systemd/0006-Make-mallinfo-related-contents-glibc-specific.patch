@@ -1,0 +1,117 @@
+From ec5bda959aa2820acc4b6c72668cfb50a745de86 Mon Sep 17 00:00:00 2001
+From: Chen Qi <Qi.Chen@windriver.com>
+Date: Mon, 29 Sep 2025 12:52:35 +0800
+Subject: [PATCH 06/16] Make mallinfo related contents glibc specific
+
+musl does not define mallinfo related contents.
+And systemd has removed support for checking, and has assumed it
+always exists[1], so these contents need to made glibc specific.
+
+[1] https://github.com/systemd/systemd/commit/abb99d3168259136187f81e0f701cda712ffd78d
+
+Upstream-Status: Inappropriate [musl specific]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ src/include/override/malloc.h      |  3 ++-
+ src/libsystemd/sd-event/sd-event.c | 14 ++++++++++----
+ src/shared/selinux-util.c          | 10 +++++++++-
+ 3 files changed, 21 insertions(+), 6 deletions(-)
+
+diff --git a/src/include/override/malloc.h b/src/include/override/malloc.h
+index d0080b6cbc..c129713831 100644
+--- a/src/include/override/malloc.h
++++ b/src/include/override/malloc.h
+@@ -2,7 +2,7 @@
+ #pragma once
+ 
+ #include_next <malloc.h>
+-
++#ifdef __GLIBC__
+ #if !HAVE_MALLINFO2
+ struct mallinfo2 {
+         size_t arena;    /* non-mmapped space allocated from system */
+@@ -37,3 +37,4 @@ static inline struct mallinfo2 mallinfo2(void) {
+         };
+ }
+ #endif
++#endif
+diff --git a/src/libsystemd/sd-event/sd-event.c b/src/libsystemd/sd-event/sd-event.c
+index 6cb496c541..79d574f5a9 100644
+--- a/src/libsystemd/sd-event/sd-event.c
++++ b/src/libsystemd/sd-event/sd-event.c
+@@ -1867,9 +1867,9 @@ _public_ int sd_event_trim_memory(void) {
+          * NULL callback parameter. */
+ 
+         log_debug("Memory pressure event, trimming malloc() memory.");
+-
++#ifdef __GLIBC__
+         struct mallinfo2 before_mallinfo = mallinfo2();
+-
++#endif
+         usec_t before_timestamp = now(CLOCK_MONOTONIC);
+         hashmap_trim_pools();
+         r = malloc_trim(0);
+@@ -1881,7 +1881,7 @@ _public_ int sd_event_trim_memory(void) {
+                 log_debug("Couldn't trim any memory.");
+ 
+         usec_t period = after_timestamp - before_timestamp;
+-
++#ifdef __GLIBC__
+         struct mallinfo2 after_mallinfo = mallinfo2();
+         size_t l = LESS_BY(before_mallinfo.hblkhd, after_mallinfo.hblkhd) +
+                 LESS_BY(before_mallinfo.arena, after_mallinfo.arena);
+@@ -1892,7 +1892,13 @@ _public_ int sd_event_trim_memory(void) {
+                    LOG_MESSAGE_ID(SD_MESSAGE_MEMORY_TRIM_STR),
+                    LOG_ITEM("TRIMMED_BYTES=%zu", l),
+                    LOG_ITEM("TRIMMED_USEC=" USEC_FMT, period));
+-
++#else
++        log_struct(LOG_DEBUG,
++                   LOG_MESSAGE("Memory trimming took %s",
++                               FORMAT_TIMESPAN(period, 0)),
++                   LOG_MESSAGE_ID(SD_MESSAGE_MEMORY_TRIM_STR),
++                   LOG_ITEM("TRIMMED_USEC=" USEC_FMT, period));
++#endif
+         return 0;
+ }
+ 
+diff --git a/src/shared/selinux-util.c b/src/shared/selinux-util.c
+index f7c4c7d2f8..b669475180 100644
+--- a/src/shared/selinux-util.c
++++ b/src/shared/selinux-util.c
+@@ -91,10 +91,13 @@ static int open_label_db(void) {
+         struct selabel_handle *hnd;
+         /* Avoid maybe-uninitialized false positives */
+         usec_t before_timestamp = USEC_INFINITY, after_timestamp = USEC_INFINITY;
++#ifdef __GLIBC__
+         struct mallinfo2 before_mallinfo = {};
+-
++#endif
+         if (DEBUG_LOGGING) {
++#ifdef __GLIBC__
+                 before_mallinfo = mallinfo2();
++#endif
+                 before_timestamp = now(CLOCK_MONOTONIC);
+         }
+ 
+@@ -104,11 +107,16 @@ static int open_label_db(void) {
+ 
+         if (DEBUG_LOGGING) {
+                 after_timestamp = now(CLOCK_MONOTONIC);
++#ifdef __GLIBC__
+                 struct mallinfo2 after_mallinfo = mallinfo2();
+                 size_t l = LESS_BY(after_mallinfo.uordblks, before_mallinfo.uordblks);
+                 log_debug("Successfully loaded SELinux database in %s, size on heap is %zuK.",
+                           FORMAT_TIMESPAN(after_timestamp - before_timestamp, 0),
+                           DIV_ROUND_UP(l, 1024));
++#else
++                log_debug("Successfully loaded SELinux database in %s",
++                          FORMAT_TIMESPAN(after_timestamp - before_timestamp, 0));
++#endif
+         }
+ 
+         /* release memory after measurement */
+-- 
+2.34.1
+

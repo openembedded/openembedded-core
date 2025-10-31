@@ -1,7 +1,7 @@
-From 28fa1d5f56c6ddee9e336e6f2051c55e9f2f98b4 Mon Sep 17 00:00:00 2001
+From 7ce68a17deeda43c31a5de5956bad4c92481f1ca Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Mon, 23 Jan 2023 23:39:46 -0800
-Subject: [PATCH 19/26] errno-util: Make STRERROR portable for musl
+Subject: [PATCH 09/16] errno-util: Make STRERROR portable for musl
 
 Sadly, systemd has decided to use yet another GNU extention in a macro
 lets make this such that we can use XSI compliant strerror_r() for
@@ -10,27 +10,30 @@ non-glibc hosts
 Upstream-Status: Inappropriate [musl specific]
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+
+Rebased for v258
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
 ---
  src/basic/errno-util.h | 10 +++++++++-
  1 file changed, 9 insertions(+), 1 deletion(-)
 
 diff --git a/src/basic/errno-util.h b/src/basic/errno-util.h
-index 48b76e4bf7..6e7653e2d9 100644
+index 5fe337cfb1..dee34167cb 100644
 --- a/src/basic/errno-util.h
 +++ b/src/basic/errno-util.h
-@@ -15,8 +15,16 @@
+@@ -13,8 +13,16 @@
   * https://stackoverflow.com/questions/34880638/compound-literal-lifetime-and-if-blocks
   *
   * Note that we use the GNU variant of strerror_r() here. */
--#define STRERROR(errnum) strerror_r(abs(errnum), (char[ERRNO_BUF_LEN]){}, ERRNO_BUF_LEN)
+-#define STRERROR(errnum) strerror_r(ABS(errnum), (char[ERRNO_BUF_LEN]){}, ERRNO_BUF_LEN)
 +static inline const char * STRERROR(int errnum);
  
 +static inline const char * STRERROR(int errnum) {
 +#ifdef __GLIBC__
-+        return strerror_r(abs(errnum), (char[ERRNO_BUF_LEN]){}, ERRNO_BUF_LEN);
++        return strerror_r(ABS(errnum), (char[ERRNO_BUF_LEN]){}, ERRNO_BUF_LEN);
 +#else
 +        static __thread char buf[ERRNO_BUF_LEN];
-+        return strerror_r(abs(errnum), buf, ERRNO_BUF_LEN) ? "unknown error" : buf;
++        return strerror_r(ABS(errnum), buf, ERRNO_BUF_LEN) ? "unknown error" : buf;
 +#endif
 +}
  /* A helper to print an error message or message for functions that return 0 on EOF.
