@@ -451,7 +451,7 @@ pkg_postinst:${PN}:prepend () {
         # Need path to saved utils, but they may have be removed on upgrade of busybox
         # Only use shell to get paths. Also capture if busybox was saved.
         BUSYBOX=""
-        if [ "x$D" = "x" ] ; then 
+        if [ "x$D" = "x" ] ; then
            for busybox_rmdir in /tmp/busyboxrm-*; do
                if [ "$busybox_rmdir" != '/tmp/busyboxrm-*' ] ; then
                   export PATH=$busybox_rmdir:$PATH
@@ -471,7 +471,7 @@ pkg_postinst:${PN}:append () {
               rm -f $BUSYBOX
            fi
         fi
-} 
+}
 
 pkg_prerm:${PN} () {
 	# This is so you can make busybox commit suicide - removing busybox with no other packages
@@ -499,7 +499,7 @@ pkg_prerm:${PN} () {
         if [ -n "$(readlink -f /bin/sh | grep busybox)" ] ; then
            BUSYBOX=$(readlink -f /bin/sh)
            cp $BUSYBOX $tmpdir/$(basename $BUSYBOX)
-           update-alternatives --install /bin/sh sh $tmpdir/$(basename $BUSYBOX) 1 
+           update-alternatives --install /bin/sh sh $tmpdir/$(basename $BUSYBOX) 1
         fi
 }
 
