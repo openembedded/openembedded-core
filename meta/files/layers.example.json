@@ -24,8 +24,7 @@
                     }
                 },
                 "rev": "0a96edae609a3f48befac36af82cf1eed6786b4a"
-            },
-            "path": "meta-intel"
+            }
         },
         "poky": {
             "git-remote": {

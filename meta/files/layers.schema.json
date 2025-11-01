@@ -17,9 +17,6 @@
                 "type": "object",
                 "description": "The upstream source from which a set of layers may be fetched",
                 "additionalProperties": false,
-                "required": [
-                    "path"
-                ],
                 "properties": {
                     "path": {
                         "description": "The path where this layer source will be placed when fetching",

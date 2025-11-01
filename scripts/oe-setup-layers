@@ -66,7 +66,7 @@ def _do_checkout(args, json):
     oesetupbuild = None
     for r_name in repos:
         r_data = repos[r_name]
-        repodir = os.path.abspath(os.path.join(args['destdir'], r_data['path']))
+        repodir = os.path.abspath(os.path.join(args['destdir'], r_data.get('path', r_name)))
         repodirs.append(repodir)
 
         if 'contains_this_file' in r_data.keys():
