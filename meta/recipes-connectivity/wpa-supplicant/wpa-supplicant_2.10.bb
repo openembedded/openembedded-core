@@ -36,6 +36,8 @@ SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz \
            file://CVE-2022-37660-0003.patch \
            file://CVE-2022-37660-0004.patch \
            file://CVE-2022-37660-0005.patch \
+           file://CVE-2025-24912-01.patch \
+           file://CVE-2025-24912-02.patch \
            "
 SRC_URI[sha256sum] = "20df7ae5154b3830355f8ab4269123a87affdea59fe74fe9292a91d0d7e17b2f"
 
