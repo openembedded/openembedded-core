@@ -58,6 +58,12 @@ CFLAGS:append:toolchain-clang = " -fno-strict-aliasing"
 CFLAGS:append:toolchain-gcc:class-target:x86-64 = " -fno-builtin-memcpy -D__NO_STRING_INLINES -U_FORTIFY_SOURCE"
 
 do_configure:prepend() {
+# ${B} will have been set as our current directory before immediately
+# before do_configure is called. So let's avoid any problems associated
+# with it being deleted from underneath us.
+# We're being put back there (the new version) at the end of this code
+#
+    cd /
     rm -rf ${B}
     cp -rfp ${S} ${B}
     cp -rfp ${STAGING_DATADIR_NATIVE}/perl-cross/* ${B}
