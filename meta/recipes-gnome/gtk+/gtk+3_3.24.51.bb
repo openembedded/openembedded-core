@@ -15,15 +15,16 @@ DEPENDS = "glib-2.0 cairo pango atk jpeg libpng gdk-pixbuf gdk-pixbuf-native"
 
 LICENSE = "LGPL-2.0-only & LGPL-2.0-or-later & LGPL-2.1-or-later"
 
-inherit meson gettext pkgconfig gtk-doc update-alternatives gtk-immodules-cache gsettings features_check gobject-introspection
+GNOMEBN = "gtk"
 
-MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
-SRC_URI = "${GNOME_MIRROR}/gtk/${MAJ_VER}/gtk-${PV}.tar.xz \
+inherit gettext gnomebase gtk-doc update-alternatives gtk-immodules-cache gsettings features_check gobject-introspection
+
+SRC_URI += "\
            file://opengl.patch \
            "
-SRC_URI[sha256sum] = "0013877c6bd23c2dbe42ad7c70a053d0e449be66736574e37867c49c5f905a4f"
+SRC_URI[archive.sha256sum] = "0013877c6bd23c2dbe42ad7c70a053d0e449be66736574e37867c49c5f905a4f"
 
-S = "${UNPACKDIR}/gtk-${PV}"
+S = "${UNPACKDIR}/${GNOMEBN}-${PV}"
 
 BBCLASSEXTEND = "native nativesdk"
 
@@ -104,7 +105,6 @@ FILES:${PN}:append = " ${bindir}/gtk-update-icon-cache-3.0 \
                ${bindir}/gtk-query-immodules-3.0 \
                ${bindir}/gtk-launch \
                ${datadir}/themes ${datadir}/gtk-3.0/emoji \
-               ${sysconfdir} ${datadir}/glib-2.0/schemas/ \
                ${libdir}/gtk-3.0/${LIBV}/engines/libpixmap.so \
                ${libdir}/gtk-3.0/modules/*.so"
 
