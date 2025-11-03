@@ -26,7 +26,7 @@ DEPENDS = " \
 inherit gnomebase gsettings features_check gettext mime-xdg gtk-icon-cache
 REQUIRED_DISTRO_FEATURES = "x11 opengl"
 
-SRC_URI = "${GNOME_MIRROR}/${GNOMEBN}/${@oe.utils.trim_version("${PV}", 1)}/${GNOMEBN}-${PV}.tar.${GNOME_COMPRESS_TYPE};name=archive \
+SRC_URI += "\
            file://0002-help-meson.build-disable-the-use-of-yelp.patch \
            file://migrator.patch \
            file://distributor.patch \
