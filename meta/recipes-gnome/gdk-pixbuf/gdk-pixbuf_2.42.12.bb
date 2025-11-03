@@ -14,17 +14,15 @@ SECTION = "libs"
 
 DEPENDS = "glib-2.0 shared-mime-info"
 
-MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
+SRC_URI[archive.sha256sum] = "b9505b3445b9a7e48ced34760c3bcb73e966df3ac94c95a148cb669ab748e3c7"
 
-SRC_URI = "${GNOME_MIRROR}/${BPN}/${MAJ_VER}/${BPN}-${PV}.tar.xz \
+inherit gettext gnomebase pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gi-docgen lib_package
+
+SRC_URI += "\
            file://run-ptest \
            file://fatal-loader.patch \
            file://0001-meson.build-allow-a-subset-of-tests-in-cross-compile.patch \
            "
-
-SRC_URI[sha256sum] = "b9505b3445b9a7e48ced34760c3bcb73e966df3ac94c95a148cb669ab748e3c7"
-
-inherit meson pkgconfig gettext pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gi-docgen lib_package
 
 GIR_MESON_OPTION = 'introspection'
 GIR_MESON_ENABLE_FLAG = "enabled"
