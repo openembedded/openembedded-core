@@ -33,18 +33,15 @@ LIC_FILES_CHKSUM = " \
     file://tests/testgtk.c;endline=25;md5=49d06770681b8322466b52ed19d29fb2 \
 "
 
-MAJ_VER = "${@oe.utils.trim_version("${PV}", 2)}"
+SRC_URI[archive.sha256sum] = "5e8240edecafaff2b8baf4663bdceaa668ef10a207bee4d7f90e010e10bddc5c"
 
-UPSTREAM_CHECK_REGEX = "gtk-(?P<pver>\d+\.(\d*[02468])+(\.\d+)+)\.tar.xz"
-
-SRC_URI = "${GNOME_MIRROR}/gtk/${MAJ_VER}/gtk-${PV}.tar.xz"
-SRC_URI[sha256sum] = "5e8240edecafaff2b8baf4663bdceaa668ef10a207bee4d7f90e010e10bddc5c"
-
-S = "${UNPACKDIR}/gtk-${PV}"
+S = "${UNPACKDIR}/${GNOMEBN}-${PV}"
 
 CVE_PRODUCT = "gnome:gtk"
 
-inherit meson gettext pkgconfig gi-docgen update-alternatives gsettings features_check gobject-introspection
+GNOMEBN = "gtk"
+
+inherit gettext gnomebase gi-docgen update-alternatives gsettings features_check gobject-introspection
 
 # TBD: nativesdk
 # gobject-introspection.bbclass pins introspection off for nativesk. As long as
@@ -85,10 +82,8 @@ LIBV = "4.0.0"
 
 FILES:${PN}:append = " \
     ${datadir}/bash-completion \
-    ${datadir}/glib-2.0/schemas/ \
     ${datadir}/gtk-4.0/emoji/ \
     ${datadir}/metainfo/ \
-    ${datadir}/icons/hicolor/*/apps/org.gtk.PrintEditor4*.* \
     ${libdir}/gtk-4.0/${LIBV}/media \
     ${bindir}/gtk4-update-icon-cache \
     ${bindir}/gtk4-launch \
