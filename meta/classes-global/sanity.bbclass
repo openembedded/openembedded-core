@@ -368,6 +368,8 @@ def check_connectivity(d):
                 msg += "    CONNECTIVITY_CHECK_URIS = \"https://www.example.com/\""
                 msg += "    You could also set BB_NO_NETWORK = \"1\" to disable network\n"
                 msg += "    access if all required sources are on local disk.\n"
+            else:
+                msg = "%s.\n%s" % (err, msg)
             retval = msg
 
     return retval
