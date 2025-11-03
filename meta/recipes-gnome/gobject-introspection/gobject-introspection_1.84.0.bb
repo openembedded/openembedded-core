@@ -3,7 +3,7 @@ DESCRIPTION = "GObject Introspection is a project for providing machine \
 readable introspection data of the API of C libraries. This introspection \
 data can be used in several different use cases, for example automatic code \
 generation for bindings, API verification and documentation generation."
-HOMEPAGE = "https://wiki.gnome.org/action/show/Projects/GObjectIntrospection"
+HOMEPAGE = "https://gitlab.gnome.org/GNOME/gobject-introspection"
 BUGTRACKER = "https://gitlab.gnome.org/GNOME/gobject-introspection/issues"
 SECTION = "libs"
 LICENSE = "LGPL-2.0-or-later & GPL-2.0-or-later & MIT"
@@ -13,14 +13,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=c434e8128a68bedd59b80b2ac1eb1c4a \
                     file://girepository/giregisteredtypeinfo.c;endline=21;md5=661847611ae6979465415f31a759ba27 \
                     "
 
-SRC_URI = "${GNOME_MIRROR}/${BPN}/${@oe.utils.trim_version("${PV}", 2)}/${BPN}-${PV}.tar.xz \
-           "
-
-SRC_URI[sha256sum] = "945b57da7ec262e5c266b89e091d14be800cc424277d82a02872b7d794a84779"
+SRC_URI[archive.sha256sum] = "945b57da7ec262e5c266b89e091d14be800cc424277d82a02872b7d794a84779"
 
 SRC_URI:append:class-native = " file://0001-Relocate-the-repository-directory-for-native-builds.patch"
 
-inherit meson pkgconfig gtk-doc python3targetconfig qemu gobject-introspection-data upstream-version-is-even multilib_script
+inherit gnomebase gtk-doc python3targetconfig qemu gobject-introspection-data upstream-version-is-even multilib_script
 
 GTKDOC_MESON_OPTION = "gtk_doc"
 
