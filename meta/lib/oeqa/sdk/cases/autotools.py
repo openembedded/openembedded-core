@@ -43,7 +43,8 @@ class AutotoolsTest(OESDKTestCase):
 
             # Check that configure detected the target correctly
             with open(os.path.join(opts["build"], "config.log")) as f:
-                host_sys = self.td["HOST_SYS"]
+                configure_flags= self._run("echo $CONFIGURE_FLAGS")
+                host_sys = configure_flags.split("--host=")[1].split()[0]
                 self.assertIn(f"host_alias='{host_sys}'\n", f.readlines())
 
             self._run("cd {build} && make CFLAGS='-std=gnu17 -Dbool=int -Dtrue=1 -Dfalse=0 -Wno-error=implicit-function-declaration' {parallel_make}".format(**opts))
