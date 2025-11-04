@@ -13,9 +13,10 @@ DEPENDS = "flex-native bison-native libcap"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BP}.tar.xz \
            file://0001-include-libnetlink.h-add-missing-include-for-htobe64.patch \
+           file://0002-lib-bridge-avoid-redefinition-of-in6_addr.patch \
            "
 
-SRC_URI[sha256sum] = "5900ccc15f9ac3bf7b7eae81deb5937123df35e99347a7f11a22818482f0a8d0"
+SRC_URI[sha256sum] = "9781e59410ab7dea8e9f79bb10ff1488e63d10fcbb70503b94426ba27a8e2dec"
 
 inherit update-alternatives bash-completion pkgconfig
 
