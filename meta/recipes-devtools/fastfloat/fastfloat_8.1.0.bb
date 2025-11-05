@@ -7,8 +7,8 @@ LIC_FILES_CHKSUM = " \
 	file://LICENSE-BOOST;md5=2c7a3fa82e66676005cd4ee2608fd7d2 \
 "
 
-SRC_URI = "git://github.com/fastfloat/fast_float.git;protocol=https;branch=main"
+SRC_URI = "git://github.com/fastfloat/fast_float.git;protocol=https;branch=main;tag=v${PV}"
 
-SRCREV = "50a80a73ab2ab256ba1c3bf86923ddd8b4202bc7"
+SRCREV = "88b1e5321c6918cbe091afd76728296290668403"
 
 inherit cmake
