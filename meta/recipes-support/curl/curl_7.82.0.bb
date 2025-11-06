@@ -79,6 +79,8 @@ CVE_CHECK_IGNORE += "CVE-2023-42915"
 CVE_CHECK_IGNORE += "CVE-2024-32928"
 # ignored: gzip decompression of content-encoded HTTP responses with the `CURLOPT_ACCEPT_ENCODING` option, using zlib 1.2.0.3 or older
 CVE_CHECK_IGNORE += "CVE-2025-0725"
+# not-applicable-config: applicable only with wolfssl
+CVE_CHECK_IGNORE += "${@bb.utils.contains('PACKAGECONFIG', 'openssl', 'CVE-2025-10966','',d)}"
 
 inherit autotools pkgconfig binconfig multilib_header
 
