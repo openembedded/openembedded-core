@@ -104,8 +104,10 @@ python () {
 
     clsextend.set_filter("DEPENDS", deps=True)
     clsextend.set_filter("PACKAGE_WRITE_DEPS", deps=False)
-    clsextend.map_packagevars()
     clsextend.set_filter("PROVIDES", deps=False)
+
+    if "nativesdk" in (d.getVar("BBCLASSEXTEND") or ""):
+        clsextend.map_packagevars()
 
     d.setVar("LIBCEXTENSION", "")
     d.setVar("ABIEXTENSION", "")
