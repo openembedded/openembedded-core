@@ -16,12 +16,12 @@ SECTION = "devel"
 LICENSE = "LGPL-3.0-or-later | GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=6a6a8e020838b23406c81b19c1d46df6 \
                     file://README;beginline=45;endline=65;md5=3a896a943b4da2c551e6be1af27eff8d \
-                    file://doc/libunistring.texi;md5=36b7d20daef7fbcc032333ae2429aa94 \
+                    file://doc/libunistring.texi;md5=55cc91e1fe09c7aec78b6dc932202300 \
                     "
 DEPENDS = "gperf-native"
 
 SRC_URI = "${GNU_MIRROR}/libunistring/libunistring-${PV}.tar.gz"
-SRC_URI[sha256sum] = "8ea8ccf86c09dd801c8cac19878e804e54f707cf69884371130d20bde68386b7"
+SRC_URI[sha256sum] = "12542ad7619470efd95a623174dcd4b364f2483caf708c6bee837cb53a54cb9d"
 
 inherit autotools texinfo
 BBCLASSEXTEND = "native nativesdk"
