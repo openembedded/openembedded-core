@@ -422,3 +422,42 @@ def check_license_format(d):
                     '%s: LICENSE value "%s" has an invalid separator "%s" that is not ' \
                     'in the valid list of separators (%s)' %
                     (pn, licenses, element, license_operator_chars), d)
+
+def skip_incompatible_package_licenses(d, pkgs):
+    if not pkgs:
+        return {}
+
+    pn = d.getVar("PN")
+
+    check_license = False if pn.startswith("nativesdk-") else True
+    for t in ["-native", "-cross-${TARGET_ARCH}", "-cross-initial-${TARGET_ARCH}",
+            "-crosssdk-${SDK_SYS}", "-crosssdk-initial-${SDK_SYS}",
+            "-cross-canadian-${TRANSLATED_TARGET_ARCH}"]:
+        if pn.endswith(d.expand(t)):
+            check_license = False
+    if pn.startswith("gcc-source-"):
+        check_license = False
+
+    bad_licenses = (d.getVar('INCOMPATIBLE_LICENSE') or "").split()
+    if not check_license or not bad_licenses:
+        return {}
+
+    bad_licenses = expand_wildcard_licenses(d, bad_licenses)
+
+    exceptions = (d.getVar("INCOMPATIBLE_LICENSE_EXCEPTIONS") or "").split()
+
+    for lic_exception in exceptions:
+        if ":" in lic_exception:
+            lic_exception = lic_exception.split(":")[1]
+        if lic_exception in obsolete_license_list():
+            bb.fatal("Obsolete license %s used in INCOMPATIBLE_LICENSE_EXCEPTIONS" % lic_exception)
+
+    skipped_pkgs = {}
+    for pkg in pkgs:
+        remaining_bad_licenses = apply_pkg_license_exception(pkg, bad_licenses, exceptions)
+
+        incompatible_lic = incompatible_license(d, remaining_bad_licenses, pkg)
+        if incompatible_lic:
+            skipped_pkgs[pkg] = incompatible_lic
+
+    return skipped_pkgs
