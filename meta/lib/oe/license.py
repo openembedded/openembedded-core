@@ -7,6 +7,7 @@
 
 import ast
 import re
+import oe.qa
 from fnmatch import fnmatchcase as fnmatch
 
 def license_ok(license, dont_want_licenses):
