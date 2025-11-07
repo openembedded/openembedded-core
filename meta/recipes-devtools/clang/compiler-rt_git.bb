@@ -41,7 +41,7 @@ UNWINDLIB:class-target = "--unwindlib=libgcc"
 COMPILER_RT:class-target = "-rtlib=libgcc"
 LIBCPLUSPLUS:class-target = "-stdlib=libstdc++"
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "crt"
 PACKAGECONFIG[crt] = "-DCOMPILER_RT_BUILD_CRT:BOOL=ON,-DCOMPILER_RT_BUILD_CRT:BOOL=OFF"
 PACKAGECONFIG[profile] = "-DCOMPILER_RT_BUILD_PROFILE=ON,-DCOMPILER_RT_BUILD_PROFILE=OFF"
 # Context Profiling, might need to enable 'profile' too
