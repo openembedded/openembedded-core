@@ -833,7 +833,6 @@ RECIPE_MAINTAINER:pn-target-sdk-provides-dummy = "Richard Purdie <richard.purdie
 RECIPE_MAINTAINER:pn-tcf-agent = "Unassigned <unassigned@yoctoproject.org>"
 RECIPE_MAINTAINER:pn-tcl = "Yi Zhao <yi.zhao@windriver.com>"
 RECIPE_MAINTAINER:pn-tcl8 = "Yi Zhao <yi.zhao@windriver.com>"
-RECIPE_MAINTAINER:pn-tcp-wrappers = "Robert Yang <liezhi.yang@windriver.com>"
 RECIPE_MAINTAINER:pn-testexport-tarball = "Richard Purdie <richard.purdie@linuxfoundation.org>"
 RECIPE_MAINTAINER:pn-texinfo = "Unassigned <unassigned@yoctoproject.org>"
 RECIPE_MAINTAINER:pn-texinfo-dummy-native = "Unassigned <unassigned@yoctoproject.org>"

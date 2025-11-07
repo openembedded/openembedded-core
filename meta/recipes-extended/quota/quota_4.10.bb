@@ -25,10 +25,9 @@ CFLAGS += "${@bb.utils.contains('PACKAGECONFIG', 'rpc', '-I${STAGING_INCDIR}/tir
 LDFLAGS += "${@bb.utils.contains('PACKAGECONFIG', 'rpc', '-ltirpc', '', d)}"
 ASNEEDED = ""
 
-PACKAGECONFIG ??= "tcp-wrappers rpc bsd"
-PACKAGECONFIG:libc-musl = "tcp-wrappers rpc"
+PACKAGECONFIG ??= "rpc bsd"
+PACKAGECONFIG:libc-musl = "rpc"
 
-PACKAGECONFIG[tcp-wrappers] = "--enable-libwrap,--disable-libwrap,tcp-wrappers"
 PACKAGECONFIG[rpc] = "--enable-rpc,--disable-rpc,libtirpc"
 PACKAGECONFIG[bsd] = "--enable-bsd_behaviour=yes,--enable-bsd_behaviour=no,"
 PACKAGECONFIG[ldapmail] = "--enable-ldapmail,--disable-ldapmail,openldap"

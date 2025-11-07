@@ -37,9 +37,8 @@ TERMBITS_SHIFTS:powerpc64 = "sc_cv_sys_crdly_shift=12 \
                              sc_cv_sys_tabdly_shift=10 \
                              sc_cv_sys_csize_shift=8"
 
-PACKAGECONFIG:class-target ??= "tcp-wrappers readline openssl"
+PACKAGECONFIG:class-target ??= "readline openssl"
 PACKAGECONFIG ??= "readline openssl"
-PACKAGECONFIG[tcp-wrappers] = "--enable-libwrap,--disable-libwrap,tcp-wrappers"
 PACKAGECONFIG[readline] = "--enable-readline,--disable-readline,readline"
 PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
 

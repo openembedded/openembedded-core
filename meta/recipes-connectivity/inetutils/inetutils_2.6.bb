@@ -192,7 +192,7 @@ RPROVIDES:${PN}-rsh = "rsh"
 FILES:${PN}-rshd = "${sbindir}/in.rshd ${sbindir}/in.rlogind ${sbindir}/in.rexecd \
                     ${sysconfdir}/xinetd.d/rsh ${sysconfdir}/xinetd.d/rlogin ${sysconfdir}/xinetd.d/rexec"
 FILES:${PN}-rshd-dbg = "${sbindir}/.debug/in.rshd ${sbindir}/.debug/in.rlogind ${sbindir}/.debug/in.rexecd"
-RDEPENDS:${PN}-rshd += "xinetd tcp-wrappers"
+RDEPENDS:${PN}-rshd += "xinetd"
 RCONFLICTS:${PN}-rshd += "netkit-rshd-server"
 RPROVIDES:${PN}-rshd = "rshd"
 
