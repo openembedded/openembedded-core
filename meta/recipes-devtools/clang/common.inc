@@ -38,7 +38,7 @@ SRC_URI = "\
     file://0016-clang-driver-Add-dyld-prefix-when-checking-sysroot-f.patch \
     file://0017-clang-Use-python3-in-python-scripts.patch \
     file://0018-llvm-clang-Insert-anchor-for-adding-OE-distro-vendor.patch \
-    file://0019-compiler-rt-Do-not-use-backtrace-APIs-on-non-glibc-l.patch \ 
+    file://0019-compiler-rt-Do-not-use-backtrace-APIs-on-non-glibc-l.patch \
     file://0020-clang-Fix-x86-triple-for-non-debian-multiarch-linux-.patch \
     file://0021-libunwind-Added-unw_backtrace-method.patch \
     file://0022-lldb-Link-with-libatomic-on-x86.patch \
@@ -59,6 +59,8 @@ SRC_URI = "\
     file://0037-Revert-libc-Remap-headers-in-the-debug-info-when-bui.patch \
     file://0038-Prevent-revisiting-block-when-searching-for-noreturn.patch \
     file://0039-Only-build-c-index-test-when-clang-tests-are-include.patch \
+    file://0040-llvm-libgcc-Fix-symlink-path-for-libcc-when-LLVM_ENA.patch \
+    file://0041-llvm-libgcc-Fix-libgcc.a-symlink-path-when-LLVM_ENAB.patch \
     file://0001-Install-lldb-tblgen.patch \
     file://0001-dont-expose-LLVM_HAVE_OPT_VIEWER_MODULES.patch \
     file://0001-clang-Support-building-native-tools-when-cross-compi.patch \
