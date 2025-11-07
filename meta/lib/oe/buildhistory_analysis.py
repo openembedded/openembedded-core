@@ -13,6 +13,7 @@
 import sys
 import os.path
 import difflib
+import functools
 import git
 import re
 import shlex
@@ -206,6 +207,7 @@ class ChangeRecord:
 
         return '%s%s' % (prefix, out) if out else ''
 
+@functools.total_ordering
 class FileChange:
     changetype_add = 'A'
     changetype_remove = 'R'
@@ -256,6 +258,12 @@ class FileChange:
             return '%s moved to %s' % (self.path, self.oldvalue)
         else:
             return '%s changed (unknown)' % self.path
+
+    def __eq__(self, other):
+        return (self.path, self.changetype, self.oldvalue, self.oldvalue) == (other.path, other.changetype, other.oldvalue, other.oldvalue)
+
+    def __lt__(self, other):
+        return (self.path, self.changetype, self.oldvalue, self.oldvalue) < (other.path, other.changetype, other.oldvalue, other.oldvalue)
 
 def blob_to_dict(blob):
     alines = [line for line in blob.data_stream.read().decode('utf-8').splitlines()]
@@ -662,7 +670,7 @@ def process_changes(repopath, revision1, revision2='HEAD', report_all=False, rep
                     filechanges = compare_lists(alines,blines)
                     if filechanges:
                         chg = ChangeRecord(path, filename, None, None, True)
-                        chg.filechanges = filechanges
+                        chg.filechanges = sorted(filechanges)
                         changes.append(chg)
                 else:
                     chg = ChangeRecord(path, filename, d.a_blob.data_stream.read().decode('utf-8'), d.b_blob.data_stream.read().decode('utf-8'), True)
@@ -690,7 +698,7 @@ def process_changes(repopath, revision1, revision2='HEAD', report_all=False, rep
                     filechanges = compare_lists(alines,blines)
                     if filechanges:
                         chg = ChangeRecord(path, filename, None, None, True)
-                        chg.filechanges = filechanges
+                        chg.filechanges = sorted(filechanges)
                         changes.append(chg)
                 else:
                     chg = ChangeRecord(path, filename, d.a_blob.data_stream.read().decode('utf-8'), d.b_blob.data_stream.read().decode('utf-8'), True)
