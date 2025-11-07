@@ -26,7 +26,7 @@ PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'acl selinux', d)}"
 PACKAGECONFIG[acl] = ",,acl"
 PACKAGECONFIG[selinux] = ",,libselinux"
 
-CONFFILES:${PN} += "${localstatedir}/lib/logrotate.status \
+CONFFILES:${PN} += "\
                     ${sysconfdir}/logrotate.conf \
                     ${sysconfdir}/logrotate.d/btmp \
                     ${sysconfdir}/logrotate.d/wtmp"
@@ -64,7 +64,6 @@ LOGROTATE_SYSTEMD_TIMER_PERSISTENT ?= "true"
 do_install(){
     oe_runmake install DESTDIR=${D} PREFIX=${D} MANDIR=${mandir}
     mkdir -p ${D}${sysconfdir}/logrotate.d
-    mkdir -p ${D}${localstatedir}/lib
     install -p -m 644 ${S}/examples/logrotate.conf ${D}${sysconfdir}/logrotate.conf
     install -p -m 644 ${S}/examples/btmp ${D}${sysconfdir}/logrotate.d/btmp
     install -p -m 644 ${S}/examples/wtmp ${D}${sysconfdir}/logrotate.d/wtmp
