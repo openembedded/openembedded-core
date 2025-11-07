@@ -39,7 +39,14 @@
                             },
                             "bb-layers": {
                                 "type": "array",
-                                "description": "List of BitBake layers to include",
+                                "description": "List of BitBake layer paths to include, relative to the layers download directory",
+                                "items": {
+                                    "type": "string"
+                                }
+                            },
+                            "bb-layers-file-relative": {
+                                "type": "array",
+                                "description": "List of BitBake layers paths to include, relative to the directory with the configuration file",
                                 "items": {
                                     "type": "string"
                                 }
