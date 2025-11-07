@@ -25,9 +25,8 @@ TUNE_CCARGS:remove = "-no-integrated-as"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
-DEPENDS += "libgcc"
-DEPENDS:append:class-target = " virtual/cross-c++ ${MLPREFIX}clang-cross-${TARGET_ARCH} virtual/${MLPREFIX}libc gcc-runtime"
-DEPENDS:append:class-nativesdk = " virtual/cross-c++ clang-native clang-crosssdk-${SDK_SYS} nativesdk-gcc-runtime"
+DEPENDS:append:class-target = " virtual/cross-c++ ${MLPREFIX}clang-cross-${TARGET_ARCH} virtual/${MLPREFIX}libc libcxx-native compiler-rt-native"
+DEPENDS:append:class-nativesdk = " virtual/cross-c++ clang-native clang-crosssdk-${SDK_SYS}"
 DEPENDS:append:class-native = " clang-native"
 DEPENDS:remove:class-native = "libcxx-native compiler-rt-native"
 
@@ -76,6 +75,8 @@ INSTALL_VER ?= "${MAJOR_VER}.${MINOR_VER}.${PATCH_VER}${VER_SUFFIX}"
 INSTALL_VER:class-native = "${@oe.utils.trim_version("${PV}", 1)}"
 
 EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=RelWithDebInfo \
+                  -DCMAKE_C_COMPILER_WORKS=ON \
+                  -DCMAKE_CXX_COMPILER_WORKS=ON \
                   -DCOMPILER_RT_STANDALONE_BUILD=ON \
                   -DCOMPILER_RT_INCLUDE_TESTS=OFF \
                   -DCOMPILER_RT_BUILD_XRAY=OFF \
@@ -100,6 +101,7 @@ EXTRA_OECMAKE:append:class-target = "\
                -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON \
                -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
                -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=OFF \
+               -DCOMPILER_RT_BUILD_ORC=OFF \
 "
 
 EXTRA_OECMAKE:append:class-nativesdk = "\
@@ -111,14 +113,13 @@ EXTRA_OECMAKE:append:class-nativesdk = "\
                -DCMAKE_C_COMPILER_TARGET=${HOST_SYS} \
                -DCOMPILER_RT_DEFAULT_TARGET_ONLY=ON \
                -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=OFF \
+               -DCOMPILER_RT_BUILD_ORC=OFF \
 "
 
 do_install:append () {
     if [ "${HF}" = "hf" ]; then
         mv -f ${D}${nonarch_libdir}/clang/${INSTALL_VER}/lib/linux/libclang_rt.builtins-arm.a \
               ${D}${nonarch_libdir}/clang/${INSTALL_VER}/lib/linux/libclang_rt.builtins-armhf.a
-        mv -f ${D}${nonarch_libdir}/clang/${INSTALL_VER}/lib/linux/liborc_rt-arm.a \
-              ${D}${nonarch_libdir}/clang/${INSTALL_VER}/lib/linux/liborc_rt-armhf.a
     fi
 }
 
