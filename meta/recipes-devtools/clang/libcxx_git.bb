@@ -12,7 +12,7 @@ inherit cmake
 
 BPN = "libcxx"
 
-PACKAGECONFIG ??= "compiler-rt exceptions ${@bb.utils.contains("TC_CXX_RUNTIME", "llvm", "unwind unwind-shared", "", d)}"
+PACKAGECONFIG ??= "compiler-rt exceptions unwind ${@bb.utils.contains("TC_CXX_RUNTIME", "llvm", "unwind unwind-shared", "", d)}"
 PACKAGECONFIG:append:armv5 = " no-atomics"
 PACKAGECONFIG:remove:class-native = "compiler-rt"
 PACKAGECONFIG[unwind] = "-DLIBCXXABI_USE_LLVM_UNWINDER=ON -DLIBCXXABI_ENABLE_STATIC_UNWINDER=ON,-DLIBCXXABI_USE_LLVM_UNWINDER=OFF,,"
@@ -22,19 +22,20 @@ PACKAGECONFIG[compiler-rt] = "-DLIBCXX_USE_COMPILER_RT=ON -DLIBCXXABI_USE_COMPIL
 PACKAGECONFIG[unwind-shared] = "-DLIBUNWIND_ENABLE_SHARED=ON,-DLIBUNWIND_ENABLE_SHARED=OFF,,"
 PACKAGECONFIG[unwind-cross] = "-DLIBUNWIND_ENABLE_CROSS_UNWINDING=ON,-DLIBUNWIND_ENABLE_CROSS_UNWINDING=OFF,,"
 
-DEPENDS:append:class-target = " virtual/cross-c++ ${MLPREFIX}clang-cross-${TARGET_ARCH} virtual/${MLPREFIX}libc virtual/${MLPREFIX}compilerlibs"
-DEPENDS:append:class-nativesdk = " virtual/cross-c++ clang-crosssdk-${SDK_SYS} nativesdk-compiler-rt"
+DEPENDS:append:class-target = " virtual/cross-c++ ${MLPREFIX}clang-cross-${TARGET_ARCH} virtual/${MLPREFIX}libc"
+DEPENDS:append:class-nativesdk = " virtual/cross-c++ clang-crosssdk-${SDK_SYS} nativesdk-compiler-rt virtual/nativesdk-libc"
 DEPENDS:append:class-native = " clang-native compiler-rt-native"
 DEPENDS:remove:class-native = "libcxx-native"
 
 COMPILER_RT ?= "${@bb.utils.contains("PACKAGECONFIG", "compiler-rt", "-rtlib=compiler-rt", "-rtlib=libgcc", d)}"
 UNWINDLIB ?= "${@bb.utils.contains("PACKAGECONFIG", "unwind", "-unwindlib=none", "-unwindlib=libgcc", d)}"
-LIBCPLUSPLUS ?= "-stdlib=libstdc++"
+LIBCPLUSPLUS ?= ""
+#LIBCPLUSPLUS ?= "-stdlib=libstdc++"
 # Trick clang.bbclass into not creating circular dependencies
-UNWINDLIB:class-nativesdk = "-unwindlib=libgcc"
-LIBCPLUSPLUS:class-nativesdk = "-stdlib=libstdc++"
+#UNWINDLIB:class-nativesdk = "-unwindlib=libgcc"
+#LIBCPLUSPLUS:class-nativesdk = "-stdlib=libstdc++"
 UNWINDLIB:class-native = "-unwindlib=libgcc"
-LIBCPLUSPLUS:class-native = "-stdlib=libstdc++"
+#LIBCPLUSPLUS:class-native = "-stdlib=libstdc++"
 
 LDFLAGS:append = " ${UNWINDLIB}"
 
@@ -65,7 +66,7 @@ EXTRA_OECMAKE += "\
                   -DCMAKE_CROSSCOMPILING=ON \
                   -DLLVM_TEMPORARILY_ALLOW_OLD_TOOLCHAIN=ON \
                   -DLLVM_ENABLE_RTTI=ON \
-                  -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=ON \
+                  -DLIBCXX_ENABLE_STATIC_ABI_LIBRARY=OFF \
                   -DLIBCXXABI_INCLUDE_TESTS=OFF \
                   -DLIBCXXABI_ENABLE_SHARED=ON \
                   -DLIBCXXABI_LIBCXX_INCLUDES=${S}/libcxx/include \
@@ -80,6 +81,10 @@ EXTRA_OECMAKE += "\
 "
 
 EXTRA_OECMAKE:append:class-target = " \
+                  -DCMAKE_C_COMPILER_WORKS=ON \
+                  -DCMAKE_CXX_COMPILER_WORKS=ON \
+                  -DCXX_SUPPORTS_FNO_EXCEPTIONS_FLAG=ON \
+                  -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON \
                   -DCMAKE_AR=${STAGING_BINDIR_TOOLCHAIN}/${AR} \
                   -DCMAKE_NM=${STAGING_BINDIR_TOOLCHAIN}/${NM} \
                   -DCMAKE_RANLIB=${STAGING_BINDIR_TOOLCHAIN}/${RANLIB} \
@@ -88,6 +93,10 @@ EXTRA_OECMAKE:append:class-target = " \
 "
 
 EXTRA_OECMAKE:append:class-nativesdk = " \
+                  -DCMAKE_C_COMPILER_WORKS=ON \
+                  -DCMAKE_CXX_COMPILER_WORKS=ON \
+                  -DCXX_SUPPORTS_FNO_EXCEPTIONS_FLAG=ON \
+                  -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON \
                   -DCMAKE_AR=${STAGING_BINDIR_TOOLCHAIN}/${AR} \
                   -DCMAKE_NM=${STAGING_BINDIR_TOOLCHAIN}/${NM} \
                   -DCMAKE_RANLIB=${STAGING_BINDIR_TOOLCHAIN}/${RANLIB} \
