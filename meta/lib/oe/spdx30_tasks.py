@@ -502,34 +502,29 @@ def create_spdx(d):
     cve_by_status = {}
     if include_vex != "none":
         patched_cves = oe.cve_check.get_patched_cves(d)
-        for cve, patched_cve in patched_cves.items():
-            decoded_status = {
-                "mapping": patched_cve["abbrev-status"],
-                "detail": patched_cve["status"],
-                "description": patched_cve.get("justification", None)
-            }
+        for cve_id in patched_cves:
+            mapping, detail, description = oe.cve_check.decode_cve_status(d, cve_id)
+
+            if not mapping or not detail:
+                bb.warn(f"Skipping {cve_id} — missing or unknown CVE status")
+                continue
 
             # If this CVE is fixed upstream, skip it unless all CVEs are
             # specified.
             if (
                 include_vex != "all"
-                and "detail" in decoded_status
-                and decoded_status["detail"]
-                in (
-                    "fixed-version",
-                    "cpe-stable-backport",
-                )
+                and "detail" in ("fixed-version", "cpe-stable-backport")
             ):
-                bb.debug(1, "Skipping %s since it is already fixed upstream" % cve)
+                bb.debug(1, "Skipping %s since it is already fixed upstream" % cve_id)
                 continue
 
-            spdx_cve = build_objset.new_cve_vuln(cve)
+            spdx_cve = build_objset.new_cve_vuln(cve_id)
             build_objset.set_element_alias(spdx_cve)
 
-            cve_by_status.setdefault(decoded_status["mapping"], {})[cve] = (
+            cve_by_status.setdefault(mapping, {})[cve_id] = (
                 spdx_cve,
-                decoded_status["detail"],
-                decoded_status["description"],
+                detail,
+                description,
             )
 
     cpe_ids = oe.cve_check.get_cpe_ids(d.getVar("CVE_PRODUCT"), d.getVar("CVE_VERSION"))
