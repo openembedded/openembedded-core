@@ -7,7 +7,7 @@ DEPENDS += "ninja-native"
 UPSTREAM_CHECK_COMMITS = "1"
 
 SRC_URI = "git://gn.googlesource.com/gn;protocol=https;branch=main"
-SRCREV = "81b24e01531ecf0eff12ec9359a555ec3944ec4e"
+SRCREV = "092f4f0d612e5982728c8b872c2e69cf3d04b21f"
 PV = "0+git"
 
 BB_GIT_SHALLOW = ""
