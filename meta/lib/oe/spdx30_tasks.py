@@ -405,7 +405,7 @@ def add_download_files(d, objset):
                     name=file_name,
                     software_primaryPurpose=primary_purpose,
                     software_downloadLocation=oe.spdx_common.fetch_data_to_uri(
-                        fd, fd.name
+                        fd, fd.names[0]
                     ),
                 )
             )
