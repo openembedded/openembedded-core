@@ -476,8 +476,8 @@ class DevtoolAddTests(DevtoolBase):
         version = 'v3.1.0'
         pn = 'mbedtls'
         # this will trigger reformat_git_uri with branch parameter in url
-        git_url = "'git://git@github.com/ARMmbed/mbedtls.git;branch=mbedtls-2.28;protocol=https'"
-        resulting_src_uri = "git://git@github.com/ARMmbed/mbedtls.git;branch=mbedtls-2.28;protocol=https"
+        git_url = "'git://git@github.com/Mbed-TLS/mbedtls.git;branch=archive/mbedtls-2.28;protocol=https'"
+        resulting_src_uri = "git://git@github.com/Mbed-TLS/mbedtls.git;branch=archive/mbedtls-2.28;protocol=https"
         self._test_devtool_add_git_url(git_url, version, pn, resulting_src_uri)
 
     def test_devtool_add_git_style2(self):
@@ -485,8 +485,8 @@ class DevtoolAddTests(DevtoolBase):
         srcrev = 'v3.1.0'
         pn = 'mbedtls'
         # this will trigger reformat_git_uri with branch parameter in url
-        git_url = "'git://git@github.com/ARMmbed/mbedtls.git;protocol=https'"
-        resulting_src_uri = "git://git@github.com/ARMmbed/mbedtls.git;protocol=https;branch=master"
+        git_url = "'git://git@github.com/Mbed-TLS/mbedtls.git;protocol=https'"
+        resulting_src_uri = "git://git@github.com/Mbed-TLS/mbedtls.git;protocol=https;branch=master"
         self._test_devtool_add_git_url(git_url, version, pn, resulting_src_uri, srcrev)
 
     def test_devtool_add_library(self):
