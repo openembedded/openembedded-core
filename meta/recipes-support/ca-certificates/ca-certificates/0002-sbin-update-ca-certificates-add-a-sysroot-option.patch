@@ -1,0 +1,36 @@
+From d6bb773745c2e95fd1a414e916fbed64e0d8df66 Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex@linutronix.de>
+Date: Mon, 31 Mar 2025 17:42:25 +0200
+Subject: [PATCH] sbin/update-ca-certificates: add a --sysroot option
+
+This allows using the script in cross-compilation environments
+where the script needs to prefix the sysroot to every other
+directory it operates on. There are individual options
+to set those directories, but using a common prefix option
+instead is a lot less clutter and more robust.
+
+Upstream-Status: Submitted [https://salsa.debian.org/debian/ca-certificates/-/merge_requests/13]
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ sbin/update-ca-certificates | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/sbin/update-ca-certificates b/sbin/update-ca-certificates
+index 4bb77a0..1e737b9 100755
+--- a/sbin/update-ca-certificates
++++ b/sbin/update-ca-certificates
+@@ -59,6 +59,14 @@ do
+     --hooksdir)
+       shift
+       HOOKSDIR="$1";;
++    --sysroot)
++      shift
++      SYSROOT="$1"
++      CERTSCONF="$1/${CERTSCONF}"
++      CERTSDIR="$1/${CERTSDIR}"
++      LOCALCERTSDIR="$1/${LOCALCERTSDIR}"
++      ETCCERTSDIR="$1/${ETCCERTSDIR}"
++      HOOKSDIR="$1/${HOOKSDIR}";;
+     --help|-h|*)
+       echo "$0: [--verbose] [--fresh]"
+       exit;;

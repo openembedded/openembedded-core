@@ -16,9 +16,8 @@ PACKAGE_WRITE_DEPS += "openssl-native debianutils-native"
 
 SRC_URI[sha256sum] = "dd8286d0a9dd35c756fea5f1df3fed1510fb891f376903891b003cd9b1ad7e03"
 SRC_URI = "${DEBIAN_MIRROR}/main/c/ca-certificates/${BPN}_${PV}.tar.xz \
-           file://0002-update-ca-certificates-use-SYSROOT.patch \
            file://0001-update-ca-certificates-don-t-use-Debianisms-in-run-p.patch \
-           file://default-sysroot.patch \
+           file://0002-sbin-update-ca-certificates-add-a-sysroot-option.patch \
            file://0003-update-ca-certificates-use-relative-symlinks-from-ET.patch \
            file://0001-Revert-mozilla-certdata2pem.py-print-a-warning-for-e.patch \
            "
@@ -62,7 +61,7 @@ do_install:append:class-target () {
 }
 
 pkg_postinst:${PN}:class-target () {
-    SYSROOT="$D" $D${sbindir}/update-ca-certificates
+    $D${sbindir}/update-ca-certificates --sysroot $D
 }
 
 CONFFILES:${PN} += "${sysconfdir}/ca-certificates.conf"
@@ -71,11 +70,11 @@ CONFFILES:${PN} += "${sysconfdir}/ca-certificates.conf"
 # we just run update-ca-certificate from do_install() for nativesdk.
 CONFFILES:${PN}:append:class-nativesdk = " ${sysconfdir}/ssl/certs/ca-certificates.crt"
 do_install:append:class-nativesdk () {
-    SYSROOT="${D}${SDKPATHNATIVE}" ${D}${sbindir}/update-ca-certificates
+    ${D}${sbindir}/update-ca-certificates --sysroot ${D}${SDKPATHNATIVE}
 }
 
 do_install:append:class-native () {
-    SYSROOT="${D}${base_prefix}" ${D}${sbindir}/update-ca-certificates
+    ${D}${sbindir}/update-ca-certificates --sysroot ${D}${base_prefix}
 }
 
 RDEPENDS:${PN}:append:class-target = " openssl-bin openssl"
