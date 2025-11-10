@@ -14,6 +14,13 @@ DEPENDS:class-nativesdk = "openssl-native"
 # Need rehash from openssl and run-parts from debianutils
 PACKAGE_WRITE_DEPS += "openssl-native debianutils-native"
 
+# Since there is no TAG in the git repository, the SRCREV was determined
+# through comparison of the git repository and the data on the following
+# package informatin pages:
+#
+# * https://packages.debian.org/trixie/ca-certificates
+# * https://packages.ubuntu.com/noble/ca-certificates
+#
 SRCREV = "ee6e0484031314090a11c04ee82689acb73d7ad8"
 
 SRC_URI = "git://salsa.debian.org/debian/ca-certificates.git;protocol=https;branch=master \
