@@ -60,7 +60,8 @@ do_install:append:class-target () {
 }
 
 pkg_postinst:${PN}:class-target () {
-    $D${sbindir}/update-ca-certificates --sysroot $D
+    [ -n "$D" ] && sysroot_args="--sysroot $D"
+    $D${sbindir}/update-ca-certificates $sysroot_args
 }
 
 CONFFILES:${PN} += "${sysconfdir}/ca-certificates.conf"
