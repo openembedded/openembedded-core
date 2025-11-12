@@ -312,7 +312,7 @@ LIC_FILES_CHKSUM = "file://LICENCE.Abilis;md5=b5ee3f410780e56711ad48eadc22b8bc \
                     "
 # WHENCE checksum is defined separately to ease overriding it if
 # class-devupstream is selected.
-WHENCE_CHKSUM  = "aa7f40acde3418d9125fbb933ba2d9f9"
+WHENCE_CHKSUM  = "4a2863b38b43abbc3a09b24ece7d1196"
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
 # so that the license files will be copied from fetched source
@@ -449,7 +449,7 @@ SRC_URI:class-devupstream = "git://git.kernel.org/pub/scm/linux/kernel/git/firmw
 # Pin this to the 20220509 release, override this in local.conf
 SRCREV:class-devupstream ?= "b19cbdca78ab2adfd210c91be15a22568e8b8cae"
 
-SRC_URI[sha256sum] = "fa6130988ecd7968602938c77dd6f8d2dace4e03ba0da4c0e9624dfed657e6cf"
+SRC_URI[sha256sum] = "ab57a1526595090bb4874c35335e2252288dcbea546eff491654b2313438a47d"
 
 inherit allarch
 
@@ -709,7 +709,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-qcom-adreno-g802 \
              ${PN}-qcom-apq8016-modem ${PN}-qcom-apq8016-wifi \
              ${PN}-qcom-apq8096-adreno ${PN}-qcom-apq8096-audio ${PN}-qcom-apq8096-modem \
-             ${PN}-qcom-kaanapali-adreno ${PN}-qcom-kaanapali-compute \
+             ${PN}-qcom-kaanapali-adreno ${PN}-qcom-kaanapali-audio ${PN}-qcom-kaanapali-compute ${PN}-qcom-kaanapali-soccp \
              ${PN}-qcom-qcm2290-adreno ${PN}-qcom-qcm2290-audio ${PN}-qcom-qcm2290-modem \
              ${PN}-qcom-qcm6490-adreno ${PN}-qcom-qcm6490-audio ${PN}-qcom-qcm6490-compute \
              ${PN}-qcom-qcm6490-ipa ${PN}-qcom-qcm6490-wifi ${PN}-qcom-qcm6490-qupv3fw \
@@ -753,7 +753,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-typhoon-license ${PN}-typhoon \
              ${PN}-intel-license ${PN}-ish-lnlm \
              ${PN}-dell-license ${PN}-ish-lnlm-39ceeaf8 \
-             ${PN}-hp-license ${PN}-ish-lnlm-dba6b120-152c3222 \
+             ${PN}-hp-license ${PN}-ish-lnlm-12128606 \
              ${PN}-lenovo-license ${PN}-ish-lnlm-53c4ffad-2a17559f \
              ${PN}-ish-ptl \
              ${PN}-advansys-license ${PN}-advansys \
@@ -1770,7 +1770,7 @@ LICENSE:${PN}-ti-tas2563 = "Firmware-ti-tspa"
 FILES:${PN}-ti-tas2563 = "\
     ${nonarch_base_libdir}/firmware/INT8866RCA2.bin* \
     ${nonarch_base_libdir}/firmware/TAS2XXX3870.bin* \
-    ${nonarch_base_libdir}/firmware/ti/tas2563/* \
+    ${nonarch_base_libdir}/firmware/ti/audio/tas2563/* \
 "
 RDEPENDS:${PN}-ti-tas2563 = "${PN}-ti-tspa-license"
 
@@ -1780,7 +1780,7 @@ FILES:${PN}-ti-tas2781 = "\
     ${nonarch_base_libdir}/firmware/TAS2XXX*.bin* \
     ${nonarch_base_libdir}/firmware/TIAS2781*.bin* \
     ${nonarch_base_libdir}/firmware/TXNW2781*.bin* \
-    ${nonarch_base_libdir}/firmware/ti/tas2781/* \
+    ${nonarch_base_libdir}/firmware/ti/audio/tas2781/* \
 "
 RDEPENDS:${PN}-ti-tas2781 = "${PN}-ti-tspa-license"
 
@@ -2275,7 +2275,9 @@ LICENSE:${PN}-qcom-apq8096-audio = "Firmware-qcom"
 LICENSE:${PN}-qcom-apq8096-adreno = "Firmware-qcom"
 LICENSE:${PN}-qcom-apq8096-modem = "Firmware-qcom"
 LICENSE:${PN}-qcom-kaanapali-adreno = "Firmware-qcom"
+LICENSE:${PN}-qcom-kaanapali-audio = "Firmware-qcom"
 LICENSE:${PN}-qcom-kaanapali-compute = "Firmware-qcom"
+LICENSE:${PN}-qcom-kaanapali-soccp = "Firmware-qcom"
 LICENSE:${PN}-qcom-qcm2290-adreno = "Firmware-qcom"
 LICENSE:${PN}-qcom-qcm2290-audio = "Firmware-qcom"
 LICENSE:${PN}-qcom-qcm2290-modem = "Firmware-qcom"
@@ -2373,7 +2375,9 @@ FILES:${PN}-qcom-apq8096-adreno = "${nonarch_base_libdir}/firmware/qcom/apq8096/
 FILES:${PN}-qcom-apq8096-audio = "${nonarch_base_libdir}/firmware/qcom/apq8096/adsp*.*"
 FILES:${PN}-qcom-apq8096-modem = "${nonarch_base_libdir}/firmware/qcom/apq8096/mba.mbn* ${nonarch_base_libdir}/firmware/qcom/apq8096/modem*.* ${nonarch_base_libdir}/firmware/qcom/apq8096/wlanmdsp.mbn*"
 FILES:${PN}-qcom-kaanapali-adreno = "${nonarch_base_libdir}/firmware/qcom/kaanapali/gen80200_zap.mbn*"
+FILES:${PN}-qcom-kaanapali-audio = "${nonarch_base_libdir}/firmware/qcom/kaanapali/adsp*.*"
 FILES:${PN}-qcom-kaanapali-compute = "${nonarch_base_libdir}/firmware/qcom/kaanapali/cdsp*.*"
+FILES:${PN}-qcom-kaanapali-soccp = "${nonarch_base_libdir}/firmware/qcom/kaanapali/soccp*.*"
 FILES:${PN}-qcom-qcm2290-adreno = "${nonarch_base_libdir}/firmware/qcom/qcm2290/a702_zap.mbn*"
 FILES:${PN}-qcom-qcm2290-audio = "${nonarch_base_libdir}/firmware/qcom/qcm2290/adsp*.*"
 FILES:${PN}-qcom-qcm2290-modem = "${nonarch_base_libdir}/firmware/qcom/qcm2290/modem*.*"
@@ -2476,7 +2480,9 @@ RDEPENDS:${PN}-qcom-apq8096-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-apq8096-audio = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-apq8096-modem = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-kaanapali-adreno = "${PN}-qcom-license"
+RDEPENDS:${PN}-qcom-kaanapali-audio = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-kaanapali-compute = "${PN}-qcom-license"
+RDEPENDS:${PN}-qcom-kaanapali-soccp = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-qcm2290-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-qcm2290-audio = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-qcm2290-modem = "${PN}-qcom-license"
@@ -2600,12 +2606,12 @@ RDEPENDS:${PN}-ish-lnlm-39ceeaf8 = "${PN}-dell-license"
 LICENSE:${PN}-hp-license = "Firmware-HP"
 FILES:${PN}-hp-license = "${nonarch_base_libdir}/firmware/LICENSE.HP"
 
-LICENSE:${PN}-ish-lnlm-dba6b120-152c3222 = "Firmware-HP"
-FILES:${PN}-ish-lnlm-dba6b120-152c3222 = " \
-    ${nonarch_base_libdir}/firmware/intel/ish/ish_lnlm_dba6b120_152c3222.bin* \
-    ${nonarch_base_libdir}/firmware/HP/ish/ish_lnlm_dba6b120_152c3222.bin* \
+LICENSE:${PN}-ish-lnlm-12128606 = "Firmware-HP"
+FILES:${PN}-ish-lnlm-12128606 = " \
+    ${nonarch_base_libdir}/firmware/intel/ish/ish_lnlm_12128606.bin* \
+    ${nonarch_base_libdir}/firmware/HP/ish/ish_lnlm_12128606.bin* \
 "
-RDEPENDS:${PN}-ish-lnlm-dba6b120-152c3222 = "${PN}-hp-license"
+RDEPENDS:${PN}-ish-lnlm-12128606 = "${PN}-hp-license"
 
 # For LENOVO ish - Intel Integrated Sensor Hub
 LICENSE:${PN}-lenovo-license = "Firmware-lenovo"
