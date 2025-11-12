@@ -22,8 +22,6 @@ SRC_URI += "\
 
 SRC_URI[archive.sha256sum] = "1912b91803ab09a5eed34d364bf09fe3a2a9c96751fde03a4e0cfa51a04d784c"
 
-S = "${UNPACKDIR}/${GNOMEBN}-${PV}"
-
 EXTRA_OECONF = "--enable-shared --disable-static \
                 --disable-orbit --with-openldap=no --disable-gtk"
 

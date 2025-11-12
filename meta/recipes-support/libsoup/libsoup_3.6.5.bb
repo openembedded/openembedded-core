@@ -13,8 +13,6 @@ SRC_URI[archive.sha256sum] = "6891765aac3e949017945c3eaebd8cc8216df772456dc9f460
 
 PROVIDES = "libsoup-3.0"
 
-S = "${UNPACKDIR}/${GNOMEBN}-${PV}"
-
 inherit gettext gnomebase upstream-version-is-even gobject-introspection gi-docgen vala
 
 GIR_MESON_ENABLE_FLAG = 'enabled'

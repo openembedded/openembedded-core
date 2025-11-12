@@ -24,8 +24,6 @@ SRC_URI += "\
            "
 SRC_URI[archive.sha256sum] = "0013877c6bd23c2dbe42ad7c70a053d0e449be66736574e37867c49c5f905a4f"
 
-S = "${UNPACKDIR}/${GNOMEBN}-${PV}"
-
 BBCLASSEXTEND = "native nativesdk"
 
 GSETTINGS_PACKAGE:class-native = ""
