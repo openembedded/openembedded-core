@@ -15,6 +15,10 @@ EXTRA_OECONF += "ac_cv_path_SORT=${bindir}/sort"
 # need od from coreutils for -t option
 RDEPENDS:${PN}-ptest += "bash sed grep coreutils"
 
+do_install:append() {
+	rmdir ${D}${localstatedir}
+}
+
 do_install_ptest:class-target() {
 	mkdir -p ${D}${PTEST_PATH}/tests/
 	cp ${S}/init.cfg ${D}${PTEST_PATH}
