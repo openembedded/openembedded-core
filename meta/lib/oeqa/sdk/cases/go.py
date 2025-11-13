@@ -25,9 +25,9 @@ class GoCompileTest(OESDKTestCase):
                         os.path.join(self.tc.sdk_dir, 'test.go'))
 
     def setUp(self):
-        target_arch = self.td.get("TARGET_ARCH")
+        translated_target_arch = self.td.get("TRANSLATED_TARGET_ARCH")
         # Check for go-cross-canadian package (uses target architecture)
-        if not self.tc.hasHostPackage("go-cross-canadian-%s" % target_arch):
+        if not self.tc.hasHostPackage("go-cross-canadian-%s" % translated_target_arch):
             raise unittest.SkipTest("GoCompileTest class: SDK doesn't contain a Go cross-canadian toolchain")
 
         # Additional runtime check for go command availability
@@ -63,9 +63,9 @@ class GoHostCompileTest(OESDKTestCase):
                         os.path.join(self.tc.sdk_dir, 'test.go'))
 
     def setUp(self):
-        target_arch = self.td.get("TARGET_ARCH")
+        translated_target_arch = self.td.get("TRANSLATED_TARGET_ARCH")
         # Check for go-cross-canadian package (uses target architecture)
-        if not self.tc.hasHostPackage("go-cross-canadian-%s" % target_arch):
+        if not self.tc.hasHostPackage("go-cross-canadian-%s" % translated_target_arch):
             raise unittest.SkipTest("GoHostCompileTest class: SDK doesn't contain a Go cross-canadian toolchain")
 
         # Additional runtime check for go command availability
