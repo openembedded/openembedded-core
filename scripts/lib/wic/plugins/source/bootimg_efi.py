@@ -386,7 +386,7 @@ class BootimgEFIPlugin(SourcePlugin):
         for paths in part.include_path or []:
             for path in paths:
                 cp_cmd = "cp -v -p -r %s %s/" % (path, hdddir)
-                exec_cmd(cp_cmd, True)
+                out = exec_cmd(cp_cmd, True)
                 logger.debug("include_path files:\n%s" % out)
 
         du_cmd = "du -bks %s" % hdddir
