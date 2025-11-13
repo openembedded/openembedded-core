@@ -28,7 +28,6 @@ class GoCompileTest(OERuntimeTestCase):
     @OEHasPackage('go')
     @OEHasPackage('go-runtime')
     @OEHasPackage('go-runtime-dev')
-    @OEHasPackage('openssh-scp')
     def test_go_compile(self):
         # Check if go is available
         status, output = self.target.run('which go')
@@ -49,7 +48,6 @@ class GoCompileTest(OERuntimeTestCase):
     @OEHasPackage('go')
     @OEHasPackage('go-runtime')
     @OEHasPackage('go-runtime-dev')
-    @OEHasPackage('openssh-scp')
     def test_go_module(self):
         # Check if go is available
         status, output = self.target.run('which go')
