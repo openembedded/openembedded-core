@@ -421,6 +421,26 @@ class BaseConfig(object):
         else:
             raise RunQemuError("Unknown path arg %s" % p)
 
+    def rootfs_fixups(self):
+        """Address or workaround any rootfs issues.  Currently, only resize the rootfs image (if needed)"""
+        qb_rootfs_opt = self.get('QB_ROOTFS_OPT')
+
+        # Check if sdcard size is a power of 2, as that is currently a requirement for qemu
+        # See https://gitlab.com/qemu-project/qemu/-/issues/1754
+        rootfs_size = os.path.getsize(self.rootfs)
+        rootfs_size_pwr2 = 1 << (rootfs_size - 1).bit_length()
+        if ("if=sd" in qb_rootfs_opt or "if=pflash" in qb_rootfs_opt) and rootfs_size != rootfs_size_pwr2:
+            logger.info("Using sd-card or pflash and is not power of 2. File size %d, power of 2 size %d" %(rootfs_size, rootfs_size_pwr2))
+            logger.info("Attempting to use truncate to correct this.")
+
+            # Ensure the 'truncate' tool is installed before attempting to make a power of 2.
+            if not shutil.which('truncate'):
+                raise RunQemuError(f"'truncate' is required to make {self.rootfs} a power of 2 in size but was not found in PATH")
+            try:
+                subprocess.check_call(['truncate', '-s', str(rootfs_size_pwr2), self.rootfs])
+            except subprocess.CalledProcessError as e:
+                raise RunQemuError(f"Failed to make {self.rootfs} power of 2 in size: {e}")
+
     def uncompress_rootfs(self):
         """Decompress ZST rootfs image if needed"""
         if not self.rootfs or not self.fstype.endswith('.zst'):
@@ -1784,6 +1804,7 @@ def main():
         config.read_qemuboot()
         config.check_and_set()
         config.uncompress_rootfs()
+        config.rootfs_fixups()
         # Check whether the combos is valid or not
         config.validate_combos()
         config.print_config()
