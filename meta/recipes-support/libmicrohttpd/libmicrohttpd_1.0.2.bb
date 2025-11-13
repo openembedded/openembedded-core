@@ -6,7 +6,8 @@ SECTION = "net"
 
 DEPENDS = "file"
 
-SRC_URI = "${GNU_MIRROR}/libmicrohttpd/${BPN}-${PV}.tar.gz"
+SRC_URI = "${GNU_MIRROR}/libmicrohttpd/${BPN}-${PV}.tar.gz \
+           file://0001-Remove-broken-experimental-code.patch"
 SRC_URI[sha256sum] = "df324fcd0834175dab07483133902d9774a605bfa298025f69883288fd20a8c7"
 
 inherit autotools lib_package pkgconfig gettext
