@@ -348,3 +348,7 @@ INSANE_SKIP:libopencl-mesa += "dev-so"
 RREPLACES:mesa-megadriver = "mesa"
 RCONFLICTS:mesa-megadriver = "mesa"
 RPROVIDES:mesa-megadriver = "mesa"
+
+# As of May 2025 it is known that LTO breaks Mesa, for example:
+# https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/34318
+LTO = ""
