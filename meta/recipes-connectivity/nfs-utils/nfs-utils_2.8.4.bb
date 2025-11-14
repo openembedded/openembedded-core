@@ -123,12 +123,6 @@ do_configure:prepend() {
 		${S}/systemd/Makefile.am ${S}/tools/nfsrahead/Makefile.am
 }
 
-# Make clean needed because the package comes with
-# precompiled 64-bit objects that break the build
-do_compile:prepend() {
-	make clean
-}
-
 # Works on systemd only
 HIGH_RLIMIT_NOFILE ??= "4096"
 
