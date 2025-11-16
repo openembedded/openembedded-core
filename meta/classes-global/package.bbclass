@@ -296,8 +296,10 @@ python package_get_auto_pr() {
         conn = oe.prservice.prserv_make_conn(d)
         if conn is not None:
             if "AUTOINC" in pkgv:
+                pr = d.getVar('PR')
+                # Strip PR to make AUTOINC can increase when SRCREV is changed
+                base_ver = "AUTOINC-%s" % version[:-len(pr)]
                 srcpv = bb.fetch2.get_srcrev(d)
-                base_ver = "AUTOINC-%s" % version[:version.find(srcpv)]
                 value = conn.getPR(base_ver, pkgarch, srcpv)
                 d.setVar("PRSERV_PV_AUTOINC", str(value))
 
