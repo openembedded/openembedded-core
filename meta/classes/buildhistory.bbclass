@@ -57,6 +57,13 @@ BUILDHISTORY_PRESERVE = "latest latest_srcrev sysroot"
 PATCH_GIT_USER_EMAIL ?= "buildhistory@oe"
 PATCH_GIT_USER_NAME ?= "OpenEmbedded"
 
+python() {
+    warn_qa = d.getVar('WARN_QA')
+    error_qa = d.getVar('ERROR_QA')
+    if ('version-going-backwards' in warn_qa + error_qa) and not d.getVar('PRSERV_HOST'):
+        bb.warn('PRServer is not enabled, version-going-backwards check may fail!')
+}
+
 #
 # Write out the contents of the sysroot
 #
