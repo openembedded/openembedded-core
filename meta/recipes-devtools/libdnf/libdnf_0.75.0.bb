@@ -9,15 +9,18 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=dnf-4-master;p
            file://0001-Get-parameters-for-both-libsolv-and-libsolvext-libdn.patch \
            file://0001-drop-FindPythonInstDir.cmake.patch \
            file://armarch.patch \
-           file://optional-check.patch \
+           file://0001-dnf-repo-Define-FNM_EXTMATCH-if-not-already-like-und.patch \
+           file://0001-utils-utils.cpp-fix-compilation-with-musl.patch \
            "
 
-SRCREV = "91a0bf9aada36a722855051526f012e0b5ab1af9"
+SRCREV = "d39573195e24b43687587a8d83b9f6ac274e2412"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(?!4\.90)\d+(\.\d+)+)"
 
 DEPENDS = "glib-2.0 libsolv librepo rpm libmodulemd json-c swig-native util-linux"
 
 inherit cmake pkgconfig setuptools3-base gettext
+
+COMPATIBLE_HOST_libc-musl = 'null'
 
 EXTRA_OECMAKE = " -DPYTHON_INSTALL_DIR=${PYTHON_SITEPACKAGES_DIR} -DPYTHON_DESIRED=3 \
                   -DWITH_GTKDOC=OFF -DWITH_MAN=OFF -DWITH_HTML=OFF \
