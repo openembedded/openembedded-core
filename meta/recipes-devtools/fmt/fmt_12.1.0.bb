@@ -4,12 +4,11 @@ HOMEPAGE = "https://fmt.dev"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b9257785fc4f3803a4b71b76c1412729"
 
-SRC_URI = "git://github.com/fmtlib/fmt;branch=master;protocol=https;tag=${PV}\
+SRC_URI = "git://github.com/fmtlib/fmt;branch=master;protocol=https;tag=${PV} \
            file://0001-Workaround-an-ABI-issue-in-spdlog.patch \
-           file://0001-Fix-compilation-on-clang-21-libc-21-4477.patch \
            file://run-ptest \
            "
-SRCREV = "40626af88bd7df9a5fb80be7b25ac85b122d6c21"
+SRCREV = "407c905e45ad75fc29bf0f9bb7c5c2fd3475976f"
 
 inherit cmake ptest
 
