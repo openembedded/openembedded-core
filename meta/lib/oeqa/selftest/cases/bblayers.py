@@ -145,7 +145,7 @@ class BitbakeLayers(OESelftestTestCase):
     def validate_json(self, json, jsonschema):
         python = os.path.join(self.jsonschema_staging_bindir, 'nativepython3')
         jsonvalidator = os.path.join(self.jsonschema_staging_bindir, 'jsonschema')
-        schemas_dir = os.path.join(self.corebase, "meta/files/")
+        schemas_dir = os.path.join(self.bitbakepath, "..", "setup-schema")
         if not os.path.isabs(jsonschema):
             jsonschema = os.path.join(schemas_dir, jsonschema)
 
