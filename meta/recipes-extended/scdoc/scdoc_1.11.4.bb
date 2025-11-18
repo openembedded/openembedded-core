@@ -6,9 +6,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=31752b4a8edd3fb9ddba1cb90fada74d"
 
 DEPENDS = "scdoc-native"
 
-SRC_URI = "git://git.sr.ht/~sircmpwn/scdoc;protocol=https;branch=master \
-           file://0001-Makefile-drop-static.patch "
-SRCREV = "0528bcb993cac6c412acd3ae2e09539e994c0a59"
+SRC_URI = "git://git.sr.ht/~sircmpwn/scdoc;protocol=https;branch=master"
+SRCREV = "70de0e5e5d3bc40134ee65c35f1631656199f4be"
 
 do_install() {
 	oe_runmake 'DESTDIR=${D}' install
