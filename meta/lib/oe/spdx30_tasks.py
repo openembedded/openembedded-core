@@ -503,7 +503,13 @@ def create_spdx(d):
     if include_vex != "none":
         patched_cves = oe.cve_check.get_patched_cves(d)
         for cve_id in patched_cves:
-            mapping, detail, description = oe.cve_check.decode_cve_status(d, cve_id)
+            # decode_cve_status is decoding CVE_STATUS, so patch files need to be hardcoded
+            if cve_id in (d.getVarFlags("CVE_STATUS") or {}):
+                mapping, detail, description = oe.cve_check.decode_cve_status(d, cve_id)
+            else:
+                mapping = "Patched"
+                detail = "backported-patch"  # fix-file-included is not available in scarthgap
+                description = None
 
             if not mapping or not detail:
                 bb.warn(f"Skipping {cve_id} — missing or unknown CVE status")
