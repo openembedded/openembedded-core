@@ -122,8 +122,10 @@ MACHINE ??= "qemux86-64"
 # There are other features that can be used here too, see
 # meta/classes-recipe/image.bbclass and
 # meta/classes-recipe/core-image.bbclass for more details.
-# We default to allowing root login without a password for convenience.
-EXTRA_IMAGE_FEATURES ?= "allow-empty-password empty-root-password allow-root-login"
+#
+# The following will allow root login without a password for convenience.
+# Use with care, and never in product builds.
+#EXTRA_IMAGE_FEATURES ?= "allow-empty-password empty-root-password allow-root-login"
 
 #
 # Additional image features
