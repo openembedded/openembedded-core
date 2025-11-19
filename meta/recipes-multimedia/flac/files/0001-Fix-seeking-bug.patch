@@ -1,0 +1,34 @@
+From 1817916388cd8180f4411e6d0eb89a8c6916dce6 Mon Sep 17 00:00:00 2001
+From: Martijn van Beurden <mvanb1@gmail.com>
+Date: Mon, 25 Apr 2022 20:29:57 +0200
+Subject: [PATCH] Fix seeking bug
+
+Commit 159cd6c introduced a bug that only triggered upon seeking
+from the start of a headerless FLAC file to the first frame (so
+really not a seek at all). Furthermore that commit did nothing
+else in any other circumstance. This commit fixes that, by both
+fixing the problem and the behaviour the commit mentioned earlier
+meant to introduce.
+
+Co-authored-by: Robert Kausch <robert.kausch@freac.org>
+
+Upstream-Status: Backport [https://github.com/xiph/flac/commit/7e785eb9a84f9147246eb2b0e5e35ec01db5a815]
+Signed-off-by: Gyorgy Sarvari <skandigraun@gmail.com>
+---
+ src/libFLAC/stream_decoder.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/src/libFLAC/stream_decoder.c b/src/libFLAC/stream_decoder.c
+index ef6da44..bc78645 100644
+--- a/src/libFLAC/stream_decoder.c
++++ b/src/libFLAC/stream_decoder.c
+@@ -3077,7 +3077,8 @@ FLAC__bool seek_to_absolute_sample_(FLAC__StreamDecoder *decoder, FLAC__uint64 s
+ 	upper_bound = stream_length;
+ 	upper_bound_sample = total_samples > 0 ? total_samples : target_sample /*estimate it*/;
+ 
+-	if(decoder->protected_->state == FLAC__STREAM_DECODER_READ_FRAME) {
++	if(decoder->protected_->state == FLAC__STREAM_DECODER_SEARCH_FOR_FRAME_SYNC &&
++	   decoder->private_->samples_decoded != 0) {
+ 		if(target_sample < decoder->private_->samples_decoded) {
+ 			if(FLAC__stream_decoder_get_decode_position(decoder, &upper_bound))
+ 				upper_bound_sample = decoder->private_->samples_decoded;

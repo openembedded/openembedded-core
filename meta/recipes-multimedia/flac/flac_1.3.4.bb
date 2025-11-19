@@ -16,7 +16,8 @@ DEPENDS = "libogg"
 
 SRC_URI = "http://downloads.xiph.org/releases/flac/${BP}.tar.xz \
            file://CVE-2020-22219.patch \
-"
+           file://0001-Fix-seeking-bug.patch \
+           "
 
 SRC_URI[sha256sum] = "8ff0607e75a322dd7cd6ec48f4f225471404ae2730d0ea945127b1355155e737"
 
