@@ -32,6 +32,8 @@ SRC_URI = "https://www.x.org/archive/individual/xserver/xwayland-${PV}.tar.xz \
            file://CVE-2025-49179.patch \
            file://CVE-2025-49180.patch \
            file://CVE-2025-62229.patch \
+           file://CVE-2025-62230-0001.patch \
+           file://CVE-2025-62230-0002.patch \
 "
 SRC_URI[sha256sum] = "33ec7ff2687a59faaa52b9b09aa8caf118e7ecb6aed8953f526a625ff9f4bd90"
 
