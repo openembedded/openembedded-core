@@ -453,7 +453,7 @@ class GitApplyTree(PatchTree):
         # Prepare git command
         cmd = ["git"]
         GitApplyTree.gitCommandUserOptions(cmd, commituser, commitemail)
-        cmd += ["commit", "-F", tmpfile, "--no-verify"]
+        cmd += ["commit", "-F", tmpfile, "--no-verify", "--no-gpg-sign"]
         # git doesn't like plain email addresses as authors
         if author and '<' in author:
             cmd.append('--author="%s"' % author)
@@ -507,7 +507,7 @@ class GitApplyTree(PatchTree):
             runcmd(['git', 'add'] + files, dir)
         cmd = ["git"]
         GitApplyTree.gitCommandUserOptions(cmd, d=d)
-        cmd += ["commit", "-m", subject, "--no-verify"]
+        cmd += ["commit", "-m", subject, "--no-verify", "--no-gpg-sign"]
         runcmd(cmd, dir)
         GitApplyTree.addNote(dir, "HEAD", GitApplyTree.ignore_commit, d.getVar('PATCH_GIT_USER_NAME'), d.getVar('PATCH_GIT_USER_EMAIL'))
 
