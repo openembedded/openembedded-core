@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=2a2b5acd7bc4844964cfda45fe807dc3"
 SRCREV = "a91631b260cba3f22858d6c6827511e636c2458a"
 SRC_URI = "git://github.com/KhronosGroup/glslang.git;protocol=https;branch=main \
            file://0001-generate-glslang-pkg-config.patch \
+           file://0001-SPIRV-SpvBuilder.h-add-missing-cstdint-include.patch \
            "
 PE = "1"
 # These recipes need to be updated in lockstep with each other:
