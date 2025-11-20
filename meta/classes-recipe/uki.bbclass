@@ -152,7 +152,9 @@ python do_uki() {
     # dtb
     if d.getVar('KERNEL_DEVICETREE'):
         for dtb in d.getVar('KERNEL_DEVICETREE').split():
-            dtb_path = "%s/%s" % (deploy_dir_image, dtb)
+            # DTBs are without sub-directories in deploy_dir
+            dtb_name = os.path.basename(dtb)
+            dtb_path = "%s/%s" % (deploy_dir_image, dtb_name)
             if not os.path.exists(dtb_path):
                 bb.fatal(f"ERROR: cannot find {dtb_path}.")
             ukify_cmd += " --devicetree %s" % (dtb_path)
