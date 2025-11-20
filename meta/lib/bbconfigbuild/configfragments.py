@@ -115,7 +115,11 @@ class ConfigFragmentsPlugin(LayerPlugin):
     def create_conf(self, confpath):
         if not os.path.exists(confpath):
             with open(confpath, 'w') as f:
-                f.write('# Automated config file controlled by tools\n')
+                f.write("""# Automated config file controlled by tools
+#
+# Run 'bitbake-config-build enable-fragment <fragment-name>' to enable additional fragments
+# or replace built-in ones (e.g. machine/<name> or distro/<name> to change MACHINE or DISTRO).
+""")
         with open(confpath, 'r') as f:
             lines = f.read()
         if "OE_FRAGMENTS += " not in lines:
