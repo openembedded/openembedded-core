@@ -10,6 +10,7 @@ import tempfile
 import unittest
 
 from oeqa.sdk.case import OESDKTestCase
+from oeqa.sdkext.context import OESDKExtTestContext
 from oeqa.utils.subprocesstweak import errors_have_output
 errors_have_output()
 
@@ -21,6 +22,9 @@ class EpoxyTest(OESDKTestCase):
         libc = self.td.get("TCLIBC")
         if libc in [ 'newlib' ]:
             raise unittest.SkipTest("MesonTest class: SDK doesn't contain a supported C library")
+
+        if isinstance(self.tc, OESDKExtTestContext):
+            self.skipTest(f"{self.id()} does not support eSDK (https://bugzilla.yoctoproject.org/show_bug.cgi?id=15854)")
 
         if not (self.tc.hasHostPackage("nativesdk-meson") or
                 self.tc.hasHostPackage("meson-native")):
