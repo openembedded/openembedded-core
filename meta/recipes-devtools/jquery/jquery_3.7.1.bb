@@ -13,6 +13,9 @@ SRC_URI = "\
     https://code.jquery.com/${BP}.min.map;name=map;subdir=${BP} \
     "
 
+# Explicitly set to 1991-10-18 20:00:00.000000000
+SOURCE_DATE_EPOCH = "687787200"
+
 SRC_URI[js.sha256sum] = "78a85aca2f0b110c29e0d2b137e09f0a1fb7a8e554b499f740d6744dc8962cfe"
 SRC_URI[min.sha256sum] = "fc9a93dd241f6b045cbff0481cf4e1901becd0e12fb45166a8f17f95823f0b1a"
 SRC_URI[map.sha256sum] = "5e7d6d9c28b7f21006535e8875eb47e9667852a14c4624eed301c6cea19ae62b"
