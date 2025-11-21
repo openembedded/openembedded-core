@@ -75,11 +75,13 @@ class ConfigFragmentsPlugin(LayerPlugin):
                  print('{}\tSets {} = "{}"'.format(f, builtin_dict[prefix], value))
             print('')
 
+        allfragments = self.discover_fragments()
+
         all_enabled_fragments = (self.tinfoil.config_data.getVar('OE_FRAGMENTS') or "").split()
         all_builtin_fragments = (self.tinfoil.config_data.getVar('OE_FRAGMENTS_BUILTIN') or "").split()
         print_builtin_fragments(all_builtin_fragments, all_enabled_fragments)
 
-        for layername, layerdata in self.discover_fragments().items():
+        for layername, layerdata in allfragments.items():
             layerdir = layerdata['layerdir']
             fragments = layerdata['fragments']
             enabled_fragments = [f for f in fragments if f['name'] in all_enabled_fragments]
