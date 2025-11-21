@@ -23,7 +23,7 @@ inherit autotools pkgconfig github-releases
 EXTRA_OECONF = "--with-cross-build=${STAGING_ICU_DIR_NATIVE} --disable-icu-config ac_cv_path_install='install -c'"
 EXTRA_OECONF:class-native = "--disable-icu-config ac_cv_path_install='install -c'"
 EXTRA_OECONF:class-nativesdk = "--with-cross-build=${STAGING_ICU_DIR_NATIVE} --disable-icu-config ac_cv_path_install='install -c'"
-
+EXTRA_OECONF:append:class-target = " --enable-automake-test-format"
 EXTRA_OECONF:append:class-target = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'be', ' --with-data-packaging=archive', '', d)}"
 TARGET_CXXFLAGS:append = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'be', ' -DICU_DATA_DIR=\\""${datadir}/${BPN}/${@icu_install_folder(d)}\\""', '', d)}"
 
@@ -122,7 +122,7 @@ SRC_URI = "${BASE_SRC_URI};name=code \
            file://0001-ICU-23120-Mask-UnicodeStringTest-TestLargeMemory-on-.patch \
            file://0001-test-Add-support-ptest.patch \
            file://run-ptest \
-           file://0001-Make-ICU-ptest-output-compatible-with-Automake-forma.patch \
+           file://0001-Make-ICU-test-output-compatible-with-Automake-format.patch \
           "
 
 SRC_URI:append:class-target = "\
