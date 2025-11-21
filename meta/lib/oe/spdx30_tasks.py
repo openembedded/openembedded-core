@@ -453,6 +453,22 @@ def set_purposes(d, element, *var_names, force_purposes=[]):
     ]
 
 
+def _get_cves_info(d):
+    patched_cves = oe.cve_check.get_patched_cves(d)
+    for cve_id in (d.getVarFlags("CVE_STATUS") or {}):
+        mapping, detail, description = oe.cve_check.decode_cve_status(d, cve_id)
+        if not mapping or not detail:
+            bb.warn(f"Skipping {cve_id} — missing or unknown CVE status")
+            continue
+        yield cve_id, mapping, detail, description
+        patched_cves.discard(cve_id)
+
+    # decode_cve_status is decoding CVE_STATUS, so patch files need to be hardcoded
+    for cve_id in patched_cves:
+        # fix-file-included is not available in scarthgap
+        yield cve_id, "Patched", "backported-patch", None
+
+
 def create_spdx(d):
     def set_var_field(var, obj, name, package=None):
         val = None
@@ -502,20 +518,7 @@ def create_spdx(d):
     # Add CVEs
     cve_by_status = {}
     if include_vex != "none":
-        patched_cves = oe.cve_check.get_patched_cves(d)
-        for cve_id in patched_cves:
-            # decode_cve_status is decoding CVE_STATUS, so patch files need to be hardcoded
-            if cve_id in (d.getVarFlags("CVE_STATUS") or {}):
-                mapping, detail, description = oe.cve_check.decode_cve_status(d, cve_id)
-            else:
-                mapping = "Patched"
-                detail = "backported-patch"  # fix-file-included is not available in scarthgap
-                description = None
-
-            if not mapping or not detail:
-                bb.warn(f"Skipping {cve_id} — missing or unknown CVE status")
-                continue
-
+        for cve_id, mapping, detail, description in _get_cves_info(d):
             # If this CVE is fixed upstream, skip it unless all CVEs are
             # specified.
             if (
