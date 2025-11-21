@@ -28,10 +28,10 @@ class ConfigFragmentsPlugin(LayerPlugin):
         summary = d.getVar('BB_CONF_FRAGMENT_SUMMARY')
         description = d.getVar('BB_CONF_FRAGMENT_DESCRIPTION')
         if not summary:
-            raise Exception('Please add a one-line summary as BB_CONF_FRAGMENT_SUMMARY = \"...\" variable at the beginning of {}'.format(path))
+            bb.fatal('Please add a one-line summary as BB_CONF_FRAGMENT_SUMMARY = "..." variable at the beginning of {}'.format(path))
 
         if not description:
-            raise Exception('Please add a description as BB_CONF_FRAGMENT_DESCRIPTION = \"...\" variable at the beginning of {}'.format(path))
+            bb.fatal('Please add a description as BB_CONF_FRAGMENT_DESCRIPTION = "..." variable at the beginning of {}'.format(path))
 
         return summary, description
 
@@ -143,7 +143,7 @@ class ConfigFragmentsPlugin(LayerPlugin):
         fragments = self.discover_fragments()
         for f in args.fragmentname:
             if not self.get_fragment(f, fragments) and not self.builtin_fragment_exists(f):
-                raise Exception("Fragment {} does not exist; use 'list-fragments' to see the full list.".format(f))
+                bb.fatal("Fragment {} does not exist; use 'list-fragments' to see the full list.".format(f))
 
         self.create_conf(args.confpath)
         modified = bb.utils.edit_metadata_file(args.confpath, ["OE_FRAGMENTS"], enable_helper)
