@@ -71,6 +71,14 @@ UBOOT_ENV_BINARY ?= "${UBOOT_ENV}.${UBOOT_ENV_SUFFIX}"
 UBOOT_ENV_IMAGE ?= "${UBOOT_ENV}-${MACHINE}-${UBOOT_VERSION}.${UBOOT_ENV_SUFFIX}"
 UBOOT_ENV_SYMLINK ?= "${UBOOT_ENV}-${MACHINE}.${UBOOT_ENV_SUFFIX}"
 
+# Enable the build of the U-Boot initial env binary image. The binary size is
+# required (i.e. the U-Boot partition environment size). Since the environment
+# layout with multiple copies is different, set UBOOT_INITIAL_ENV_BINARY_REDUND
+# to "1" if the U-Boot environment redundancy is enabled.
+UBOOT_INITIAL_ENV_BINARY ?= "0"
+UBOOT_INITIAL_ENV_BINARY_SIZE ?= ""
+UBOOT_INITIAL_ENV_BINARY_REDUND ?= "0"
+
 # U-Boot EXTLINUX variables. U-Boot searches for /boot/extlinux/extlinux.conf
 # to find EXTLINUX conf file.
 UBOOT_EXTLINUX_INSTALL_DIR ?= "/boot/extlinux"
@@ -100,6 +108,9 @@ UBOOT_DTB_BINARY ??= ""
 UBOOT_FIT_CHECK_SIGN ?= "uboot-fit_check_sign"
 
 python () {
+    if bb.utils.to_boolean(d.getVar('UBOOT_INITIAL_ENV_BINARY')) and d.getVar('UBOOT_INITIAL_ENV_BINARY_SIZE') == "":
+        bb.fatal("UBOOT_INITIAL_ENV_BINARY requires setting the U-Boot partition environment size with the UBOOT_INITIAL_ENV_BINARY_SIZE variable")
+
     ubootmachine = d.getVar("UBOOT_MACHINE")
     ubootconfigflags = d.getVarFlags('UBOOT_CONFIG')
     ubootbinary = d.getVar('UBOOT_BINARY')
