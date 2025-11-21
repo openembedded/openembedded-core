@@ -5,6 +5,9 @@
 # SPDX-License-Identifier: MIT
 #
 
+import os
+import textwrap
+
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake, runqemu, get_bb_var, get_bb_vars, runCmd
 from oeqa.core.decorator.data import skipIfNotArch, skipIfNotBuildArch
@@ -96,3 +99,54 @@ QB_DRIVE_TYPE = "/dev/vd"
             self.assertTrue("Machine model: linux,dummy-virt" in output, msg=output)
             # with KVM enabled
             self.assertTrue("KVM: hypervisor services detected" in output, msg=output)
+
+    def test_uboot_initial_env_binary(self):
+        """
+        Tests building the initial U-Boot environment in binary format with
+        the U-Boot mkimage tool.
+        We assume that the uboot-mkenvimage tool generates a correct binary.
+        """
+
+        self.write_config(textwrap.dedent("""
+            UBOOT_INITIAL_ENV_BINARY = "1"
+            UBOOT_INITIAL_ENV_BINARY_SIZE = "0x4000"
+            UBOOT_INITIAL_ENV_BINARY_REDUND = "1"
+        """))
+
+        bitbake("u-boot")
+
+        bb_vars = get_bb_vars(["DEPLOYDIR", "UBOOT_INITIAL_ENV"], "u-boot")
+
+        uboot_initial_env_binary_path = os.path.realpath(os.path.join(
+            bb_vars["DEPLOYDIR"], "%s.bin" % bb_vars["UBOOT_INITIAL_ENV"]
+        ))
+
+        self.assertExists(uboot_initial_env_binary_path)
+
+    def test_uboot_config_initial_env_binary(self):
+        """
+        Tests building the initial U-Boot environment in binary format with
+        the U-Boot mkimage tool for a U-Boot config.
+        We assume that the uboot-mkenvimage tool generates a correct binary.
+        """
+
+        uboot_machine = get_bb_var("UBOOT_MACHINE", "u-boot")
+
+        self.write_config(textwrap.dedent(f"""
+            UBOOT_CONFIG = "test"
+            UBOOT_CONFIG[test] := "{uboot_machine}"
+            UBOOT_MACHINE = ""
+            UBOOT_INITIAL_ENV_BINARY = "1"
+            UBOOT_INITIAL_ENV_BINARY_SIZE = "0x4000"
+            UBOOT_INITIAL_ENV_BINARY_REDUND = "1"
+        """))
+
+        bitbake("u-boot")
+
+        bb_vars = get_bb_vars(["DEPLOYDIR", "UBOOT_INITIAL_ENV"], "u-boot")
+
+        uboot_initial_env_binary_path = os.path.realpath(os.path.join(
+            bb_vars["DEPLOYDIR"], "%s-test.bin" % bb_vars["UBOOT_INITIAL_ENV"]
+        ))
+
+        self.assertExists(uboot_initial_env_binary_path)
