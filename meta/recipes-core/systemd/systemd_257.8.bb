@@ -412,7 +412,7 @@ python populate_packages:prepend (){
 }
 PACKAGES_DYNAMIC += "^lib(udev|systemd|nss).*"
 
-PACKAGE_BEFORE_PN = "\
+PACKAGE_BEFORE_PN += "\
     ${PN}-analyze \
     ${PN}-binfmt \
     ${PN}-container \
