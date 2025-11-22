@@ -80,7 +80,7 @@ IPROUTE2_PACKAGES =+ "\
     ${PN}-rdma \
 "
 
-PACKAGE_BEFORE_PN = "${IPROUTE2_PACKAGES}"
+PACKAGE_BEFORE_PN += "${IPROUTE2_PACKAGES}"
 RDEPENDS:${PN} += "${PN}-ip"
 
 FILES:${PN}-tc = "${base_sbindir}/tc* \
