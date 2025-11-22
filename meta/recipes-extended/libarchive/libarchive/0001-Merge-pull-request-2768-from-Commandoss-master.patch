@@ -1,0 +1,28 @@
+From 82b57a9740aa6d084edcf4592a3b8e49f63dec98 Mon Sep 17 00:00:00 2001
+From: Tim Kientzle <kientzle@acm.org>
+Date: Fri, 31 Oct 2025 22:07:19 -0700
+Subject: [PATCH] Merge pull request #2768 from Commandoss/master
+
+Fix for an out-of-bounds buffer overrun when using p[H_LEVEL_OFFSET]
+
+(cherry picked from commit ce614c65246158bcb0dc1f9c1dce5a5af65f9827)
+
+Upstream-Status: Backport [https://github.com/libarchive/libarchive/commit/82b57a9740aa6d084edcf4592a3b8e49f63dec98]
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ libarchive/archive_read_support_format_lha.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libarchive/archive_read_support_format_lha.c b/libarchive/archive_read_support_format_lha.c
+index 2a84ad9d..abf8b879 100644
+--- a/libarchive/archive_read_support_format_lha.c
++++ b/libarchive/archive_read_support_format_lha.c
+@@ -690,7 +690,7 @@ archive_read_format_lha_read_header(struct archive_read *a,
+ 	 * a pathname and a symlink has '\' character, a directory
+ 	 * separator in DOS/Windows. So we should convert it to '/'.
+ 	 */
+-	if (p[H_LEVEL_OFFSET] == 0)
++	if (lha->level == 0)
+ 		lha_replace_path_separator(lha, entry);
+ 
+ 	archive_entry_set_mode(entry, lha->mode);
