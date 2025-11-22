@@ -1,0 +1,186 @@
+From 82e31ba4a9afcce0c7c19e591ccd8653196d84a0 Mon Sep 17 00:00:00 2001
+From: Tim Kientzle <kientzle@acm.org>
+Date: Mon, 13 Oct 2025 10:57:18 -0700
+Subject: [PATCH] Merge pull request #2749 from KlaraSystems/des/tempdir
+
+Unify temporary directory handling
+
+(cherry picked from commit d207d816d065c79dc2cb992008c3ba9721c6a276)
+
+Upstream-Status: Backport [https://github.com/libarchive/libarchive/commit/82e31ba4a9afcce0c7c19e591ccd8653196d84a0]
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ CMakeLists.txt                                |  6 ++-
+ configure.ac                                  |  6 ++-
+ libarchive/archive_private.h                  |  1 +
+ .../archive_read_disk_entry_from_file.c       | 14 +++----
+ libarchive/archive_read_disk_posix.c          |  3 --
+ libarchive/archive_util.c                     | 38 ++++++++++++++++---
+ 6 files changed, 49 insertions(+), 19 deletions(-)
+
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index f44adc77..fc9aca4e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1455,15 +1455,19 @@ CHECK_FUNCTION_EXISTS_GLIBC(ftruncate HAVE_FTRUNCATE)
+ CHECK_FUNCTION_EXISTS_GLIBC(futimens HAVE_FUTIMENS)
+ CHECK_FUNCTION_EXISTS_GLIBC(futimes HAVE_FUTIMES)
+ CHECK_FUNCTION_EXISTS_GLIBC(futimesat HAVE_FUTIMESAT)
++CHECK_FUNCTION_EXISTS_GLIBC(getegid HAVE_GETEGID)
+ CHECK_FUNCTION_EXISTS_GLIBC(geteuid HAVE_GETEUID)
+ CHECK_FUNCTION_EXISTS_GLIBC(getgrgid_r HAVE_GETGRGID_R)
+ CHECK_FUNCTION_EXISTS_GLIBC(getgrnam_r HAVE_GETGRNAM_R)
+ CHECK_FUNCTION_EXISTS_GLIBC(getline HAVE_GETLINE)
++CHECK_FUNCTION_EXISTS_GLIBC(getpid HAVE_GETPID)
+ CHECK_FUNCTION_EXISTS_GLIBC(getpwnam_r HAVE_GETPWNAM_R)
+ CHECK_FUNCTION_EXISTS_GLIBC(getpwuid_r HAVE_GETPWUID_R)
+-CHECK_FUNCTION_EXISTS_GLIBC(getpid HAVE_GETPID)
++CHECK_FUNCTION_EXISTS_GLIBC(getresgid HAVE_GETRESGID)
++CHECK_FUNCTION_EXISTS_GLIBC(getresuid HAVE_GETRESUID)
+ CHECK_FUNCTION_EXISTS_GLIBC(getvfsbyname HAVE_GETVFSBYNAME)
+ CHECK_FUNCTION_EXISTS_GLIBC(gmtime_r HAVE_GMTIME_R)
++CHECK_FUNCTION_EXISTS_GLIBC(issetugid HAVE_ISSETUGID)
+ CHECK_FUNCTION_EXISTS_GLIBC(lchflags HAVE_LCHFLAGS)
+ CHECK_FUNCTION_EXISTS_GLIBC(lchmod HAVE_LCHMOD)
+ CHECK_FUNCTION_EXISTS_GLIBC(lchown HAVE_LCHOWN)
+diff --git a/configure.ac b/configure.ac
+index aae0f381..a1a8f380 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -810,8 +810,10 @@ AC_CHECK_FUNCS([arc4random_buf chflags chown chroot ctime_r])
+ AC_CHECK_FUNCS([fchdir fchflags fchmod fchown fcntl fdopendir fnmatch fork])
+ AC_CHECK_FUNCS([fstat fstatat fstatfs fstatvfs ftruncate])
+ AC_CHECK_FUNCS([futimens futimes futimesat])
+-AC_CHECK_FUNCS([geteuid getline getpid getgrgid_r getgrnam_r])
+-AC_CHECK_FUNCS([getpwnam_r getpwuid_r getvfsbyname gmtime_r])
++AC_CHECK_FUNCS([getegid geteuid getline getpid getresgid getresuid])
++AC_CHECK_FUNCS([getgrgid_r getgrnam_r getpwnam_r getpwuid_r])
++AC_CHECK_FUNCS([getvfsbyname gmtime_r])
++AC_CHECK_FUNCS([issetugid])
+ AC_CHECK_FUNCS([lchflags lchmod lchown link linkat localtime_r lstat lutimes])
+ AC_CHECK_FUNCS([mbrtowc memmove memset])
+ AC_CHECK_FUNCS([mkdir mkfifo mknod mkstemp])
+diff --git a/libarchive/archive_private.h b/libarchive/archive_private.h
+index 050fc63c..3a926c68 100644
+--- a/libarchive/archive_private.h
++++ b/libarchive/archive_private.h
+@@ -158,6 +158,7 @@ int	__archive_check_magic(struct archive *, unsigned int magic,
+ __LA_NORETURN void	__archive_errx(int retvalue, const char *msg);
+ 
+ void	__archive_ensure_cloexec_flag(int fd);
++int	__archive_get_tempdir(struct archive_string *);
+ int	__archive_mktemp(const char *tmpdir);
+ #if defined(_WIN32) && !defined(__CYGWIN__)
+ int	__archive_mkstemp(wchar_t *templates);
+diff --git a/libarchive/archive_read_disk_entry_from_file.c b/libarchive/archive_read_disk_entry_from_file.c
+index 87389642..42af4034 100644
+--- a/libarchive/archive_read_disk_entry_from_file.c
++++ b/libarchive/archive_read_disk_entry_from_file.c
+@@ -338,7 +338,7 @@ setup_mac_metadata(struct archive_read_disk *a,
+ 	int ret = ARCHIVE_OK;
+ 	void *buff = NULL;
+ 	int have_attrs;
+-	const char *name, *tempdir;
++	const char *name;
+ 	struct archive_string tempfile;
+ 
+ 	(void)fd; /* UNUSED */
+@@ -357,14 +357,12 @@ setup_mac_metadata(struct archive_read_disk *a,
+ 	if (have_attrs == 0)
+ 		return (ARCHIVE_OK);
+ 
+-	tempdir = NULL;
+-	if (issetugid() == 0)
+-		tempdir = getenv("TMPDIR");
+-	if (tempdir == NULL)
+-		tempdir = _PATH_TMP;
+ 	archive_string_init(&tempfile);
+-	archive_strcpy(&tempfile, tempdir);
+-	archive_strcat(&tempfile, "/tar.md.XXXXXX");
++	if (__archive_get_tempdir(&tempfile) != ARCHIVE_OK) {
++		ret = ARCHIVE_WARN;
++		goto cleanup;
++	}
++	archive_strcat(&tempfile, "tar.md.XXXXXX");
+ 	tempfd = mkstemp(tempfile.s);
+ 	if (tempfd < 0) {
+ 		archive_set_error(&a->archive, errno,
+diff --git a/libarchive/archive_read_disk_posix.c b/libarchive/archive_read_disk_posix.c
+index ba0046d7..54a8e661 100644
+--- a/libarchive/archive_read_disk_posix.c
++++ b/libarchive/archive_read_disk_posix.c
+@@ -1578,9 +1578,6 @@ setup_current_filesystem(struct archive_read_disk *a)
+ #  endif
+ #endif
+ 	int r, xr = 0;
+-#if !defined(HAVE_STRUCT_STATFS_F_NAMEMAX)
+-	long nm;
+-#endif
+ 
+ 	t->current_filesystem->synthetic = -1;
+ 	t->current_filesystem->remote = -1;
+diff --git a/libarchive/archive_util.c b/libarchive/archive_util.c
+index 900abd0c..d048bbc9 100644
+--- a/libarchive/archive_util.c
++++ b/libarchive/archive_util.c
+@@ -443,11 +443,39 @@ __archive_mkstemp(wchar_t *template)
+ #else
+ 
+ static int
+-get_tempdir(struct archive_string *temppath)
++__archive_issetugid(void)
+ {
+-	const char *tmp;
++#ifdef HAVE_ISSETUGID
++	return (issetugid());
++#elif HAVE_GETRESUID
++	uid_t ruid, euid, suid;
++	gid_t rgid, egid, sgid;
++	if (getresuid(&ruid, &euid, &suid) != 0)
++		return (-1);
++	if (ruid != euid || ruid != suid)
++		return (1);
++	if (getresgid(&ruid, &egid, &sgid) != 0)
++		return (-1);
++	if (rgid != egid || rgid != sgid)
++		return (1);
++#elif HAVE_GETEUID
++	if (geteuid() != getuid())
++		return (1);
++#if HAVE_GETEGID
++	if (getegid() != getgid())
++		return (1);
++#endif
++#endif
++	return (0);
++}
+ 
+-	tmp = getenv("TMPDIR");
++int
++__archive_get_tempdir(struct archive_string *temppath)
++{
++	const char *tmp = NULL;
++
++	if (__archive_issetugid() == 0)
++		tmp = getenv("TMPDIR");
+ 	if (tmp == NULL)
+ #ifdef _PATH_TMP
+ 		tmp = _PATH_TMP;
+@@ -474,7 +502,7 @@ __archive_mktemp(const char *tmpdir)
+ 
+ 	archive_string_init(&temp_name);
+ 	if (tmpdir == NULL) {
+-		if (get_tempdir(&temp_name) != ARCHIVE_OK)
++		if (__archive_get_tempdir(&temp_name) != ARCHIVE_OK)
+ 			goto exit_tmpfile;
+ 	} else {
+ 		archive_strcpy(&temp_name, tmpdir);
+@@ -536,7 +564,7 @@ __archive_mktempx(const char *tmpdir, char *template)
+ 	if (template == NULL) {
+ 		archive_string_init(&temp_name);
+ 		if (tmpdir == NULL) {
+-			if (get_tempdir(&temp_name) != ARCHIVE_OK)
++			if (__archive_get_tempdir(&temp_name) != ARCHIVE_OK)
+ 				goto exit_tmpfile;
+ 		} else
+ 			archive_strcpy(&temp_name, tmpdir);

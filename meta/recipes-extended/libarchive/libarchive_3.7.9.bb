@@ -38,6 +38,9 @@ SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
            file://CVE-2025-5918-0001.patch \
            file://CVE-2025-5918-0002.patch \
            file://CVE-2025-5918-0003.patch \
+           file://0001-Merge-pull-request-2696-from-al3xtjames-mkstemp.patch \
+           file://0001-Merge-pull-request-2749-from-KlaraSystems-des-tempdi.patch \
+           file://0001-Merge-pull-request-2753-from-KlaraSystems-des-temp-f.patch \
            "
 UPSTREAM_CHECK_URI = "http://libarchive.org/"
 
