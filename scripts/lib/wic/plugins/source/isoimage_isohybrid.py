@@ -429,7 +429,7 @@ class IsoImagePlugin(SourcePlugin):
 
         shutil.rmtree(isodir)
 
-        du_cmd = "du -Lbks %s" % iso_img
+        du_cmd = "du --apparent-size -Lks %s" % iso_img
         out = exec_cmd(du_cmd)
         isoimg_size = int(out.split()[0])
 

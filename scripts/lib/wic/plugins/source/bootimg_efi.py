@@ -427,7 +427,7 @@ class BootimgEFIPlugin(SourcePlugin):
         chmod_cmd = "chmod 644 %s" % bootimg
         exec_cmd(chmod_cmd)
 
-        du_cmd = "du -Lbks %s" % bootimg
+        du_cmd = "du --apparent-size -Lks %s" % bootimg
         out = exec_cmd(du_cmd)
         bootimg_size = out.split()[0]
 

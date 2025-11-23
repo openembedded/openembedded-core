@@ -275,7 +275,7 @@ class Partition():
         self.source_file = rootfs
 
         # get the rootfs size in the right units for kickstart (kB)
-        du_cmd = "du -Lbks %s" % rootfs
+        du_cmd = "du --apparent-size -Lks %s" % rootfs
         out = exec_cmd(du_cmd)
         self.size = int(out.split()[0])
 
