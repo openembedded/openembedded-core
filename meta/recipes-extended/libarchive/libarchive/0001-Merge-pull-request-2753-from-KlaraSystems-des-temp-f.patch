@@ -1,0 +1,190 @@
+From c3593848067cea3b41bc11eec15f391318675cb4 Mon Sep 17 00:00:00 2001
+From: Tim Kientzle <kientzle@acm.org>
+Date: Tue, 28 Oct 2025 17:13:18 -0700
+Subject: [PATCH] Merge pull request #2753 from KlaraSystems/des/temp-files
+
+Create temporary files in the target directory
+
+(cherry picked from commit d2e861769c25470427656b36a14b535f17d47d03)
+
+Upstream-Status: Backport [https://github.com/libarchive/libarchive/commit/c3593848067cea3b41bc11eec15f391318675cb4]
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ .../archive_read_disk_entry_from_file.c       | 10 ++---
+ libarchive/archive_string.c                   | 20 ++++++++++
+ libarchive/archive_string.h                   |  4 ++
+ libarchive/archive_write_disk_posix.c         | 20 ++++++----
+ libarchive/test/test_archive_string.c         | 38 +++++++++++++++++++
+ 5 files changed, 79 insertions(+), 13 deletions(-)
+
+diff --git a/libarchive/archive_read_disk_entry_from_file.c b/libarchive/archive_read_disk_entry_from_file.c
+index 42af4034..121af198 100644
+--- a/libarchive/archive_read_disk_entry_from_file.c
++++ b/libarchive/archive_read_disk_entry_from_file.c
+@@ -359,12 +359,10 @@ setup_mac_metadata(struct archive_read_disk *a,
+ 		return (ARCHIVE_OK);
+ 
+ 	archive_string_init(&tempfile);
+-	if (__archive_get_tempdir(&tempfile) != ARCHIVE_OK) {
+-		ret = ARCHIVE_WARN;
+-		goto cleanup;
+-	}
+-	archive_strcat(&tempfile, "tar.md.XXXXXX");
+-	tempfd = mkstemp(tempfile.s);
++	archive_strcpy(&tempfile, name);
++	archive_string_dirname(&tempfile);
++	archive_strcat(&tempfile, "/tar.XXXXXXXX");
++	tempfd = __archive_mkstemp(tempfile.s);
+ 	if (tempfd < 0) {
+ 		archive_set_error(&a->archive, errno,
+ 		    "Could not open extended attribute file");
+diff --git a/libarchive/archive_string.c b/libarchive/archive_string.c
+index 3bb97833..740308b6 100644
+--- a/libarchive/archive_string.c
++++ b/libarchive/archive_string.c
+@@ -2012,6 +2012,26 @@ archive_strncat_l(struct archive_string *as, const void *_p, size_t n,
+ 	return (r);
+ }
+ 
++struct archive_string *
++archive_string_dirname(struct archive_string *as)
++{
++	/* strip trailing separators */
++	while (as->length > 1 && as->s[as->length - 1] == '/')
++		as->length--;
++	/* strip final component */
++	while (as->length > 0 && as->s[as->length - 1] != '/')
++		as->length--;
++	/* empty path -> cwd */
++	if (as->length == 0)
++		return (archive_strcat(as, "."));
++	/* strip separator(s) */
++	while (as->length > 1 && as->s[as->length - 1] == '/')
++		as->length--;
++	/* terminate */
++	as->s[as->length] = '\0';
++	return (as);
++}
++
+ #if HAVE_ICONV
+ 
+ /*
+diff --git a/libarchive/archive_string.h b/libarchive/archive_string.h
+index e8987867..d5f5c03a 100644
+--- a/libarchive/archive_string.h
++++ b/libarchive/archive_string.h
+@@ -195,6 +195,10 @@ void	archive_string_vsprintf(struct archive_string *, const char *,
+ void	archive_string_sprintf(struct archive_string *, const char *, ...)
+ 	    __LA_PRINTF(2, 3);
+ 
++/* Equivalent to dirname(3) */
++struct archive_string *
++archive_string_dirname(struct archive_string *);
++
+ /* Translates from MBS to Unicode. */
+ /* Returns non-zero if conversion failed in any way. */
+ int archive_wstring_append_from_mbs(struct archive_wstring *dest,
+diff --git a/libarchive/archive_write_disk_posix.c b/libarchive/archive_write_disk_posix.c
+index 6fcf3929..cd256203 100644
+--- a/libarchive/archive_write_disk_posix.c
++++ b/libarchive/archive_write_disk_posix.c
+@@ -412,12 +412,14 @@ static ssize_t	_archive_write_disk_data_block(struct archive *, const void *,
+ static int
+ la_mktemp(struct archive_write_disk *a)
+ {
++	struct archive_string *tmp = &a->_tmpname_data;
+ 	int oerrno, fd;
+ 	mode_t mode;
+ 
+-	archive_string_empty(&a->_tmpname_data);
+-	archive_string_sprintf(&a->_tmpname_data, "%s.XXXXXX", a->name);
+-	a->tmpname = a->_tmpname_data.s;
++	archive_strcpy(tmp, a->name);
++	archive_string_dirname(tmp);
++	archive_strcat(tmp, "/tar.XXXXXXXX");
++	a->tmpname = tmp->s;
+ 
+ 	fd = __archive_mkstemp(a->tmpname);
+ 	if (fd == -1)
+@@ -4251,8 +4253,10 @@ create_tempdatafork(struct archive_write_disk *a, const char *pathname)
+ 	int tmpfd;
+ 
+ 	archive_string_init(&tmpdatafork);
+-	archive_strcpy(&tmpdatafork, "tar.md.XXXXXX");
+-	tmpfd = mkstemp(tmpdatafork.s);
++	archive_strcpy(&tmpdatafork, pathname);
++	archive_string_dirname(&tmpdatafork);
++	archive_strcat(&tmpdatafork, "/tar.XXXXXXXX");
++	tmpfd = __archive_mkstemp(tmpdatafork.s);
+ 	if (tmpfd < 0) {
+ 		archive_set_error(&a->archive, errno,
+ 		    "Failed to mkstemp");
+@@ -4331,8 +4335,10 @@ set_mac_metadata(struct archive_write_disk *a, const char *pathname,
+ 	 * silly dance of writing the data to disk just so that
+ 	 * copyfile() can read it back in again. */
+ 	archive_string_init(&tmp);
+-	archive_strcpy(&tmp, "tar.mmd.XXXXXX");
+-	fd = mkstemp(tmp.s);
++	archive_strcpy(&tmp, pathname);
++	archive_string_dirname(&tmp);
++	archive_strcat(&tmp, "/tar.XXXXXXXX");
++	fd = __archive_mkstemp(tmp.s);
+ 
+ 	if (fd < 0) {
+ 		archive_set_error(&a->archive, errno,
+diff --git a/libarchive/test/test_archive_string.c b/libarchive/test/test_archive_string.c
+index 30f7a800..bf822c0d 100644
+--- a/libarchive/test/test_archive_string.c
++++ b/libarchive/test/test_archive_string.c
+@@ -354,6 +354,43 @@ test_archive_string_sprintf(void)
+ 	archive_string_free(&s);
+ }
+ 
++static void
++test_archive_string_dirname(void)
++{
++	static struct pair { const char *str, *exp; } pairs[] = {
++		{ "",		"." },
++		{ "/",		"/" },
++		{ "//",		"/" },
++		{ "///",	"/" },
++		{ "./",		"." },
++		{ ".",		"." },
++		{ "..",		"." },
++		{ "foo",	"." },
++		{ "foo/",	"." },
++		{ "foo//",	"." },
++		{ "foo/bar",	"foo" },
++		{ "foo/bar/",	"foo" },
++		{ "foo/bar//",	"foo" },
++		{ "foo//bar",	"foo" },
++		{ "foo//bar/",	"foo" },
++		{ "foo//bar//",	"foo" },
++		{ "/foo",	"/" },
++		{ "//foo",	"/" },
++		{ "//foo/",	"/" },
++		{ "//foo//",	"/" },
++		{ 0 },
++	};
++	struct pair *pair;
++	struct archive_string s;
++
++	archive_string_init(&s);
++	for (pair = pairs; pair->str; pair++) {
++		archive_strcpy(&s, pair->str);
++		archive_string_dirname(&s);
++		assertEqualString(pair->exp, s.s);
++	}
++}
++
+ DEFINE_TEST(test_archive_string)
+ {
+ 	test_archive_string_ensure();
+@@ -365,6 +402,7 @@ DEFINE_TEST(test_archive_string)
+ 	test_archive_string_concat();
+ 	test_archive_string_copy();
+ 	test_archive_string_sprintf();
++	test_archive_string_dirname();
+ }
+ 
+ static const char *strings[] =

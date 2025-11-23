@@ -1,0 +1,30 @@
+From 2e73ea3a7db1c3c743c28a0d2dd0456a43e96b96 Mon Sep 17 00:00:00 2001
+From: Sam Bingner <sam@bingner.com>
+Date: Fri, 5 Jul 2024 09:34:43 -1000
+Subject: [PATCH] Fix max path-length metadata writing (#2243)
+
+Previous code added `.XXXXXX` to the end of the filename to write the
+mac metadata. This is a problem if the filename is at or near the
+filesystem max path length. This reuses the same code used by
+create_tempdatafork to ensure that the filename is not too long.
+
+Upstream-Status: Backport [https://github.com/libarchive/libarchive/commit/2e73ea3a7db1c3c743c28a0d2dd0456a43e96b96]
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ libarchive/archive_write_disk_posix.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/libarchive/archive_write_disk_posix.c b/libarchive/archive_write_disk_posix.c
+index bac906d2..098a8fe4 100644
+--- a/libarchive/archive_write_disk_posix.c
++++ b/libarchive/archive_write_disk_posix.c
+@@ -4331,8 +4331,7 @@ set_mac_metadata(struct archive_write_disk *a, const char *pathname,
+ 	 * silly dance of writing the data to disk just so that
+ 	 * copyfile() can read it back in again. */
+ 	archive_string_init(&tmp);
+-	archive_strcpy(&tmp, pathname);
+-	archive_strcat(&tmp, ".XXXXXX");
++	archive_strcpy(&tmp, "tar.mmd.XXXXXX");
+ 	fd = mkstemp(tmp.s);
+ 
+ 	if (fd < 0) {

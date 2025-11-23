@@ -43,6 +43,10 @@ SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
            file://0001-Improve-lseek-handling-2564.patch \
            file://CVE-2025-5918-01.patch \
            file://CVE-2025-5918-02.patch \
+           file://0001-Fix-max-path-length-metadata-writing-2243.patch \
+           file://0001-Merge-pull-request-2696-from-al3xtjames-mkstemp.patch \
+           file://0001-Merge-pull-request-2749-from-KlaraSystems-des-tempdi.patch \
+           file://0001-Merge-pull-request-2753-from-KlaraSystems-des-temp-f.patch \
            "
 UPSTREAM_CHECK_URI = "http://libarchive.org/"
 

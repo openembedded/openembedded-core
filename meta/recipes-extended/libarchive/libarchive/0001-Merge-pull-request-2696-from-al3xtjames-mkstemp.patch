@@ -1,0 +1,28 @@
+From 53d2bc4f89fcbd7414b92bd242f6cdc901941f55 Mon Sep 17 00:00:00 2001
+From: Tim Kientzle <kientzle@acm.org>
+Date: Sat, 16 Aug 2025 10:27:11 -0600
+Subject: [PATCH] Merge pull request #2696 from al3xtjames/mkstemp
+
+Fix mkstemp path in setup_mac_metadata
+
+(cherry picked from commit 892f33145093d1c9b962b6521a6480dfea66ae00)
+
+Upstream-Status: Backport [https://github.com/libarchive/libarchive/commit/53d2bc4f89fcbd7414b92bd242f6cdc901941f55]
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ libarchive/archive_read_disk_entry_from_file.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libarchive/archive_read_disk_entry_from_file.c b/libarchive/archive_read_disk_entry_from_file.c
+index 19d04977..87389642 100644
+--- a/libarchive/archive_read_disk_entry_from_file.c
++++ b/libarchive/archive_read_disk_entry_from_file.c
+@@ -365,7 +365,7 @@ setup_mac_metadata(struct archive_read_disk *a,
+ 		tempdir = _PATH_TMP;
+ 	archive_string_init(&tempfile);
+ 	archive_strcpy(&tempfile, tempdir);
+-	archive_strcat(&tempfile, "tar.md.XXXXXX");
++	archive_strcat(&tempfile, "/tar.md.XXXXXX");
+ 	tempfd = mkstemp(tempfile.s);
+ 	if (tempfd < 0) {
+ 		archive_set_error(&a->archive, errno,
