@@ -64,7 +64,6 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
            file://init \
            file://run-ptest \
            file://0001-tests-add-a-target-for-building-tests-without-runnin.patch \
-           file://0001-media-fix-pac_config_cb-error-code-return.patch \
            "
 S = "${UNPACKDIR}/bluez-${PV}"
 

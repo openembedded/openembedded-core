@@ -1,6 +1,6 @@
 require bluez5.inc
 
-SRC_URI[sha256sum] = "5ba73d030f7b00087d67800b0e321601aec0f892827c72e5a2c8390d8c886b11"
+SRC_URI[sha256sum] = "ad028e49254bc4551a13f08fe7904c63d02ba650d77be8ae15bb3b0a0ad94a6f"
 
 CVE_STATUS[CVE-2020-24490] = "cpe-incorrect: This issue has kernel fixes rather than bluez fixes"
 
@@ -35,6 +35,7 @@ NOINST_TOOLS_TESTING ?= " \
     tools/iso-tester \
     tools/mesh-tester \
     tools/ioctl-tester \
+    tools/6lowpan-tester \
 "
 
 # noinst programs in Makefile.tools that are conditional on TOOLS
