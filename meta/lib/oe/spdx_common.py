@@ -239,6 +239,6 @@ def fetch_data_to_uri(fd, name):
     uri = uri + "://" + fd.host + fd.path
 
     if fd.method.supports_srcrev():
-        uri = uri + "@" + fd.revision
+        uri = uri + "@" + fd.revisions[name]
 
     return uri
