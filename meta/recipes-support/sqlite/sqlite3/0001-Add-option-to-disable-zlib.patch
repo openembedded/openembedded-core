@@ -32,7 +32,7 @@ diff --git a/autosetup/sqlite-config.tcl b/autosetup/sqlite-config.tcl
 index 85fe414382..77190a7053 100644
 --- a/autosetup/sqlite-config.tcl
 +++ b/autosetup/sqlite-config.tcl
-@@ -274,6 +274,14 @@ proc sqlite-configure {buildMode configScript} {
+@@ -287,6 +287,14 @@ proc sqlite-configure {buildMode configScript} {
        }
      }
  
@@ -47,7 +47,7 @@ index 85fe414382..77190a7053 100644
      # Options for ICU: International Components for Unicode
      icu {
        {*} {
-@@ -641,7 +649,7 @@ proc sqlite-check-common-system-deps {} {
+@@ -656,7 +664,7 @@ proc sqlite-check-common-system-deps {} {
      string.h strings.h \
      inttypes.h
  
