@@ -26,12 +26,12 @@ inherit core-image setuptools3 features_check
 
 REQUIRED_DISTRO_FEATURES += "xattr"
 
-SRCREV_bitbake ?= ""
-SRCREV_oe-core ?= "b0b3c7515249447b512e7f3b76e2efed3f957288"
+SRCREV_bitbake ?= "6ee4df8ab58e0175b43106d8a6cbac1f6ab8d022"
+SRCREV_oe-core ?= "ba25642a59ab8d06c250c27fa1dc03594fea0de3"
 SRCREV_yocto ?= "d02d3faaf4d6075ea03e9eb47654ec7639f929a0"
 SRCREV_FORMAT = "bitbake_oe-core_yocto"
 
-SRC_URI = "git://git.openembedded.org/bitbake;name=bitbake;branch=whinlatter;destsuffix=bitbake \
+SRC_URI = "git://git.openembedded.org/bitbake;name=bitbake;branch=2.16;destsuffix=bitbake \
            git://git.openembedded.org/openembedded-core;name=oe-core;branch=whinlatter;destsuffix=openembedded-core \
            git://git.yoctoproject.org/meta-yocto;name=yocto;branch=whinlatter;destsuffix=meta-yocto \
            file://Yocto_Build_Appliance.vmx \
