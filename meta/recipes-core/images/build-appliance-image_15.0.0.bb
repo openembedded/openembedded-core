@@ -26,14 +26,14 @@ inherit core-image setuptools3 features_check
 
 REQUIRED_DISTRO_FEATURES += "xattr"
 
-SRCREV_bitbake ?= "8b582ef8dd0cef0192d4c0104bcd9b5d642d132c"
-SRCREV_oe-core ?= "5298d01663f897e38380116edf23973d2a156cbc"
-SRCREV_yocto ?= "fe65e142d0d9ba0e51ff9175ffa82e902f982a20"
+SRCREV_bitbake ?= ""
+SRCREV_oe-core ?= "b0b3c7515249447b512e7f3b76e2efed3f957288"
+SRCREV_yocto ?= "d02d3faaf4d6075ea03e9eb47654ec7639f929a0"
 SRCREV_FORMAT = "bitbake_oe-core_yocto"
 
-SRC_URI = "git://git.openembedded.org/bitbake;name=bitbake;branch=master;destsuffix=bitbake \
-           git://git.openembedded.org/openembedded-core;name=oe-core;branch=master;destsuffix=openembedded-core \
-           git://git.yoctoproject.org/meta-yocto;name=yocto;branch=master;destsuffix=meta-yocto \
+SRC_URI = "git://git.openembedded.org/bitbake;name=bitbake;branch=whinlatter;destsuffix=bitbake \
+           git://git.openembedded.org/openembedded-core;name=oe-core;branch=whinlatter;destsuffix=openembedded-core \
+           git://git.yoctoproject.org/meta-yocto;name=yocto;branch=whinlatter;destsuffix=meta-yocto \
            file://Yocto_Build_Appliance.vmx \
            file://Yocto_Build_Appliance.vmxf \
            file://README_VirtualBox_Guest_Additions.txt \
