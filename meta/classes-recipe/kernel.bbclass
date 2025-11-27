@@ -864,5 +864,69 @@ addtask deploy after do_populate_sysroot do_packagedata
 
 EXPORT_FUNCTIONS do_deploy
 
+python __anonymous() {
+    inherits = (d.getVar("INHERIT") or "")
+    if "create-spdx" in inherits:
+        bb.build.addtask('do_create_kernel_config_spdx', 'do_populate_lic do_deploy', 'do_create_spdx', d)
+}
+
+python do_create_kernel_config_spdx() {
+    if d.getVar("SPDX_INCLUDE_KERNEL_CONFIG", True) == "1":
+        import oe.spdx30
+        import oe.spdx30_tasks
+        from pathlib import Path
+        from datetime import datetime, timezone
+
+        pkg_arch = d.getVar("SSTATE_PKGARCH")
+        deploydir = Path(d.getVar("SPDXDEPLOY"))
+        pn = d.getVar("PN")
+
+        config_path = d.expand("${B}/.config")
+        kernel_params = []
+        if not os.path.exists(config_path):
+            bb.warn(f"SPDX: Kernel config file not found at: {config_path}")
+            return
+
+        try:
+            with open(config_path, 'r') as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith("#"):
+                        continue
+                    if "=" in line:
+                        key, value = line.split("=", 1)
+                        kernel_params.append(oe.spdx30.DictionaryEntry(
+                            key=key,
+                            value=value.strip('"')
+                        ))
+            bb.note(f"Parsed {len(kernel_params)} kernel config entries from {config_path}")
+        except Exception as e:
+            bb.error(f"Failed to parse kernel config file: {e}")
+
+        build, build_objset = oe.sbom30.find_root_obj_in_jsonld(
+            d, "recipes", f"recipe-{pn}", oe.spdx30.build_Build
+        )
+
+        kernel_build = build_objset.add_root(
+            oe.spdx30.build_Build(
+                _id=build_objset.new_spdxid("kernel-config"),
+                creationInfo=build_objset.doc.creationInfo,
+                build_buildType="https://openembedded.org/kernel-configuration",
+                build_parameter=kernel_params
+            )
+        )
+
+        oe.spdx30_tasks.set_timestamp_now(d, kernel_build, "build_buildStartTime")
+
+        build_objset.new_relationship(
+            [build],
+            oe.spdx30.RelationshipType.ancestorOf,
+            [kernel_build]
+        )
+
+        oe.sbom30.write_jsonld_doc(d, build_objset, deploydir / pkg_arch / "recipes" / f"recipe-{pn}.spdx.json")
+}
+do_create_kernel_config_spdx[depends] = "virtual/kernel:do_configure"
+
 # Add using Device Tree support
 inherit kernel-devicetree
