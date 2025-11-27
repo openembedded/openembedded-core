@@ -1,0 +1,74 @@
+From 0b5fa602e8a06293da734b80b0bc0a3421ed3bd4 Mon Sep 17 00:00:00 2001
+From: Matthieu Longo <matthieu.longo@arm.com>
+Date: Wed, 19 Nov 2025 17:01:56 +0000
+Subject: [PATCH] aarch64: constify BTI and GCS report functions
+
+This patch consitifies the arguments of the functions used to report BTI
+and GCS errors, and also renames the argument "ebfd" to "abfd" as this
+naming is confusing and inconsistent with others places.
+
+Upstream-Status: Backport [https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=12856136986380efff1dcba2ecd3be80e482ff15]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ bfd/elfxx-aarch64.c | 13 ++++++++-----
+ bfd/elfxx-aarch64.h |  4 ++--
+ 2 files changed, 10 insertions(+), 7 deletions(-)
+
+diff --git a/bfd/elfxx-aarch64.c b/bfd/elfxx-aarch64.c
+index 551f74e3373..cb4566386ce 100644
+--- a/bfd/elfxx-aarch64.c
++++ b/bfd/elfxx-aarch64.c
+@@ -1098,7 +1098,8 @@ _bfd_aarch64_elf_link_fixup_gnu_properties
+
+ /* Check AArch64 BTI report.  */
+ void
+-_bfd_aarch64_elf_check_bti_report (struct bfd_link_info *info, bfd *ebfd)
++_bfd_aarch64_elf_check_bti_report (const struct bfd_link_info *info,
++				   const bfd *abfd)
+ {
+   struct elf_aarch64_obj_tdata *tdata = elf_aarch64_tdata (info->output_bfd);
+
+@@ -1117,14 +1118,16 @@ _bfd_aarch64_elf_check_bti_report (struct bfd_link_info *info, bfd *ebfd)
+     : _("%X%pB: error: BTI is required by -z force-bti, but this input object "
+ 	"file lacks the necessary property note.\n");
+
+-  info->callbacks->einfo (msg, ebfd);
++  info->callbacks->einfo (msg, abfd);
+ }
+
++/* Check AArch64 GCS report.  */
+ void
+-_bfd_aarch64_elf_check_gcs_report (struct bfd_link_info *info, bfd *ebfd)
++_bfd_aarch64_elf_check_gcs_report (const struct bfd_link_info *info,
++				   const bfd *abfd)
+ {
+   struct elf_aarch64_obj_tdata *tdata = elf_aarch64_tdata (info->output_bfd);
+-  bool dynamic_obj = (ebfd->flags & DYNAMIC) != 0;
++  bool dynamic_obj = (abfd->flags & DYNAMIC) != 0;
+
+   if (dynamic_obj)
+     {
+@@ -1161,5 +1164,5 @@ _bfd_aarch64_elf_check_gcs_report (struct bfd_link_info *info, bfd *ebfd)
+       : _("%X%pB: error: GCS is required by -z gcs, but this input object file "
+ 	  "lacks the necessary property note.\n");
+
+-  info->callbacks->einfo (msg, ebfd);
++  info->callbacks->einfo (msg, abfd);
+ }
+diff --git a/bfd/elfxx-aarch64.h b/bfd/elfxx-aarch64.h
+index bd3642cbefe..35033059299 100644
+--- a/bfd/elfxx-aarch64.h
++++ b/bfd/elfxx-aarch64.h
+@@ -247,10 +247,10 @@ _bfd_aarch64_elf_merge_gnu_properties (struct bfd_link_info *, bfd *,
+ 				       uint32_t);
+
+ extern void
+-_bfd_aarch64_elf_check_bti_report (struct bfd_link_info *, bfd *);
++_bfd_aarch64_elf_check_bti_report (const struct bfd_link_info *, const bfd *);
+
+ extern void
+-_bfd_aarch64_elf_check_gcs_report (struct bfd_link_info *, bfd *);
++_bfd_aarch64_elf_check_gcs_report (const struct bfd_link_info *, const bfd *);
+
+ extern void
+ _bfd_aarch64_elf_link_fixup_gnu_properties (struct bfd_link_info *,
