@@ -357,3 +357,60 @@ class SPDX30Check(SPDX3CheckBase, OESelftestTestCase):
             1,
             f"Expected exactly 1 occurrence of ANNOTATION2, found {annotation2_count}",
         )
+
+    def test_kernel_config_spdx(self):
+        kernel_recipe = get_bb_var("PREFERRED_PROVIDER_virtual/kernel")
+        spdx_file = f"recipe-{kernel_recipe}.spdx.json"
+        spdx_path = f"{{DEPLOY_DIR_SPDX}}/{{SSTATE_PKGARCH}}/recipes/{spdx_file}"
+
+        # Make sure kernel is configured first
+        bitbake(f"-c configure {kernel_recipe}")
+
+        objset = self.check_recipe_spdx(
+            kernel_recipe,
+            spdx_path,
+            task="do_create_kernel_config_spdx",
+            extraconf="""\
+                INHERIT += "create-spdx"
+                SPDX_INCLUDE_KERNEL_CONFIG = "1"
+                """,
+        )
+
+        # Check that at least one CONFIG_* entry exists
+        found_kernel_config = False
+        for build_obj in objset.foreach_type(oe.spdx30.build_Build):
+            if getattr(build_obj, "build_buildType", "") == "https://openembedded.org/kernel-configuration":
+                found_kernel_config = True
+                self.assertTrue(
+                    len(getattr(build_obj, "build_parameter", [])) > 0,
+                    "Kernel configuration build_Build has no CONFIG_* entries"
+                )
+                break
+
+        self.assertTrue(found_kernel_config, "Kernel configuration build_Build not found in SPDX output")
+
+    def test_packageconfig_spdx(self):
+        objset = self.check_recipe_spdx(
+            "tar",
+            "{DEPLOY_DIR_SPDX}/{SSTATE_PKGARCH}/recipes/recipe-tar.spdx.json",
+            extraconf="""\
+                SPDX_INCLUDE_PACKAGECONFIG = "1"
+                """,
+        )
+
+        found_entries = []
+        for build_obj in objset.foreach_type(oe.spdx30.build_Build):
+            for param in getattr(build_obj, "build_parameter", []):
+                if param.key.startswith("PACKAGECONFIG:"):
+                    found_entries.append((param.key, param.value))
+
+        self.assertTrue(
+            found_entries,
+            "No PACKAGECONFIG entries found in SPDX output for 'tar'"
+        )
+
+        for key, value in found_entries:
+            self.assertIn(
+                value, ["enabled", "disabled"],
+                f"Unexpected PACKAGECONFIG value '{value}' for {key}"
+            )
