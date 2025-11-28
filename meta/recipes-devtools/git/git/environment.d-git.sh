@@ -1,5 +1,5 @@
 # Respect host env GIT_SSL_CAINFO/GIT_SSL_CAPATH first, then auto-detected host cert, then cert in buildtools
-# CAFILE/CAPATH is auto-deteced when source buildtools
+# CAFILE/CAPATH is auto-detected when source buildtools
 if [ -z "${GIT_SSL_CAINFO:-}" ]; then
 	if [ -n "${CAFILE:-}" ];then
 		export GIT_SSL_CAINFO="$CAFILE"

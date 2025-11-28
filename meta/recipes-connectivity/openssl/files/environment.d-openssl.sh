@@ -4,7 +4,7 @@ export OPENSSL_ENGINES="$OECORE_NATIVE_SYSROOT/usr/lib/engines-3"
 export BB_ENV_PASSTHROUGH_ADDITIONS="${BB_ENV_PASSTHROUGH_ADDITIONS:-} OPENSSL_CONF OPENSSL_MODULES OPENSSL_ENGINES"
 
 # Respect host env SSL_CERT_FILE/SSL_CERT_DIR first, then auto-detected host cert, then cert in buildtools
-# CAFILE/CAPATH is auto-deteced when source buildtools
+# CAFILE/CAPATH is auto-detected when source buildtools
 if [ -z "${SSL_CERT_FILE:-}" ]; then
 	if [ -n "${CAFILE:-}" ];then
 		export SSL_CERT_FILE="$CAFILE"
