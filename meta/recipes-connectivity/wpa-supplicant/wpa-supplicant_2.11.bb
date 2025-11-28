@@ -43,9 +43,9 @@ do_configure () {
 		echo 'CONFIG_TLS=openssl' >>wpa_supplicant/.config
 	elif ${@ bb.utils.contains('PACKAGECONFIG', 'gnutls', 'true', 'false', d) }; then
 		echo 'CONFIG_TLS=gnutls' >>wpa_supplicant/.config
-        sed -i -e 's/\(^CONFIG_DPP=\)/#\1/' \
-               -e 's/\(^CONFIG_EAP_PWD=\)/#\1/' \
-               -e 's/\(^CONFIG_SAE=\)/#\1/' wpa_supplicant/.config
+		sed -i -e 's/\(^CONFIG_DPP=\)/#\1/' \
+		    -e 's/\(^CONFIG_EAP_PWD=\)/#\1/' \
+		    -e 's/\(^CONFIG_SAE=\)/#\1/' wpa_supplicant/.config
 	fi
 
 	# For rebuild
