@@ -9,7 +9,7 @@ HOMEPAGE = "http://roy.marples.name/projects/dhcpcd/"
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4dda5beb433a809f2e0aeffbf9da3d91"
 
-SRC_URI = "git://github.com/NetworkConfiguration/dhcpcd;protocol=https;branch=master \
+SRC_URI = "git://github.com/NetworkConfiguration/dhcpcd;protocol=https;branch=master;tag=v${PV} \
            file://0001-remove-INCLUDEDIR-to-prevent-build-issues.patch \
            file://0001-20-resolv.conf-improve-the-sitation-of-working-with-.patch \
            file://dhcpcd.service \
@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/NetworkConfiguration/dhcpcd;protocol=https;branch=ma
            file://0001-dhcpcd.8-Fix-conflict-error-when-enable-multilib.patch \
            "
 
-SRCREV = "93df2b254caf9639f9ffb66e0fe2b584eeba6220"
+SRCREV = "385ff246cbdbd1627582999f7705bf9ef2ad0d7d"
 
 # Doesn't use automake so we can't do out-of-tree builds
 inherit pkgconfig autotools-brokensep systemd useradd
