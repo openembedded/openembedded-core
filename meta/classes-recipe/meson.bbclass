@@ -174,7 +174,13 @@ meson_do_configure() {
 
     bbnote Executing meson ${EXTRA_OEMESON}...
     if ! meson setup ${MESONOPTS} "${MESON_SOURCEPATH}" "${B}" ${MESON_CROSS_FILE} ${EXTRA_OEMESON}; then
-        bbfatal_log meson failed
+        MESON_LOG=${B}/meson-logs/meson-log.txt
+        if test -f $MESON_LOG; then
+            printf "\nLast 10 lines of meson-log.txt:\n"
+            tail --lines=10 $MESON_LOG
+            printf "\n"
+        fi
+        bbfatal_log meson setup failed
     fi
 }
 
