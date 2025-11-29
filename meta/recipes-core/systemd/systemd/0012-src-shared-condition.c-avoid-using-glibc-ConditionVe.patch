@@ -1,0 +1,47 @@
+From 3deaad26b98ce024a938aa61c1609cbd038da369 Mon Sep 17 00:00:00 2001
+From: Chen Qi <Qi.Chen@windriver.com>
+Date: Mon, 29 Sep 2025 14:59:27 +0800
+Subject: [PATCH 12/16] src/shared/condition.c: avoid using glibc
+ ConditionVersion
+
+The ConditionVersion on glibc is glibc specific.
+And musl does not export programming interface to get its version.
+So it cannot be extended to musl.
+
+Upstream-Status: Inappropriate [musl specific]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ src/shared/condition.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/shared/condition.c b/src/shared/condition.c
+index b09eff1bfb..4899bd6c39 100644
+--- a/src/shared/condition.c
++++ b/src/shared/condition.c
+@@ -2,7 +2,9 @@
+ 
+ #include <fcntl.h>
+ #include <fnmatch.h>
++#ifdef __GLIBC__
+ #include <gnu/libc-version.h>
++#endif
+ #include <sys/stat.h>
+ #include <sys/utsname.h>
+ #include <time.h>
+@@ -254,10 +256,10 @@ static int condition_test_version(Condition *c, char **env) {
+ 
+         if (streq(word, "systemd"))
+                 return condition_test_version_cmp(p, STRINGIFY(PROJECT_VERSION));
+-
++#ifdef __GLIBC__
+         if (streq(word, "glibc"))
+                 return condition_test_version_cmp(p, gnu_get_libc_version());
+-
++#endif
+         /* if no predicate has been set, default to "kernel" and use the whole parameter as condition */
+         if (!streq(word, "kernel"))
+                 p = c->parameter;
+-- 
+2.34.1
+

@@ -6,14 +6,12 @@ require systemd.inc
 
 DEPENDS = "gperf-native libcap-native util-linux-native python3-jinja2-native"
 
-SRC_URI += "file://0001-systemctl-Call-systemd-sysv-install-without-path.patch"
-SRC_URI += "file://0002-implment-systemd-sysv-install-for-OE.patch"
-
 inherit pkgconfig meson native
 
 MESON_TARGET = "systemctl:executable"
 MESON_INSTALL_TAGS = "systemctl"
 EXTRA_OEMESON += "-Dlink-systemctl-shared=false"
+EXTRA_OEMESON += "-Dsysvinit-path= -Dsysvrcnd-path="
 
 # Systemctl is supposed to operate on target, but the target sysroot is not
 # determined at run-time, but rather set during configure

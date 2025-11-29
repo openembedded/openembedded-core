@@ -1,0 +1,61 @@
+From ca53ef485929773cbb2e4b1d2dd3d15204409d70 Mon Sep 17 00:00:00 2001
+From: Chen Qi <Qi.Chen@windriver.com>
+Date: Mon, 29 Sep 2025 11:04:09 +0800
+Subject: [PATCH 04/16] musl.h: introduce header file and add __THROW
+
+1. Introduce musl.h in preparation to hold musl related header workarounds.
+2. Define __THROW as empty to avoid compilation error.
+
+Upstream-Status: Inappropriate [musl specific]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ src/include/override/musl.h      | 8 ++++++++
+ src/include/override/net/if.h    | 2 ++
+ src/include/override/sys/mount.h | 2 ++
+ 3 files changed, 12 insertions(+)
+ create mode 100644 src/include/override/musl.h
+
+diff --git a/src/include/override/musl.h b/src/include/override/musl.h
+new file mode 100644
+index 0000000000..6d747c1005
+--- /dev/null
++++ b/src/include/override/musl.h
+@@ -0,0 +1,8 @@
++#ifndef _MUSL_H
++#define _MUSL_H    1
++
++#ifndef __THROW
++#define __THROW
++#endif
++
++#endif /* musl.h */
+diff --git a/src/include/override/net/if.h b/src/include/override/net/if.h
+index 1914b596e3..1606be0fef 100644
+--- a/src/include/override/net/if.h
++++ b/src/include/override/net/if.h
+@@ -4,6 +4,8 @@
+ #include <features.h>
+ #include <linux/if.h>   /* IWYU pragma: export */
+ 
++#include <musl.h>
++
+ #define IF_NAMESIZE       16
+ 
+ extern unsigned int if_nametoindex(const char *__ifname) __THROW;
+diff --git a/src/include/override/sys/mount.h b/src/include/override/sys/mount.h
+index 33a843b8f4..1b9d00ee60 100644
+--- a/src/include/override/sys/mount.h
++++ b/src/include/override/sys/mount.h
+@@ -9,6 +9,8 @@
+ #include <stdint.h>
+ #include <sys/ioctl.h>
+ 
++#include <musl.h>
++
+ /* Since glibc-2.37 (774058d72942249f71d74e7f2b639f77184160a6), sys/mount.h includes linux/mount.h, and
+  * we can safely include both headers in the same source file. However, we cannot do that with older glibc.
+  * To avoid conflicts, let's not use glibc's sys/mount.h, and provide our own minimal implementation.
+-- 
+2.34.1
+

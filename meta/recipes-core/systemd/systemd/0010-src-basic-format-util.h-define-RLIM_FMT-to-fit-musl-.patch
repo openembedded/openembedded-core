@@ -1,0 +1,40 @@
+From adf7bd6cf6305f5454cfb1ad4f1755880e831f7e Mon Sep 17 00:00:00 2001
+From: Chen Qi <Qi.Chen@windriver.com>
+Date: Mon, 29 Sep 2025 14:41:52 +0800
+Subject: [PATCH 10/16] src/basic/format-util.h: define RLIM_FMT to fit musl's
+ rlim_t definition
+
+musl always defines rlim_t to be "unsigned long long".
+
+Upstream-Status: Inappropriate [musl specific]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ src/basic/format-util.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/basic/format-util.h b/src/basic/format-util.h
+index e42f788ce6..9275f9615d 100644
+--- a/src/basic/format-util.h
++++ b/src/basic/format-util.h
+@@ -39,6 +39,7 @@ assert_cc(sizeof(gid_t) == sizeof(uint32_t));
+ #  error Unknown timex member size
+ #endif
+ 
++#ifdef __GLIBC__
+ #if SIZEOF_RLIM_T == 8
+ #  define RLIM_FMT "%" PRIu64
+ #elif SIZEOF_RLIM_T == 4
+@@ -46,6 +47,9 @@ assert_cc(sizeof(gid_t) == sizeof(uint32_t));
+ #else
+ #  error Unknown rlim_t size
+ #endif
++#else
++#define RLIM_FMT "%llu"
++#endif
+ 
+ #if SIZEOF_DEV_T == 8
+ #  define DEV_FMT "%" PRIu64
+-- 
+2.34.1
+
