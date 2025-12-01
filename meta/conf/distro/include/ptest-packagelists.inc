@@ -87,6 +87,7 @@ PTESTS_FAST = "\
     rpm-sequoia \
     sed \
     slang \
+    utfcpp \
     wayland \
     xz \
     zlib \
