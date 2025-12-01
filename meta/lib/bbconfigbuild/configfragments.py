@@ -161,16 +161,16 @@ class ConfigFragmentsPlugin(LayerPlugin):
         def disable_helper(varname, origvalue, op, newlines):
             enabled_fragments = origvalue.split()
             for f in args.fragmentname:
-                if f in enabled_fragments:
-                    enabled_fragments.remove(f)
-                else:
-                    print("Fragment {} not currently enabled in {}".format(f, args.confpath))
+                for e in enabled_fragments[:]:
+                    if (f.endswith('/') and e.startswith(f)) or f==e:
+                        print("Removing fragment {} from {}".format(e, args.confpath))
+                        enabled_fragments.remove(e)
             return " ".join(enabled_fragments), None, 0, True
 
         self.create_conf(args.confpath)
         modified = bb.utils.edit_metadata_file(args.confpath, ["OE_FRAGMENTS"], disable_helper)
-        if modified:
-            print("Fragment {} removed from {}.".format(", ".join(args.fragmentname), args.confpath))
+        if not modified:
+            print("Fragment names or prefixes {} matched nothing in {}.".format(", ".join(args.fragmentname), args.confpath))
 
     def do_show_fragment(self, args):
         """ Show the content of a fragment """
@@ -210,7 +210,7 @@ class ConfigFragmentsPlugin(LayerPlugin):
 
         parser_disable_fragment = self.add_command(sp, 'disable-fragment', self.do_disable_fragment, parserecipes=False)
         parser_disable_fragment.add_argument("--confpath", default=default_confpath, help='Configuration file which contains a list of enabled fragments (default is {}).'.format(default_confpath))
-        parser_disable_fragment.add_argument('fragmentname', help='The name of the fragment', nargs='+')
+        parser_disable_fragment.add_argument('fragmentname', help='The name of the fragment, or a name prefix (ending with "/") to match', nargs='+')
 
         parser_show_fragment = self.add_command(sp, 'show-fragment', self.do_show_fragment, parserecipes=False)
         parser_show_fragment.add_argument('fragmentname', help='The name of the fragment')
