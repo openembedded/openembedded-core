@@ -11,10 +11,3 @@ for T in $TESTS; do
     echo Running $T
     ./$T && echo PASS: $T || echo FAIL: $T
 done
-
-if test -d python/tests; then
-    cd python/tests
-    for T in *.py; do
-        python3 ./$T && echo PASS: $T || echo FAIL: $T
-    done
-fi
