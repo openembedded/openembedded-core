@@ -39,11 +39,11 @@ class MesonTestBase(OESDKTestCase):
 
         # Check that the cross-compiler used is the one we set.
         data = json.loads(self._run(f"meson introspect --compilers {builddir}"))
-        self.assertIn(self.td.get("CC").split()[0], data["host"]["c"]["exelist"])
+        self.assertIn(self._run("echo $CC").split()[0], data["host"]["c"]["exelist"])
 
         # Check that the target architectures was set correctly.
         data = json.loads(self._run(f"meson introspect --machines {builddir}"))
-        self.assertEqual(data["host"]["cpu"], self.td["HOST_ARCH"])
+        self.assertEqual(data["host"]["cpu"], self._run("echo -n $OECORE_MESON_HOST_CPU"))
 
         self._run(f"meson compile -C {builddir} -v")
 
