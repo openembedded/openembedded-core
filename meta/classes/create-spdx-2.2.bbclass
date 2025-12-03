@@ -489,7 +489,7 @@ python do_create_spdx() {
         for cpe_id in cpe_ids:
             cpe = oe.spdx.SPDXExternalReference()
             cpe.referenceCategory = "SECURITY"
-            cpe.referenceType = "http://spdx.org/rdf/references/cpe23Type"
+            cpe.referenceType = "cpe23Type"
             cpe.referenceLocator = cpe_id
             recipe.externalRefs.append(cpe)
 
