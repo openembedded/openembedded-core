@@ -30,7 +30,8 @@ class RpmIndexer(Indexer):
             signer.detach_sign(os.path.join(deploy_dir, 'repodata', 'repomd.xml'),
                                self.d.getVar('PACKAGE_FEED_GPG_NAME'),
                                self.d.getVar('PACKAGE_FEED_GPG_PASSPHRASE_FILE'),
-                               armor=is_ascii_sig)
+                               armor=is_ascii_sig,
+                               use_sha256=True)
 
 class RpmSubdirIndexer(RpmIndexer):
     def write_index(self):
