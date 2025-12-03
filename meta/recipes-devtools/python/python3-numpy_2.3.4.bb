@@ -39,6 +39,12 @@ do_install:append() {
     nativepython3 -mcompileall -s ${D} ${D}${PYTHON_SITEPACKAGES_DIR}/numpy/__config__.py
 }
 
+do_install_ptest:append() {
+    sed -i \
+        -e 's|@PYTHON_SITEPACKAGES_DIR@|${PYTHON_SITEPACKAGES_DIR}|g' \
+        -e 's|@PTEST_PATH@|${PTEST_PATH}|g' ${D}${PTEST_PATH}/run-ptest
+}
+
 FILES:${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/numpy/_core/lib/*.a \
                           ${PYTHON_SITEPACKAGES_DIR}/numpy/random/lib/*.a \
 "
