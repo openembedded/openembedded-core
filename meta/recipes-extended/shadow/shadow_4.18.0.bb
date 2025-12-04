@@ -46,6 +46,8 @@ EXTRA_OECONF += " \
                  --without-sssd \
                  ${NSCDOPT}"
 
+CACHED_CONFIGUREVARS += "ac_cv_lib_econf_econf_readDirs=no"
+
 CFLAGS:append:libc-musl = " -DLIBBSD_OVERLAY"
 
 NSCDOPT = ""
