@@ -75,6 +75,10 @@ do_check[prefuncs] += "check_prepare"
 do_check[nostamp] = "1"
 do_check() {
     export LC_ALL=C
+
+    # Needs to be unset for binutils/testsuite/bintils-all/ar.exp:replacing_non_deterministic_member() to pass.
+    unset SOURCE_DATE_EPOCH
+
     for i in ${CHECK_TARGETS}; do
         (cd ${B}/$i/testsuite; runtest \
             --tool $i \
