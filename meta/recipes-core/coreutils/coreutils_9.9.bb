@@ -15,10 +15,9 @@ inherit autotools gettext texinfo
 
 SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
            file://remove-usr-local-lib-from-m4.patch \
-           file://0001-sort-fix-buffer-under-read-CWE-127.patch \
            file://run-ptest \
            "
-SRC_URI[sha256sum] = "e8bb26ad0293f9b5a1fc43fb42ba970e312c66ce92c1b0b16713d7500db251bf"
+SRC_URI[sha256sum] = "19bcb6ca867183c57d77155eae946c5eced88183143b45ca51ad7d26c628ca75"
 
 # http://git.savannah.gnu.org/cgit/coreutils.git/commit/?id=v8.27-101-gf5d7c0842
 #
@@ -47,13 +46,16 @@ PACKAGECONFIG[single-binary] = "--enable-single-binary,--disable-single-binary,,
 PACKAGECONFIG[selinux] = "--with-selinux,--without-selinux,libselinux"
 PACKAGECONFIG[openssl] = "--with-openssl=yes,--with-openssl=no,openssl"
 
+selinux_progs = "${@'chcon runcon' if 'selinux' in d.getVar('PACKAGECONFIG') else ''}"
+
 # [ base32 base64 df mktemp nice printenv get a special treatment and are not included in this
-bindir_progs = "arch basename chcon cksum comm csplit cut dir dircolors dirname du \
+bindir_progs = "arch basename cksum comm csplit cut dir dircolors dirname du \
                 env expand expr factor fmt fold groups head hostid id install \
                 join link logname md5sum mkfifo nl nohup nproc od paste pathchk \
-                pinky pr printf ptx readlink realpath runcon seq sha1sum sha224sum sha256sum \
+                pinky pr printf ptx readlink realpath seq sha1sum sha224sum sha256sum \
                 sha384sum sha512sum shred shuf sort split sum tac tail tee test timeout \
-                tr truncate tsort tty unexpand uniq unlink uptime users vdir wc who whoami yes"
+                tr truncate tsort tty unexpand uniq unlink uptime users vdir wc who whoami yes \
+                ${selinux_progs}"
 
 base_bindir_progs = "cat chgrp chmod chown cp date dd echo false hostname kill ln ls mkdir \
                      mknod mv pwd rm rmdir sleep stty sync touch true uname stat"
