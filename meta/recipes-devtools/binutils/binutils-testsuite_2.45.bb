@@ -45,6 +45,8 @@ python check_prepare() {
         content.append('set target_triplet {0}'.format(suffix_sys(d.getVar("TARGET_SYS"))))
         content.append("set development true")
         content.append("set experimental false")
+        # This is normally written into ld/enablings.exp
+        content.append("set enable_libctf yes")
 
         content.append(d.expand('set CXXFILT "${TARGET_PREFIX}c++filt"'))
         content.append(d.expand('set CC "${TARGET_PREFIX}gcc --sysroot=${STAGING_DIR_TARGET} ${TUNE_CCARGS}"'))
