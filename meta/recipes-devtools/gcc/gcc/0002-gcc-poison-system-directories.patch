@@ -35,7 +35,7 @@ index e3fa0dacec4..bea1adc0940 100644
  
 +Wpoison-system-directories
 +Common Var(flag_poison_system_directories) Init(1) Warning
-+Warn for -I and -L options using system directories if cross compiling
++Warn for -I and -L options using system directories if cross compiling.
 +
  Wshadow
  Common Var(warn_shadow) Warning
