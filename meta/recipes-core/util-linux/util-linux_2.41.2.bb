@@ -401,6 +401,8 @@ do_install_ptest() {
     cp -pR ${S}/tests/expected ${D}${PTEST_PATH}/tests/expected
     cp -pR ${S}/tests/ts ${D}${PTEST_PATH}/tests/
     cp ${B}/config.h ${D}${PTEST_PATH}
+    # for misc/color ts
+    mkdir ${D}${PTEST_PATH}/lib && cp ${S}/lib/color-names.c ${D}${PTEST_PATH}/lib/
 
     sed -i 's|@base_sbindir@|${base_sbindir}|g' ${D}${PTEST_PATH}/run-ptest
 
