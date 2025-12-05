@@ -65,6 +65,7 @@ PACKAGECONFIG[pop3] = "--enable-pop3,--disable-pop3,"
 PACKAGECONFIG[proxy] = "--enable-proxy,--disable-proxy,"
 PACKAGECONFIG[rtmpdump] = "--with-librtmp,--without-librtmp,rtmpdump"
 PACKAGECONFIG[rtsp] = "--enable-rtsp,--disable-rtsp,"
+PACKAGECONFIG[schannel] = "--with-schannel,--without-schannel,"
 PACKAGECONFIG[smb] = "--enable-smb,--disable-smb,"
 PACKAGECONFIG[smtp] = "--enable-smtp,--disable-smtp,"
 PACKAGECONFIG[telnet] = "--enable-telnet,--disable-telnet,"
@@ -87,7 +88,7 @@ EXTRA_OECONF = " \
     --without-libpsl \
     --enable-optimize \
     --with-ca-bundle=${CURL_CA_BUNDLE_BASE_DIR}/ssl/certs/ca-certificates.crt \
-    ${@'--without-ssl' if (bb.utils.filter('PACKAGECONFIG', 'gnutls mbedtls openssl', d) == '') else ''} \
+    ${@'--without-ssl' if (bb.utils.filter('PACKAGECONFIG', 'gnutls mbedtls openssl schannel', d) == '') else ''} \
     WATT_ROOT=${STAGING_DIR_TARGET}${prefix} \
 "
 
