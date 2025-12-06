@@ -1,0 +1,126 @@
+From be0a5f477ae2c73d80ade595f28783d85e1ef3e0 Mon Sep 17 00:00:00 2001
+From: Jan Kiszka <jan.kiszka@siemens.com>
+Date: Sun, 24 Aug 2025 09:18:33 +0200
+Subject: [PATCH 10/10] hw/sd/sdcard: Fix size check for backing block image
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Alignment rules apply the the individual partitions (user, boot, later
+on also RPMB) and depend both on the size of the image and the type of
+the device. Up to and including 2GB, the power-of-2 rule applies to the
+user data area. For larger images, multiples of 512 sectors must be used
+for eMMC and multiples of 512K for SD-cards. Fix the check accordingly
+and also detect if the image is too small to even hold the boot
+partitions.
+
+Signed-off-by: Jan Kiszka <jan.kiszka@siemens.com>
+Reviewed-by: Cédric Le Goater <clg@redhat.com>
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Reviewed-by: Warner Losh <imp@bsdimp.com>
+Message-ID: <591f6d8a9dc86428723cb6876df6e717cc41a70e.1762261430.git.jan.kiszka@siemens.com>
+Tested-by: Cédric Le Goater <clg@redhat.com>
+Signed-off-by: Philippe Mathieu-Daudé <philmd@linaro.org>
+Upstream-Status: Backport [https://gitlab.com/qemu-project/qemu/-/commit/a362b19a39e458256cc7e3acd0dc7825b0389b48]
+Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+---
+ hw/sd/sd.c | 67 ++++++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 47 insertions(+), 20 deletions(-)
+
+diff --git a/hw/sd/sd.c b/hw/sd/sd.c
+index e541c57f8c3c..db86849b8512 100644
+--- a/hw/sd/sd.c
++++ b/hw/sd/sd.c
+@@ -2675,9 +2675,32 @@ static void sd_instance_finalize(Object *obj)
+     timer_free(sd->ocr_power_timer);
+ }
+ 
++static void sd_blk_size_error(SDState *sd, int64_t blk_size,
++                              int64_t blk_size_aligned, const char *rule,
++                              Error **errp)
++{
++    const char *dev_type = sd_is_emmc(sd) ? "eMMC" : "SD card";
++    char *blk_size_str;
++
++    blk_size_str = size_to_str(blk_size);
++    error_setg(errp, "Invalid %s size: %s", dev_type, blk_size_str);
++    g_free(blk_size_str);
++
++    blk_size_str = size_to_str(blk_size_aligned);
++    error_append_hint(errp,
++                      "%s size has to be %s, e.g. %s.\n"
++                      "You can resize disk images with"
++                      " 'qemu-img resize <imagefile> <new-size>'\n"
++                      "(note that this will lose data if you make the"
++                      " image smaller than it currently is).\n",
++                      dev_type, rule, blk_size_str);
++    g_free(blk_size_str);
++}
++
+ static void sd_realize(DeviceState *dev, Error **errp)
+ {
+     SDState *sd = SDMMC_COMMON(dev);
++    int64_t blk_size = -ENOMEDIUM;
+     int ret;
+ 
+     switch (sd->spec_version) {
+@@ -2690,32 +2713,36 @@ static void sd_realize(DeviceState *dev, Error **errp)
+     }
+ 
+     if (sd->blk) {
+-        int64_t blk_size;
+-
+         if (!blk_supports_write_perm(sd->blk)) {
+             error_setg(errp, "Cannot use read-only drive as SD card");
+             return;
+         }
+ 
+         blk_size = blk_getlength(sd->blk);
+-        if (blk_size > 0 && !is_power_of_2(blk_size)) {
+-            int64_t blk_size_aligned = pow2ceil(blk_size);
+-            char *blk_size_str;
+-
+-            blk_size_str = size_to_str(blk_size);
+-            error_setg(errp, "Invalid SD card size: %s", blk_size_str);
+-            g_free(blk_size_str);
+-
+-            blk_size_str = size_to_str(blk_size_aligned);
+-            error_append_hint(errp,
+-                              "SD card size has to be a power of 2, e.g. %s.\n"
+-                              "You can resize disk images with"
+-                              " 'qemu-img resize <imagefile> <new-size>'\n"
+-                              "(note that this will lose data if you make the"
+-                              " image smaller than it currently is).\n",
+-                              blk_size_str);
+-            g_free(blk_size_str);
+-
++    }
++    if (blk_size >= 0) {
++        blk_size -= sd->boot_part_size * 2;
++        if (blk_size > SDSC_MAX_CAPACITY) {
++            if (sd_is_emmc(sd) &&
++                !QEMU_IS_ALIGNED(blk_size, 1 << HWBLOCK_SHIFT)) {
++                int64_t blk_size_aligned =
++                    ((blk_size >> HWBLOCK_SHIFT) + 1) << HWBLOCK_SHIFT;
++                sd_blk_size_error(sd, blk_size, blk_size_aligned,
++                                  "multiples of 512", errp);
++                return;
++            } else if (!sd_is_emmc(sd) &&
++                !QEMU_IS_ALIGNED(blk_size, 512 * KiB)) {
++                int64_t blk_size_aligned = ((blk_size >> 19) + 1) << 19;
++                sd_blk_size_error(sd, blk_size, blk_size_aligned,
++                                  "multiples of 512K", errp);
++                return;
++            }
++        } else if (blk_size > 0 && !is_power_of_2(blk_size)) {
++            sd_blk_size_error(sd, blk_size, pow2ceil(blk_size), "a power of 2",
++                              errp);
++            return;
++        } else if (blk_size < 0) {
++            error_setg(errp, "eMMC image smaller than boot partitions");
+             return;
+         }
+ 
+-- 
+2.47.3
+
