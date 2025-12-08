@@ -19,9 +19,13 @@ PACKAGECONFIG ?= "curl https"
 
 PACKAGECONFIG[curl] = "--enable-curl,--disable-curl,curl,"
 PACKAGECONFIG[https] = "--enable-https,--disable-https,libgcrypt gnutls,"
+PACKAGECONFIG[experimental] = "--enable-experimental,--disable-experimental,"
 
 do_compile:append() {
     sed -i s:-L${STAGING_LIBDIR}::g libmicrohttpd.pc
 }
 
 BBCLASSEXTEND = "native nativesdk"
+
+CVE_STATUS[CVE-2025-59777] = "${@bb.utils.contains('PACKAGECONFIG', 'experimental', 'unpatched', 'not-applicable-config: experimental code not compiled', d)}"
+CVE_STATUS[CVE-2025-62689] = "${@bb.utils.contains('PACKAGECONFIG', 'experimental', 'unpatched', 'not-applicable-config: experimental code not compiled', d)}"
