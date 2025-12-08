@@ -22,9 +22,12 @@ PACKAGECONFIG:append:class-target = "\
 PACKAGECONFIG[largefile] = "--enable-largefile,--disable-largefile,,"
 PACKAGECONFIG[curl] = "--enable-curl,--disable-curl,curl,"
 PACKAGECONFIG[https] = "--enable-https,--disable-https,libgcrypt gnutls,"
+PACKAGECONFIG[experimental] = "--enable-experimental,--disable-experimental,"
 
 do_compile:append() {
     sed -i s:-L${STAGING_LIBDIR}::g libmicrohttpd.pc
 }
 
 BBCLASSEXTEND = "native nativesdk"
+
+CVE_CHECK_IGNORE += "${@bb.utils.contains('PACKAGECONFIG', 'experimental', '', 'CVE-2025-59777 CVE-2025-62689', d)}"
