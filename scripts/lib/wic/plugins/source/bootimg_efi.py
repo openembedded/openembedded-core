@@ -389,7 +389,7 @@ class BootimgEFIPlugin(SourcePlugin):
                 out = exec_cmd(cp_cmd, True)
                 logger.debug("include_path files:\n%s" % out)
 
-        du_cmd = "du -bks %s" % hdddir
+        du_cmd = "du --apparent-size -ks %s" % hdddir
         out = exec_cmd(du_cmd)
         blocks = int(out.split()[0])
 
