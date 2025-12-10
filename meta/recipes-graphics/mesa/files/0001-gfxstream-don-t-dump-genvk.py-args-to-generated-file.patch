@@ -1,0 +1,34 @@
+From c0f067e86bc9f7fbc60c2539dc612a050ee2569f Mon Sep 17 00:00:00 2001
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Wed, 19 Nov 2025 11:36:42 +0200
+Subject: [PATCH] gfxstream: don't dump genvk.py args to generated files
+
+Full command lines include full path to the output file, which triggers
+the 'buildpath' QA warning. Drop the args and print only a basename of
+the script used to generate the file.
+
+Upstream-Status: Submitted [https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/38875]
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+---
+ src/gfxstream/codegen/scripts/cerealgenerator.py | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/src/gfxstream/codegen/scripts/cerealgenerator.py b/src/gfxstream/codegen/scripts/cerealgenerator.py
+index 077571e9eda5..217c3e1d0e94 100644
+--- a/src/gfxstream/codegen/scripts/cerealgenerator.py
++++ b/src/gfxstream/codegen/scripts/cerealgenerator.py
+@@ -254,13 +254,7 @@ def banner_command(argv):
+        Return a string corresponding to the command, with platform-specific
+        paths removed."""
+ 
+-    def makePosixRelative(someArg):
+-        # Do not use relative for /tmp/ to avoid effects of checkout location
+-        if os.path.exists(someArg) and someArg != "/tmp/":
+-            return str(PurePosixPath(Path(os.path.relpath(someArg))))
+-        return someArg
+-
+-    return ' '.join(map(makePosixRelative, argv))
++    return os.path.basename(argv[0])
+ 
+ def envGetOrDefault(key, default=None):
+     if key in os.environ:
