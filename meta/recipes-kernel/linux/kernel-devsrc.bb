@@ -334,6 +334,16 @@ do_install() {
         cp -a --parents kernel/time/timeconst.bc $kerneldir/build 2>/dev/null || :
         cp -a --parents kernel/bounds.c $kerneldir/build 2>/dev/null || :
 
+        # v6.18+ rq offset generation needs these scheduler sources/headers
+        cp -a --parents kernel/sched/rq-offsets.c $kerneldir/build 2>/dev/null || :
+        cp -a --parents kernel/sched/sched.h $kerneldir/build 2>/dev/null || :
+        cp -a --parents kernel/sched/cpudeadline.h $kerneldir/build 2>/dev/null || :
+        cp -a --parents kernel/sched/cpupri.h $kerneldir/build 2>/dev/null || :
+        cp -a --parents kernel/sched/features.h $kerneldir/build 2>/dev/null || :
+        cp -a --parents kernel/sched/stats.h $kerneldir/build 2>/dev/null || :
+        cp -a --parents kernel/sched/ext.h $kerneldir/build 2>/dev/null || :
+        cp -a --parents kernel/workqueue_internal.h $kerneldir/build 2>/dev/null || :
+
         if [ "${ARCH}" = "mips" ]; then
             cp -a --parents arch/mips/Kbuild.platforms $kerneldir/build/
             cp --parents $(find -type f -name "Platform") $kerneldir/build
