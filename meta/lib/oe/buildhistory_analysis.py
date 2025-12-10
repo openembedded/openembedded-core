@@ -150,10 +150,10 @@ class ChangeRecord:
                         lines.append('removed "{colour_remove}{value}{colour_default}"'.format(value=' '.join(removed), **colours))
                     if added:
                         lines.append('added "{colour_add}{value}{colour_default}"'.format(value=' '.join(added), **colours))
-            else:
+            elif not renamed_dirs:
                 lines.append('changed order')
 
-            if not (removed or added or changed_order):
+            if not (removed or added or changed_order or renamed_dirs):
                 out = ''
             else:
                 out = '%s: %s' % (self.fieldname, ', '.join(lines))
