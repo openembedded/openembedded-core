@@ -33,6 +33,58 @@ def print_results(counts):
     print("# ERROR: " + str(counts["error"]))
     print("============================================================================")
 
+def get_patches(patchesdir):
+    """
+    Return a list of dict mapping test IDs to patch filenames and expected results.
+    """
+    patch_list = []
+    for root, dirs, patches in os.walk(patchesdir):
+        for patch in patches:
+            part = patch.split('.')
+            klass, testname, expected_result = part[0], part[1], part[-1]
+            testid = f".{klass}.{testname}"
+            patch_list.append({
+                "testid": testid,
+                "patch": patch,
+                "expected": expected_result,
+                "root" : root,
+            })
+    return patch_list
+
+def analyze_result(results, patch, counts):
+    testid   = patch["testid"]
+    expected_result = str(patch["expected"])
+    for resultline in results.splitlines():
+        if testid in resultline:
+            result, _ = resultline.split(':', 1)
+
+            if expected_result.upper() == "FAIL" and result.upper() == "FAIL":
+                    counts["xfail"] = counts["xfail"] + 1
+                    print("XFAIL: %s (file: %s)" % (testid.strip("."), os.path.basename(patch["patch"])))
+            elif expected_result.upper() == "PASS" and result.upper() == "PASS":
+                    counts["xpass"] = counts["xpass"] + 1
+                    print("XPASS: %s (file: %s)" % (testid.strip("."), os.path.basename(patch["patch"])))
+            elif expected_result.upper() == "SKIP" and result.upper() == "SKIP":
+                    counts["xskip"] = counts["xskip"] + 1
+                    print("XSKIP: %s (file: %s)" % (testid.strip("."), os.path.basename(patch["patch"])))
+            else:
+                print("%s: %s (%s)" % (result.upper(), testid.strip("."),os.path.basename(patch["patch"])))
+                if result.upper() == "PASS":
+                    counts["pass"] = counts["pass"] + 1
+                elif result.upper() == "FAIL":
+                    counts["fail"] = counts["fail"] + 1
+                elif result.upper() == "SKIP":
+                    counts["skip"] = counts["skip"] + 1
+                else:
+                     print("Bad result on test %s against %s" % (testid.strip("."),os.path.basename(patch["patch"])))
+                     counts["error"] = counts["error"] + 1
+            break
+    else:
+        print ("No test for=%s" % patch["patch"])
+
+    return counts
+
+
 # Once the tests are in oe-core, we can remove the testdir param and use os.path.dirname to get relative paths
 def test(root, patch):
     res = True
@@ -55,42 +107,8 @@ if __name__ == '__main__':
     }
 
     results = None
-        
-    for root, dirs, patches in os.walk(patchesdir):
-        for patch in patches:
-            results = test(root, patch)
-
-            a = patch.split('.')
-            klass, testname = a[0], a[1]
-            expected_result = a[-1]
-            testid          = ".%s.%s" % (klass,testname)
-
-            for resultline in results.splitlines():
-                if testid in resultline:
-                    result, _ = resultline.split(':', 1)
-
-                    if expected_result.upper() == "FAIL" and result.upper() == "FAIL":
-                        counts["xfail"] = counts["xfail"] + 1
-                        print("XFAIL: %s (file: %s)" % (testid.strip("."), os.path.basename(patch)))
-                    elif expected_result.upper() == "PASS" and result.upper() == "PASS":
-                        counts["xpass"] = counts["xpass"] + 1
-                        print("XPASS: %s (file: %s)" % (testid.strip("."), os.path.basename(patch)))
-                    elif expected_result.upper() == "SKIP" and result.upper() == "SKIP":
-                        counts["xskip"] = counts["xskip"] + 1
-                        print("XSKIP: %s (file: %s)" % (testid.strip("."), os.path.basename(patch)))
-                    else:
-                        print("%s: %s (%s)" % (result.upper(), testid.strip("."), os.path.basename(patch)))
-                        if result.upper() == "PASS":
-                            counts["pass"] = counts["pass"] + 1
-                        elif result.upper() == "FAIL":
-                            counts["fail"] = counts["fail"] + 1
-                        elif result.upper() == "SKIP":
-                            counts["skip"] = counts["skip"] + 1
-                        else:
-                            print("Bad result on test %s against %s" % (testid.strip("."), os.path.basename(patch)))
-                            counts["error"] = counts["error"] + 1
-                    break
-            else:
-                print ("No test for=%s" % patch)
-
+    patches = get_patches(patchesdir)
+    for patch_info in patches:
+        results = test(patch_info["root"], patch_info["patch"])
+        counts = analyze_result(results, patch_info, counts)
     print_results(counts)
