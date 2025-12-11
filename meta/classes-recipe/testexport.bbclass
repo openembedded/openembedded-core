@@ -52,7 +52,8 @@ def testexport_main(d):
                              d.getVar('IMAGE_LINK_NAME') or d.getVar('IMAGE_NAME')))
 
     tdname = "%s.testdata.json" % image_name
-    td = json.load(open(tdname, "r"))
+    with open(tdname, "r") as f:
+        td = json.load(f)
 
     logger = logging.getLogger("BitBake")
 
