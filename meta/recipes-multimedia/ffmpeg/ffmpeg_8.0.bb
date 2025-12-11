@@ -24,6 +24,8 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz \
            file://0001-fftools-resources-Fix-double-build-by-disabling-.d-f.patch \
+           file://0001-ffbuild-commonmak-Consolidate-pattern-rules-for-comp.patch \
+           file://0002-ffbuild-common.mak-ensure-target-directories-are-cre.patch \
            "
 
 SRC_URI[sha256sum] = "b2751fccb6cc4c77708113cd78b561059b6fa904b24162fa0be2d60273d27b8e"
