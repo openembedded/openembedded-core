@@ -84,6 +84,47 @@ def analyze_result(results, patch, counts):
 
     return counts
 
+def run_sh(cmd):
+    """Run a shell command and return its stdout as a stripped string."""
+    return subprocess.check_output(cmd, cwd=currentdir, stderr=subprocess.STDOUT, universal_newlines=True, shell=True).strip()
+
+def get_git_state():
+    """Return the current Git HEAD state (branch, commit)."""
+    try:
+        inside_repo = run_sh("git rev-parse --is-inside-work-tree")
+    except subprocess.CalledProcessError:
+        print("Not a Git repository")
+        return None
+
+    state = {
+        "branch": run_sh("git rev-parse --abbrev-ref HEAD"),
+        "commit": run_sh("git rev-parse HEAD"),
+    }
+
+    return state
+
+def restore_git_state(git_state):
+    assert git_state['branch'] is not None, "Failed to restore git state, no valid branch"
+    if git_state['branch'] == "HEAD":
+        run_sh(f"git switch --detach {git_state['commit']}")
+    else:
+        run_sh(f"git switch {git_state['branch']}")
+
+def is_git_state_same(before, after):
+    ret = True
+
+    for k in ("branch", "commit"):
+        if before[k] != after[k]:
+            print(f"Git state changed: {k} changed: {before[k]} -> {after[k]}")
+            ret = False
+
+    return ret
+
+def git_detach_head():
+    run_sh("git switch --detach HEAD")
+    assert run_sh("git rev-parse --abbrev-ref HEAD") == "HEAD", "Failed to enter detached HEAD state"
+
+    return get_git_state()
 
 # Once the tests are in oe-core, we can remove the testdir param and use os.path.dirname to get relative paths
 def test(root, patch):
@@ -99,6 +140,31 @@ def test_head_attached(patches, counts):
     for patch_info in patches:
         results = test(patch_info["root"], patch_info["patch"])
         counts = analyze_result(results, patch_info, counts)
+    return counts
+
+def test_head_detached(patches, counts):
+    git_state = get_git_state()
+    git_st_detach_before = git_detach_head()
+    patch_info = patches[0]
+    testid   = patch_info["testid"]
+    results = test(patch_info["root"], patch_info["patch"])
+    git_st_detach_after = get_git_state()
+    counts = analyze_result(results, patch_info, counts)
+    if not is_git_state_same(git_st_detach_before, git_st_detach_after):
+        print(" Test '%s' failed with git in detach HEAD mode: state changed after test" % testid.strip("."))
+        counts["error"] = counts["error"] + 1
+    else:
+        counts["xpass"] = counts["xpass"] + 1
+        print("XPASS: %s.test_head_detached" % os.path.basename(__file__))
+
+    return counts
+
+def run_tests(patches, counts):
+    git_state = get_git_state()
+    counts = test_head_attached(patches, counts)
+    counts = test_head_detached(patches, counts)
+    restore_git_state(git_state)
+
     return counts
 
 if __name__ == '__main__':
@@ -118,5 +184,5 @@ if __name__ == '__main__':
     if not patches:
         print(f"Error: Unable to find patch(es) in {patchesdir}")
         sys.exit(1)
-    counts = test_head_attached(patches, counts)
+    counts = run_tests(patches, counts)
     print_results(counts)
