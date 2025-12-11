@@ -47,7 +47,7 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
         bitbake("{} -c test_compile".format(recipe))
         builddir = get_bb_var("RUSTSRC", "rust")
         # build core-image-minimal with required packages
-        default_installed_packages = ["libgcc", "libstdc++", "libatomic", "libgomp", "libzstd"]
+        default_installed_packages = ["libgcc", "libstdc++", "libatomic", "libgomp", "libzstd", "openssl"]
         features = []
         features.append('IMAGE_FEATURES += "ssh-server-dropbear"')
         features.append('CORE_IMAGE_EXTRA_INSTALL += "{0}"'.format(" ".join(default_installed_packages)))
@@ -75,9 +75,11 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
                             'src/tools/rustdoc-themes',
                             'src/tools/rust-installer',
                             'src/tools/test-float-parse',
+                            'src/tools/tier-check',
                             'src/tools/suggest-tests',
                             'src/tools/tidy',
                             'tests/assembly-llvm/asm/aarch64-outline-atomics.rs',
+                            'tests/assembly-llvm/c-variadic-arm.rs',
                             'tests/codegen-llvm/issues/issue-122805.rs',
                             'tests/codegen-llvm/thread-local.rs',
                             'tests/mir-opt/',
@@ -117,9 +119,11 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
             targetsys = get_bb_var("RUST_TARGET_SYS", "rust")
             rustlibpath = get_bb_var("WORKDIR", "rust")
             tmpdir = get_bb_var("TMPDIR", "rust")
+            staging_dir_native = get_bb_var("STAGING_DIR_NATIVE", "core-image-minimal")
 
             # Set path for target-poky-linux-gcc, RUST_TARGET_PATH and hosttools.
             cmd = "export TARGET_VENDOR=\"-poky\";"
+            cmd = cmd + " export OPENSSL_DIR=%s/usr;" %(staging_dir_native)
             cmd = cmd + " export PATH=%s/recipe-sysroot-native/usr/bin/python3-native:%s/recipe-sysroot-native/usr/bin:%s/recipe-sysroot-native/usr/bin/%s:%s/hosttools:$PATH;" % (rustlibpath, rustlibpath, rustlibpath, tcpath, tmpdir)
             cmd = cmd + " export RUST_TARGET_PATH=%s/rust-targets;" % rustlibpath
             # Strip debug symbols from test binaries to reduce size (300+ MB -> ~140 MB)
