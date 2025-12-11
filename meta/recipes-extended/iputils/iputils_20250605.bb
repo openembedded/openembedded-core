@@ -26,7 +26,7 @@ PACKAGECONFIG[docs] = "-DBUILD_HTML_MANS=true -DBUILD_MANS=true,-DBUILD_HTML_MAN
 
 inherit meson update-alternatives pkgconfig
 
-EXTRA_OEMESON += "--prefix=${root_prefix}/ -DSKIP_TESTS=true"
+EXTRA_OEMESON += "--bindir=${base_bindir} -DSKIP_TESTS=true"
 
 ALTERNATIVE_PRIORITY = "100"
 
