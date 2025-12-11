@@ -25,24 +25,22 @@ MESON_TARGET ?= ""
 # Since 0.60.0 you can specify custom tags to install
 MESON_INSTALL_TAGS ?= ""
 
-def noprefix(var, d):
-    return d.getVar(var).replace(d.getVar('prefix') + '/', '', 1)
-
 MESON_BUILDTYPE ?= "${@oe.utils.vartrue('DEBUG_BUILD', 'debug', 'plain', d)}"
 MESON_BUILDTYPE[vardeps] += "DEBUG_BUILD"
-MESONOPTS = " --prefix ${prefix} \
-              --buildtype ${MESON_BUILDTYPE} \
-              --bindir ${@noprefix('bindir', d)} \
-              --sbindir ${@noprefix('sbindir', d)} \
-              --datadir ${@noprefix('datadir', d)} \
-              --libdir ${@noprefix('libdir', d)} \
-              --libexecdir ${@noprefix('libexecdir', d)} \
-              --includedir ${@noprefix('includedir', d)} \
-              --mandir ${@noprefix('mandir', d)} \
-              --infodir ${@noprefix('infodir', d)} \
-              --sysconfdir ${sysconfdir} \
+
+MESONOPTS = " --buildtype ${MESON_BUILDTYPE} \
+              --prefix ${prefix} \
+              --bindir ${bindir} \
+              --datadir ${datadir} \
+              --includedir ${includedir} \
+              --infodir ${infodir} \
+              --libdir ${libdir} \
+              --libexecdir ${libexecdir} \
               --localstatedir ${localstatedir} \
+              --mandir ${mandir} \
+              --sbindir ${sbindir} \
               --sharedstatedir ${sharedstatedir} \
+              --sysconfdir ${sysconfdir} \
               --wrap-mode nodownload \
               --native-file ${WORKDIR}/meson.native"
 
