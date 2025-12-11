@@ -36,7 +36,6 @@ FILES:${PN} += "\
                 ${datadir}/dbus-1/services/ \
                 ${systemd_user_unitdir} \
                 "
-FILES:${PN}-dev += "${libdir}/gio/modules/libgio*.la"
 FILES:${PN}-staticdev += "${libdir}/gio/modules/libgio*.a"
 
 RDEPENDS:${PN}-ptest += "bash"

@@ -709,7 +709,7 @@ FILES:${PN} = " ${base_bindir}/* \
                 ${datadir}/dbus-1/system.d/org.freedesktop.home1.conf \
                "
 
-FILES:${PN}-dev += "${base_libdir}/security/*.la ${datadir}/dbus-1/interfaces/ ${sysconfdir}/rpm/macros.systemd"
+FILES:${PN}-dev += "${datadir}/dbus-1/interfaces/ ${sysconfdir}/rpm/macros.systemd"
 
 RDEPENDS:${PN} += "kmod ${VIRTUAL-RUNTIME_dbus} util-linux-mount util-linux-umount udev (= ${EXTENDPKGV}) systemd-udev-rules util-linux-agetty util-linux-fsck util-linux-swaponoff util-linux-mkswap"
 RDEPENDS:${PN} += "systemd-serialgetty"

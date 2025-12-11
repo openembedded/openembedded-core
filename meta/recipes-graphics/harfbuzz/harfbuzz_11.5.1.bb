@@ -44,8 +44,7 @@ do_install:append() {
 }
 
 FILES:${PN}-icu = "${libdir}/libharfbuzz-icu.so.*"
-FILES:${PN}-icu-dev = "${libdir}/libharfbuzz-icu.la \
-                       ${libdir}/libharfbuzz-icu.so \
+FILES:${PN}-icu-dev = "${libdir}/libharfbuzz-icu.so \
                        ${libdir}/pkgconfig/harfbuzz-icu.pc \
 "
 FILES:${PN}-subset = "${libdir}/libharfbuzz-subset.so.*"
