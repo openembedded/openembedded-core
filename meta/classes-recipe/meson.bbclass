@@ -184,16 +184,6 @@ meson_do_configure() {
     fi
 }
 
-python meson_do_qa_configure() {
-    import re
-    warn_re = re.compile(r"^WARNING: Cross property (.+) is using default value (.+)$", re.MULTILINE)
-    with open(d.expand("${B}/meson-logs/meson-log.txt")) as logfile:
-        log = logfile.read()
-    for (prop, value) in warn_re.findall(log):
-        bb.warn("Meson cross property %s used without explicit assignment, defaulting to %s" % (prop, value))
-}
-do_configure[postfuncs] += "meson_do_qa_configure"
-
 do_compile[progress] = "outof:^\[(\d+)/(\d+)\]\s+"
 meson_do_compile() {
     meson compile -v ${PARALLEL_MAKE} ${MESON_TARGET}
