@@ -18,19 +18,19 @@ parentdir  = os.path.dirname(topdir)
 # path to the repo root
 repodir = os.path.dirname(os.path.dirname(parentdir))
 
-def print_results(passcount, failcount, skipcount, xpasscount, xfailcount, xskipcount, errorcount):
-    total = passcount + skipcount + failcount + xpasscount + xfailcount + xskipcount + errorcount
+def print_results(counts):
+    total = sum(counts.values())
     print("============================================================================")
     print("Testsuite summary for %s" % os.path.basename(topdir))
     print("============================================================================")
-    print("# TOTAL: %s" % str(total))
-    print("# XPASS: %s" % str(xpasscount))
-    print("# XFAIL: %s" % str(xfailcount))
-    print("# XSKIP: %s" % str(xskipcount))
-    print("# PASS: %s" % str(passcount))
-    print("# FAIL: %s" % str(failcount))
-    print("# SKIP: %s" % str(skipcount))
-    print("# ERROR: %s" % str(errorcount))
+    print("# TOTAL: " + str(total))
+    print("# XPASS: " + str(counts["xpass"]))
+    print("# XFAIL: " + str(counts["xfail"]))
+    print("# XSKIP: " + str(counts["xskip"]))
+    print("# PASS: " + str(counts["pass"]))
+    print("# FAIL: " + str(counts["fail"]))
+    print("# SKIP: " + str(counts["skip"]))
+    print("# ERROR: " + str(counts["error"]))
     print("============================================================================")
 
 # Once the tests are in oe-core, we can remove the testdir param and use os.path.dirname to get relative paths
@@ -44,13 +44,15 @@ def test(root, patch):
     return results
 
 if __name__ == '__main__':
-    passcount = 0
-    failcount = 0
-    skipcount = 0
-    xpasscount = 0
-    xfailcount = 0
-    xskipcount = 0
-    errorcount = 0
+    counts = {
+        "pass": 0,
+        "fail": 0,
+        "skip": 0,
+        "xpass": 0,
+        "xfail": 0,
+        "xskip": 0,
+        "error": 0,
+    }
 
     results = None
         
@@ -68,27 +70,27 @@ if __name__ == '__main__':
                     result, _ = resultline.split(':', 1)
 
                     if expected_result.upper() == "FAIL" and result.upper() == "FAIL":
-                        xfailcount = xfailcount + 1
+                        counts["xfail"] = counts["xfail"] + 1
                         print("XFAIL: %s (file: %s)" % (testid.strip("."), os.path.basename(patch)))
                     elif expected_result.upper() == "PASS" and result.upper() == "PASS":
-                        xpasscount = xpasscount + 1
+                        counts["xpass"] = counts["xpass"] + 1
                         print("XPASS: %s (file: %s)" % (testid.strip("."), os.path.basename(patch)))
                     elif expected_result.upper() == "SKIP" and result.upper() == "SKIP":
-                        xskipcount = xskipcount + 1
+                        counts["xskip"] = counts["xskip"] + 1
                         print("XSKIP: %s (file: %s)" % (testid.strip("."), os.path.basename(patch)))
                     else:
                         print("%s: %s (%s)" % (result.upper(), testid.strip("."), os.path.basename(patch)))
                         if result.upper() == "PASS":
-                            passcount = passcount + 1
+                            counts["pass"] = counts["pass"] + 1
                         elif result.upper() == "FAIL":
-                            failcount = failcount + 1
+                            counts["fail"] = counts["fail"] + 1
                         elif result.upper() == "SKIP":
-                            skipcount = skipcount + 1
+                            counts["skip"] = counts["skip"] + 1
                         else:
                             print("Bad result on test %s against %s" % (testid.strip("."), os.path.basename(patch)))
-                            errorcount = errorcount + 1
+                            counts["error"] = counts["error"] + 1
                     break
             else:
                 print ("No test for=%s" % patch)
 
-    print_results(passcount, failcount, skipcount, xpasscount, xfailcount, xskipcount, errorcount)
+    print_results(counts)
