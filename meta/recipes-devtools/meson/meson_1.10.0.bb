@@ -11,11 +11,10 @@ GITHUB_BASE_URI = "https://github.com/mesonbuild/meson/releases/"
 SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/meson-${PV}.tar.gz \
            file://meson-setup.py \
            file://meson-wrapper \
-           file://0001-python-module-do-not-manipulate-the-environment-when.patch \
            file://0001-Make-CPU-family-warnings-fatal.patch \
            file://0002-Support-building-allarch-recipes-again.patch \
            "
-SRC_URI[sha256sum] = "4e076606f2afff7881d195574bddcd8d89286f35a17b4977a216f535dc0c74ac"
+SRC_URI[sha256sum] = "8071860c1f46a75ea34801490fd1c445c9d75147a65508cd3a10366a7006cc1c"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)$"
 
 inherit python_setuptools_build_meta github-releases

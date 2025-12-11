@@ -25,20 +25,18 @@ index 43fad0c..27be871 100644
  
          endian = literal['endian']
          if endian not in ('little', 'big'):
-diff --git a/mesonbuild/environment.py b/mesonbuild/environment.py
-index 489ef50..1567efa 100644
---- a/mesonbuild/environment.py
-+++ b/mesonbuild/environment.py
-@@ -438,10 +438,8 @@ def detect_cpu_family(compilers: CompilersDict) -> str:
-         if compilers and not any_compiler_has_define(compilers, '__mips64'):
+diff --git i/mesonbuild/envconfig.py w/mesonbuild/envconfig.py
+index dd050b011..5277693c3 100644
+--- i/mesonbuild/envconfig.py
++++ w/mesonbuild/envconfig.py
+@@ -634,9 +634,7 @@ def detect_cpu_family(compilers: T.Dict[str, Compiler]) -> str:
              trial = 'mips'
  
--    if trial not in known_cpu_families:
+     if trial not in known_cpu_families:
 -        mlog.warning(f'Unknown CPU family {trial!r}, please report this at '
 -                     'https://github.com/mesonbuild/meson/issues/new with the '
 -                     'output of `uname -a` and `cat /proc/cpuinfo`')
-+    if trial not in known_cpu_families and trail != "riscv":
-+        raise EnvironmentException('Unknown CPU family %s, see https://wiki.yoctoproject.org/wiki/Meson/UnknownCPU for directions.' % trial)
++        raise EnvironmentException(f'Unknown CPU family {trial!r}, see https://wiki.yoctoproject.org/wiki/Meson/UnknownCPU for directions.')
  
      return trial
  
