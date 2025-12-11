@@ -24,9 +24,9 @@ diff --git a/src/bootstrap/src/core/build_steps/tool.rs b/src/bootstrap/src/core
 index 087df2f8a..00790affb 100644
 --- a/src/bootstrap/src/core/build_steps/tool.rs
 +++ b/src/bootstrap/src/core/build_steps/tool.rs
-@@ -16,14 +16,12 @@ use std::{env, fs};
- #[cfg(feature = "tracing")]
- use tracing::instrument;
+@@ -13,14 +13,12 @@ use std::ffi::OsStr;
+ use std::path::PathBuf;
+ use std::{env, fs};
 
 -use crate::core::build_steps::compile::is_lto_stage;
  use crate::core::build_steps::toolstate::ToolState;
@@ -41,14 +41,16 @@ index 087df2f8a..00790affb 100644
 +use crate::core::config::{DebuginfoLevel, TargetSelection};
  use crate::utils::exec::{BootstrapCommand, command};
  use crate::utils::helpers::{add_dylib_path, exe, t};
- use crate::{Compiler, FileType, Kind, Mode, gha};
-@@ -160,20 +158,7 @@ impl Step for ToolBuild {
+ use crate::{Compiler, FileType, Kind, Mode};
+@@ -121,22 +119,7 @@ impl Step for ToolBuild {
              cargo.env("RUSTC_WRAPPER", ccache);
          }
 
--        // Rustc tools (miri, clippy, cargo, rustfmt, rust-analyzer)
+-        // RustcPrivate tools (miri, clippy, rustfmt, rust-analyzer) and cargo
 -        // could use the additional optimizations.
--        if self.mode == Mode::ToolRustc && is_lto_stage(&self.build_compiler) {
+-        if is_lto_stage(&self.build_compiler)
+-            && (self.mode == Mode::ToolRustcPrivate || self.path == "src/tools/cargo")
+-        {
 -            let lto = match builder.config.rust_lto {
 -                RustcLto::Off => Some("off"),
 -                RustcLto::Thin => Some("thin"),
@@ -67,7 +69,7 @@ index 087df2f8a..00790affb 100644
 diff --git a/src/bootstrap/src/core/builder/mod.rs b/src/bootstrap/src/core/builder/mod.rs
 --- a/src/bootstrap/src/core/builder/mod.rs
 +++ b/src/bootstrap/src/core/builder/mod.rs
-@@ -13,7 +13,7 @@
+@@ -13,7 +13,7 @@ use clap::ValueEnum;
  #[cfg(feature = "tracing")]
  use tracing::instrument;
  
@@ -75,4 +77,4 @@ diff --git a/src/bootstrap/src/core/builder/mod.rs b/src/bootstrap/src/core/buil
 +pub use self::cargo::Cargo;
  pub use crate::Compiler;
  use crate::core::build_steps::compile::{Std, StdLink};
- use crate::core::build_steps::{
+ use crate::core::build_steps::tool::RustcPrivateCompilers;
