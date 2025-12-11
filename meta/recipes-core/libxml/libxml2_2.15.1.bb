@@ -31,7 +31,7 @@ inherit autotools pkgconfig binconfig-disabled ptest
 
 LDFLAGS:append:riscv64 = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld ptest', ' -fuse-ld=bfd', '', d)}"
 
-RDEPENDS:${PN}-ptest += "bash make locale-base-en-us"
+RDEPENDS:${PN}-ptest += "locale-base-en-us"
 RDEPENDS:${PN}-ptest:append:libc-musl = " musl-locales"
 RDEPENDS:${PN}-ptest:append:libc-glibc = " glibc-gconv-ebcdic-us \
                                            glibc-gconv-ibm1141 \
