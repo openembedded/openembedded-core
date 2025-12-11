@@ -78,6 +78,7 @@ do_write_config() {
 [binaries]
 c = ${@meson_array('CC', d)}
 cpp = ${@meson_array('CXX', d)}
+ld = ${@meson_array('LD', d)}
 cython = 'cython3'
 ar = ${@meson_array('AR', d)}
 nm = ${@meson_array('NM', d)}
@@ -120,6 +121,7 @@ EOF
 [binaries]
 c = ${@meson_array('BUILD_CC', d)}
 cpp = ${@meson_array('BUILD_CXX', d)}
+ld = ${@meson_array('BUILD_LD', d)}
 cython = 'cython3'
 ar = ${@meson_array('BUILD_AR', d)}
 nm = ${@meson_array('BUILD_NM', d)}
@@ -168,10 +170,6 @@ do_write_config:append:class-nativesdk() {
 CONFIGURE_FILES = "meson.build"
 
 meson_do_configure() {
-    # Meson requires this to be 'bfd, 'lld' or 'gold' from 0.53 onwards
-    # https://github.com/mesonbuild/meson/commit/ef9aeb188ea2bc7353e59916c18901cde90fa2b3
-    unset LD
-
     bbnote Executing meson ${EXTRA_OEMESON}...
     if ! meson setup ${MESONOPTS} "${MESON_SOURCEPATH}" "${B}" ${MESON_CROSS_FILE} ${EXTRA_OEMESON}; then
         MESON_LOG=${B}/meson-logs/meson-log.txt
