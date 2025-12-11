@@ -21,7 +21,10 @@ def discover_templates(layers_file):
         raise Exception("List of layers {} does not exist; were the layers set up using the setup-layers script or bitbake-setup tool?".format(layers_file))
 
     templates = []
-    layers_list = json.load(open(layers_file))["layers"]
+
+    with open(layers_file) as f:
+        layers_list = json.load(f)["layers"]
+
     for layer in layers_list:
         template_dir = os.path.join(os.path.dirname(layers_file), layer, 'conf','templates')
         if os.path.exists(template_dir):
