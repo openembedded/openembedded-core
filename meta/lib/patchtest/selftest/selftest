@@ -95,6 +95,12 @@ def test(root, patch):
 
     return results
 
+def test_head_attached(patches, counts):
+    for patch_info in patches:
+        results = test(patch_info["root"], patch_info["patch"])
+        counts = analyze_result(results, patch_info, counts)
+    return counts
+
 if __name__ == '__main__':
     counts = {
         "pass": 0,
@@ -107,8 +113,10 @@ if __name__ == '__main__':
     }
 
     results = None
+
     patches = get_patches(patchesdir)
-    for patch_info in patches:
-        results = test(patch_info["root"], patch_info["patch"])
-        counts = analyze_result(results, patch_info, counts)
+    if not patches:
+        print(f"Error: Unable to find patch(es) in {patchesdir}")
+        sys.exit(1)
+    counts = test_head_attached(patches, counts)
     print_results(counts)
