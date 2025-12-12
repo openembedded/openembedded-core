@@ -106,7 +106,9 @@ QB_NETWORK_DEVICE ?= "-device virtio-net-pci,netdev=net0,mac=@MAC@"
 #
 QB_NO_PNI ?= "${@bb.utils.contains('DISTRO_FEATURES', 'pni-names', '', 'net.ifnames=0', d)}"
 QB_CMDLINE_IP_SLIRP ?= "ip=dhcp"
-QB_CMDLINE_IP_TAP ?= "ip=192.168.7.@CLIENT@::192.168.7.@GATEWAY@:255.255.255.0::eth0:off:8.8.8.8 ${QB_NO_PNI}"
+# 8.8.8.8 is Google Public DNS: https://en.wikipedia.org/wiki/Google_Public_DNS
+QB_TAP_NAMESERVER ?= "8.8.8.8"
+QB_CMDLINE_IP_TAP ?= "ip=192.168.7.@CLIENT@::192.168.7.@GATEWAY@:255.255.255.0::eth0:off:${QB_TAP_NAMESERVER} ${QB_NO_PNI}"
 
 QB_ROOTFS_EXTRA_OPT ?= ""
 QB_GRAPHICS ?= ""
