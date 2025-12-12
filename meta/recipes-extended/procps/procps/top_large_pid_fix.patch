@@ -1,0 +1,52 @@
+From f21fc624d960d12afa399af7333d4f9193fb2ffb Mon Sep 17 00:00:00 2001
+From: Jim Warner <james.warner@comcast.net>
+Date: Tue, 16 Sep 2025 12:00:00 -0500
+Subject: [PATCH] library: avoid possible segmentation fault, <pids> api
+Upstream-Status: Backport
+[https://gitlab.com/procps-ng/procps/-/commit/5461b50b1a85c5e556c4cd2739ca8ffdbc69399a]
+
+In the issue referenced below, that SEGV was caused by
+passing a '-1' pid to the procps_pids_select function.
+That value, in turn, is caused by providing a LONG_MAX
+or greater number for what was assigned to an integer.
+
+So, this commit will help ensure we avoid a match when
+we should fail plus skip some unproductive libc calls.
+
+[ the same problem occurs in that old 3.3.17 library ]
+
+Reference(s):
+https://gitlab.com/procps-ng/procps/-/issues/394
+
+Signed-off-by: Jim Warner <james.warner@comcast.net>
+Signed-off-by: Amaury Couderc <amaury.couderc@est.tech>
+
+---
+ library/readproc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/library/readproc.c b/library/readproc.c
+index 2dfe4c9e..d0e039bf 100644
+--- a/library/readproc.c
++++ b/library/readproc.c
+@@ -1434,7 +1434,7 @@ static int listed_nextpid (PROCTAB *PT, proc_t *p) {
+   pid_t pid = *(PT->pids)++;
+   char *path = PT->path;
+ 
+-  if (pid) {
++  if (pid > 0) {
+     snprintf(path, PROCPATHLEN, "/proc/%d", pid);
+     p->tid = p->tgid = pid;        // this tgid may be a huge fib |
+ 
+@@ -1546,7 +1546,7 @@ PROCTAB *openproc(unsigned flags, ...) {
+         did_stat = 1;
+     }
+     PT->taskdir = NULL;
+-    PT->taskdir_user = -1;
++    PT->taskdir_user = -2;
+     PT->taskfinder = simple_nexttid;
+     PT->taskreader = simple_readtask;
+ 
+-- 
+2.43.0
+
