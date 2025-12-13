@@ -116,7 +116,7 @@ PTESTS_SLOW = "\
     libgcrypt \
     libmodule-build-perl \
     libpng \
-    libseccomp \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'seccomp', 'libseccomp', '',d)} \
     lttng-tools \
     lz4 \
     openssh \
