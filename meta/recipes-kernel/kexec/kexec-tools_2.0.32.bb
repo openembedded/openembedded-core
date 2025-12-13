@@ -3,7 +3,7 @@ DESCRIPTION = "Kexec is a fast reboot feature that lets you reboot to a new Linu
 HOMEPAGE = "http://kernel.org/pub/linux/utils/kernel/kexec/"
 SECTION = "kernel/userland"
 LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+LIC_FILES_CHKSUM = "file://COPYING;md5=570a9b3749dd0463a1778803b12a6dce \
                     file://kexec/kexec.c;beginline=1;endline=20;md5=af10f6ae4a8715965e648aa687ad3e09 \
                     "
 DEPENDS = "zlib xz"
@@ -19,10 +19,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/kernel/kexec/kexec-tools-${PV}.tar.gz
            file://0001-arm64-kexec-disabled-check-if-kaslr-seed-dtb-propert.patch \
            file://0001-kexec.c-add-MFD_NOEXEC_SEAL-flag-explicitly.patch \
            file://0001-ppc-fs2dt-Match-function-signatures.patch \
-           file://0001-Make-the-segment-base-match-pinned-section-address.patch \
            "
-
-SRC_URI[sha256sum] = "ddaaa65b02b4f8aa9222586b1f26565b93a4baeffd35bcbd523f15fae7aa4897"
+SRC_URI[sha256sum] = "41c427651269cba7ecb0a3a537403076c5694949783b5cc3ae046223bc962087"
 
 inherit autotools update-rc.d systemd
 
@@ -86,7 +84,7 @@ SYSTEMD_SERVICE:kdump = "kdump.service"
 
 SECURITY_PIE_CFLAGS:remove = "-fPIE -pie"
 
-COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|aarch64.*|powerpc.*|mips.*)-(linux|freebsd.*)'
+COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|aarch64.*|powerpc.*|mips.*|riscv64.*)-(linux|freebsd.*)'
 # makedumpfile would not compile on mips/rv32
 COMPATIBLE_HOST:mipsarcho32 = "null"
 COMPATIBLE_HOST:riscv32 = "null"
