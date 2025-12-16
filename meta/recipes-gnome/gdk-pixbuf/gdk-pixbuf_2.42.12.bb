@@ -2,7 +2,7 @@ SUMMARY = "Image loading library for GTK+"
 DESCRIPTION = "The GDK Pixbuf library provides: Image loading and saving \
 facilities, fast scaling and compositing of pixbufs and Simple animation \
 loading (ie. animated GIFs)"
-HOMEPAGE = "https://wiki.gnome.org/Projects/GdkPixbuf"
+HOMEPAGE = "https://gitlab.gnome.org/GNOME/gdk-pixbuf"
 BUGTRACKER = "https://gitlab.gnome.org/GNOME/gdk-pixbuf/issues"
 
 LICENSE = "LGPL-2.1-or-later"
@@ -16,7 +16,7 @@ DEPENDS = "glib-2.0 shared-mime-info"
 
 SRC_URI[archive.sha256sum] = "b9505b3445b9a7e48ced34760c3bcb73e966df3ac94c95a148cb669ab748e3c7"
 
-inherit gettext gnomebase pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gi-docgen lib_package
+inherit gettext gnomebase pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gi-docgen lib_package manpages
 
 SRC_URI += "\
            file://run-ptest \
@@ -24,7 +24,7 @@ SRC_URI += "\
            file://0001-meson.build-allow-a-subset-of-tests-in-cross-compile.patch \
            "
 
-GIR_MESON_OPTION = 'introspection'
+GIR_MESON_OPTION = "introspection"
 GIR_MESON_ENABLE_FLAG = "enabled"
 GIR_MESON_DISABLE_FLAG = "disabled"
 
@@ -38,17 +38,11 @@ PACKAGECONFIG[jpeg] = "-Djpeg=enabled,-Djpeg=disabled,jpeg"
 PACKAGECONFIG[tiff] = "-Dtiff=enabled,-Dtiff=disabled,tiff"
 PACKAGECONFIG[gif] = "-Dgif=enabled,-Dgif=disabled"
 PACKAGECONFIG[others] = "-Dothers=enabled,-Dothers=disabled"
-PACKAGECONFIG[tests] = "-Dinstalled_tests=true,-Dinstalled_tests=false"
-
-EXTRA_OEMESON = "-Dman=false"
-
-PACKAGES =+ "${PN}-xlib"
+PACKAGECONFIG[manpages] = "-Dman=true,-Dman=false,python3-docutils-native"
+PACKAGECONFIG[tests] = "-Dtests=true -Dinstalled_tests=true,-Dtests=false -Dinstalled_tests=false"
 
 # For GIO image type sniffing
 RDEPENDS:${PN} = "shared-mime-info"
-
-FILES:${PN}-xlib = "${libdir}/*pixbuf_xlib*${SOLIBS}"
-ALLOW_EMPTY:${PN}-xlib = "1"
 
 FILES:${PN} += "${libdir}/gdk-pixbuf-2.0/gdk-pixbuf-query-loaders"
 
@@ -57,7 +51,7 @@ FILES:${PN}-bin += "${datadir}/thumbnailers/gdk-pixbuf-thumbnailer.thumbnailer"
 FILES:${PN}-dev += " \
 	${bindir}/gdk-pixbuf-csource \
 	${bindir}/gdk-pixbuf-pixdata \
-        ${bindir}/gdk-pixbuf-print-mime-types \
+	${bindir}/gdk-pixbuf-print-mime-types \
 	${includedir}/* \
 "
 
@@ -85,9 +79,9 @@ do_install:append() {
 }
 
 do_install_ptest() {
-        # Remove a bad fuzzing attempt that sporadically fails without a way to reproduce
+	# Remove a bad fuzzing attempt that sporadically fails without a way to reproduce
 	rm ${D}/${datadir}/installed-tests/gdk-pixbuf/pixbuf-randomly-modified.test
-        # https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/issues/215
+	# https://gitlab.gnome.org/GNOME/gdk-pixbuf/-/issues/215
 	rm ${D}/${datadir}/installed-tests/gdk-pixbuf/pixbuf-jpeg.test
 }
 
