@@ -18,26 +18,15 @@ SRC_URI[sha256sum] = "32427e8c471ac095853212a37aef816c60b42052d4d9e48230bab3bdf2
 
 UPSTREAM_CHECK_REGEX = "freetype-(?P<pver>\d+(\.\d+)+)"
 
-inherit autotools pkgconfig multilib_header
+inherit meson pkgconfig multilib_header
 
-# Adapt autotools to work with the minimal autoconf usage in freetype
-AUTOTOOLS_SCRIPT_PATH = "${S}/builds/unix"
-CONFIGURE_SCRIPT = "${S}/configure"
-EXTRA_AUTORECONF += "--exclude=autoheader --exclude=automake -I ."
+PACKAGECONFIG ??= "harfbuzz pixmap zlib"
 
-PACKAGECONFIG ??= "zlib pixmap"
-
-PACKAGECONFIG[brotli] = "--with-brotli,--without-brotli,brotli"
-PACKAGECONFIG[bzip2] = "--with-bzip2,--without-bzip2,bzip2"
-# harfbuzz results in a circular dependency so enabling is non-trivial
-PACKAGECONFIG[harfbuzz] = "--with-harfbuzz,--without-harfbuzz,harfbuzz"
-PACKAGECONFIG[pixmap] = "--with-png,--without-png,libpng"
-PACKAGECONFIG[zlib] = "--with-zlib,--without-zlib,zlib"
-PACKAGECONFIG[freetypeconfig] = "--enable-freetype-config=yes,--enable-freetype-config=no,"
-
-EXTRA_OECONF = "CC_BUILD='${BUILD_CC}'"
-
-TARGET_CPPFLAGS += "-D_FILE_OFFSET_BITS=64"
+PACKAGECONFIG[brotli] = "-Dbrotli=enabled,-Dbrotli=disabled,brotli"
+PACKAGECONFIG[bzip2] = "-Dbzip2=enabled,-Dbzip2=disabled,bzip2"
+PACKAGECONFIG[harfbuzz] = "-Dharfbuzz=dynamic,-Dharfbuzz=disabled"
+PACKAGECONFIG[pixmap] = "-Dpng=enabled,-Dpng=disabled,libpng"
+PACKAGECONFIG[zlib] = "-Dzlib=system,-Dzlib=disabled,zlib"
 
 do_install:append() {
 	oe_multilib_header freetype2/freetype/config/ftconfig.h
