@@ -3,18 +3,18 @@ DESCRIPTION = "FreeType is a software font engine that is designed to be small, 
 highly customizable, and portable while capable of producing high-quality output (glyph \
 images). It can be used in graphics libraries, display servers, font conversion tools, text \
 image generation tools, and many other products as well."
-HOMEPAGE = "http://www.freetype.org/"
-BUGTRACKER = "https://savannah.nongnu.org/bugs/?group=freetype"
+HOMEPAGE = "https://freetype.org/"
+BUGTRACKER = "https://gitlab.freedesktop.org/groups/freetype/-/issues"
 SECTION = "libs"
 
 LICENSE = "(FTL | GPL-2.0-or-later) & MIT"
-LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=843b6efc16f6b1652ec97f89d5a516c0 \
-                    file://docs/FTL.TXT;md5=9f37b4e6afa3fef9dba8932b16bd3f97 \
+LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=eeb073d5fb86d23c52bb9b84aa256307 \
+                    file://docs/FTL.TXT;md5=72d844cd2f3bcaf6a85244b508032be7 \
                     file://docs/GPLv2.TXT;md5=8ef380476f642c20ebf40fecb0add2ec \
                     "
 
 SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/${BPN}/${BP}.tar.xz"
-SRC_URI[sha256sum] = "0550350666d427c74daeb85d5ac7bb353acba5f76956395995311a9c6f063289"
+SRC_URI[sha256sum] = "32427e8c471ac095853212a37aef816c60b42052d4d9e48230bab3bdf2936ccc"
 
 UPSTREAM_CHECK_REGEX = "freetype-(?P<pver>\d+(\.\d+)+)"
 
