@@ -10,7 +10,7 @@ DEPENDS = "dbus glib-2.0 udev mobile-broadband-provider-info ell"
 SRC_URI = "${KERNELORG_MIRROR}/linux/network/${BPN}/${BP}.tar.xz \
            file://ofono \
            "
-SRC_URI[sha256sum] = "f74c3bba7ebac488fed7bcfa6113b0e39e723d2e1a24b53f79c9f18a1c85dd00"
+SRC_URI[sha256sum] = "d554525ad2db1ccd2fe3ed733e437d76997e7f443c085b87e6be1fded020bc8f"
 
 inherit autotools pkgconfig update-rc.d systemd gobject-introspection-data
 
