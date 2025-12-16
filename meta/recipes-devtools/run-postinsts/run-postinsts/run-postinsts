@@ -67,7 +67,7 @@ exec_postinst_scriptlets() {
 		echo "Running postinst $i..."
 		[ "$POSTINST_LOGGING" = "1" ] && eval echo "Running postinst $i..." $append_log
 		if [ -x "$i" ]; then
-			(sh -c "$i" $append_log)
+			(sh -c "$i $append_log")
 			status=$?
 			if [ $status -ne 0 ]; then
 				echo "ERROR: postinst $i failed with exit code $status."
