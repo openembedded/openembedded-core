@@ -17,7 +17,7 @@ COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
 DEPENDS = "m4-native flex-native bison-native"
 
 SRC_URI = "git://github.com/acpica/acpica;protocol=https;branch=master;tag=${PV}"
-SRCREV = "aa98db3bd149fc1f8d2a3017cb05b6b1982c3296"
+SRCREV = "446be438238e9d339eed5182b807ac5f82df56c9"
 
 inherit update-alternatives
 
