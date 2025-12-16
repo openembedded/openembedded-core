@@ -1,4 +1,4 @@
-From d58bdaca3d5379afcb954bb57c690c7736807ec5 Mon Sep 17 00:00:00 2001
+From 2f3d8359ffd1ab07d578c1e991180bc31dc7d143 Mon Sep 17 00:00:00 2001
 From: Lucas Kanashiro <kanashiro@debian.org>
 Date: Fri, 1 Nov 2019 15:25:17 -0300
 Subject: [PATCH] Make gemspecs reproducible
@@ -64,7 +64,7 @@ index 5719f83..fe76260 100644
    spec.email         = ["knu@idaemons.org", "ume@mahoroba.org"]
  
 diff --git a/lib/rdoc/rdoc.gemspec b/lib/rdoc/rdoc.gemspec
-index 3144df5..65c313f 100644
+index 47f4802..cf0b5f7 100644
 --- a/lib/rdoc/rdoc.gemspec
 +++ b/lib/rdoc/rdoc.gemspec
 @@ -7,6 +7,7 @@ end
