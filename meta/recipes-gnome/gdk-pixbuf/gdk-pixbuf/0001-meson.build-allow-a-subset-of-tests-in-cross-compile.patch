@@ -33,9 +33,9 @@ index 3eb3fcc..dc7e790 100644
 -  if get_option('tests')
 -    subdir('tests')
 -  endif
-   subdir('thumbnailer')
- endif
- 
+   thumbnailer_opt = get_option('thumbnailer').disable_auto_if(glycin_dep.found())
+   if not thumbnailer_opt.disabled()
+     subdir('thumbnailer')
 diff --git a/tests/meson.build b/tests/meson.build
 index 3781066..911b5fb 100644
 --- a/tests/meson.build

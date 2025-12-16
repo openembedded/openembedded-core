@@ -14,7 +14,7 @@ SECTION = "libs"
 
 DEPENDS = "glib-2.0 shared-mime-info"
 
-SRC_URI[archive.sha256sum] = "b9505b3445b9a7e48ced34760c3bcb73e966df3ac94c95a148cb669ab748e3c7"
+SRC_URI[archive.sha256sum] = "93a1aac3f1427ae73457397582a2c38d049638a801788ccbd5f48ca607bdbd17"
 
 inherit gettext gnomebase pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gi-docgen lib_package manpages
 
@@ -27,6 +27,7 @@ SRC_URI += "\
 GIR_MESON_OPTION = "introspection"
 GIR_MESON_ENABLE_FLAG = "enabled"
 GIR_MESON_DISABLE_FLAG = "disabled"
+GIDOCGEN_MESON_OPTION = "documentation"
 
 LIBV = "2.10.0"
 
@@ -40,6 +41,10 @@ PACKAGECONFIG[gif] = "-Dgif=enabled,-Dgif=disabled"
 PACKAGECONFIG[others] = "-Dothers=enabled,-Dothers=disabled"
 PACKAGECONFIG[manpages] = "-Dman=true,-Dman=false,python3-docutils-native"
 PACKAGECONFIG[tests] = "-Dtests=true -Dinstalled_tests=true,-Dtests=false -Dinstalled_tests=false"
+
+# Disable glycin whilst we have no recipe yet
+# Disable the thumbnailers as they don't build in cross
+EXTRA_OEMESON = "-Dglycin=disabled -Dthumbnailer=disabled"
 
 # For GIO image type sniffing
 RDEPENDS:${PN} = "shared-mime-info"
