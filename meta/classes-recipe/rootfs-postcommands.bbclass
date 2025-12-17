@@ -5,7 +5,7 @@
 #
 
 # Zap the root password if empty-root-password feature is not enabled
-ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains("IMAGE_FEATURES", "empty-root-password", "add_empty_root_password_note", "zap_empty_root_password ",d)}'
+ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains("IMAGE_FEATURES", "empty-root-password", "", "zap_empty_root_password ",d)}'
 
 # Allow dropbear/openssh to accept logins from accounts with an empty password string if allow-empty-password is enabled
 ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains("IMAGE_FEATURES", "allow-empty-password", "ssh_allow_empty_password ", "",d)}'
@@ -57,6 +57,9 @@ inherit image-artifact-names
 # the command can be overridden.
 SORT_PASSWD_POSTPROCESS_COMMAND ??= "tidy_shadowutils_files"
 ROOTFS_POSTPROCESS_COMMAND += '${SORT_PASSWD_POSTPROCESS_COMMAND}'
+
+# Check and add 'no root password' banner.
+ROOTFS_POSTPROCESS_COMMAND += "add_empty_root_password_note"
 
 #
 # Note that useradd-staticids.bbclass has to be used to ensure that
@@ -259,8 +262,14 @@ zap_empty_root_password () {
 # This function adds a note to the login banner that the system is configured for root logins without password
 #
 add_empty_root_password_note () {
-	echo "Type 'root' to login with superuser privileges (no password will be asked)." >> ${IMAGE_ROOTFS}/etc/issue
-	echo "" >> ${IMAGE_ROOTFS}/etc/issue
+	if [ -e ${IMAGE_ROOTFS}/etc/shadow -a -e ${IMAGE_ROOTFS}/etc/issue ]; then
+		rootpw="`grep '^root:' ${IMAGE_ROOTFS}/etc/shadow | cut -d':' -f2`"
+		rootpw_lastchanged="`grep "^root:" ${IMAGE_ROOTFS}/etc/shadow | cut -d: -f3`"
+		if [ -z "$rootpw" -a "$rootpw_lastchanged" != "0" ]; then
+			echo "Type 'root' to login with superuser privileges (no password will be asked)." >> ${IMAGE_ROOTFS}/etc/issue
+			echo "" >> ${IMAGE_ROOTFS}/etc/issue
+		fi
+	fi
 }
 
 #
