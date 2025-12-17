@@ -72,7 +72,8 @@ for root, dirs, files in os.walk('${CARGO_LOCK_SRC_DIR}'):
                 crates += c
 if crates is None:
     raise ValueError("Unable to find any Cargo.lock in ${CARGO_LOCK_SRC_DIR}")
-open("${TARGET_FILE}", 'w').write(crates)
+with open("${TARGET_FILE}", 'w') as f:
+    f.write(crates)
 EOF
 
     bbnote "Successfully update crates inside '${TARGET_FILE}'"
