@@ -1,0 +1,43 @@
+From baf05d4c74d35a98d65328b89627d1806bfd84a5 Mon Sep 17 00:00:00 2001
+From: Hongxu Jia <hongxu.jia@windriver.com>
+Date: Wed, 17 Dec 2025 11:31:29 +0800
+Subject: [PATCH] fix compile failed with musl
+
+...
+|../sources/socat-1.8.1.0/xio-netlink.c:33:59: error: initialization of 'int' from 'void *' makes integer from pointer without a cast [-Wint-conversion]
+|   33 |         struct msghdr rtmsg = { &sa, sizeof(sa), &iov, 1, NULL, 0, 0 };
+|      |                                                           ^~~~
+...
+
+The warning is due to the fact the NULL macro is defined (by most modern
+compilers) as ((void *)0), as it is intended to be used only for pointers.
+Assigning this value to the void *msg_control member of structure msghdr
+causes the warning.
+
+Make the 0/NULL initialization implicit
+
+Refer https://stackoverflow.com/questions/64535635/assignment-to-int-from-void-makes-integer-from-pointer-without-a-cast
+
+Upstream-Status: Submitted [socat@dest-unreach.org]
+Suggested-by: socat@dest-unreach.org
+Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+---
+ xio-netlink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/xio-netlink.c b/xio-netlink.c
+index 533d78c..cb31c43 100644
+--- a/xio-netlink.c
++++ b/xio-netlink.c
+@@ -30,7 +30,7 @@ int xio_netlink_mtu(
+ 	struct nlmsghdr buf[8192/sizeof(struct nlmsghdr)];
+ 	struct iovec iov = { buf, sizeof(buf) };
+ 	struct sockaddr_nl sa;
+-	struct msghdr rtmsg = { &sa, sizeof(sa), &iov, 1, NULL, 0, 0 };
++	struct msghdr rtmsg = { &sa, sizeof(sa), &iov, 1};
+ 	struct nlmsghdr *nh;
+ 
+ 	Info2("Setting interface %d MTU to %u using netlink", interface_index, mtu);
+-- 
+2.49.0
+
