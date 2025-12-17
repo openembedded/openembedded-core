@@ -13,6 +13,7 @@ import sys
 import unittest
 import hashlib
 import subprocess
+import filecmp
 
 from glob import glob
 from shutil import rmtree, copy
@@ -2083,6 +2084,70 @@ class ModifyTests(WicTestCase):
             # check for the file size to validate the copy
             runCmd("wic cp %s:2/etc/fstab %s -n %s" % (images[0], testfile.name, sysroot))
             self.assertTrue(os.stat(testfile.name).st_size > 0, msg="Filesize not as expected %s" % os.stat(testfile.name).st_size)
+
+            # prepare directory structure
+            testdir = os.path.join(self.resultdir, "wic-test-cp-ext-dir")
+            testsubdir = os.path.join(testdir, "subdir")
+            os.makedirs(testsubdir)
+
+            # add a file in the top-level of the directory
+            src_file = os.path.join(testdir, "topfile.txt")
+            with open(src_file, "w") as f:
+                f.write("top-level\n")
+
+            # add file in the subdir
+            src_subfile = os.path.join(testsubdir, "subfile.txt")
+            with open(src_subfile, "w") as f:
+                f.write("sub-level\n")
+
+            # copy directory to the partition root
+            runCmd("wic cp %s %s:2/ -n %s" % (testdir, images[0], sysroot))
+            basedir = os.path.basename(testdir)
+
+            # check if directory is there at partition root
+            result = runCmd("wic ls %s:2/ -n %s" % (images[0], sysroot))
+            root_entries = set(line.split()[-1] for line in result.output.split('\n') if line)
+            self.assertIn(basedir, root_entries, msg="Expected directory not present at root: %s" % root_entries)
+
+            # list INSIDE the copied directory
+            result = runCmd("wic ls %s:2/%s/ -n %s" % (images[0], basedir, sysroot))
+            self.assertEqual(0, result.status,
+                             msg="wic ls inside copied directory failed. Output:\n%s" % result.output)
+            self.assertNotIn("Ext2 inode is not a directory", result.output,
+                             msg="Regression detected (inode not a directory). Output:\n%s" % result.output)
+
+            inside_entries = set(line.split()[-1] for line in result.output.split('\n') if line)
+            self.assertTrue(set(["subdir", "topfile.txt"]).issubset(inside_entries),
+                            msg="Expected entries missing inside dir: %s" % inside_entries)
+
+            # list inside the subdir
+            result = runCmd("wic ls %s:2/%s/subdir/ -n %s" % (images[0], basedir, sysroot))
+            self.assertEqual(0, result.status,
+                             msg="wic ls inside copied subdir failed. Output:\n%s" % result.output)
+            self.assertNotIn("Ext2 inode is not a directory", result.output,
+                             msg="Regression detected (inode not a directory). Output:\n%s" % result.output)
+
+            sub_entries = set(line.split()[-1] for line in result.output.split('\n') if line)
+            self.assertIn("subfile.txt", sub_entries, msg="Expected file missing in subdir: %s" % sub_entries)
+
+            # copy directory from the partition and compare with original
+            outparent = os.path.join(self.resultdir, "wic-test-cp-ext-out")
+            os.makedirs(outparent)
+            runCmd("wic cp %s:2/%s %s -n %s" % (images[0], basedir, outparent, sysroot))
+
+            copied_dir = os.path.join(outparent, basedir)
+            self.assertTrue(os.path.isdir(copied_dir), msg="Copied-back directory not created: %s" % copied_dir)
+
+            copied_file = os.path.join(copied_dir, "topfile.txt")
+            copied_subfile = os.path.join(copied_dir, "subdir", "subfile.txt")
+
+            self.assertTrue(os.path.isfile(copied_file), msg="Missing copied-back file: %s" % copied_file)
+            self.assertTrue(os.path.isfile(copied_subfile), msg="Missing copied-back subfile: %s" % copied_subfile)
+
+            self.assertTrue(filecmp.cmp(src_file, copied_file, shallow=False),
+                            msg="topfile.txt differs after round-trip copy")
+            self.assertTrue(filecmp.cmp(src_subfile, copied_subfile, shallow=False),
+                            msg="subfile.txt differs after round-trip copy")
 
 
     def test_wic_rm_ext(self):
