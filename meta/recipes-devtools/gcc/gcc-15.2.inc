@@ -73,6 +73,7 @@ SRC_URI = "${BASEURI} \
            file://0024-Avoid-hardcoded-build-paths-into-ppc-libgcc.patch \
            file://0025-gcc-testsuite-tweaks-for-mips-OE.patch \
            file://0026-fix-pr90579-testcases.patch \
+           file://0027-gcc15-pr122394.patch \
            file://0001-mapper-localhost-might-not-be-known.patch \
 "
 
