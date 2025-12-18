@@ -1305,9 +1305,7 @@ python do_qa_patch() {
         return False
 
     srcdir = d.getVar('S')
-    if not bb.utils.contains('DISTRO_FEATURES', 'ptest', True, False, d):
-        pass
-    elif not (bb.utils.contains('ERROR_QA', 'unimplemented-ptest', True, False, d) or bb.utils.contains('WARN_QA', 'unimplemented-ptest', True, False, d)):
+    if not (bb.utils.contains('ERROR_QA', 'unimplemented-ptest', True, False, d) or bb.utils.contains('WARN_QA', 'unimplemented-ptest', True, False, d)):
         pass
     elif bb.data.inherits_class('ptest', d):
         bb.note("Package %s QA: skipping unimplemented-ptest: ptest implementation detected" % d.getVar('PN'))
