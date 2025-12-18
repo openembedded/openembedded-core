@@ -28,8 +28,8 @@ SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https;ta
            file://0005-UefiCpuPkg-CpuExceptionHandlerLib-fix-push-instructi.patch \
            "
 
-PV = "edk2-stable202508"
-SRCREV = "d46aa46c8361194521391aa581593e556c707c6e"
+PV = "edk2-stable202511"
+SRCREV = "46548b1adac82211d8d11da12dd914f41e7aa775"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>edk2-stable.*)"
 
 CVE_PRODUCT = "edk2"
@@ -58,7 +58,7 @@ EDK_TOOLS_DIR = "edk2_basetools"
 BUILD_OPTIMIZATION = ""
 
 # OVMF supports IA only, although it could conceivably support ARM someday.
-COMPATIBLE_HOST:class-target = '(i.86|x86_64).*'
+COMPATIBLE_HOST:class-target = '(x86_64).*'
 
 # Additional build flags for OVMF with Secure Boot.
 # Fedora also uses "-D SMM_REQUIRE -D EXCLUDE_SHELL_FROM_FD".
@@ -178,9 +178,6 @@ do_compile:class-target() {
     export LFLAGS="${LDFLAGS}"
     PARALLEL_JOBS="${@oe.utils.parallel_make_argument(d, '-n %d')}"
     OVMF_ARCH="X64"
-    if [ "${TARGET_ARCH}" != "x86_64" ] ; then
-        OVMF_ARCH="IA32"
-    fi
 
     # The build for the target uses BaseTools/Conf/tools_def.template
     # from ovmf-native to find the compiler, which depends on
@@ -197,9 +194,6 @@ do_compile:class-target() {
     rm -rf ${WORKDIR}/ovmf
     mkdir ${WORKDIR}/ovmf
     OVMF_DIR_SUFFIX="X64"
-    if [ "${TARGET_ARCH}" != "x86_64" ] ; then
-        OVMF_DIR_SUFFIX="Ia32" # Note the different capitalization
-    fi
     FIXED_GCCVER=$(fixup_target_tools ${GCC_VER})
     bbnote FIXED_GCCVER is ${FIXED_GCCVER}
     build_dir="${S}/Build/Ovmf$OVMF_DIR_SUFFIX/${OVMF_BUILD_TYPE}_${FIXED_GCCVER}"
@@ -231,10 +225,10 @@ do_install:class-native() {
 
 do_install:class-target() {
     # Content for UEFI shell iso. We install the EFI shell as
-    # bootx64/ia32.efi because then it can be started even when the
+    # bootx64.efi because then it can be started even when the
     # firmware itself does not contain it.
     install -d ${D}/efi/boot
-    install ${WORKDIR}/ovmf/Shell.efi ${D}/efi/boot/boot${@ "ia32" if "${TARGET_ARCH}" != "x86_64" else "x64"}.efi
+    install ${WORKDIR}/ovmf/Shell.efi ${D}/efi/boot/bootx64.efi
     if ${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'true', 'false', d)}; then
         install ${WORKDIR}/ovmf/EnrollDefaultKeys.efi ${D}
     fi
