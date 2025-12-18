@@ -18,7 +18,7 @@ COMPATIBLE_HOST:armv4 = 'null'
 SRC_URI = "git://github.com/ncroxon/gnu-efi;protocol=https;branch=master \
            file://0001-Do-not-treat-warnings-as-errors.patch \
            "
-SRCREV = "1fee8ab566ce91b9cbab9f2c85db96566d79063b"
+SRCREV = "37cd8f069bde6715eebdc5e38a8f15ee6de5edcf"
 
 # llvm-objcopy fails
 # arm-poky-linux-gnueabi-llvm-objcopy: error: 't8.so': section '.dynstr' cannot be removed because it is referenced by the section '.dynamic'

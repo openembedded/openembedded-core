@@ -1,4 +1,4 @@
-From 2f70be61679933805e1d2fef4fefcaf041cbd8db Mon Sep 17 00:00:00 2001
+From 0298e10c334241ec503992db567d6850941c7737 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 16 May 2024 21:38:32 +0800
 Subject: [PATCH] Do not treat warnings as errors
@@ -15,15 +15,15 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Make.defaults b/Make.defaults
-index 777a638..bf98939 100755
+index cf7a88e..399e31c 100755
 --- a/Make.defaults
 +++ b/Make.defaults
-@@ -275,7 +275,7 @@ EFI_CFLAGS  += $(ARCH3264) -g -O2 -Wall -Wextra -Werror \
+@@ -275,7 +275,7 @@ EFI_CFLAGS  += $(ARCH3264) -g -O2 -Wall -Wextra -Wstrict-prototypes -Werror \
             -fno-strict-aliasing \
             -ffreestanding -fno-stack-protector
  else
--EFI_CFLAGS  += $(ARCH3264) -g -O2 -Wall -Wextra -Werror \
-+EFI_CFLAGS  += $(ARCH3264) -g -O2 -Wall -Wextra \
+-EFI_CFLAGS  += $(ARCH3264) -g -O2 -Wall -Wextra -Wstrict-prototypes -Werror \
++EFI_CFLAGS  += $(ARCH3264) -g -O2 -Wall -Wextra -Wstrict-prototypes \
             -fno-strict-aliasing \
             -ffreestanding -fno-stack-protector \
             $(if $(findstring 0,$(USING_CLANG)),-fno-merge-all-constants,)
