@@ -24,6 +24,7 @@ export GOARCH = "${TARGET_GOARCH}"
 export GOOS = "${TARGET_GOOS}"
 export GOHOSTARCH = "${BUILD_GOARCH}"
 export GOHOSTOS = "${BUILD_GOOS}"
+export GOWORK = "off"
 
 GOARM[export] = "0"
 GOARM:arm:class-target = "${TARGET_GOARM}"
