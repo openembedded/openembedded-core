@@ -12,6 +12,7 @@ import pprint
 
 import oe.fitimage
 
+from bb import BBHandledException
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_vars, get_bb_var
 
@@ -411,6 +412,7 @@ class KernelFitImageBase(FitImageTestCase):
         internal_used = {
             'DEPLOY_DIR_IMAGE',
             'FIT_CONF_DEFAULT_DTB',
+            'FIT_CONF_MAPPINGS',
             'FIT_CONF_PREFIX',
             'FIT_DESC',
             'FIT_HASH_ALG',
@@ -542,9 +544,52 @@ class KernelFitImageBase(FitImageTestCase):
         else:
             not_images.append('ramdisk-1')
 
-        # configuration nodes (one per DTB and also one per symlink)
+        # configuration nodes (one per DTB, symlink, and mappings)
+        configurations = []
         if dtb_files:
-            configurations = [bb_vars['FIT_CONF_PREFIX'] + conf for conf in dtb_files + dtb_symlinks]
+            fit_conf_prefix = bb_vars['FIT_CONF_PREFIX']
+            fit_conf_mappings = bb_vars.get('FIT_CONF_MAPPINGS', '')
+
+            # Parse mappings to build configuration node names
+            dtb_confs = {}
+            dtb_extra_confs = []
+            if fit_conf_mappings:
+                for mapping in fit_conf_mappings.split():
+                    mapping_type, dtb_name, alt_name = mapping.split(':')
+                    if mapping_type == "dtb-conf":
+                        dtb_confs[dtb_name] = alt_name
+                    elif mapping_type == "dtb-extra-conf":
+                        dtb_extra_confs.append((dtb_name, alt_name))
+                    else:
+                        self.fail("Invalid FIT_CONF_MAPPINGS type: %s" % mapping_type)
+
+            # Generate configuration names based on DTBs and mappings
+            for dtb in dtb_files:
+                if dtb in dtb_confs:
+                    # DTB is renamed via dtb-conf
+                    configurations.append(fit_conf_prefix + dtb_confs[dtb])
+                else:
+                    # Default configuration name
+                    configurations.append(fit_conf_prefix + dtb)
+
+                # Add extra configurations for this DTB
+                for dtb_extra_name, dtb_extra_alias in dtb_extra_confs:
+                    if dtb == dtb_extra_name:
+                        configurations.append(fit_conf_prefix + dtb_extra_alias)
+
+            # Add symlink configurations with mapping support
+            for dtb_symlink in dtb_symlinks:
+                if dtb_symlink in dtb_confs:
+                    # Symlink is renamed via dtb-conf
+                    configurations.append(fit_conf_prefix + dtb_confs[dtb_symlink])
+                else:
+                    # Default configuration name for symlink
+                    configurations.append(fit_conf_prefix + dtb_symlink)
+
+                # Add extra configurations for this DTB symlink
+                for dtb_extra_name, dtb_extra_alias in dtb_extra_confs:
+                    if dtb_symlink == dtb_extra_name:
+                        configurations.append(fit_conf_prefix + dtb_extra_alias)
         else:
             configurations = [bb_vars['FIT_CONF_PREFIX'] + '1']
 
@@ -1069,6 +1114,7 @@ class FitImagePyTests(KernelFitImageBase):
             # image-fitimage.conf
             'FIT_ADDRESS_CELLS': "1",
             'FIT_CONF_DEFAULT_DTB': "",
+            'FIT_CONF_MAPPINGS': "",
             'FIT_CONF_PREFIX': "conf-",
             'FIT_DESC': "Kernel fitImage for a dummy distro",
             'FIT_GENERATE_KEYS': "0",
@@ -1128,10 +1174,16 @@ class FitImagePyTests(KernelFitImageBase):
             bb_vars.get('UBOOT_MKIMAGE_KERNEL_TYPE'), bb_vars.get("UBOOT_ENTRYSYMBOL")
         )
 
-        dtb_files, _ = FitImageTestCase._get_dtb_files(bb_vars)
+        dtb_files, dtb_symlinks = FitImageTestCase._get_dtb_files(bb_vars)
         for dtb in dtb_files:
             root_node.fitimage_emit_section_dtb(dtb, os.path.join("a-dir", dtb),
                 bb_vars.get("UBOOT_DTB_LOADADDRESS"), bb_vars.get("UBOOT_DTBO_LOADADDRESS"))
+
+        for dtb_symlink in dtb_symlinks:
+            # For test purposes, assume each symlink points to a DTB with the same basename minus "-alias"
+            # In this case, "am335x-bonegreen-ext-alias.dtb" -> "am335x-bonegreen-ext.dtb"
+            dtb_target = dtb_symlink.replace("-alias", "")
+            root_node.fitimage_emit_section_dtb_alias(dtb_symlink, os.path.join("a-dir", dtb_target))
 
         if bb_vars.get('FIT_UBOOT_ENV'):
             root_node.fitimage_emit_section_boot_script(
@@ -1145,7 +1197,7 @@ class FitImagePyTests(KernelFitImageBase):
                 "core-image-minimal-initramfs",
                 bb_vars.get("UBOOT_RD_LOADADDRESS"), bb_vars.get("UBOOT_RD_ENTRYPOINT"))
 
-        root_node.fitimage_emit_section_config(bb_vars['FIT_CONF_DEFAULT_DTB'])
+        root_node.fitimage_emit_section_config(bb_vars['FIT_CONF_DEFAULT_DTB'], bb_vars.get('FIT_CONF_MAPPINGS'))
         root_node.write_its_file(fitimage_its_path)
 
         self.assertExists(fitimage_its_path, "%s image tree source doesn't exist" % (fitimage_its_path))
@@ -1161,6 +1213,45 @@ class FitImagePyTests(KernelFitImageBase):
             'FIT_CONF_DEFAULT_DTB': "two.dtb"
         }
         self._test_fitimage_py(bb_vars_overrides)
+
+    def test_fitimage_py_conf_mappings(self):
+        """Test FIT_CONF_MAPPINGS functionality with dtb-conf and dtb-extra-conf"""
+        bb_vars_overrides = {
+            'KERNEL_DEVICETREE': "am335x-bonegreen.dtb am335x-boneblack.dtb beaglebone.dtb",
+            'FIT_CONF_MAPPINGS': "dtb-extra-conf:am335x-bonegreen.dtb:bonegreen.dtb dtb-conf:am335x-boneblack.dtb:bbblack",
+            'FIT_CONF_DEFAULT_DTB': "bbblack"
+        }
+        self._test_fitimage_py(bb_vars_overrides)
+
+    def test_fitimage_py_conf_mappings_with_alias(self):
+        """Test FIT_CONF_MAPPINGS with external DTB aliases (symlinks)"""
+        bb_vars_overrides = {
+            'PREFERRED_PROVIDER_virtual/dtb': "bbb-dtbs-as-ext",
+            'FIT_CONF_MAPPINGS': "dtb-conf:am335x-bonegreen-ext-alias.dtb:green-alias-renamed dtb-extra-conf:am335x-bonegreen-ext.dtb:green-extra",
+        }
+        self._test_fitimage_py(bb_vars_overrides)
+
+    def test_fitimage_py_conf_mappings_unused_error(self):
+        """Test that unused FIT_CONF_MAPPINGS cause a fatal error"""
+        bb_vars_overrides = {
+            'KERNEL_DEVICETREE': "am335x-bonegreen.dtb am335x-boneblack.dtb",
+            'FIT_CONF_MAPPINGS': "dtb-conf:nonexistent.dtb:renamed",
+        }
+
+        # This should raise an exception because the mapping references a non-existent DTB
+        with self.assertRaises(BBHandledException):
+            self._test_fitimage_py(bb_vars_overrides)
+
+    def test_fitimage_py_conf_extra_mappings_unused_error(self):
+        """Test that unused dtb-extra-conf mappings cause a fatal error"""
+        bb_vars_overrides = {
+            'KERNEL_DEVICETREE': "am335x-bonegreen.dtb",
+            'FIT_CONF_MAPPINGS': "dtb-extra-conf:nonexistent.dtb:extra-conf",
+        }
+
+        # This should raise an exception because the extra-conf mapping references a non-existent DTB
+        with self.assertRaises(BBHandledException):
+            self._test_fitimage_py(bb_vars_overrides)
 
 
 class UBootFitImageTests(FitImageTestCase):
