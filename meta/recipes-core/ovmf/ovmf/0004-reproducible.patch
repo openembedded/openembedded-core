@@ -1,7 +1,7 @@
-From 0d22e07cd9cc35ede04c01d3141068db744d7677 Mon Sep 17 00:00:00 2001
+From 8b218dffa0368fbc2bfb5d8051b358476266fcb4 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Mon, 14 Jun 2021 19:57:30 +0200
-Subject: [PATCH] reproducible
+Subject: [PATCH 4/5] reproducible
 
 This patch fixes various things which make the build more reproducible. Some changes
 here only change intermediate artefacts but that means when you have two build trees
@@ -35,7 +35,7 @@ Signed-off-by: Alexander Kanavin <alex.kanavin@gmail.com>
  4 files changed, 24 insertions(+), 16 deletions(-)
 
 diff --git a/BaseTools/Source/C/GenFw/Elf64Convert.c b/BaseTools/Source/C/GenFw/Elf64Convert.c
-index 18594122ea..92b5f13cf6 100644
+index 83f1b285c2..e2f582f8fb 100644
 --- a/BaseTools/Source/C/GenFw/Elf64Convert.c
 +++ b/BaseTools/Source/C/GenFw/Elf64Convert.c
 @@ -15,6 +15,8 @@ SPDX-License-Identifier: BSD-2-Clause-Patent
@@ -47,7 +47,7 @@ index 18594122ea..92b5f13cf6 100644
  #endif
  #include <assert.h>
  #include <stdio.h>
-@@ -990,7 +992,7 @@ ScanSections64 (
+@@ -995,7 +997,7 @@ ScanSections64 (
    }
    mCoffOffset = mDebugOffset + sizeof(EFI_IMAGE_DEBUG_DIRECTORY_ENTRY) +
                  sizeof(EFI_IMAGE_DEBUG_CODEVIEW_NB10_ENTRY) +
@@ -56,7 +56,7 @@ index 18594122ea..92b5f13cf6 100644
  
    //
    // Add more space in the .debug data region for the DllCharacteristicsEx
-@@ -2322,7 +2324,7 @@ WriteDebug64 (
+@@ -2329,7 +2331,7 @@ WriteDebug64 (
    EFI_IMAGE_DEBUG_CODEVIEW_NB10_ENTRY         *Nb10;
    EFI_IMAGE_DEBUG_EX_DLLCHARACTERISTICS_ENTRY *DllEntry;
  
@@ -65,7 +65,7 @@ index 18594122ea..92b5f13cf6 100644
  
    NtHdr = (EFI_IMAGE_OPTIONAL_HEADER_UNION *)(mCoffFile + mNtHdrOffset);
    DataDir = &NtHdr->Pe32Plus.OptionalHeader.DataDirectory[EFI_IMAGE_DIRECTORY_ENTRY_DEBUG];
-@@ -2355,7 +2357,7 @@ WriteDebug64 (
+@@ -2362,7 +2364,7 @@ WriteDebug64 (
  
    Nb10 = (EFI_IMAGE_DEBUG_CODEVIEW_NB10_ENTRY*)(Dir + 1);
    Nb10->Signature = CODEVIEW_SIGNATURE_NB10;
@@ -153,7 +153,7 @@ index e5f282c4ac..27a34ef7c6 100755
                  if T.GenFileListMacro and T.FileListMacro not in self.FileListMacros:
                      self.FileListMacros[T.FileListMacro] = []
 diff --git a/BaseTools/Source/Python/AutoGen/ModuleAutoGen.py b/BaseTools/Source/Python/AutoGen/ModuleAutoGen.py
-index aa0b71632e..57c9cad117 100755
+index 764c51789b..40aadbcfbc 100755
 --- a/BaseTools/Source/Python/AutoGen/ModuleAutoGen.py
 +++ b/BaseTools/Source/Python/AutoGen/ModuleAutoGen.py
 @@ -1429,6 +1429,9 @@ class ModuleAutoGen(AutoGen):
@@ -175,3 +175,6 @@ index aa0b71632e..57c9cad117 100755
  
          # Ignore generating makefile when it is a binary module
          if self.IsBinaryModule:
+-- 
+2.47.3
+

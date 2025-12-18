@@ -1,7 +1,7 @@
-From 7dcf5ed06b5a256436521f892d2579421c163902 Mon Sep 17 00:00:00 2001
+From 7e6be0f4068a2158af3c97e873edb33fa4d5c6b8 Mon Sep 17 00:00:00 2001
 From: Gerd Hoffmann <kraxel@redhat.com>
 Date: Mon, 3 Nov 2025 09:56:52 +0100
-Subject: [PATCH] UefiCpuPkg/CpuExceptionHandlerLib: fix push instructions
+Subject: [PATCH 5/5] UefiCpuPkg/CpuExceptionHandlerLib: fix push instructions
 
 Nasm 3.0 complains about 'dword' being invalid.  The comment talks about
 a '8-byte value' so 'qword' should be correct here.
@@ -41,3 +41,6 @@ index 3d64ac9080..671ed98f85 100644
  VectorNum:
      push    rax
  %ifdef NO_ABSOLUTE_RELOCS_IN_TEXT
+-- 
+2.47.3
+
