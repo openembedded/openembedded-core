@@ -636,7 +636,22 @@ def create_spdx(d):
             set_var_field(
                 "HOMEPAGE", spdx_package, "software_homePage", package=package
             )
-            set_var_field("SUMMARY", spdx_package, "summary", package=package)
+            
+            # Add summary with fallback to DESCRIPTION
+            summary = None
+            if package:
+                summary = d.getVar("SUMMARY:%s" % package)
+            if not summary:
+                summary = d.getVar("SUMMARY")
+            if not summary:
+                # Fallback to DESCRIPTION if SUMMARY not available
+                summary = d.getVar("DESCRIPTION")
+            if not summary:
+                # Last resort: generate from package name
+                summary = f"Package {package or d.getVar('PN')}"
+            if summary:
+                spdx_package.summary = summary
+            
             set_var_field("DESCRIPTION", spdx_package, "description", package=package)
 
             if d.getVar("SPDX_PACKAGE_URL:%s" % package) or d.getVar("SPDX_PACKAGE_URL"):
