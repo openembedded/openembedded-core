@@ -57,7 +57,9 @@ do_configure:prepend() {
 
 # patch out build host paths for reproducibility
 do_compile:prepend:class-target() {
-    sed -i -e "s,${WORKDIR},,g" ${B}/config.report
+    sed -i -e "s,${WORKDIR},,g" -e "s,${HOSTTOOLS_DIR}/,,g" \
+        ${B}/config.report \
+        ${B}/src/lib/process/cfgrpt/config_report.cc
 }
 
 do_install:append() {
