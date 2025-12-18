@@ -32,13 +32,13 @@ do_compile_ptest() {
 do_install_ptest() {
     install -d ${D}${PTEST_PATH}/tests
     for file in $(find ${S}/tests/* -executable -type f); do
-        install -m 744 $file ${D}/${PTEST_PATH}/tests
-    done
-    for file in $(find ${B}/tests/* -executable -type f); do
-        install -m 744 $file ${D}/${PTEST_PATH}/tests
+        install $file ${D}/${PTEST_PATH}/tests
     done
     for file in $(find ${S}/tests/*.tests -type f); do
-        install -m 744 $file ${D}/${PTEST_PATH}/tests
+        install $file ${D}/${PTEST_PATH}/tests
+    done
+    for file in $(find ${B}/tests/* -executable -type f); do
+        ${B}/libtool --mode=install install $file ${D}/${PTEST_PATH}/tests
     done
         for file in $(find ${S}/tests/*.pfc -type f); do
         install -m 644 $file ${D}/${PTEST_PATH}/tests
@@ -47,14 +47,10 @@ do_install_ptest() {
 
     install -d ${D}${PTEST_PATH}/tools
     for file in $(find ${S}/tools/* -executable -type f); do
-        install -m 744 $file ${D}/${PTEST_PATH}/tools
+        install $file ${D}/${PTEST_PATH}/tools
     done
     for file in $(find ${B}/tools/* -executable -type f); do
-        install -m 744 $file ${D}/${PTEST_PATH}/tools
-    done
-    # Overwrite libtool wrappers with real executables
-    for file in $(find ${B}/tools/.libs/* -executable -type f); do
-        install -m 744 $file ${D}/${PTEST_PATH}/tools
+        ${B}/libtool --mode=install install $file ${D}/${PTEST_PATH}/tools
     done
 
     # fix python shebang
