@@ -36,6 +36,19 @@ SPDX_LICENSES ??= "${COREBASE}/meta/files/spdx-licenses.json"
 
 SPDX_CUSTOM_ANNOTATION_VARS ??= ""
 
+SPDX_CONCLUDED_LICENSE ??= ""
+SPDX_CONCLUDED_LICENSE[doc] = "The license concluded by manual or external \
+    license analysis. This should only be set when license analysis (manual review \
+    or external scanning tools) identifies differences from the declared LICENSE. \
+    When unset or empty, the concluded license defaults to the declared license, \
+    indicating no separate analysis was performed. When differences are found, the \
+    preferred approach is to correct the LICENSE field in the recipe and contribute \
+    the fix upstream to OpenEmbedded. Use this variable locally only when upstream \
+    contribution is not immediately possible or when the license conclusion is \
+    environment-specific. This allows tracking license analysis results in SBOM \
+    while maintaining recipe LICENSE field for build compatibility. \
+    Example: SPDX_CONCLUDED_LICENSE = 'MIT & Apache-2.0'"
+
 SPDX_MULTILIB_SSTATE_ARCHS ??= "${SSTATE_ARCHS}"
 
 python () {

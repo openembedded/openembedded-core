@@ -712,6 +712,27 @@ def create_spdx(d):
                 oe.spdx30.RelationshipType.hasDeclaredLicense,
                 [oe.sbom30.get_element_link_id(package_spdx_license)],
             )
+            
+            # Add concluded license relationship
+            # Use SPDX_CONCLUDED_LICENSE if set, otherwise default to declared license
+            concluded_license_str = d.getVar("SPDX_CONCLUDED_LICENSE")
+            if concluded_license_str:
+                # Use explicitly set concluded license
+                if concluded_license_str != package_license and concluded_license_str != d.getVar("LICENSE"):
+                    concluded_spdx_license = add_license_expression(
+                        d, build_objset, concluded_license_str, license_data
+                    )
+                else:
+                    concluded_spdx_license = package_spdx_license
+            else:
+                # Default: concluded = declared (no analysis performed)
+                concluded_spdx_license = package_spdx_license
+            
+            pkg_objset.new_relationship(
+                [spdx_package],
+                oe.spdx30.RelationshipType.hasConcludedLicense,
+                [oe.sbom30.get_element_link_id(concluded_spdx_license)],
+            )
 
             # NOTE: CVE Elements live in the recipe collection
             all_cves = set()
