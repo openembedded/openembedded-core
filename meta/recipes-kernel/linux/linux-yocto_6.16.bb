@@ -22,14 +22,14 @@ SRCREV_machine:qemuarm ?= "cdb5121dcb8fbde2d7616011e8e84623914d17a4"
 SRCREV_machine:qemuarm64 ?= "42ddd61a7bcedefc5eaedb89e91dcec7061e78ce"
 SRCREV_machine:qemuloongarch64 ?= "42ddd61a7bcedefc5eaedb89e91dcec7061e78ce"
 SRCREV_machine:qemumips ?= "62ea92a539f58803a222be98b81118403074206e"
-SRCREV_machine:qemuppc ?= "42ddd61a7bcedefc5eaedb89e91dcec7061e78ce"
+SRCREV_machine:qemuppc ?= "c80bee672268c633df8e4e37bfe6b0eda2a32f8d"
 SRCREV_machine:qemuriscv64 ?= "42ddd61a7bcedefc5eaedb89e91dcec7061e78ce"
 SRCREV_machine:qemuriscv32 ?= "42ddd61a7bcedefc5eaedb89e91dcec7061e78ce"
 SRCREV_machine:qemux86 ?= "42ddd61a7bcedefc5eaedb89e91dcec7061e78ce"
 SRCREV_machine:qemux86-64 ?= "42ddd61a7bcedefc5eaedb89e91dcec7061e78ce"
 SRCREV_machine:qemumips64 ?= "9fb4ff0187c85426f21fd40d4c61b742800f65c4"
 SRCREV_machine ?= "42ddd61a7bcedefc5eaedb89e91dcec7061e78ce"
-SRCREV_meta ?= "9e0a3e81b40db2b35e060ef001b3902a6a0996ac"
+SRCREV_meta ?= "12553099281a0d3ffbcf5860aedaa1062c8ffc78"
 
 # set your preferred provider of linux-yocto to 'linux-yocto-upstream', and you'll
 # get the <version>/base branch, which is pure upstream -stable, and the same
