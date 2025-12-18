@@ -58,8 +58,7 @@ do_install_ptest() {
     sed -i -e 's@^#!/usr/bin/env python$@#!/usr/bin/env python3@' ${D}/${PTEST_PATH}/tests/*.py
 }
 
-FILES:${PN} = "${bindir} ${libdir}/${BPN}.so* ${PYTHON_SITEPACKAGES_DIR}/"
-FILES:${PN}-dbg += "${libdir}/${PN}/tests/.debug/* ${libdir}/${PN}/tools/.debug"
+FILES:${PN} += "${PYTHON_SITEPACKAGES_DIR}/"
 
 RDEPENDS:${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'python', 'python3', '', d)}"
 RDEPENDS:${PN}-ptest = "coreutils bash"
