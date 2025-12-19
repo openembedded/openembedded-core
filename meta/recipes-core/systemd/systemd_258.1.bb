@@ -408,6 +408,7 @@ PACKAGE_BEFORE_PN += "\
     ${PN}-networkd \
     ${PN}-rpm-macros \
     ${PN}-udev-rules \
+    ${PN}-ukify \
     ${PN}-vconsole-setup \
     ${PN}-zsh-completion \
     libsystemd-shared \
@@ -629,6 +630,24 @@ FILES:${PN}-udev-rules = "\
                         ${nonarch_libdir}/udev/rules.d/73-seat-late.rules \
                         ${nonarch_libdir}/udev/rules.d/99-systemd.rules \
 "
+
+SUMMARY:${PN}-ukify = "Create and inspect Unified Kernel Images (UKIs)"
+DESCRIPTION:${PN}-ukify = "ukify is a tool whose primary purpose is to combine components (usually a kernel, an initrd, and a UEFI boot stub) to create a Unified Kernel Image (UKI) — a PE binary that can be executed by the firmware to start the embedded linux kernel."
+FILES:${PN}-ukify = "${bindir}/ukify"
+RDEPENDS:${PN}-ukify = " \
+                        python3-compression \
+                        python3-core \
+                        python3-crypt \
+                        python3-datetime \
+                        python3-io \
+                        python3-json \
+                        python3-netclient \
+                        python3-pefile \
+                        python3-pprint \
+                        python3-pydoc \
+                        python3-pyzstd \
+                        python3-shell \
+                       "
 
 CONFFILES:${PN} = "${sysconfdir}/systemd/coredump.conf \
 	${sysconfdir}/systemd/journald.conf \
