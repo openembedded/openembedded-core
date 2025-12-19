@@ -9,9 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=17c8e32f0f72580cc2906b409d46b5ac"
 
 SRC_URI = " \
     git://github.com/hyperrealm/libconfig.git;protocol=https;branch=master;tag=v${PV} \
-    file://0001-Add-missing-dependency-for-scanner.h.patch \
 "
-SRCREV = "47ec93c588f534d20f6ee8704d2a2cec339db7b7"
+SRCREV = "a42cb47c1526a4f2ed025fcbb2289863375bc898"
 
 # needed when we modify grammar.y with patches
 DEPENDS += "bison-native flex-native"
