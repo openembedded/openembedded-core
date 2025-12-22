@@ -1843,11 +1843,12 @@ class DevtoolDeployTargetTests(DevtoolBase):
                 result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, testcommand))
                 # Check if it deployed all of the files with the right ownership/perms
                 # First look on the host - need to do this under pseudo to get the correct ownership/perms
-                bb_vars = get_bb_vars(['D', 'FAKEROOTENV', 'FAKEROOTCMD'], testrecipe)
+                bb_vars = get_bb_vars(['D', 'FAKEROOTENV', 'FAKEROOTCMD', 'PATH'], testrecipe)
                 installdir = bb_vars['D']
                 fakerootenv = bb_vars['FAKEROOTENV']
                 fakerootcmd = bb_vars['FAKEROOTCMD']
-                result = runCmd('%s %s find . -type f -exec ls -l {} \\;' % (fakerootenv, fakerootcmd), cwd=installdir)
+                path = bb_vars['PATH']
+                result = runCmd('PATH="%s" %s %s find . -type f -exec ls -l {} \\;' % (path, fakerootenv, fakerootcmd), cwd=installdir)
                 filelist1 = self._process_ls_output(result.output)
 
                 # Now look on the target
