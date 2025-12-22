@@ -12,10 +12,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=bab4ac7dc1c10bc0fb037dc76c46ef8a"
 
 DEPENDS = "libevdev udev mtdev"
 
-SRC_URI = "git://gitlab.freedesktop.org/libinput/libinput.git;protocol=https;branch=1.29-branch;tag=${PV} \
+SRC_URI = "git://gitlab.freedesktop.org/libinput/libinput.git;protocol=https;branch=1.30-branch;tag=${PV} \
            file://run-ptest \
            "
-SRCREV = "917783150a5bab7d55eedc5714f1b49b192426ac"
+SRCREV = "baf1ceca88b3a668dd263f50bfaddfd205306028"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 
