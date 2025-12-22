@@ -422,8 +422,6 @@ FILES:${PN}-python = " \
                        "
 FILES:${PN}-perl = "${libexecdir}/perf-core/scripts/perl"
 
-DEBUG_OPTIMIZATION:append = " -Wno-error=maybe-uninitialized"
-
 PACKAGESPLITFUNCS =+ "perf_fix_sources"
 
 perf_fix_sources () {
