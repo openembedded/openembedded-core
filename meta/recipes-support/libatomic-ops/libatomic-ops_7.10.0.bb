@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/libatomic_ops-${PV}.tar.gz"
 GITHUB_BASE_URI = "https://github.com/bdwgc/libatomic_ops/releases"
 
-SRC_URI[sha256sum] = "2356e002e80ef695875e971d6a4fd8c61ca5c6fa4fd1bf31cce54a269c8bfcd5"
+SRC_URI[sha256sum] = "0db3ebff755db170f65e74a64ec4511812e9ee3185c232eeffeacd274190dfb0"
 
 CVE_PRODUCT = "libatomic_ops"
 
