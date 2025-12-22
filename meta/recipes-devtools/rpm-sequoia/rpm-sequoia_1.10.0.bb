@@ -14,10 +14,9 @@ inherit pkgconfig rust cargo cargo-update-recipe-crates ptest-cargo
 
 SRC_URI = "git://github.com/rpm-software-management/rpm-sequoia.git;protocol=https;branch=main;tag=v${PV} \
            file://0001-Use-optional-env-vars-to-force-runtime-paths-in-test.patch \
-           file://0001-tests-build-lib-for-symbols-tests-conditionally.patch \
            file://run-ptest \
 "
-SRCREV = "cd090b02119565c6d171fa9a892790c966cf10ef"
+SRCREV = "eb3cd2bfaf42a8806cba5bd060c7458654625c94"
 
 require ${BPN}-crates.inc
 
