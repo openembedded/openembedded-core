@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 CVE_PRODUCT += "at-spi2-atk"
 
-SRC_URI[archive.sha256sum] = "dbe35b951499e1d6f1fb552c2e0a09cea7cba2adf6c2eba0b2c85b6c094a3a02"
+SRC_URI[archive.sha256sum] = "a2823b962ed16cdd5cb1fc5365029fd218394d852acd4098b321854bd6692f6e"
 
 DEPENDS = " \
 	dbus \
@@ -23,7 +23,7 @@ DEPENDS = " \
 PROVIDES += "atk at-spi2-atk"
 RPROVIDES:${PN} += "atk at-spi2-atk"
 
-inherit gnomebase gi-docgen gettext systemd upstream-version-is-even gobject-introspection
+inherit gnomebase gi-docgen gettext systemd upstream-version-is-even gobject-introspection python3targetconfig
 
 EXTRA_OEMESON = " -Dsystemd_user_dir=${systemd_user_unitdir} \
                   -Ddbus_daemon=${bindir}/dbus-daemon"
@@ -42,5 +42,6 @@ FILES:${PN} += "${libdir}/gnome-settings-daemon-3.0/gtk-modules/at-spi2-atk.desk
                 ${datadir}/dbus-1/accessibility-services/*.service \
                 ${datadir}/defaults/at-spi2 \
                 ${systemd_user_unitdir}/at-spi-dbus-bus.service \
+                ${PYTHON_SITEPACKAGES_DIR} \
                 "
 BBCLASSEXTEND = "native nativesdk"
