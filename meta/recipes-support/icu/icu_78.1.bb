@@ -5,7 +5,7 @@ internationalization (I18N) and globalization (G11N), giving applications the \
 same results on all platforms."
 HOMEPAGE = "https://icu.unicode.org/"
 
-LICENSE = "ICU"
+LICENSE = "ICU & MIT"
 DEPENDS = "icu-native"
 
 CVE_PRODUCT = "international_components_for_unicode"
@@ -25,7 +25,7 @@ EXTRA_OECONF:class-native = "--disable-icu-config ac_cv_path_install='install -c
 EXTRA_OECONF:class-nativesdk = "--with-cross-build=${STAGING_ICU_DIR_NATIVE} --disable-icu-config ac_cv_path_install='install -c'"
 EXTRA_OECONF:append:class-target = " --enable-automake-test-format"
 EXTRA_OECONF:append:class-target = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'be', ' --with-data-packaging=archive', '', d)}"
-TARGET_CXXFLAGS:append = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'be', ' -DICU_DATA_DIR=\\""${datadir}/${BPN}/${@icu_install_folder(d)}\\""', '', d)}"
+TARGET_CXXFLAGS:append = "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'be', ' -DICU_DATA_DIR=\\""${datadir}/${BPN}/${PV}\\""', '', d)}"
 
 ASNEEDED = ""
 
@@ -61,16 +61,16 @@ remove_build_host_references() {
 	    -e 's,--sysroot=${STAGING_DIR_TARGET},,g' \
 	    -e 's|${DEBUG_PREFIX_MAP}||g' \
 	    -e 's:${HOSTTOOLS_DIR}/::g' \
-	    ${D}/${libdir}/${BPN}/${@icu_install_folder(d)}/Makefile.inc \
-	    ${D}/${libdir}/${BPN}/${@icu_install_folder(d)}/pkgdata.inc
+	    ${D}/${libdir}/${BPN}/${PV}/Makefile.inc \
+	    ${D}/${libdir}/${BPN}/${PV}/pkgdata.inc
 }
 
 do_install:append:class-target() {
     # The native pkgdata can not generate the correct data file.
     # Use icupkg to re-generate it.
     if [ "${SITEINFO_ENDIANNESS}" = "be" ] ; then
-        rm -f ${D}/${datadir}/${BPN}/${@icu_install_folder(d)}/icudt${ICU_MAJOR_VER}b.dat
-        icupkg -tb ${S}/data/in/icudt${ICU_MAJOR_VER}l.dat ${D}/${datadir}/${BPN}/${@icu_install_folder(d)}/icudt${ICU_MAJOR_VER}b.dat
+        rm -f ${D}/${datadir}/${BPN}/${PV}/icudt${ICU_MAJOR_VER}b.dat
+        icupkg -tb ${S}/data/in/icudt${ICU_MAJOR_VER}l.dat ${D}/${datadir}/${BPN}/${PV}/icudt${ICU_MAJOR_VER}b.dat
     fi
 
 	remove_build_host_references
@@ -92,28 +92,16 @@ FILES:libicuio = "${libdir}/libicuio.so.*"
 
 BBCLASSEXTEND = "native nativesdk"
 
-LIC_FILES_CHKSUM = "file://../LICENSE;md5=cf57d9459a2c5f88ecd83c75207cc5ff"
+LIC_FILES_CHKSUM = "file://../LICENSE;md5=e531a388be7c1df9a0fb7b4010c9c1d7"
 
-def icu_download_version(d):
-    pvsplit = d.getVar('PV').split('-')
-    return pvsplit[0] + "_" + pvsplit[1]
-
-def icu_download_folder(d):
-    pvsplit = d.getVar('PV').split('-')
-    return pvsplit[0] + "-" + pvsplit[1]
-
-def icu_install_folder(d):
-    pvsplit = d.getVar('PV').split('-')
-    return pvsplit[0] + "." + pvsplit[1]
-
-ICU_PV = "${@icu_download_version(d)}"
-ICU_FOLDER = "${@icu_download_folder(d)}"
+ICU_PV = "${PV}"
+ICU_FOLDER = "${PV}"
 
 # http://errors.yoctoproject.org/Errors/Details/20486/
 ARM_INSTRUCTION_SET:armv4 = "arm"
 ARM_INSTRUCTION_SET:armv5 = "arm"
 
-BASE_SRC_URI = "${GITHUB_BASE_URI}/download/release-${ICU_FOLDER}/icu4c-${ICU_PV}-src.tgz"
+BASE_SRC_URI = "${GITHUB_BASE_URI}/download/release-${ICU_FOLDER}/icu4c-${ICU_PV}-sources.tgz"
 DATA_SRC_URI = "${GITHUB_BASE_URI}/download/release-${ICU_FOLDER}/icu4c-${ICU_PV}-data.zip"
 SRC_URI = "${BASE_SRC_URI};name=code \
            ${DATA_SRC_URI};name=data \
@@ -128,8 +116,8 @@ SRC_URI = "${BASE_SRC_URI};name=code \
 SRC_URI:append:class-target = "\
            file://0001-Disable-LDFLAGSICUDT-for-Linux.patch \
           "
-SRC_URI[code.sha256sum] = "588e431f77327c39031ffbb8843c0e3bc122c211374485fa87dc5f3faff24061"
-SRC_URI[data.sha256sum] = "1e08bfafa442260ccabf9a872d4eab12de813d42b90769df056bab032b37e1d3"
+SRC_URI[code.sha256sum] = "6217f58ca39b23127605cfc6c7e0d3475fe4b0d63157011383d716cb41617886"
+SRC_URI[data.sha256sum] = "e7b652244f27194e0ea46a0d21cfc714ee8a818e1fd82d51a93bc91516fdcf65"
 
 UPSTREAM_CHECK_REGEX = "releases/tag/release-(?P<pver>(?!.+rc).+)"
 GITHUB_BASE_URI = "https://github.com/unicode-org/icu/releases"
