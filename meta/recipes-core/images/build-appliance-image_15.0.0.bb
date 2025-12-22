@@ -22,7 +22,7 @@ APPEND += "rootfstype=ext4 quiet"
 DEPENDS = "zip-native python3-pip-native"
 IMAGE_FSTYPES = "wic.vmdk wic.vhd wic.vhdx"
 
-inherit core-image setuptools3 features_check
+inherit core-image features_check
 
 REQUIRED_DISTRO_FEATURES += "xattr"
 
