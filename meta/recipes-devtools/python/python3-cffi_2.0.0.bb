@@ -1,13 +1,12 @@
 SUMMARY = "Foreign Function Interface for Python calling C code"
 HOMEPAGE = "http://cffi.readthedocs.org/"
-LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=5677e2fdbf7cdda61d6dd2b57df547bf"
+LICENSE = "MIT-0"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=c0158ab9b75875f3bb7fea081d388818"
 DEPENDS += "libffi python3-pycparser"
 
-SRC_URI[sha256sum] = "1c39c6016c32bc48dd54561950ebd6836e1670f2ae46128f67cf49e789c52824"
+SRC_URI[sha256sum] = "44d1b5909021139fe36001ae048dbdde8214afa20200eda0f64c068cac5d5529"
 
-SRC_URI += "file://run-ptest \
-            file://0001-Cast-offset-to-size_t-to-avoid-c-11-narrowing-warnin.patch"
+SRC_URI += "file://run-ptest"
 
 inherit pypi python_setuptools_build_meta ptest pkgconfig
 
