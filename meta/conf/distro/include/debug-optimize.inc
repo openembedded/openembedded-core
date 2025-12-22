@@ -43,3 +43,7 @@ CXXFLAGS:append:pn-vulkan-validation-layers = " -DXXH_NO_INLINE_HINTS=1"
 
 # For meson.bbclass
 MESON_BUILDTYPE:class-target ?= "debug"
+
+# For cargo.bbclass
+CARGO_BUILD_MODE:class-target ?= ""
+CARGO_BUILD_DIR:class-target ?= "debug"
