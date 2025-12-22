@@ -8,12 +8,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
 
 DEPENDS = "nasm-native"
 
-SRC_URI = "git://code.videolan.org/videolan/x264.git;branch=stable;protocol=https \
-    file://32c3b801191522961102d4bea292cdb61068d0dd.patch \
+SRC_URI = "git://code.videolan.org/videolan/x264.git;branch=master;protocol=https \
            "
 UPSTREAM_CHECK_COMMITS = "1"
 
-SRCREV = "31e19f92f00c7003fa115047ce50978bc98c3a0d"
+SRCREV = "0480cb05fa188d37ae87e8f4fd8f1aea3711f7ee"
 
 PV = "r3039+git"
 
