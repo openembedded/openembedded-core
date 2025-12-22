@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7006e973486c4700556f6d58cba0ab6c"
 
-SRC_URI[sha256sum] = "fed46e24f26a788e2ab8e445f7077f00edcf95abb73bcef4b86cefa8b62dd174"
+SRC_URI[sha256sum] = "663083443908b1830e567350d72e74d9948b310f827966358d76eebdc92bf592"
 
 inherit pypi python_poetry_core
 
