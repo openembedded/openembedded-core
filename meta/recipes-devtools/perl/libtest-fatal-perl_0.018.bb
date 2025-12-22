@@ -5,13 +5,13 @@ exception-throwing code with about the same amount of typing."
 HOMEPAGE = "https://github.com/rjbs/Test-Fatal"
 BUGTRACKER = "https://github.com/rjbs/Test-Fatal/issues"
 SECTION = "libs"
-LICENSE = "Artistic-1.0 | GPL-1.0-or-later"
+LICENSE = "Artistic-1.0-Perl | GPL-1.0-or-later"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=b5c851290cab1dda12fcfb0e9ec43639"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=f7fc7d4b26ddae0843b09ba56109e65a"
 
 SRC_URI = "${CPAN_MIRROR}/authors/id/R/RJ/RJBS/Test-Fatal-${PV}.tar.gz"
 
-SRC_URI[sha256sum] = "37dfffdafb84b762efe96b02fb2aa41f37026c73e6b83590db76229697f3c4a6"
+SRC_URI[sha256sum] = "b8d2cccf9ee467271bc478f9cf7eba49545452be9302ae359bc538b8bf687cd6"
 
 S = "${UNPACKDIR}/Test-Fatal-${PV}"
 
