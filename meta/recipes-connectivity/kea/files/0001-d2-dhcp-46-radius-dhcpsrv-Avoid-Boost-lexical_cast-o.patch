@@ -1,4 +1,4 @@
-From e3a0d181a279334c7d7a10c5b09fd1610384101c Mon Sep 17 00:00:00 2001
+From 4a507d1822cbfb561657ed9a8ccb0dfeced30cac Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 3 Sep 2025 12:52:51 -0700
 Subject: [PATCH] d2/dhcp[46]/radius/dhcpsrv: Avoid Boost lexical_cast on enums
@@ -295,10 +295,10 @@ index 04fe4df..cefdda8 100644
                        .arg(getCurrentServer()->toText());
  
 diff --git a/src/bin/dhcp4/dhcp4_srv.cc b/src/bin/dhcp4/dhcp4_srv.cc
-index 0701ed4..471e94c 100644
+index a6be662..1de57cd 100644
 --- a/src/bin/dhcp4/dhcp4_srv.cc
 +++ b/src/bin/dhcp4/dhcp4_srv.cc
-@@ -5101,7 +5101,7 @@ Dhcpv4Srv::d2ClientErrorHandler(const
+@@ -5116,7 +5116,7 @@ Dhcpv4Srv::d2ClientErrorHandler(const
                                  dhcp_ddns::NameChangeSender::Result result,
                                  dhcp_ddns::NameChangeRequestPtr& ncr) {
      LOG_ERROR(ddns4_logger, DHCP4_DDNS_REQUEST_SEND_FAILED).
@@ -308,10 +308,10 @@ index 0701ed4..471e94c 100644
      /// @todo We may wish to revisit this, but for now we will simply turn
      /// them off.
 diff --git a/src/bin/dhcp6/dhcp6_srv.cc b/src/bin/dhcp6/dhcp6_srv.cc
-index 417960b..818046d 100644
+index f999c31..acf19d0 100644
 --- a/src/bin/dhcp6/dhcp6_srv.cc
 +++ b/src/bin/dhcp6/dhcp6_srv.cc
-@@ -5054,7 +5054,7 @@ Dhcpv6Srv::d2ClientErrorHandler(const
+@@ -5061,7 +5061,7 @@ Dhcpv6Srv::d2ClientErrorHandler(const
                                  dhcp_ddns::NameChangeSender::Result result,
                                  dhcp_ddns::NameChangeRequestPtr& ncr) {
      LOG_ERROR(ddns6_logger, DHCP6_DDNS_REQUEST_SEND_FAILED).

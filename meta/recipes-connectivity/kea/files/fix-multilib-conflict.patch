@@ -1,8 +1,7 @@
-From cdef313bd34c5abd897b80f25554b0c66737ed05 Mon Sep 17 00:00:00 2001
+From 00e2905dc622f98f608d253b1148a3d778131cad Mon Sep 17 00:00:00 2001
 From: Kai Kang <kai.kang@windriver.com>
 Date: Tue, 14 Oct 2025 01:37:35 +0000
-Subject: [PATCH] There are conflict of config files between
- kea and lib32-kea:
+Subject: [PATCH] There are conflict of config files between kea and lib32-kea:
 
 | Error: Transaction test error:
 |  file /etc/kea/kea-ctrl-agent.conf conflicts between attempted installs of
@@ -99,6 +98,3 @@ index c69a508..2bb488f 100644
      //   }
      // ],
  
--- 
-2.43.0
-

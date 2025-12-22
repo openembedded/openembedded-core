@@ -1,4 +1,4 @@
-From 5ec5e08edc059ed0c0d430dc8e02cd64bebc8d1c Mon Sep 17 00:00:00 2001
+From f7024a5e7153538072a57858e1b48bbb806167e7 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Thu, 28 Aug 2025 17:02:49 -0700
 Subject: [PATCH] meson: use a runtime-safe interpreter string
@@ -17,15 +17,18 @@ such as /usr/bin/env python3 (portable) or
 Upstream-Status: Submitted [https://gitlab.isc.org/isc-projects/kea/-/issues/4087]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- doc/sphinx/meson.build          | 8 +++++++-
- meson.build                     | 8 +++++++-
- src/bin/shell/tests/meson.build | 8 +++++++-
- src/lib/util/python/meson.build | 8 +++++++-
- 4 files changed, 28 insertions(+), 4 deletions(-)
+ doc/sphinx/meson.build          |  8 +++++++-
+ meson.build                     | 14 ++++++++++++--
+ src/bin/shell/meson.build       |  8 +++++++-
+ src/bin/shell/tests/meson.build |  8 +++++++-
+ src/lib/util/python/meson.build |  8 +++++++-
+ 5 files changed, 40 insertions(+), 6 deletions(-)
 
+diff --git a/doc/sphinx/meson.build b/doc/sphinx/meson.build
+index 74ba705..71f1c7b 100644
 --- a/doc/sphinx/meson.build
 +++ b/doc/sphinx/meson.build
-@@ -70,7 +70,13 @@ doc_conf.set('builddir', meson.current_b
+@@ -70,7 +70,13 @@ doc_conf.set('builddir', meson.current_build_dir())
  doc_conf.set('srcdir', meson.current_source_dir())
  doc_conf.set('sphinxbuilddir', sphinxbuilddir)
  doc_conf.set('abs_sphinxbuilddir', abs_sphinxbuilddir)
@@ -40,6 +43,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  doc_conf.set('TOP_SOURCE_DIR', TOP_SOURCE_DIR)
  if PDFLATEX.found()
      doc_conf.set('HAVE_PDFLATEX', 'yes')
+diff --git a/meson.build b/meson.build
+index d5723ba..3bb5185 100644
 --- a/meson.build
 +++ b/meson.build
 @@ -638,9 +638,13 @@ link_args = []
@@ -57,7 +62,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  
  # Add rpaths for NETCONF dependencies.
  if NETCONF_DEP.found()
-@@ -759,7 +763,13 @@ report_conf_data.set('CXX_ARGS', ' '.joi
+@@ -759,7 +763,13 @@ report_conf_data.set('CXX_ARGS', ' '.join(compile_args))
  report_conf_data.set('LD_ID', cpp.get_linker_id())
  link_args += get_option('cpp_link_args')
  report_conf_data.set('LD_ARGS', ' '.join(link_args))
@@ -72,6 +77,25 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  report_conf_data.set('PYTHON_VERSION', PYTHON.version())
  report_conf_data.set('PKGPYTHONDIR', PKGPYTHONDIR)
  result = cpp.run(
+diff --git a/src/bin/shell/meson.build b/src/bin/shell/meson.build
+index 273293d..846a280 100644
+--- a/src/bin/shell/meson.build
++++ b/src/bin/shell/meson.build
+@@ -1,5 +1,11 @@
+ kea_shell_conf_data = configuration_data()
+-kea_shell_conf_data.set('PYTHON', PYTHON.full_path())
++# During cross builds, avoid embedding the native Python path into target artifacts.
++# Use a runtime-safe interpreter path for the target.
++py_for_runtime = '/usr/bin/env python3'
++if not meson.is_cross_build()
++  py_for_runtime = PYTHON.full_path()
++endif
++kea_shell_conf_data.set('PYTHON', py_for_runtime)
+ kea_shell_conf_data.set('PACKAGE_VERSION', PROJECT_VERSION)
+ kea_shell_conf_data.set(
+     'EXTENDED_VERSION',
+diff --git a/src/bin/shell/tests/meson.build b/src/bin/shell/tests/meson.build
+index 18a7bc3..c5c07ad 100644
 --- a/src/bin/shell/tests/meson.build
 +++ b/src/bin/shell/tests/meson.build
 @@ -3,7 +3,13 @@ if not TESTS_OPT.enabled()
@@ -89,6 +113,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  shell_tests_conf_data.set('abs_top_builddir', TOP_BUILD_DIR)
  shell_tests_conf_data.set('abs_top_srcdir', TOP_SOURCE_DIR)
  shell_unittest = configure_file(
+diff --git a/src/lib/util/python/meson.build b/src/lib/util/python/meson.build
+index 36b4f6d..d80403a 100644
 --- a/src/lib/util/python/meson.build
 +++ b/src/lib/util/python/meson.build
 @@ -4,7 +4,13 @@ endif
@@ -106,18 +132,3 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  configure_file(
      input: 'gen_wiredata.py.in',
      output: 'gen_wiredata.py',
---- a/src/bin/shell/meson.build
-+++ b/src/bin/shell/meson.build
-@@ -1,5 +1,11 @@
- kea_shell_conf_data = configuration_data()
--kea_shell_conf_data.set('PYTHON', PYTHON.full_path())
-+# During cross builds, avoid embedding the native Python path into target artifacts.
-+# Use a runtime-safe interpreter path for the target.
-+py_for_runtime = '/usr/bin/env python3'
-+if not meson.is_cross_build()
-+  py_for_runtime = PYTHON.full_path()
-+endif
-+kea_shell_conf_data.set('PYTHON', py_for_runtime)
- kea_shell_conf_data.set('PACKAGE_VERSION', PROJECT_VERSION)
- kea_shell_conf_data.set(
-     'EXTENDED_VERSION',
