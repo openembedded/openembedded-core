@@ -67,7 +67,7 @@
 #
 # Uncomment this to change the optimization to make debugging easer, at the
 # possible cost of performance.
-# DEBUG_BUILD = "1"
+# OE_FRAGMENTS += "core/yocto/debug-optimize"
 #
 # Uncomment this to disable the stripping of the installed binaries
 # INHIBIT_PACKAGE_STRIP = "1"
