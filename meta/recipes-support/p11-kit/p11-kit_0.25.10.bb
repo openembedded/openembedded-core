@@ -10,9 +10,9 @@ DEPENDS = "libtasn1 libtasn1-native libffi"
 
 DEPENDS:append = "${@' glib-2.0' if d.getVar('GTKDOC_ENABLED') == 'True' else ''}"
 
-SRC_URI = "gitsm://github.com/p11-glue/p11-kit;branch=master;protocol=https \
+SRC_URI = "gitsm://github.com/p11-glue/p11-kit;branch=master;protocol=https;tag=${PV} \
            "
-SRCREV = "0dd113361057e477f40ff4d8788f3e7e400af5f9"
+SRCREV = "90dba4ded391c6232a78ee14db0da76efda7b1c3"
 
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[manpages] = "-Dman=true,-Dman=false,libxslt-native"
@@ -25,6 +25,7 @@ FILES:${PN} += " \
     ${libdir}/p11-kit-proxy.so \
     ${libdir}/pkcs11/*.so \
     ${libdir}/pkcs11/*.la \
+    ${datadir} \
     ${systemd_user_unitdir}/*"
 
 # PN contains p11-kit-proxy.so, a symlink to a loadable module
