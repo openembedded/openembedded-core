@@ -41,7 +41,7 @@ CVE_PRODUCT = "gnome:gtk"
 
 GNOMEBN = "gtk"
 
-inherit gettext gnomebase gi-docgen update-alternatives gsettings features_check gobject-introspection
+inherit gettext gnomebase gi-docgen update-alternatives gsettings features_check gobject-introspection upstream-version-is-even
 
 # TBD: nativesdk
 # gobject-introspection.bbclass pins introspection off for nativesk. As long as
