@@ -1,7 +1,7 @@
-From be0a5f477ae2c73d80ade595f28783d85e1ef3e0 Mon Sep 17 00:00:00 2001
+From 9b262cda68d2b687f803a8030d3a1ad29a93a41e Mon Sep 17 00:00:00 2001
 From: Jan Kiszka <jan.kiszka@siemens.com>
 Date: Sun, 24 Aug 2025 09:18:33 +0200
-Subject: [PATCH 10/10] hw/sd/sdcard: Fix size check for backing block image
+Subject: [PATCH] hw/sd/sdcard: Fix size check for backing block image
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -28,10 +28,10 @@ Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
  1 file changed, 47 insertions(+), 20 deletions(-)
 
 diff --git a/hw/sd/sd.c b/hw/sd/sd.c
-index e541c57f8c3c..db86849b8512 100644
+index 8c290595f..58387440b 100644
 --- a/hw/sd/sd.c
 +++ b/hw/sd/sd.c
-@@ -2675,9 +2675,32 @@ static void sd_instance_finalize(Object *obj)
+@@ -2767,9 +2767,32 @@ static void sd_instance_finalize(Object *obj)
      timer_free(sd->ocr_power_timer);
  }
  
@@ -64,7 +64,7 @@ index e541c57f8c3c..db86849b8512 100644
      int ret;
  
      switch (sd->spec_version) {
-@@ -2690,32 +2713,36 @@ static void sd_realize(DeviceState *dev, Error **errp)
+@@ -2782,32 +2805,36 @@ static void sd_realize(DeviceState *dev, Error **errp)
      }
  
      if (sd->blk) {
@@ -121,6 +121,3 @@ index e541c57f8c3c..db86849b8512 100644
              return;
          }
  
--- 
-2.47.3
-
