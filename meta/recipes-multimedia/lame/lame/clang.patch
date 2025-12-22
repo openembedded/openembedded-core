@@ -9,7 +9,7 @@ and target hardware aligns, and leads to some amusing errors:
 	unknown target CPU 'neoverse-n1'
 	note: valid target CPU values are: i386, i486, ...
 
-Move the HAVE_CLANG block up into the FULL_OPTIMIZATION case, alongside
+Move the HAVE_CLANG block up into the OPTIMIZATION case, alongside
 HAVE_GCC.  This option is never enabled (as it's basically "use native")
 so resolves the build failure.
 

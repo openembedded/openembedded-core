@@ -21,7 +21,7 @@ GTKDOC_MESON_ENABLE_FLAG = 'enabled'
 GTKDOC_MESON_DISABLE_FLAG = 'disabled'
 
 # As per upstream CONFIG.md, it is recommended to always build with -Os.
-FULL_OPTIMIZATION = "-Os ${DEBUG_LEVELFLAG}"
+SELECTED_OPTIMIZATION ?= "-Os ${DEBUG_LEVELFLAG}"
 
 EXTRA_OEMESON = "-Dtests=disabled"
 
