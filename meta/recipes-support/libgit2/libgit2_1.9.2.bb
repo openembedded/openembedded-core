@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8eacfdc17c8f4d219e131a073973b97d"
 DEPENDS = "curl openssl zlib libssh2 libgcrypt libpcre2"
 
 SRC_URI = "git://github.com/libgit2/libgit2.git;branch=maint/v1.9;protocol=https;tag=v${PV}"
-SRCREV = "0060d9cf5666f015b1067129bd874c6cc4c9c7ac"
+SRCREV = "ca225744b992bf2bf24e9a2eb357ddef78179667"
 
 inherit cmake
 
