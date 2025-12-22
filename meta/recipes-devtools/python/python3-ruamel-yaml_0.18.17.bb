@@ -4,12 +4,13 @@ HOMEPAGE = "https://pypi.org/project/ruamel.yaml/"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=5cc5d45e8a30c81dade6ca1928caa515"
 
-PYPI_PACKAGE = "ruamel.yaml"
+PYPI_PACKAGE = "ruamel_yaml"
 UPSTREAM_CHECK_PYPI_PACKAGE = "${PYPI_PACKAGE}"
 
 inherit pypi python_setuptools_build_meta
 
-SRC_URI[sha256sum] = "dbfca74b018c4c3fba0b9cc9ee33e53c371194a9000e694995e620490fd40700"
+S = "${UNPACKDIR}/ruamel.yaml-${PV}"
+SRC_URI[sha256sum] = "9091cd6e2d93a3a4b157ddb8fabf348c3de7f1fb1381346d985b6b247dcd8d3c"
 
 RDEPENDS:${PN} += "\
     python3-shell \
