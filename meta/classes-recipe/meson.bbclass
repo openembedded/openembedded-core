@@ -25,8 +25,7 @@ MESON_TARGET ?= ""
 # Since 0.60.0 you can specify custom tags to install
 MESON_INSTALL_TAGS ?= ""
 
-MESON_BUILDTYPE ?= "${@oe.utils.vartrue('DEBUG_BUILD', 'debug', 'plain', d)}"
-MESON_BUILDTYPE[vardeps] += "DEBUG_BUILD"
+MESON_BUILDTYPE ??= "plain"
 
 MESONOPTS = " --buildtype ${MESON_BUILDTYPE} \
               --prefix ${prefix} \
