@@ -221,7 +221,7 @@ PACKAGECONFIG[video-codecs] = "-Dvideo-codecs=${VIDEO_CODECS}, -Dvideo-codecs=''
 PACKAGECONFIG[teflon] = "-Dteflon=true, -Dteflon=false"
 
 # llvmpipe is slow if compiled with -fomit-frame-pointer (e.g. -O2)
-FULL_OPTIMIZATION:append = " -fno-omit-frame-pointer"
+TARGET_CFLAGS += "${@bb.utils.contains('SELECTED_OPTIMIZATION', '-O2', '-fno-omit-frame-pointer', '', d)}"
 
 CFLAGS:append:armv5 = " -DMISSING_64BIT_ATOMICS"
 CFLAGS:append:armv6 = " -DMISSING_64BIT_ATOMICS"
