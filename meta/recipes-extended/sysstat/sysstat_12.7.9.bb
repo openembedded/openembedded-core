@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/sysstat/sysstat.git;protocol=https;branch=master;tag
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=a23a74b3f4caf9616230789d94217acb"
 
-SRCREV = "5841596edf7f5e53288cb56400e0c0c1da5f2415"
+SRCREV = "b8f987807e7c7ba5c1b2ca8b7b1e9d80e61bce6c"
 
 DEPENDS += "base-passwd"
 
