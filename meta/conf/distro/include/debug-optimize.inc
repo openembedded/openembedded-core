@@ -1,26 +1,25 @@
 # Override SELECTED_OPTIMIZATION and BUILD_OPTIMIZATION when fragment 'core/yocto/debug-optimize' is enabled.
-DEBUG_OPTIMIZATION ?= "-Og ${DEBUG_LEVELFLAG}"
-SELECTED_OPTIMIZATION ?= "${DEBUG_OPTIMIZATION}"
+SELECTED_OPTIMIZATION ?= "-Og ${DEBUG_LEVELFLAG}"
 # compiler flags for native/nativesdk
 BUILD_OPTIMIZATION ?= "-Og -g"
 
 # The modern compilers and code seem to require extra steps to avoid DEBUG errors,
 # this file collects debug tuning configuration to address DEBUG errors.
 
-DEBUG_OPTIMIZATION:append:pn-perf = " -Wno-error=maybe-uninitialized"
-DEBUG_OPTIMIZATION:append:armv4:pn-libjpeg-turbo = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb', '-fomit-frame-pointer', '', d)}"
-DEBUG_OPTIMIZATION:append:armv5:pn-libjpeg-turbo = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb', '-fomit-frame-pointer', '', d)}"
-DEBUG_OPTIMIZATION:append:armv4:pn-bash = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb', '-fomit-frame-pointer', '', d)}"
-DEBUG_OPTIMIZATION:append:armv5:pn-bash = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb', '-fomit-frame-pointer', '', d)}"
-DEBUG_OPTIMIZATION:append:pn-mdadm = " -Wno-error"
-DEBUG_OPTIMIZATION:mips:pn-kea = "-O ${DEBUG_LEVELFLAG}"
-DEBUG_OPTIMIZATION:mipsel:pn-kea = "-O ${DEBUG_LEVELFLAG}"
+SELECTED_OPTIMIZATION:append:pn-perf = " -Wno-error=maybe-uninitialized"
+SELECTED_OPTIMIZATION:append:armv4:pn-libjpeg-turbo = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb', '-fomit-frame-pointer', '', d)}"
+SELECTED_OPTIMIZATION:append:armv5:pn-libjpeg-turbo = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb', '-fomit-frame-pointer', '', d)}"
+SELECTED_OPTIMIZATION:append:armv4:pn-bash = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb', '-fomit-frame-pointer', '', d)}"
+SELECTED_OPTIMIZATION:append:armv5:pn-bash = " ${@bb.utils.contains('TUNE_CCARGS', '-mthumb', '-fomit-frame-pointer', '', d)}"
+SELECTED_OPTIMIZATION:append:pn-mdadm = " -Wno-error"
+SELECTED_OPTIMIZATION:mips:pn-kea = "-O ${DEBUG_LEVELFLAG}"
+SELECTED_OPTIMIZATION:mipsel:pn-kea = "-O ${DEBUG_LEVELFLAG}"
 # {standard input}: Assembler messages:
 # {standard input}:1488805: Error: branch out of range
-DEBUG_OPTIMIZATION:mips:pn-python3-lxml = "-O ${DEBUG_LEVELFLAG}"
-DEBUG_OPTIMIZATION:mipsel:pn-python3-lxml = "-O ${DEBUG_LEVELFLAG}"
+SELECTED_OPTIMIZATION:mips:pn-python3-lxml = "-O ${DEBUG_LEVELFLAG}"
+SELECTED_OPTIMIZATION:mipsel:pn-python3-lxml = "-O ${DEBUG_LEVELFLAG}"
 # used to fix ../../../../../../../../../work-shared/gcc-8.3.0-r0/gcc-8.3.0/libsanitizer/libbacktrace/../../libbacktrace/elf.c:772:21: error: 'st.st_mode' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-DEBUG_OPTIMIZATION:append:pn-gcc-sanitizers = " -Wno-error"
+SELECTED_OPTIMIZATION:append:pn-gcc-sanitizers = " -Wno-error"
 
 BUILD_OPTIMIZATION:mips:pn-kea = "-O -g"
 BUILD_OPTIMIZATION:mipsel:pn-kea = "-O -g"
