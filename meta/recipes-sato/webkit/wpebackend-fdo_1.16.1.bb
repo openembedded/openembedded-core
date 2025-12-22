@@ -12,8 +12,10 @@ inherit meson features_check pkgconfig
 
 REQUIRED_DISTRO_FEATURES = "opengl"
 
-SRC_URI = "https://wpewebkit.org/releases/${BPN}-${PV}.tar.xz"
-SRC_URI[sha256sum] = "beddf321232d5bd08106c179dbc600f8ce88eb3620b4a59a6329063b78f64635"
+SRC_URI = "https://wpewebkit.org/releases/${BPN}-${PV}.tar.xz \
+           file://0001-src-ws-egl.cpp-add-missing-unistd.h-header.patch \
+           "
+SRC_URI[sha256sum] = "544ae14012f8e7e426b8cb522eb0aaaac831ad7c35601d1cf31d37670e0ebb3b"
 
 # Especially helps compiling with clang which enable this as error when
 # using c++11
