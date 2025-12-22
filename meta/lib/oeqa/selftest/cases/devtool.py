@@ -1724,7 +1724,7 @@ class DevtoolUpdateTests(DevtoolBase):
         self.assertNotIn(recipe, result.output, 'Recipe should have been reset by finish but wasn\'t')
         self.assertNotExists(os.path.join(self.workspacedir, 'recipes', recipe), 'Recipe directory should not exist after finish')
         expected_status = [(' M', '.*/%s$' % os.path.basename(oldrecipefile)),
-                           ('??', '.*/.*-Adding-a-new-file.patch$')]
+                           ('??', '.*/vulkan/vulkan-samples/$')]
         self._check_repo_status(recipedir, expected_status)
         # Make sure the patch is added to the recipe with the correct "patchdir" option
         result = runCmd('git diff .', cwd=recipedir)
