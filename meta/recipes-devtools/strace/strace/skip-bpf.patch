@@ -1,7 +1,7 @@
 These tests failed when upgrading to 6.18. Skip them for now until the issue can be resolved
 as the upgrade is needed for newer kernel versons.
 
-Upstream-Status: Pending
+Upstream-Status: Inappropriate [issue reported at https://github.com/strace/strace/issues/370]
 
 Index: strace-6.16/tests/bpf-v.gen.test
 ===================================================================
