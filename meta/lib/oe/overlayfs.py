@@ -36,7 +36,8 @@ def unitFileList(d):
     # check that we have required mount points set first
     requiredMountPoints = d.getVarFlags('OVERLAYFS_WRITABLE_PATHS')
     for mountPoint in requiredMountPoints:
-        if mountPoint not in overlayMountPoints:
+        qaSkip = (d.getVarFlag("OVERLAYFS_QA_SKIP", mountPoint) or "").split()
+        if mountPoint not in overlayMountPoints and not "mount-configured" in qaSkip:
             bb.fatal("Missing required mount point for OVERLAYFS_MOUNT_POINT[%s] in your MACHINE configuration" % mountPoint)
 
     for mountPoint in overlayMountPoints:
