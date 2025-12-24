@@ -263,6 +263,104 @@ EOT
 
         self._test_correct_image('systemd-machine-units', systemd_machine_unit_append)
 
+    @skipIfNotMachine("qemux86-64", "tests are qemux86-64 specific currently")
+    def test_etc_mount(self):
+        """
+        Summary:   /etc is not supposed to be used with overlayfs.bbclass
+        Expected:  Observe inconsistencies after using etc overlay with a mount unit
+        Author:    Vyacheslav Yurkov <uvv.mail@gmail.com>
+        """
+        systemd_machine_unit_append = """
+SYSTEMD_SERVICE:${PN} += " \
+    data.mount \
+    etc.mount \
+"
+
+do_install:append() {
+    install -d ${D}${systemd_system_unitdir}
+    install -d ${D}${ROOT_HOME}
+    cat <<EOT > ${D}${systemd_system_unitdir}/etc.mount
+[Unit]
+Description=OverlayFS mount for /etc directory
+DefaultDependencies=no
+RequiresMountsFor=/data
+
+[Mount]
+What=overlay
+Where=/etc
+Type=overlay
+Options=lowerdir=/etc,upperdir=/data/overlay/etc,workdir=/data/overlay-workdir/etc
+[Install]
+WantedBy=local-fs.target
+EOT
+
+    cat <<EOT >${D}${systemd_system_unitdir}/data.mount
+[Unit]
+Description=Persistent storage partition
+
+[Mount]
+What=/dev/sda3
+Where=/data
+Type=ext4
+Options=defaults
+
+[Install]
+WantedBy=local-fs.target
+EOT
+    cat <<EOT > ${D}${ROOT_HOME}/test-daemon.service
+[Unit]
+Description=My one-shot task
+After=local-fs.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/echo test
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOT
+}
+
+FILES:${PN} += "${ROOT_HOME}"
+"""
+
+        config = """
+IMAGE_INSTALL:append = " systemd-machine-units"
+DISTRO_FEATURES:append = " overlayfs"
+
+# Use systemd as init manager
+INIT_MANAGER = "systemd"
+
+# enable overlayfs in the kernel
+KERNEL_EXTRA_FEATURES:append = " features/overlayfs/overlayfs.scc"
+
+IMAGE_FSTYPES += "wic"
+WKS_FILE = "overlayfs_etc.wks.in"
+OVERLAYFS_ROOTFS_TYPE = "ext4"
+"""
+
+        self.write_config(config)
+
+        machine_inc = """
+OVERLAYFS_MOUNT_POINT[etc] = "/etc"
+OVERLAYFS_QA_SKIP[mnt-overlay] = "mount-configured"
+"""
+        self.set_machine_config(machine_inc)
+        self.write_recipeinc('systemd-machine-units', systemd_machine_unit_append)
+        bitbake('core-image-minimal')
+        with runqemu('core-image-minimal', image_fstype='wic', discard_writes=False) as qemu:
+            test_daemon_path = get_bb_var('ROOT_HOME') + '/test-daemon.service'
+            status, output = qemu.run_serial('cp -f ' + test_daemon_path + ' /etc/systemd/system/')
+            status, output = qemu.run_serial("systemctl enable test-daemon")
+            status, output = qemu.run_serial("sync")
+        with runqemu('core-image-minimal', image_fstype='wic') as qemu:
+            # Check the test service status. It's enabled and supposed to start, but it didn't
+            status, output = qemu.run_serial("systemctl is-enabled test-daemon")
+            self.assertTrue("enabled" in output, msg=output)
+            status, output = qemu.run_serial("systemctl is-active test-daemon")
+            self.assertTrue("inactive" in output, msg=output)
+
 @OETestTag("runqemu")
 class OverlayFSEtcRunTimeTests(OESelftestTestCase):
     """overlayfs-etc class tests"""
