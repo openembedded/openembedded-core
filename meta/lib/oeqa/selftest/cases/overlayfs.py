@@ -5,7 +5,7 @@
 #
 
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import bitbake, runqemu, get_bb_vars
+from oeqa.utils.commands import bitbake, runqemu, get_bb_vars, get_bb_var
 from oeqa.core.decorator import OETestTag
 from oeqa.core.decorator.data import skipIfNotMachine
 
@@ -46,7 +46,8 @@ inherit overlayfs
         res = bitbake('core-image-minimal', ignore_status=True)
         line = getline(res, "overlayfs-user was skipped: missing required distro features")
         self.assertTrue("overlayfs" in res.output, msg=res.output)
-        self.assertTrue("systemd" in res.output, msg=res.output)
+        if not "systemd" in get_bb_var('DISTRO_FEATURES'):
+            self.assertTrue("systemd" in res.output, msg=res.output)
         self.assertTrue("ERROR: Required build target 'core-image-minimal' has no buildable providers." in res.output, msg=res.output)
 
     def test_not_all_units_installed(self):
