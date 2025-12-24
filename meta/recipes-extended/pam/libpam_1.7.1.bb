@@ -1,8 +1,8 @@
 DISABLE_STATIC = ""
 SUMMARY = "Linux-PAM (Pluggable Authentication Modules)"
 DESCRIPTION = "Linux-PAM (Pluggable Authentication Modules for Linux), a flexible mechanism for authenticating users"
-HOMEPAGE = "https://fedorahosted.org/linux-pam/"
-BUGTRACKER = "https://fedorahosted.org/linux-pam/newticket"
+HOMEPAGE = "https://github.com/linux-pam/linux-pam"
+BUGTRACKER = "https://github.com/linux-pam/linux-pam/issues"
 SECTION = "base"
 # PAM is dual licensed under GPL and BSD.
 # /etc/pam.d comes from Debian libpam-runtime in 2009-11 (at that time
