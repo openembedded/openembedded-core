@@ -20,47 +20,52 @@ if [ ! -d "$OEINIT" ] || [ ! -d "$BUILDDIR" ]; then
     exit 1
 fi
 
-VSCODE_SETTINGS=$VSCODEDIR/settings.json
+mkdir -p "$VSCODEDIR"
+VSCODE_SETTINGS_TMP=$(mktemp -p "$VSCODEDIR")
 ws_builddir="$(echo "$BUILDDIR" | sed -e "s|$OEINIT|\${workspaceFolder}|g")"
+
+# poky mode or bitbake-setup mode
+ws_build_env="\${workspaceFolder}/oe-init-build-env"
+if [ -f "$BUILDDIR/init-build-env" ]; then
+    ws_build_env="${ws_builddir}/init-build-env"
+fi
+
 bb_dir="$(dirname "$(which bitbake)" | sed 's|/bin$||')"
+
+files_exclude="\"**/_build/**\": true,
+        \"**/.git/**\": true,
+        \"**/cache/**\": true,
+        \"**/downloads/**\": true,
+        \"**/node_modules/**\": true,
+        \"**/oe-init-build-env-dir/**\": true,
+        \"**/oe-scripts/**\": true,
+        \"**/sstate-cache/**\": true,
+        \"**/workspace/attic/**\": true"
+
+search_exclude="\"**/buildhistory/**\": true,
+        \"**/oe-logs/**\": true,
+        \"**/oe-workdir/**\": true,
+        \"**/tmp*/**\": true,
+        \"**/workspace/sources/**\": true"
 
 # If BUILDDIR is in scope of VSCode ensure VSCode does not try to index the build folder.
 # This would lead to a busy CPU and finally to an OOM exception.
-mkdir -p "$VSCODEDIR"
-cat <<EOMsettings > "$VSCODE_SETTINGS"
+cat <<EOMsettings > "$VSCODE_SETTINGS_TMP"
 {
     "bitbake.pathToBitbakeFolder": "$bb_dir",
-    "bitbake.pathToEnvScript": "\${workspaceFolder}/oe-init-build-env",
     "bitbake.pathToBuildFolder": "$ws_builddir",
-    "bitbake.commandWrapper": "",
+    "bitbake.pathToEnvScript": "$ws_build_env",
     "bitbake.workingDirectory": "\${workspaceFolder}",
     "files.exclude": {
-        "**/.git/**": true,
-        "**/_build/**": true,
-        "**/buildhistory/**": true,
-        "**/cache/**": true,
-        "**/downloads/**": true,
-        "**/node_modules/**": true,
-        "**/oe-logs/**": true,
-        "**/oe-workdir/**": true,
-        "**/sstate-cache/**": true,
-        "**/tmp*/**": true,
-        "**/workspace/attic/**": true,
-        "**/workspace/sources/**": true
+        $files_exclude
+    },
+    "search.exclude": {
+        $files_exclude,
+        $search_exclude
     },
     "files.watcherExclude": {
-        "**/.git/**": true,
-        "**/_build/**": true,
-        "**/buildhistory/**": true,
-        "**/cache/**": true,
-        "**/downloads/**": true,
-        "**/node_modules/**": true,
-        "**/oe-logs/**": true,
-        "**/oe-workdir/**": true,
-        "**/sstate-cache/**": true,
-        "**/tmp*/**": true,
-        "**/workspace/attic/**": true,
-        "**/workspace/sources/**": true
+        $files_exclude,
+        $search_exclude
     },
     "python.analysis.exclude": [
         "**/_build/**",
@@ -74,11 +79,14 @@ cat <<EOMsettings > "$VSCODE_SETTINGS"
         "**/sstate-cache/**",
         "**/tmp*/**",
         "**/workspace/attic/**",
-        "**/workspace/sources/**"
+        "**/workspace/sources/**",
+        "**/oe-init-build-env-dir/**",
+        "**/oe-scripts/**"
     ]
 }
 EOMsettings
 
+mv -f "$VSCODE_SETTINGS_TMP" "$VSCODEDIR/settings.json"
 
 # Ask the user if the yocto-bitbake extension should be installed
 VSCODE_EXTENSIONS=$VSCODEDIR/extensions.json
