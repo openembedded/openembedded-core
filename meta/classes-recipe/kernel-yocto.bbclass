@@ -465,6 +465,13 @@ do_kernel_configme[depends] += "bc-native:do_populate_sysroot bison-native:do_po
 do_kernel_configme[depends] += "kern-tools-native:do_populate_sysroot"
 do_kernel_configme[dirs] += "${S} ${B}"
 do_kernel_configme() {
+	if ${@bb.utils.contains('DISTRO_FEATURES', 'rust-kernel', 'true', 'false', d)}; then
+		if [ ! -d ${STAGING_LIBDIR_NATIVE}/rustlib/src/rust ]; then
+			mkdir -p ${STAGING_LIBDIR_NATIVE}/rustlib/src/
+			cp -r ${TMPDIR}/work-shared/rust ${STAGING_LIBDIR_NATIVE}/rustlib/src/.
+		fi
+	fi
+
 	do_kernel_metadata config
 
 	# translate the kconfig_mode into something that merge_config.sh
