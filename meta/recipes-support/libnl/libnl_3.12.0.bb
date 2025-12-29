@@ -16,10 +16,11 @@ DEPENDS = "flex-native bison-native"
 
 SRC_URI = "${GITHUB_BASE_URI}/download/${BPN}${@d.getVar('PV').replace('.','_')}/${BP}.tar.gz \
            file://run-ptest \
-           file://0001-tests-cksuite-all-netns.c-disable-route_1.patch \
+           file://0002-tests-skip-various-tests-when-kernel-returns-EOPNOTS.patch \
+           file://0001-tests-add-and-use-_nltst_skip_eopnotsupp-helper.patch \
            "
 
-SRC_URI[sha256sum] = "2a56e1edefa3e68a7c00879496736fdbf62fc94ed3232c0baba127ecfa76874d"
+SRC_URI[sha256sum] = "fc51ca7196f1a3f5fdf6ffd3864b50f4f9c02333be28be4eeca057e103c0dd18"
 
 GITHUB_BASE_URI = "https://github.com/thom311/${BPN}/releases"
 UPSTREAM_CHECK_REGEX = "releases/tag/libnl(?P<pver>.+)"
