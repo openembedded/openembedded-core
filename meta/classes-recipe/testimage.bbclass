@@ -413,6 +413,9 @@ def testimage_main(d):
         bb.error('%s - FAILED - tests were interrupted during execution, check the logs in %s' % (pn, d.getVar("LOG_DIR")), forcelog=True)
     if results and not results.wasSuccessful():
         bb.error('%s - FAILED - also check the logs in %s' % (pn, d.getVar("LOG_DIR")), forcelog=True)
+        with open(bootlog, 'r') as bootlogfile:
+            bootlines = "".join(bootlogfile.readlines()[-20:])
+        bb.plain('%s - FAILED - Last lines of QEMU boot log:\n%s' % (pn, bootlines))
 
 def get_runtime_paths(d):
     """
