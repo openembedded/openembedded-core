@@ -22,7 +22,8 @@ SRC_URI += "\
     file://CVE-2025-47907.patch \
     file://CVE-2025-47906.patch \
     file://CVE-2025-58185.patch \
-    file://CVE-2025-58187.patch \
+    file://CVE-2025-58187-1.patch \
+    file://CVE-2025-58187-2.patch \
     file://CVE-2025-58188.patch \
     file://CVE-2025-58189.patch \
     file://CVE-2025-47912.patch \
