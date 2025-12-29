@@ -69,7 +69,8 @@ SRC_URI = "https://golang.org/dl/go${PV}.src.tar.gz;name=main \
            file://CVE-2025-47907.patch \
            file://CVE-2025-47906.patch \
            file://CVE-2024-24783.patch \
-           file://CVE-2025-58187.patch \
+           file://CVE-2025-58187-1.patch \
+           file://CVE-2025-58187-2.patch \
            file://CVE-2025-58189.patch \
            file://CVE-2025-61723.patch \
            file://CVE-2025-61724.patch \
