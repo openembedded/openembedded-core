@@ -78,19 +78,25 @@ class GdbCrossConfigNone(GdbCrossConfig):
                              os.path.join(self.modified_recipe.recipe_sysroot, 'usr', 'include') + '"')
         if self.image_recipe.rootfs_dbg:
             # First: Search for sources of this recipe in the workspace folder
-            if self.modified_recipe.pn in self.modified_recipe.target_dbgsrc_dir:
-                gdbinit_lines.append('set substitute-path "%s" "%s"' %
-                                     (self.modified_recipe.target_dbgsrc_dir, self.modified_recipe.real_srctree))
-            else:
-                logger.error(
-                    "TARGET_DBGSRC_DIR must contain the recipe name PN.")
+            # If compiled with DEBUG_PREFIX_MAP = "", no reverse map is is needed. The binaries
+            # contain the full path to the source files. But by default there is a reverse map.
+            src_file_map = dict(self.modified_recipe.reverse_debug_prefix_map)
+
             # Second: Search for sources of other recipes in the rootfs-dbg
-            if self.modified_recipe.target_dbgsrc_dir.startswith("/usr/src/debug"):
-                gdbinit_lines.append('set substitute-path "/usr/src/debug" "%s"' % os.path.join(
-                    self.image_recipe.rootfs_dbg, "usr", "src", "debug"))
-            else:
+            # We expect that /usr/src/debug/${PN}/${PV} or no mapping is used for the recipes
+            # own sources and we can use the key "/usr/src/debug" for the rootfs-dbg.
+            if "/usr/src/debug" in src_file_map:
                 logger.error(
-                    "TARGET_DBGSRC_DIR must start with /usr/src/debug.")
+                    'Key "/usr/src/debug" already exists in src_file_map. '
+                    'Something with DEBUG_PREFIX_MAP looks unexpected and finding sources '
+                    'in the rootfs-dbg will not work as expected.'
+                )
+            else:
+                src_file_map["/usr/src/debug"] = os.path.join(
+                    self.image_recipe.rootfs_dbg, "usr", "src", "debug")
+
+            for target_path, host_path in src_file_map.items():
+                gdbinit_lines.append('set substitute-path "%s" "%s"' % (target_path, host_path))
         else:
             logger.warning(
                 "Cannot setup debug symbols configuration for GDB. IMAGE_GEN_DEBUGFS is not enabled.")

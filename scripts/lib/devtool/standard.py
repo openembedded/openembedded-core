@@ -971,7 +971,12 @@ def modify(args, config, basepath, workspace):
                         continue
                     f.write('# patches_%s: %s\n' % (branch, ','.join(branch_patches[branch])))
             if args.debug_build:
-                f.write('\nDEBUG_BUILD = "1"\n')
+                f.write('\n# Optimize for debugging. Use e.g. -Og instead of -O2\n')
+                f.write('DEBUG_BUILD = "1"\n')
+                f.write('\n# Keep the paths to the source files for remote debugging\n')
+                f.write('# DEBUG_PREFIX_MAP = ""\n')
+                f.write('# WARN_QA:remove = "buildpaths"\n')
+                f.write('# ERROR_QA:remove = "buildpaths"\n')
 
         update_unlockedsigs(basepath, workspace, args.fixed_setup, [pn])
 
