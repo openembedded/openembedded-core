@@ -278,6 +278,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         self.tc_kwargs['init']['config_paths']['builddir'] = builddir
         self.tc_kwargs['init']['config_paths']['localconf'] = os.path.join(builddir, "conf/local.conf")
         self.tc_kwargs['init']['config_paths']['bblayers'] = os.path.join(builddir, "conf/bblayers.conf")
+        self.tc_kwargs['init']['config_paths']['toolcfgconf'] = os.path.join(builddir, "conf/toolcfg.conf")
         self.tc_kwargs['init']['newbuilddir'] = args.newbuilddir
         self.tc_kwargs['init']['keep_builddir'] = args.keep_builddir
 

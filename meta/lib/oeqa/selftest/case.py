@@ -8,6 +8,7 @@ import sys
 import os
 import glob
 import errno
+import shutil
 from unittest.util import safe_repr
 
 import oeqa.utils.ftools as ftools
@@ -19,6 +20,7 @@ import bb.utils
 class OESelftestTestCase(OETestCase):
     def __init__(self, methodName="runTest"):
         self._extra_tear_down_commands = []
+        self._toolcfgconf_backup = None
         super(OESelftestTestCase, self).__init__(methodName)
 
     @classmethod
@@ -30,6 +32,7 @@ class OESelftestTestCase(OETestCase):
 
         cls.localconf_path = cls.tc.config_paths['localconf']
         cls.local_bblayers_path = cls.tc.config_paths['bblayers']
+        cls.toolcfgconf_path = cls.tc.config_paths['toolcfgconf']
 
         cls.testinc_path = os.path.join(cls.tc.config_paths['builddir'],
                 "conf/selftest.inc")
@@ -137,6 +140,10 @@ class OESelftestTestCase(OETestCase):
                 self.logger.debug("Trying to move on.")
             self._extra_tear_down_commands = []
 
+        # Restore toolcfgconf backup
+        if self._toolcfgconf_backup and os.path.exists(self._toolcfgconf_backup):
+            shutil.copy2(self._toolcfgconf_backup, self.toolcfgconf_path)
+
         if self._track_for_cleanup:
             for path in self._track_for_cleanup:
                 if os.path.isdir(path):
@@ -173,6 +180,27 @@ class OESelftestTestCase(OETestCase):
 
         self.logger.debug("Writing to: %s\n%s\n" % (dest_path, data))
         ftools.write_file(dest_path, data)
+
+    def configure_fragments(self, enable_fragments=None, disable_fragments=None):
+        """Configure fragments using bitbake-config-build tool"""
+        existed = os.path.exists(self.toolcfgconf_path)
+        # If there was an existing toolcfg.conf, back it up and restore it in tearDown
+        if existed:
+            backup_path = self.toolcfgconf_path + ".oe-selftest-bak"
+            shutil.copy2(self.toolcfgconf_path, backup_path)
+            self._toolcfgconf_backup = backup_path
+            self.track_for_cleanup(backup_path)
+
+        if enable_fragments:
+            cmd = 'bitbake-config-build enable-fragment ' + ' '.join(enable_fragments)
+            runCmd(cmd)
+        if disable_fragments:
+            cmd = 'bitbake-config-build disable-fragment ' + ' '.join(disable_fragments)
+            runCmd(cmd)
+
+        # If there was no existing toolcfg.conf before, track the new one for cleanup
+        if not existed and os.path.exists(self.toolcfgconf_path):
+            self.track_for_cleanup(self.toolcfgconf_path)
 
     def append_config(self, data):
         """Append to <builddir>/conf/selftest.inc"""
