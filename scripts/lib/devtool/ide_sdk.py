@@ -269,6 +269,7 @@ class RecipeNotModified:
 class RecipeModified:
     """Handling of recipes in the workspace created by devtool modify"""
     OE_INIT_BUILD_ENV = 'oe-init-build-env'
+    INIT_BUILD_ENV = 'init-build-env'
 
     VALID_BASH_ENV_NAME_CHARS = re.compile(r"^[a-zA-Z0-9_]*$")
 
@@ -743,7 +744,13 @@ class RecipeModified:
 
     @property
     def oe_init_build_env(self):
-        """Find the oe-init-build-env used for this setup"""
+        """Find the init-build-env used for this setup"""
+        # bitbake-setup mode
+        bb_setup_init = os.path.join(self.topdir, RecipeModified.INIT_BUILD_ENV)
+        if os.path.exists(bb_setup_init):
+            return os.path.abspath(bb_setup_init)
+
+        # poky mode
         oe_init_dir = self.oe_init_dir
         if oe_init_dir:
             return os.path.join(oe_init_dir, RecipeModified.OE_INIT_BUILD_ENV)
