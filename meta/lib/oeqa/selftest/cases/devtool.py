@@ -2810,6 +2810,22 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertIn("Running tests...", result.output)
         self.assertIn("100% tests passed", result.output)
 
+    def _verify_service_running(self, qemu, service_name):
+        """Helper to verify a service is running in Qemu"""
+        status, output = qemu.run("pgrep %s" % service_name)
+        self.assertEqual(status, 0, msg="%s service not running: %s" %
+                         (service_name, output))
+        self.assertTrue(output.strip().isdigit(),
+                        f"pgrep output should be a PID integer, got: {output.strip()}")
+
+    def _verify_conf_file(self, qemu, conf_file, owner, group):
+        """Helper to verify a configuration file is owned by the proper user and group"""
+        ls_cmd = "ls -l %s" % conf_file
+        status, output = qemu.run(ls_cmd)
+        self.assertEqual(status, 0, msg="Failed to ls %s: %s" % (conf_file, output))
+        self.assertRegex(output, rf"^-.+ {owner} {group} .+ {re.escape(conf_file)}$",
+                         msg="%s not owned by %s:%s: %s" % (conf_file, owner, group, output))
+
     @OETestTag("runqemu")
     def test_devtool_ide_sdk_none_qemu(self):
         """Start qemu-system and run tests for multiple recipes. ide=none is used."""
@@ -2826,7 +2842,16 @@ class DevtoolIdeSdkTests(DevtoolBase):
             # cmake-example recipe
             recipe_name = "cmake-example"
             example_exe = "cmake-example"
+            example_user_group = "cmake-example"
+            conf_file = "/etc/cmake-example.conf"
             build_file = "CMakeLists.txt"
+
+            # Verify the cmake-example service is running on the target
+            self._verify_service_running(qemu, example_exe)
+            # Verify /etc/cmake-example.conf is owned by the cmake-example user
+            self._verify_conf_file(qemu, conf_file, example_user_group, example_user_group)
+
+            # Setup the recipe with devtool ide-sdk cmake-example ...
             tempdir = self._devtool_ide_sdk_recipe(
                 recipe_name, build_file, testimage)
             bitbake_sdk_cmd = 'devtool ide-sdk %s %s -t root@%s -c --ide=none' % (
@@ -2835,14 +2860,29 @@ class DevtoolIdeSdkTests(DevtoolBase):
             self._gdb_cross()
             self._verify_cmake_preset(tempdir)
             self._devtool_ide_sdk_qemu(tempdir, qemu, recipe_name, example_exe)
+
             # Verify the oe-scripts sym-link is valid
             self.assertEqual(self._workspace_scripts_dir(
                 recipe_name), self._sources_scripts_dir(tempdir))
 
+            # Verify /etc/meson-example.conf is still owned by the cmake-example user
+            # after the install and deploy scripts updated the file
+            self._verify_conf_file(qemu, conf_file, example_exe, example_exe)
+
+
             # meson-example recipe
             recipe_name = "meson-example"
             example_exe = "mesonex"
+            example_user_group = "meson-example"
+            conf_file = "/etc/meson-example.conf"
             build_file = "meson.build"
+
+            # Verify the meson-example service is running on the target
+            self._verify_service_running(qemu, example_exe)
+            # Verify /etc/meson-example.conf is owned by the meson-example user
+            self._verify_conf_file(qemu, conf_file, example_user_group, example_user_group)
+
+            # Setup the recipe with devtool ide-sdk meson-example ...
             tempdir = self._devtool_ide_sdk_recipe(
                 recipe_name, build_file, testimage)
             bitbake_sdk_cmd = 'devtool ide-sdk %s %s -t root@%s -c --ide=none' % (
@@ -2850,9 +2890,14 @@ class DevtoolIdeSdkTests(DevtoolBase):
             runCmd(bitbake_sdk_cmd, output_log=self._cmd_logger)
             self._gdb_cross()
             self._devtool_ide_sdk_qemu(tempdir, qemu, recipe_name, example_exe)
+
             # Verify the oe-scripts sym-link is valid
             self.assertEqual(self._workspace_scripts_dir(
                 recipe_name), self._sources_scripts_dir(tempdir))
+
+            # Verify /etc/meson-example.conf is still owned by the meson-example user
+            # after the install and deploy scripts updated the file
+            self._verify_conf_file(qemu, conf_file, example_user_group, example_user_group)
 
     def test_devtool_ide_sdk_code_cmake(self):
         """Verify a cmake recipe works with ide=code mode"""
