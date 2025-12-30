@@ -2551,12 +2551,10 @@ class DevtoolIdeSdkTests(DevtoolBase):
             self._cmd_logger = self.logger
 
     def _write_bb_config(self, recipe_names):
-        """Helper to write the bitbake local.conf file"""
+        """Helper to write the bitbake configuration"""
+        self.configure_fragments(['core/yocto/devtool-ide-sdk'])
         conf_lines = [
-            'IMAGE_CLASSES += "image-combined-dbg"',
-            'IMAGE_GEN_DEBUGFS = "1"',
-            'IMAGE_INSTALL:append = " gdbserver %s"' % ' '.join(
-                [r + '-ptest' for r in recipe_names]),
+            'IMAGE_INSTALL:append = " %s"' % ' '.join([r + '-ptest' for r in recipe_names]),
             'DISTRO_FEATURES:append = " ptest"'
         ]
         self.write_config("\n".join(conf_lines))
