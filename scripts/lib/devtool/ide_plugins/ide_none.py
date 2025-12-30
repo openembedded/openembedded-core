@@ -102,6 +102,14 @@ class GdbCrossConfigNone(GdbCrossConfig):
                 "Cannot setup debug symbols configuration for GDB. IMAGE_GEN_DEBUGFS is not enabled.")
         # Disable debuginfod for now, the IDE configuration uses rootfs-dbg from the image workdir.
         gdbinit_lines.append('set debuginfod enabled off')
+
+        # Enable pretty-printing for gdb for resolving STL types with help of python scripts
+        pretty_printing_cmd = self.modified_recipe.gdb_pretty_print_scripts
+        if pretty_printing_cmd:
+            gdbinit_lines.append(os.linesep +"python")
+            gdbinit_lines += pretty_printing_cmd
+            gdbinit_lines.append("end" + os.linesep)
+
         gdbinit_lines.append(
             '%s %s:%d' % (remote_cmd, self.gdb_cross.host, self.gdbserver_port))
         gdbinit_lines.append('set remote exec-file ' + self.binary.binary_path)
