@@ -633,7 +633,10 @@ FILES:${PN}-udev-rules = "\
 
 SUMMARY:${PN}-ukify = "Create and inspect Unified Kernel Images (UKIs)"
 DESCRIPTION:${PN}-ukify = "ukify is a tool whose primary purpose is to combine components (usually a kernel, an initrd, and a UEFI boot stub) to create a Unified Kernel Image (UKI) — a PE binary that can be executed by the firmware to start the embedded linux kernel."
-FILES:${PN}-ukify = "${bindir}/ukify"
+FILES:${PN}-ukify = " \
+    ${bindir}/ukify \
+    ${nonarch_libdir}/systemd/ukify \
+"
 RDEPENDS:${PN}-ukify = " \
                         python3-compression \
                         python3-core \
