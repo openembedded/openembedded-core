@@ -26,7 +26,7 @@ PREFERRED_PROVIDER_virtual/nativesdk-cross-c++:class-crosssdk = "clang-crosssdk-
 PREFERRED_PROVIDER_virtual/nativesdk-cross-cc:class-cross-canadian = "clang-crosssdk-${SDK_SYS}"
 PREFERRED_PROVIDER_virtual/nativesdk-cross-c++:class-cross-canadian = "clang-crosssdk-${SDK_SYS}"
 
-BASE_DEFAULT_DEPS:append = " compiler-rt libcxx"
+BASE_DEFAULT_DEPS:append = " compiler-rt libcxx ${@bb.utils.contains("DISTRO_FEATURES", "ld-is-lld", "lld-native", "", d)}"
 
 TUNE_CCARGS += "${@bb.utils.contains("DISTRO_FEATURES", "usrmerge", " --dyld-prefix=/usr", "", d)}"
 
