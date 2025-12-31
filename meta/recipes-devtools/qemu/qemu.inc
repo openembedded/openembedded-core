@@ -88,6 +88,9 @@ CVE_STATUS[CVE-2023-1386] = "disputed: not an issue as per https://bugzilla.redh
 
 CVE_STATUS[CVE-2024-7730] = "fixed-version: this is fixed in v8.2.7"
 
+CVE_STATUS[CVE-2025-54566] = "cpe-incorrect: This issue was introduced in v10.0.0-rc0"
+CVE_STATUS[CVE-2025-54567] = "cpe-incorrect: This issue was introduced in v10.0.0-rc0"
+
 COMPATIBLE_HOST:mipsarchn32 = "null"
 COMPATIBLE_HOST:mipsarchn64 = "null"
 COMPATIBLE_HOST:riscv32 = "null"
