@@ -19,16 +19,16 @@ LICENSE:liblzma = "0BSD"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=d38d562f6112174de93a9677682231b2 \
                     file://COPYING.0BSD;md5=0672c210ce80c83444339b9aa31fee2f \
-                    file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+                    file://COPYING.GPLv2;md5=570a9b3749dd0463a1778803b12a6dce \
                     file://COPYING.GPLv3;md5=1ebbd3e34237af26da5dc08a4e440464 \
-                    file://COPYING.LGPLv2.1;md5=4fbd65380cdd255951079008b364516c \
+                    file://COPYING.LGPLv2.1;md5=4bf661c1e3793e55c8d1051bc5e0ae21 \
                     file://lib/getopt.c;endline=23;md5=3f33e207287bf72834f3ae8c247dfb6a \
                     "
 
 SRC_URI = "https://github.com/tukaani-project/xz/releases/download/v${PV}/xz-${PV}.tar.gz \
            file://run-ptest \
           "
-SRC_URI[sha256sum] = "507825b599356c10dca1cd720c9d0d0c9d5400b9de300af00e4d1ea150795543"
+SRC_URI[sha256sum] = "ce09c50a5962786b83e5da389c90dd2c15ecd0980a258dd01f70f9e7ce58a8f1"
 UPSTREAM_CHECK_REGEX = "releases/tag/v(?P<pver>\d+(\.\d+)+)"
 UPSTREAM_CHECK_URI = "https://github.com/tukaani-project/xz/releases/"
 
