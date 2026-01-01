@@ -27,6 +27,7 @@ SRC_URI = "https://github.com/OpenPrinting/cups/releases/download/v${PV}/cups-${
 	   file://CVE-2024-47175-5.patch \
 	   file://CVE-2025-58060.patch \
 	   file://CVE-2025-58364.patch \
+           file://CVE-2025-58436.patch \
            "
 
 UPSTREAM_CHECK_URI = "https://github.com/OpenPrinting/cups/releases"
