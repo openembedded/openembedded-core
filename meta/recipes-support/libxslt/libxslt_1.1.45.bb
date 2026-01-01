@@ -19,6 +19,8 @@ SRC_URI[sha256sum] = "9acfe68419c4d06a45c550321b3212762d92f41465062ca4ea19e632ee
 
 UPSTREAM_CHECK_REGEX = "libxslt-(?P<pver>\d+(\.\d+)+)\.tar"
 
+CVE_STATUS[CVE-2025-7424] = "fixed-version: Fixed since version 1.1.44"
+
 S = "${UNPACKDIR}/libxslt-${PV}"
 
 BINCONFIG = "${bindir}/xslt-config"
