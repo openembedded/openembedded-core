@@ -29,6 +29,7 @@ SRC_URI = "https://github.com/OpenPrinting/cups/releases/download/v${PV}/cups-${
 	   file://CVE-2025-58364.patch \
            file://CVE-2025-58436.patch \
            file://CVE-2025-61915.patch \
+           file://0001-conf.c-Fix-stopping-scheduler-on-unknown-directive.patch \
            "
 
 UPSTREAM_CHECK_URI = "https://github.com/OpenPrinting/cups/releases"
