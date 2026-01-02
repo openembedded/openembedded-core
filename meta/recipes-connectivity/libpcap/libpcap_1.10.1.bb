@@ -17,6 +17,8 @@ SRC_URI = "https://www.tcpdump.org/release/${BP}.tar.gz \
            file://CVE-2023-7256-pre4.patch \
            file://CVE-2023-7256.patch \
            file://CVE-2024-8006.patch \
+           file://CVE-2025-11961-01.patch \
+           file://CVE-2025-11961-02.patch \
           "
 
 SRC_URI[sha256sum] = "ed285f4accaf05344f90975757b3dbfe772ba41d1c401c2648b7fa45b711bdd4"
