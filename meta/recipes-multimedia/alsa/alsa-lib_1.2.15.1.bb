@@ -9,9 +9,8 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=a916467b91076e631dd8edb7424769c7 \
                     file://src/socket.c;md5=285675b45e83f571c6a957fe4ab79c93;beginline=9;endline=24 \
                     "
 
-SRC_URI = "https://www.alsa-project.org/files/pub/lib/${BP}.tar.bz2 \
-           file://0001-ucm-use-closefrom-instead-of-close_range.patch"
-SRC_URI[sha256sum] = "83770841585e766a60c99fd23f8c574c22643ae0cb1f2d20b793c3d84eb95a8d"
+SRC_URI = "https://www.alsa-project.org/files/pub/lib/${BP}.tar.bz2"
+SRC_URI[sha256sum] = "7f983ca89ca420872ca16e8a9f8f97fb63db6c1c6e2585b91737a08bb03f566c"
 
 inherit autotools pkgconfig
 
