@@ -8,7 +8,7 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=20d74d74db9741697903372ad001d3b4"
 
 SRC_URI = "https://www.alsa-project.org/files/pub/lib/${BP}.tar.bz2"
-SRC_URI[sha256sum] = "5510cb0947a3bb877b5ce218e3ecedd78bfa6643e372346c87d93d4844a45ffa"
+SRC_URI[sha256sum] = "246c5d59d217b6f7f47a11fd10f1b766d25abcb0d9c996af3079bb9c9ac5a1b0"
 # Something went wrong at upstream tarballing
 
 inherit allarch
