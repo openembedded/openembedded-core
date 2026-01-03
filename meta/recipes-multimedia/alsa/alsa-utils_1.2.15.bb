@@ -25,7 +25,8 @@ PACKAGECONFIG[manpages] = "--enable-xmlto, --disable-xmlto, xmlto-native docbook
 
 # alsa-utils specified in SRC_URI due to alsa-utils-scripts recipe
 SRC_URI = "https://www.alsa-project.org/files/pub/utils/alsa-utils-${PV}.tar.bz2 \
-	   file://0001-alsactl-fix-build-when-in-subdirectory.patch"
+	   file://0001-alsactl-fix-build-when-in-subdirectory.patch \
+	   file://0001-aplay-add-missing-break-before-the-default-case.patch"
 SRC_URI[sha256sum] = "d3183d2ed2d69e9143c5beb97036267c3fdabfe8bfbea8bc6863f17b1f0b568e"
 
 # On build machines with python-docutils (not python3-docutils !!) installed

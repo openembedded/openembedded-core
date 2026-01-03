@@ -1,0 +1,32 @@
+From a12ec83fa93e16a76f5c57f128f819dfe332f96c Mon Sep 17 00:00:00 2001
+From: Bard Liao <yung-chuan.liao@linux.intel.com>
+Date: Tue, 16 Dec 2025 21:55:54 +0800
+Subject: [PATCH] aplay: add missing break before the default case
+
+Add the break before the default case back. Otherwise, all cases will
+fall into the default/error case.
+
+Closes: https://github.com/alsa-project/alsa-utils/pull/315
+Fixes: e78583ab7cde ("aplay: reorganize format handling in begin_wave()")
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: Jaroslav Kysela <perex@perex.cz>
+Upstream-Status: Backport [a12ec83fa93e16a76f5c57f128f819dfe332f96c]
+---
+ aplay/aplay.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/aplay/aplay.c b/aplay/aplay.c
+index 63a5214..737d087 100644
+--- a/aplay/aplay.c
++++ b/aplay/aplay.c
+@@ -2731,6 +2731,7 @@ static void begin_wave(int fd, size_t cnt)
+ 	case SND_PCM_FORMAT_S32_LE:
+ 	case SND_PCM_FORMAT_FLOAT_LE:
+ 	case SND_PCM_FORMAT_S24_3LE:
++		break;
+ 	default:
+ _format:
+ 		error(_("Wave doesn't support %s format..."), snd_pcm_format_name(hwparams.format));
+-- 
+2.34.1
+
