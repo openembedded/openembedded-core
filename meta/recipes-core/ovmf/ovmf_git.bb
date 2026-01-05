@@ -29,6 +29,16 @@ SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https \
            file://0006-BaseTools-StringFuncs-fix-gcc-16-warning.patch \
            file://0007-BaseTools-EfiRom-fix-compiler-warning.patch \
            file://0008-BaseTools-Pccts-set-C-standard.patch \
+           file://0001-AmdSev-Halt-on-failed-blob-allocation.patch \
+           file://CVE-2025-2296-1.patch \
+           file://CVE-2025-2296-2.patch \
+           file://CVE-2025-2296-3.patch \
+           file://CVE-2025-2296-4.patch \
+           file://CVE-2025-2296-5.patch \
+           file://CVE-2025-2296-6.patch \
+           file://CVE-2025-2296-7.patch \
+           file://CVE-2025-2296-8.patch \
+           file://CVE-2025-2296-9.patch \
            "
 
 PV = "edk2-stable202402"
