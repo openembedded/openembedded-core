@@ -25,8 +25,9 @@ require ${BPN}-crates.inc
 
 SRC_URI += "file://0001-query-rustc-append-RUSTFLAGS-to-rustc-executable.patch \
             file://0001-Revert-meson.build-do-not-force-disable-gdk-pixbuf-l.patch \
+            file://0001-tests-revert-Take-care-of-deprecated-assert_cmd-Comm.patch \
             file://run-ptest"
-SRC_URI[archive.sha256sum] = "dbd0db40a1179a382fbb8cc930837671b973d722ba106a3dee2aad0fd858e2c4"
+SRC_URI[archive.sha256sum] = "a56d2c80d744ad2f2718f85df466fe71d24ff1f9bc3e5ef588bde4d7e87815f2"
 
 UPSTREAM_CHECK_REGEX = "librsvg-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 
@@ -93,6 +94,7 @@ do_install_ptest:append() {
 	# the api tests look for the required files in rsvg folder, so simulate it
 	# with a symlink that points to the current folder
 	ln -s . ${D}${PTEST_PATH}/rsvg
+	ln -s ptest ${D}${PTEST_PATH}/../rsvg
 }
 
 PACKAGES =+ "librsvg-gtk rsvg"

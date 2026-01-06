@@ -1,4 +1,4 @@
-From a614646fc79ad1c11784e04d415b19e752a4ae20 Mon Sep 17 00:00:00 2001
+From 33ece256bf7c156a34ab1ee3709718e38829cc9e Mon Sep 17 00:00:00 2001
 From: Gyorgy Sarvari <skandigraun@gmail.com>
 Date: Wed, 6 Aug 2025 13:50:21 +0200
 Subject: [PATCH] Revert "meson.build: do not force-disable gdk-pixbuf-loader
