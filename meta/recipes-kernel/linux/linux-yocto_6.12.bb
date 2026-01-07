@@ -1,6 +1,7 @@
 KBRANCH ?= "v6.12/standard/base"
 
 require recipes-kernel/linux/linux-yocto.inc
+require recipes-kernel/linux/linux-yocto-features.inc
 
 # CVE exclusions
 include recipes-kernel/linux/cve-exclusion.inc
