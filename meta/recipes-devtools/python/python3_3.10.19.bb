@@ -38,6 +38,7 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-test_storlines-skip-due-to-load-variability.patch \
            file://0001-gh-107811-tarfile-treat-overflow-in-UID-GID-as-failu.patch \
            file://CVE-2025-6075.patch \
+           file://CVE-2025-13836.patch \
            "
 
 SRC_URI:append:class-native = " \
