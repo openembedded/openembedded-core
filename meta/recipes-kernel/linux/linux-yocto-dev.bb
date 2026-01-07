@@ -10,6 +10,7 @@
 
 inherit kernel
 require recipes-kernel/linux/linux-yocto.inc
+require recipes-kernel/linux/linux-yocto-features.inc
 
 # provide this .inc to set specific revisions
 include recipes-kernel/linux/linux-yocto-dev-revisions.inc

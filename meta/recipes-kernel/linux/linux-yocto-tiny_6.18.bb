@@ -4,6 +4,7 @@ LINUX_KERNEL_TYPE = "tiny"
 KCONFIG_MODE = "--allnoconfig"
 
 require recipes-kernel/linux/linux-yocto.inc
+require recipes-kernel/linux/linux-yocto-features.inc
 
 # CVE exclusions
 include recipes-kernel/linux/cve-exclusion_6.18.inc
