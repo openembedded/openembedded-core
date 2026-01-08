@@ -432,6 +432,12 @@ class ResultToolTests(OESelftestTestCase):
                                 "duration": "2",
                                 "log": "FAILED: package-failed.test_failed\nPASS: package-failed.test_passed\n",
                             },
+                            # Test with exitcode without ptestresult
+                            "package-error-noresult": {
+                                "duration": "6",
+                                "exitcode": "123",
+                                "log": "ERROR: -bash: testerror: command not found\nERROR: Exit status is 123\n",
+                            },
                         },
                     },
                 }
@@ -454,11 +460,11 @@ class ResultToolTests(OESelftestTestCase):
             )
 
     def _check_junit_testresults_1(self, testsuites_node):
-        self.assertEqual(testsuites_node.attrib["errors"], "1")
+        self.assertEqual(testsuites_node.attrib["errors"], "2")
         self.assertEqual(testsuites_node.attrib["failures"], "1")
         self.assertEqual(testsuites_node.attrib["skipped"], "2")
-        self.assertEqual(testsuites_node.attrib["tests"], "6")
-        self.assertEqual(testsuites_node.attrib["time"], "16")
+        self.assertEqual(testsuites_node.attrib["tests"], "7")
+        self.assertEqual(testsuites_node.attrib["time"], "22")
 
         testsuites = testsuites_node.findall("testsuite")
         self.assertEqual(testsuites[0].attrib["name"], "runtime_a-image")
@@ -472,10 +478,12 @@ class ResultToolTests(OESelftestTestCase):
         self.assertEqual(testcases[1].attrib["name"], "package-skipped")
         self.assertEqual(testcases[2].attrib["name"], "package-error")
         self.assertEqual(testcases[3].attrib["name"], "package-failed")
+        self.assertEqual(testcases[4].attrib["name"], "package-error-noresult")
         self.assertEqual(testcases[0].attrib["time"], "2")
         self.assertEqual(testcases[1].attrib["time"], "1")
         self.assertEqual(testcases[2].attrib["time"], "4")
         self.assertEqual(testcases[3].attrib["time"], "2")
+        self.assertEqual(testcases[4].attrib["time"], "6")
 
     def test_junit_log_inline(self):
         testresults = self._get_junit_testresults_1
@@ -492,22 +500,22 @@ class ResultToolTests(OESelftestTestCase):
         ptestresult_sections = testresults["a"]["runtime_a-image"]["result"][
             "ptestresult.sections"
         ]
-        self.assertEqual(
-            ptestresult_sections["package-passed"]["log"],
-            testcases[0].find("system-out").text,
-        )
-        self.assertEqual(
-            ptestresult_sections["package-skipped"]["log"],
-            testcases[1].find("system-out").text,
-        )
-        self.assertEqual(
-            ptestresult_sections["package-error"]["log"],
-            testcases[2].find("system-out").text,
-        )
-        self.assertEqual(
-            ptestresult_sections["package-failed"]["log"],
-            testcases[3].find("system-out").text,
-        )
+        # The inline system-out now includes a PtestSummary section followed by the raw section log.
+        # Build expected summaries and verify both parts are present.
+        pkg_error_summary = PtestSummary()
+        pkg_error_summary.add_status("test_error", "ERROR")
+        pkg_error_summary.add_status("test_failed", "FAILED")
+        pkg_error_summary.add_status("test_skipped", "SKIPPED")
+        pkg_failed_summary = PtestSummary()
+        pkg_failed_summary.add_status("test_failed", "FAILED")
+
+        pkg_error_out = testcases[2].find("system-out").text
+        self.assertIn(pkg_error_summary.log_summary, pkg_error_out)
+        self.assertIn(ptestresult_sections["package-error"]["log"], pkg_error_out)
+
+        pkg_failed_out = testcases[3].find("system-out").text
+        self.assertIn(pkg_failed_summary.log_summary, pkg_failed_out)
+        self.assertIn(ptestresult_sections["package-failed"]["log"], pkg_failed_out)
 
         # Check the ptest log messages are inline
         self.assertDictEqual(test_logfiles, {})
@@ -525,14 +533,9 @@ class ResultToolTests(OESelftestTestCase):
         # Verify the attached log files
         ptests_suite = testsuites_node.find(".//testsuite[@name='Package Tests']")
         testcases = ptests_suite.findall("testcase")
-        self.assertIn(
-            "[[ATTACHMENT|test-logs/package-passed.log]]",
-            testcases[0].find("system-out").text,
-        )
-        self.assertIn(
-            "[[ATTACHMENT|test-logs/package-skipped.log]]",
-            testcases[1].find("system-out").text,
-        )
+        # Passed and skipped testcases do not include system-out attachments
+        self.assertIsNone(testcases[0].find("system-out"))
+        self.assertIsNone(testcases[1].find("system-out"))
         self.assertIn(
             "[[ATTACHMENT|test-logs/package-error.log]]",
             testcases[2].find("system-out").text,
@@ -540,6 +543,10 @@ class ResultToolTests(OESelftestTestCase):
         self.assertIn(
             "[[ATTACHMENT|test-logs/package-failed.log]]",
             testcases[3].find("system-out").text,
+        )
+        self.assertIn(
+            "[[ATTACHMENT|test-logs/package-error-noresult.log]]",
+            testcases[4].find("system-out").text,
         )
 
         self.maxDiff = None
@@ -550,5 +557,6 @@ class ResultToolTests(OESelftestTestCase):
                 "test-logs/package-skipped.log": "SKIPPED: package-skipped.test_skipped\n",
                 "test-logs/package-error.log": "ERROR: ERROR: package-error.test_error\nFAILED: package-error.test_failed\nSKIPPED: package-error.test_skipped\nPASSED: package-error.test_passed\n",
                 "test-logs/package-failed.log": "FAILED: package-failed.test_failed\nPASS: package-failed.test_passed\n",
+                "test-logs/package-error-noresult.log": "ERROR: -bash: testerror: command not found\nERROR: Exit status is 123\n",
             },
         )
