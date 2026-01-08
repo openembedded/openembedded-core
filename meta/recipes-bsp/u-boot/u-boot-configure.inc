@@ -36,8 +36,9 @@ uboot_configure_config () {
     builddir="${config}-${type}"
 
     config_make_opts=$(uboot_config_get_indexed_value "${UBOOT_CONFIG_MAKE_OPTS}" $i)
+    config_fragments=$(uboot_config_get_indexed_value "${UBOOT_CONFIG_FRAGMENTS}" $i)
 
-    oe_runmake -C ${S} O=${B}/${builddir} ${config_make_opts} ${UBOOT_MAKE_OPTS} ${config}
+    oe_runmake -C ${S} O=${B}/${builddir} ${config_make_opts} ${UBOOT_MAKE_OPTS} ${config} ${config_fragments} ${UBOOT_FRAGMENTS}
     if [ -n "${@' '.join(find_cfgs(d))}" ]; then
         merge_config.sh -m -O ${B}/${builddir} ${B}/${builddir}/.config ${@" ".join(find_cfgs(d))}
         oe_runmake -C ${S} O=${B}/${builddir} oldconfig
@@ -46,7 +47,7 @@ uboot_configure_config () {
 
 uboot_configure () {
     if [ -n "${UBOOT_MACHINE}" ]; then
-        oe_runmake -C ${S} O=${B} ${UBOOT_MAKE_OPTS} ${UBOOT_MACHINE}
+        oe_runmake -C ${S} O=${B} ${UBOOT_MAKE_OPTS} ${UBOOT_MACHINE} ${UBOOT_FRAGMENTS}
     else
         oe_runmake -C ${S} O=${B} ${UBOOT_MAKE_OPTS} oldconfig
     fi

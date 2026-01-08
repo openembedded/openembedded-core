@@ -18,6 +18,8 @@
 # UBOOT_CONFIG_MAKE_OPTS[foo] = "FOO=1"
 # UBOOT_CONFIG_MAKE_OPTS[bar] = "BAR=1"
 #
+# UBOOT_CONFIG_FRAGMENTS[foo] = "foo.fragment"
+#
 # For more information about this, please see the official documentation.
 #
 # There is a legacy method that is still supported where some of the above
@@ -57,6 +59,7 @@ UBOOT_IMAGE ?= "${UBOOT_BINARYNAME}-${MACHINE}-${UBOOT_VERSION}.${UBOOT_SUFFIX}"
 UBOOT_SYMLINK ?= "${UBOOT_BINARYNAME}-${MACHINE}.${UBOOT_SUFFIX}"
 UBOOT_MAKE_TARGET ?= "all"
 UBOOT_MAKE_OPTS ?= ""
+UBOOT_FRAGMENTS ?= ""
 
 # Output the ELF generated. Some platforms can use the ELF file and directly
 # load it (JTAG booting, QEMU) additionally the ELF can be used for debugging
@@ -141,6 +144,8 @@ python () {
     ubootconfigbinaryflags = d.getVarFlags('UBOOT_CONFIG_BINARY')
     ubootconfigmakeopts = d.getVar('UBOOT_CONFIG_MAKE_OPTS')
     ubootconfigmakeoptsflags = d.getVarFlags('UBOOT_CONFIG_MAKE_OPTS')
+    ubootconfigfragments = d.getVar('UBOOT_CONFIG_FRAGMENTS')
+    ubootconfigfragmentsflags = d.getVarFlags('UBOOT_CONFIG_FRAGMENTS')
     # The "doc" varflag is special, we don't want to see it here
     ubootconfigflags.pop('doc', None)
     ubootconfig = (d.getVar('UBOOT_CONFIG') or "").split()
@@ -163,6 +168,9 @@ python () {
 
     if ubootconfigmakeopts:
         raise bb.parse.SkipRecipe("You cannot use UBOOT_CONFIG_MAKE_OPTS as a variable, you can only set flags.")
+
+    if ubootconfigfragments:
+        raise bb.parse.SkipRecipe("You cannot use UBOOT_CONFIG_FRAGMENTS as a variable, you can only set flags.")
 
     if len(ubootconfig) > 0:
         for config in ubootconfig:
@@ -219,6 +227,17 @@ python () {
 
             bb.debug(1, "Appending '%s' to UBOOT_CONFIG_MAKE_OPTS." % make_opts)
             d.appendVar('UBOOT_CONFIG_MAKE_OPTS', make_opts + " ? ")
+
+            # Extract out any settings from UBOOT_CONFIG_FRAGMENTS[config]
+            fragments = ""
+            if ubootconfigfragmentsflags:
+                for f, v in ubootconfigfragmentsflags.items():
+                    if config == f:
+                        bb.debug(1, "Staging '%s' for UBOOT_CONFIG_FRAGMENTS." % v)
+                        fragments = v
+
+            bb.debug(1, "Appending '%s' to UBOOT_CONFIG_FRAGMENTS." % fragments)
+            d.appendVar('UBOOT_CONFIG_FRAGMENTS', fragments + " ? ")
 
             # This recipe might be inherited e.g. by the kernel recipe via kernel-fitimage.bbclass
             # Ensure the uboot specific menuconfig settings do not leak into other recipes
