@@ -2,12 +2,33 @@
 #
 # The format to specify it, in the machine, is:
 #
-# UBOOT_CONFIG ??= <default>
-# UBOOT_CONFIG[foo] = "config,images,binary"
-#
-# or
-#
 # UBOOT_MACHINE = "config"
+#
+# or to build u-boot multiple times with different configs/options:
+#
+# UBOOT_MACHINE = ""
+# UBOOT_CONFIG ??= <default>
+# UBOOT_CONFIG[foo] = "foo_config"
+# UBOOT_CONFIG[bar] = "bar_config"
+#
+# UBOOT_CONFIG_IMAGE_FSTYPES[bar] = "fstype"
+#
+# UBOOT_CONFIG_BINARY[foo] = "binary"
+#
+# UBOOT_CONFIG_MAKE_OPTS[foo] = "FOO=1"
+# UBOOT_CONFIG_MAKE_OPTS[bar] = "BAR=1"
+#
+# For more information about this, please see the official documentation.
+#
+# There is a legacy method that is still supported where some of the above
+# controls can be specified in a comma-separated list.  This method was
+# deemed to be limiting in terms of expanding support to more and more knobs
+# that might need to be turned to customize a config build.
+#
+# UBOOT_MACHINE = ""
+# UBOOT_CONFIG ??= <default>
+# UBOOT_CONFIG[foo] = "foo_config,images,binary"
+# UBOOT_CONFIG[bar] = "bar_config,images,binary"
 #
 # Copyright 2013, 2014 (C) O.S. Systems Software LTDA.
 #
@@ -113,9 +134,13 @@ python () {
 
     ubootmachine = d.getVar("UBOOT_MACHINE")
     ubootconfigflags = d.getVarFlags('UBOOT_CONFIG')
+    ubootconfigimagefstypes = d.getVar('UBOOT_CONFIG_IMAGE_FSTYPES')
+    ubootconfigimagefstypesflags = d.getVarFlags('UBOOT_CONFIG_IMAGE_FSTYPES')
     ubootbinary = d.getVar('UBOOT_BINARY')
-    ubootbinaries = d.getVar('UBOOT_BINARIES')
+    ubootconfigbinary = d.getVar('UBOOT_CONFIG_BINARY')
+    ubootconfigbinaryflags = d.getVarFlags('UBOOT_CONFIG_BINARY')
     ubootconfigmakeopts = d.getVar('UBOOT_CONFIG_MAKE_OPTS')
+    ubootconfigmakeoptsflags = d.getVarFlags('UBOOT_CONFIG_MAKE_OPTS')
     # The "doc" varflag is special, we don't want to see it here
     ubootconfigflags.pop('doc', None)
     ubootconfig = (d.getVar('UBOOT_CONFIG') or "").split()
@@ -130,42 +155,70 @@ python () {
     if ubootmachine and ubootconfig:
         raise bb.parse.SkipRecipe("You cannot use UBOOT_MACHINE and UBOOT_CONFIG at the same time.")
 
-    if ubootconfigflags and ubootbinaries:
-        raise bb.parse.SkipRecipe("You cannot use UBOOT_BINARIES as it is internal to uboot_config.bbclass.")
+    if ubootconfigimagefstypes:
+        raise bb.parse.SkipRecipe("You cannot use UBOOT_CONFIG_IMAGE_FSTYPES as a variable, you can only set flags.")
 
-    if ubootconfigflags and ubootconfigmakeopts:
-        raise bb.parse.SkipRecipe("You cannot use UBOOT_CONFIG_MAKE_OPTS as it is internal to uboot_config.bbclass.")
+    if ubootconfigbinary:
+        raise bb.parse.SkipRecipe("You cannot use UBOOT_CONFIG_BINARY as a variable, you can only set flags.")
+
+    if ubootconfigmakeopts:
+        raise bb.parse.SkipRecipe("You cannot use UBOOT_CONFIG_MAKE_OPTS as a variable, you can only set flags.")
 
     if len(ubootconfig) > 0:
         for config in ubootconfig:
             found = False
+            binary = ubootbinary
+            imagefstype = ""
             for f, v in ubootconfigflags.items():
                 if config == f: 
                     found = True
                     items = v.split(',')
-                    if items[0] and len(items) > 4:
-                        raise bb.parse.SkipRecipe('Only config,images,binary,make_opts can be specified!')
+                    if items[0] and len(items) > 3:
+                        raise bb.parse.SkipRecipe('Only config,images,binary can be specified!')
                     d.appendVar('UBOOT_MACHINE', ' ' + items[0])
                     # IMAGE_FSTYPES appending
                     if len(items) > 1 and items[1]:
-                        bb.debug(1, "Appending '%s' to IMAGE_FSTYPES." % items[1])
-                        d.appendVar('IMAGE_FSTYPES', ' ' + items[1])
+                        bb.debug(1, "Staging '%s' for IMAGE_FSTYPES." % items[1])
+                        imagefstype = items[1]
                     if len(items) > 2 and items[2]:
-                        bb.debug(1, "Appending '%s' to UBOOT_BINARIES." % items[2])
-                        d.appendVar('UBOOT_BINARIES', ' ' + items[2])
-                    else:
-                        bb.debug(1, "Appending '%s' to UBOOT_BINARIES." % ubootbinary)
-                        d.appendVar('UBOOT_BINARIES', ' ' + ubootbinary)
-                    if len(items) > 3 and items[3]:
-                        bb.debug(1, "Appending '%s' to UBOOT_CONFIG_MAKE_OPTS." % items[3])
-                        d.appendVar('UBOOT_CONFIG_MAKE_OPTS', items[3] + " ? ")
-                    else:
-                        bb.debug(1, "Appending '%s' to UBOOT_CONFIG_MAKE_OPTS." % "")
-                        d.appendVar('UBOOT_CONFIG_MAKE_OPTS', " ? ")
+                        bb.debug(1, "Staging '%s' for UBOOT_CONFIG_BINARY." % items[2])
+                        binary = items[2]
                     break
 
             if not found:
-                raise bb.parse.SkipRecipe("The selected UBOOT_CONFIG key %s has no match in %s." % (ubootconfig, ubootconfigflags.keys()))
+                raise bb.parse.SkipRecipe("The selected UBOOT_CONFIG key %s has no match in %s." % (config, ubootconfigflags.keys()))
+
+            # Extract out any settings from UBOOT_IMAGE_FSTYPES[config]
+            if  ubootconfigimagefstypesflags:
+                for f, v in ubootconfigimagefstypesflags.items():
+                    if config == f:
+                        bb.debug(1, "Staging '%s' for IMAGE_FSTYPES." % v)
+                        imagefstype = v
+
+            if imagefstype:
+                bb.debug(1, "Appending '%s' to IMAGE_FSTYPES." % imagefstype)
+                d.appendVar('IMAGE_FSTYPES', ' ' + imagefstype)
+
+            # Extract out any settings from UBOOT_CONFIG_BINARY[config]
+            if  ubootconfigbinaryflags:
+                for f, v in ubootconfigbinaryflags.items():
+                    if config == f:
+                        bb.debug(1, "Staging '%s' for UBOOT_CONFIG_BINARY." % v)
+                        binary = v
+
+            bb.debug(1, "Appending '%s' to UBOOT_CONFIG_BINARY." % binary)
+            d.appendVar('UBOOT_CONFIG_BINARY', binary + " ? ")
+
+            # Extract out any settings from UBOOT_CONFIG_MAKE_OPTS[config]
+            make_opts = ""
+            if  ubootconfigmakeoptsflags:
+                for f, v in ubootconfigmakeoptsflags.items():
+                    if config == f:
+                        bb.debug(1, "Staging '%s' for UBOOT_CONFIG_MAKE_OPTS." % v)
+                        make_opts = v
+
+            bb.debug(1, "Appending '%s' to UBOOT_CONFIG_MAKE_OPTS." % make_opts)
+            d.appendVar('UBOOT_CONFIG_MAKE_OPTS', make_opts + " ? ")
 
             # This recipe might be inherited e.g. by the kernel recipe via kernel-fitimage.bbclass
             # Ensure the uboot specific menuconfig settings do not leak into other recipes
@@ -175,4 +228,22 @@ python () {
                 else:
                     # Disable menuconfig for multiple configs
                     d.setVar('KCONFIG_CONFIG_ENABLE_MENUCONFIG', "false")
+}
+
+uboot_config_get_indexed_value () {
+    local list=$1
+    local index=$2
+
+    local k=""
+
+    IFS="?"
+    for value in $list; do
+        k=$(expr $k + 1);
+        if [ $k -eq $index ]; then
+            break
+        fi
+    done
+    unset IFS
+
+    echo "$value"
 }

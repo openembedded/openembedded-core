@@ -78,28 +78,12 @@ uboot_compile_config () {
 
     builddir="${config}-${type}"
 
-    unset k
-    IFS="?"
-    uboot_config_make_opts="${UBOOT_CONFIG_MAKE_OPTS}"
-    for config_make_opts in $uboot_config_make_opts; do
-        k=$(expr $k + 1);
-        if [ $k -eq $i ]; then
-            break
-        fi
-    done
-    unset IFS
-    unset k
+    config_make_opts=$(uboot_config_get_indexed_value "${UBOOT_CONFIG_MAKE_OPTS}" $i)
+    config_binary=$(uboot_config_get_indexed_value "${UBOOT_CONFIG_BINARY}" $i)
 
     oe_runmake -C ${S} O=${B}/${builddir} ${config_make_opts} ${UBOOT_MAKE_OPTS} ${UBOOT_MAKE_TARGET}
 
-    unset k
-    for binary in ${UBOOT_BINARIES}; do
-        k=$(expr $k + 1);
-        if [ $k -eq $i ]; then
-            uboot_compile_config_copy_binary $config $type $binary
-        fi
-    done
-    unset k
+    uboot_compile_config_copy_binary $config $type $config_binary
 
     # Generate the uboot-initial-env
     if [ -n "${UBOOT_INITIAL_ENV}" ]; then

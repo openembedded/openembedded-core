@@ -530,15 +530,10 @@ do_uboot_assemble_fitimage() {
 
 			builddir="${config}-${type}"
 
-			for binary in ${UBOOT_BINARIES}; do
-				k=$(expr $k + 1);
-				if [ $k -eq $i ]; then
-					break;
-				fi
-			done
+			config_binary=$(uboot_config_get_indexed_value "${UBOOT_CONFIG_BINARY}" $i)
 
 			cd ${B}/${builddir}
-			uboot_assemble_fitimage_helper ${type} ${binary}
+			uboot_assemble_fitimage_helper ${type} ${config_binary}
 		done
 	else
 		cd ${B}
