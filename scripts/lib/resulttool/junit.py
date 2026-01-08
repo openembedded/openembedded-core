@@ -26,14 +26,14 @@ class PtestSummary:
         self.FAILED = []
         self.SKIPPED = []
 
-    def add_status(self, ptest_name, status):
+    def add_status(self, ptest_testcase, status):
         self.tests += 1
         if status == "FAILED":
-            self.FAILED.append(ptest_name)
+            self.FAILED.append(ptest_testcase)
         elif status == "ERROR":
-            self.ERROR.append(ptest_name)
+            self.ERROR.append(ptest_testcase)
         elif status == "SKIPPED":
-            self.SKIPPED.append(ptest_name)
+            self.SKIPPED.append(ptest_testcase)
 
     @property
     def status(self):
@@ -49,32 +49,38 @@ class PtestSummary:
     @property
     def log_summary(self):
         """Return a summary of the ptest suite"""
-        summary_str = "ERROR:" + os.linesep
-        summary_str += os.linesep.join([s + "- " for s in self.ERROR]) + os.linesep
-        summary_str = "FAILED:" + os.linesep
-        summary_str += os.linesep.join([s + "- " for s in self.FAILED]) + os.linesep
-        summary_str = "SKIPPED:" + os.linesep
-        summary_str += os.linesep.join([s + "- " for s in self.SKIPPED]) + os.linesep
-        return summary_str
+        summary_parts = []
+
+        if self.ERROR:
+            summary_parts.append("ERROR:" + os.linesep)
+            summary_parts.append(os.linesep.join(["- " + s for s in self.ERROR]) + os.linesep)
+
+        if self.FAILED:
+            summary_parts.append("FAILED:" + os.linesep)
+            summary_parts.append(os.linesep.join(["- " + s for s in self.FAILED]) + os.linesep)
+
+        if self.SKIPPED:
+            summary_parts.append("SKIPPED:" + os.linesep)
+            summary_parts.append(os.linesep.join(["- " + s for s in self.SKIPPED]) + os.linesep)
+
+        return "".join(summary_parts) if summary_parts else "No failures or errors"
 
 
 def create_testcase(testsuite, testcase_dict, status, status_message, status_text=None, system_out=None):
     """Create a junit testcase node"""
     testcase_node = ET.SubElement(testsuite, "testcase", testcase_dict)
 
+    print("%s -> %s status: %s" % (testcase_dict["classname"], testcase_dict["name"], status))
+
     se = None
     if status == "SKIPPED":
-        se = ET.SubElement(testcase_node, "skipped", message=status_message)
+        se = ET.SubElement(testcase_node, "skipped", message = status_message.replace('\n', ' ') if status_message else None)
     elif status == "FAILED":
-        se = ET.SubElement(testcase_node, "failure", message=status_message)
+        se = ET.SubElement(testcase_node, "failure")
+        se = ET.SubElement(testcase_node, "system-out").text = (status_message or "") + os.linesep + (system_out or "")
     elif status == "ERROR":
-        se = ET.SubElement(testcase_node, "error", message=status_message)
-    if se and status_text:
-        se.text = status_text
-
-    if system_out:
-        ET.SubElement(testcase_node, "system-out").text = system_out
-
+        se = ET.SubElement(testcase_node, "error")
+        se = ET.SubElement(testcase_node, "system-out").text = (status_message or "") + os.linesep + (system_out or "")
 
 def junit_tree(testresults, test_log_dir=None):
     """Create a JUnit XML tree from testresults
@@ -102,9 +108,10 @@ def junit_tree(testresults, test_log_dir=None):
 
             if result_id.startswith("ptestresult."):
                 ptest_name = result_id.split(".", 3)[1]
+                test_case = result_id.split(".", 3)[2]
                 if ptest_name not in ptest_summarys:
                     ptest_summarys[ptest_name] = PtestSummary()
-                ptest_summarys[ptest_name].add_status(ptest_name, result["status"])
+                ptest_summarys[ptest_name].add_status(test_case, result["status"])
             else:
                 image_total_time += int(result["duration"])
                 image_tests += 1
@@ -145,6 +152,7 @@ def junit_tree(testresults, test_log_dir=None):
                     "time": str(result["duration"]),
                 }
 
+                exitcode = result.get("exitcode")
                 log = result.get("log")
                 system_out = None
                 if log:
@@ -155,15 +163,24 @@ def junit_tree(testresults, test_log_dir=None):
                     else:
                         system_out = log
 
+                # Determine status and log summary
+                if ptest_name in ptest_summarys:
+                    status = ptest_summarys[ptest_name].status
+                    log_summary = ptest_summarys[ptest_name].log_summary
+                else:
+                    # When there is no detailed result for the ptest, we assume it was skipped or errored
+                    status = "SKIPPED" if exitcode in (None, "0") else "ERROR"
+                    print("Warning: ptest %s has no detailed results, marking as %s" % (ptest_name, status))
+                    log_summary = log if log else "No log available."
+
                 create_testcase(ptest_testsuite,
                                 testcase_dict,
-                                ptest_summarys[ptest_name].status,
-                                ptest_summarys[ptest_name].log_summary,
+                                status,
+                                log_summary,
                                 system_out=system_out)
 
                 ptest_total_time += int(result["duration"])
                 ptest_tests += 1
-                status = ptest_summarys[ptest_name].status
                 if status == "FAILED":
                     ptest_failures += 1
                 elif status == "ERROR":
@@ -188,6 +205,19 @@ def junit_tree(testresults, test_log_dir=None):
     testsuites_node.set("skipped", str(total_skipped))
     testsuites_node.set("tests", str(total_tests))
     testsuites_node.set("time", str(total_time))
+
+    ptest_success = ptest_tests - ptest_errors - ptest_failures - ptest_skipped
+    image_success = image_tests - image_errors - image_failures - image_skipped
+    total_success = total_tests - total_errors - total_failures - total_skipped
+
+    print("ptest     -> tests: %d, success: %d, error: %d, failures: %d, skipped: %d, time: %d" %
+              (ptest_tests, ptest_success, ptest_errors, ptest_failures, ptest_skipped, ptest_total_time))
+
+    print("testimage -> tests: %d, success: %d, error: %d, failures: %d, skipped: %d, time: %d" %
+            (image_tests, image_success, image_errors, image_failures, image_skipped, image_total_time))
+
+    print("total     -> tests: %d, success: %d, error: %d, failures: %d, skipped: %d, time: %d" %
+            (total_tests, total_success, total_errors, total_failures, total_skipped, total_time))
     tree = ET.ElementTree(testsuites_node)
     return tree, test_logfiles
 
