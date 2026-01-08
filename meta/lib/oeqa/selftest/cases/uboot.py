@@ -150,3 +150,220 @@ QB_DRIVE_TYPE = "/dev/vd"
         ))
 
         self.assertExists(uboot_initial_env_binary_path)
+
+
+class UBootConfigTest(OESelftestTestCase):
+
+    def test_uboot_config_extract(self):
+        """
+        Tests the uboot-config.bbclass python function that extracts all of
+        the config variations into the support variables.
+        """
+
+        self.write_config(textwrap.dedent(f"""
+            UBOOT_BINARY = "defBinary"
+            UBOOT_MACHINE = ""
+            UBOOT_CONFIG = "test1 test2 test3"
+            UBOOT_CONFIG[test1] = "machine1"
+            UBOOT_CONFIG[test2] = "machine2"
+            UBOOT_CONFIG[test3] = "machine3"
+            UBOOT_CONFIG_IMAGE_FSTYPES[test2] = "image_fstype2"
+            UBOOT_CONFIG_IMAGE_FSTYPES[test3] = "image_fstype3"
+            UBOOT_CONFIG_BINARY[test3] = "binary3"
+            UBOOT_CONFIG_MAKE_OPTS[test1] = "OPT=1"
+            UBOOT_CONFIG_MAKE_OPTS[test3] = "OPT=3 FOO=2"
+            UBOOT_CONFIG_FRAGMENTS[test1] = "fragment1a fragment1b"
+            UBOOT_CONFIG_FRAGMENTS[test2] = "fragment2"
+        """))
+
+        bitbake("-e u-boot")
+
+        bb_vars = get_bb_vars(["UBOOT_MACHINE", "IMAGE_FSTYPES", "UBOOT_CONFIG_BINARY", "UBOOT_CONFIG_MAKE_OPTS", "UBOOT_CONFIG_FRAGMENTS"], "u-boot")
+
+        self.assertEqual(bb_vars["UBOOT_MACHINE"], " machine1 machine2 machine3")
+        self.assertTrue(bb_vars["IMAGE_FSTYPES"].endswith(" image_fstype2 image_fstype3"))
+        self.assertEqual(bb_vars["UBOOT_CONFIG_BINARY"], "defBinary ? defBinary ? binary3 ? ")
+        self.assertEqual(bb_vars["UBOOT_CONFIG_MAKE_OPTS"], "OPT=1 ?  ? OPT=3 FOO=2 ? ")
+        self.assertEqual(bb_vars["UBOOT_CONFIG_FRAGMENTS"], "fragment1a fragment1b ? fragment2 ?  ? ")
+
+    def test_uboot_config_extract_legacy(self):
+        """
+        Tests the legacy comma-separated portion of the uboot-config.bbclass
+        python function that extracts all of the config variations into the
+        support variables.
+        """
+
+        self.write_config(textwrap.dedent(f"""
+            UBOOT_BINARY = "defBinary"
+            UBOOT_MACHINE = ""
+            UBOOT_CONFIG = "test1 test2 test3"
+            UBOOT_CONFIG[test1] = "machine1"
+            UBOOT_CONFIG[test2] = "machine2,image_fstype2"
+            UBOOT_CONFIG[test3] = "machine3,image_fstype3,binary3"
+        """))
+
+        bitbake("-e u-boot")
+
+        bb_vars = get_bb_vars(["UBOOT_MACHINE", "IMAGE_FSTYPES", "UBOOT_CONFIG_BINARY", "UBOOT_CONFIG_MAKE_OPTS", "UBOOT_CONFIG_FRAGMENTS"], "u-boot")
+
+        self.assertEqual(bb_vars["UBOOT_MACHINE"], " machine1 machine2 machine3")
+        self.assertTrue(bb_vars["IMAGE_FSTYPES"].endswith(" image_fstype2 image_fstype3"))
+        self.assertEqual(bb_vars["UBOOT_CONFIG_BINARY"], "defBinary ? defBinary ? binary3 ? ")
+        self.assertEqual(bb_vars["UBOOT_CONFIG_MAKE_OPTS"], " ?  ?  ? ")
+        self.assertEqual(bb_vars["UBOOT_CONFIG_FRAGMENTS"], " ?  ?  ? ")
+
+    def test_uboot_config_extract_error_missing_config(self):
+        """
+        Tests the uboot-config.bbclass python function that extracts all of
+        the config variations to make sure it errors on having a missing
+        flag in UBOOT_CONFIG.
+        """
+
+        self.write_config(textwrap.dedent(f"""
+            UBOOT_BINARY = "defBinary"
+            UBOOT_MACHINE = ""
+            UBOOT_CONFIG = "test1 test2 test3"
+            UBOOT_CONFIG[test1] = "machine1"
+            UBOOT_CONFIG[test2] = "machine2"
+        """))
+
+        with self.assertRaises(AssertionError) as cm:
+            bitbake("-e u-boot")
+
+        e = cm.exception
+        s = str(e)
+
+        self.assertIn("ERROR: Nothing PROVIDES 'u-boot'", s)
+        self.assertIn("u-boot was skipped: The selected UBOOT_CONFIG key test3 has no match in dict_keys(['test1', 'test2']).", s)
+
+    def test_uboot_config_extract_error_nothing_set(self):
+        """
+        Tests the uboot-config.bbclass python function that extracts all of
+        the config variations to make sure it errors on not having 
+        UBOOT_MACHINE or UBOOT_CONFIG set.
+        """
+
+        machine = get_bb_var("MACHINE", "u-boot")
+
+        self.write_config(textwrap.dedent(f"""
+            UBOOT_MACHINE = ""
+            UBOOT_CONFIG = ""
+        """))
+
+        with self.assertRaises(AssertionError) as cm:
+            bitbake("-e u-boot")
+
+        e = cm.exception
+        s = str(e)
+
+        self.assertIn("ERROR: Nothing PROVIDES 'u-boot'", s)
+        self.assertIn("u-boot was skipped: Either UBOOT_MACHINE or UBOOT_CONFIG must be set in the %s machine configuration." % machine, s)
+
+    def test_uboot_config_extract_error_set_both_config_and_machine(self):
+        """
+        Tests the uboot-config.bbclass python function that extracts all of
+        the config variations to make sure it errors on setting both 
+        UBOOT_MACHINE or UBOOT_CONFIG.
+        """
+
+        self.write_config(textwrap.dedent(f"""
+            UBOOT_MACHINE = "machine"
+            UBOOT_CONFIG = "test1 test2"
+        """))
+
+        with self.assertRaises(AssertionError) as cm:
+            bitbake("-e u-boot")
+
+        e = cm.exception
+        s = str(e)
+
+        self.assertIn("ERROR: Nothing PROVIDES 'u-boot'", s)
+        self.assertIn("u-boot was skipped: You cannot use UBOOT_MACHINE and UBOOT_CONFIG at the same time.", s)
+
+    def test_uboot_config_extract_error_set_uboot_config_image_fstypes(self):
+        """
+        Tests the uboot-config.bbclass python function that extracts all of
+        the config variations to make sure it errors on setting internal
+        variable UBOOT_CONFIG_IMAGE_FSTYPES.
+        """
+
+        self.write_config(textwrap.dedent(f"""
+            UBOOT_MACHINE = ""
+            UBOOT_CONFIG = "test1 test2"
+            UBOOT_CONFIG_IMAGE_FSTYPES = "fstype"
+        """))
+
+        with self.assertRaises(AssertionError) as cm:
+            bitbake("-e u-boot")
+
+        e = cm.exception
+        s = str(e)
+
+        self.assertIn("ERROR: Nothing PROVIDES 'u-boot'", s)
+        self.assertIn("u-boot was skipped: You cannot use UBOOT_CONFIG_IMAGE_FSTYPES as a variable, you can only set flags.", s)
+
+    def test_uboot_config_extract_error_set_uboot_config_binary(self):
+        """
+        Tests the uboot-config.bbclass python function that extracts all of
+        the config variations to make sure it errors on setting internal
+        variable UBOOT_CONFIG_BINARY.
+        """
+
+        self.write_config(textwrap.dedent(f"""
+            UBOOT_MACHINE = ""
+            UBOOT_CONFIG = "test1 test2"
+            UBOOT_CONFIG_BINARY = "binary"
+        """))
+
+        with self.assertRaises(AssertionError) as cm:
+            bitbake("-e u-boot")
+
+        e = cm.exception
+        s = str(e)
+
+        self.assertIn("ERROR: Nothing PROVIDES 'u-boot'", s)
+        self.assertIn("u-boot was skipped: You cannot use UBOOT_CONFIG_BINARY as a variable, you can only set flags.", s)
+
+    def test_uboot_config_extract_error_set_uboot_config_make_opts(self):
+        """
+        Tests the uboot-config.bbclass python function that extracts all of
+        the config variations to make sure it errors on setting internal
+        variable UBOOT_CONFIG_MAKE_OPTS.
+        """
+
+        self.write_config(textwrap.dedent(f"""
+            UBOOT_MACHINE = ""
+            UBOOT_CONFIG = "test1 test2"
+            UBOOT_CONFIG_MAKE_OPTS = "OPT=1"
+        """))
+
+        with self.assertRaises(AssertionError) as cm:
+            bitbake("-e u-boot")
+
+        e = cm.exception
+        s = str(e)
+
+        self.assertIn("ERROR: Nothing PROVIDES 'u-boot'", s)
+        self.assertIn("u-boot was skipped: You cannot use UBOOT_CONFIG_MAKE_OPTS as a variable, you can only set flags.", s)
+
+    def test_uboot_config_extract_error_set_uboot_config_fragments(self):
+        """
+        Tests the uboot-config.bbclass python function that extracts all of
+        the config variations to make sure it errors on setting internal
+        variable UBOOT_CONFIG_FRAGMENTS.
+        """
+
+        self.write_config(textwrap.dedent(f"""
+            UBOOT_MACHINE = ""
+            UBOOT_CONFIG = "test1 test2"
+            UBOOT_CONFIG_FRAGMENTS = "fragment"
+        """))
+
+        with self.assertRaises(AssertionError) as cm:
+            bitbake("-e u-boot")
+
+        e = cm.exception
+        s = str(e)
+
+        self.assertIn("ERROR: Nothing PROVIDES 'u-boot'", s)
+        self.assertIn("u-boot was skipped: You cannot use UBOOT_CONFIG_FRAGMENTS as a variable, you can only set flags.", s)
