@@ -131,7 +131,16 @@ SPDX_PACKAGE_VERSION[doc] = "The version of a package, software_packageVersion \
 SPDX_PACKAGE_URL ??= ""
 SPDX_PACKAGE_URL[doc] = "Provides a place for the SPDX data creator to record \
 the package URL string (in accordance with the Package URL specification) for \
-a software Package."
+a software Package. DEPRECATED - use SPDX_PACKAGE_URLS instead"
+
+SPDX_PACKAGE_URLS ?= "${SPDX_PACKAGE_URL} ${@oe.purl.get_base_purl(d)}"
+SPDX_PACKAGE_URLS[doc] = "A space separated list of Package URLs (purls) for \
+    the software Package. The first item in this list will be listed as the \
+    packageUrl property of the packages, and all purls (including the first \
+    one) will be listed as external references. The default value is an auto \
+    generated pkg:yocto purl based on the recipe name, version, and layer name. \
+    Override this variable to replace the default, otherwise append or prepend \
+    to add additional purls."
 
 IMAGE_CLASSES:append = " create-spdx-image-3.0"
 SDK_CLASSES += "create-spdx-sdk-3.0"

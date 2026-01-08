@@ -639,12 +639,21 @@ def create_spdx(d):
             set_var_field("SUMMARY", spdx_package, "summary", package=package)
             set_var_field("DESCRIPTION", spdx_package, "description", package=package)
 
-            if d.getVar("SPDX_PACKAGE_URL:%s" % package) or d.getVar("SPDX_PACKAGE_URL"):
-                set_var_field(
-                    "SPDX_PACKAGE_URL",
-                    spdx_package,
-                    "software_packageUrl",
-                    package=package
+            purls = (
+                d.getVar("SPDX_PACKAGE_URLS:%s" % package)
+                or d.getVar("SPDX_PACKAGE_URLS")
+                or ""
+            ).split()
+
+            if purls:
+                spdx_package.software_packageUrl = purls[0]
+
+            for p in sorted(set(purls)):
+                spdx_package.externalIdentifier.append(
+                    oe.spdx30.ExternalIdentifier(
+                        externalIdentifierType=oe.spdx30.ExternalIdentifierType.packageUrl,
+                        identifier=p,
+                    )
                 )
 
             pkg_objset.new_scoped_relationship(
