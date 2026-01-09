@@ -20,7 +20,7 @@ SRC_URI:append:class-nativesdk = " \
            file://environment.d-curl.sh \
 "
 
-SRC_URI[sha256sum] = "955f6e729ad6b3566260e8fef68620e76ba3c31acf0a18524416a185acf77992"
+SRC_URI[sha256sum] = "40df79166e74aa20149365e11ee4c798a46ad57c34e4f68fd13100e2c9a91946"
 
 # Curl has used many names over the years...
 CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl daniel_stenberg:curl"
