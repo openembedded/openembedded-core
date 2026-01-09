@@ -71,7 +71,7 @@ do_compile_ptest() {
 do_install:append:class-target() {
         if ${@bb.utils.contains('PACKAGECONFIG', 'fips', 'true', 'false', d)}; then
           install -d ${D}${bindir}/bin
-          install -m 0755 ${B}/lib/.libs/fipshmac ${D}/${bindir}/
+          ${B}/libtool --mode=install install -m 0755 ${B}/lib/fipshmac ${D}/${bindir}/
         fi
 }
 
