@@ -100,13 +100,6 @@ RRECOMMENDS:alsa-utils-alsactl = "alsa-states"
 do_install() {
 	autotools_do_install
 
-	install -d ${D}${sbindir}
-	install -m 0755 ${B}/alsaconf/alsaconf ${D}${sbindir}/
-	install -m 0755 ${S}/alsa-info/alsa-info.sh ${D}${sbindir}/
-	if ${@bb.utils.contains('PACKAGECONFIG', 'bat', 'true', 'false', d)}; then
-		install -m 0755 ${S}/bat/alsabat-test.sh ${D}${sbindir}/
-	fi
-
 	# If udev is disabled, we told configure to install the rules
 	# in /unwanted, so we can remove them now. If udev is enabled,
 	# then /unwanted won't exist and this will have no effect.
