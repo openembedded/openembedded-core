@@ -57,7 +57,9 @@ do_compile_ptest() {
 
 do_install_ptest () {
     install -d ${D}${PTEST_PATH}/tests
-    find ${B}/tests/.libs -type f -executable -exec cp {} ${D}${PTEST_PATH}/tests \;
+    for f in $(makefile-getvar ${B}/tests/Makefile check_PROGRAMS); do
+        ${B}/libtool --mode=install install ${B}/tests/$f ${D}${PTEST_PATH}/tests
+    done
     cp ${B}/config.h ${D}${PTEST_PATH}
     for i in files xzgrep_expected_output test_files.sh test_scripts.sh test_compress.sh; do
         cp -r ${S}/tests/$i ${D}${PTEST_PATH}/tests
