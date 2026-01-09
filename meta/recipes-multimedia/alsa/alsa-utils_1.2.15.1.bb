@@ -11,23 +11,21 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://alsactl/utils.c;beginline=3;endline=18;md5=96cc06a4cebe5eb7975688ffb0e65642"
 DEPENDS = "alsa-lib ncurses libsamplerate0 bash"
 
-PACKAGECONFIG ??= "udev"
+# alsa-utils specified in SRC_URI due to alsa-utils-scripts recipe
+SRC_URI = "https://www.alsa-project.org/files/pub/utils/alsa-utils-${PV}.tar.bz2"
+SRC_URI[sha256sum] = "5ad79f349e59c30c9a4929ad4995ebee33267473e0e632d7c1a30e2b093d3327"
 
+inherit autotools gettext pkgconfig manpages
+
+PACKAGECONFIG ??= "udev"
 # alsabat can be built also without fftw support (with reduced functionality).
 # It would be better to always enable alsabat, but provide an option for
 # enabling/disabling fftw. The configure script doesn't support that, however
 # (at least in any obvious way), so for now we only support alsabat with fftw
 # or no alsabat at all.
 PACKAGECONFIG[bat] = "--enable-bat,--disable-bat,fftwf"
-
 PACKAGECONFIG[udev] = ",--with-udev-rules-dir=/unwanted/rules.d,udev"
 PACKAGECONFIG[manpages] = "--enable-rst2man --enable-xmlto, --disable-rst2man --disable-xmlto, python3-docutils-native xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
-
-# alsa-utils specified in SRC_URI due to alsa-utils-scripts recipe
-SRC_URI = "https://www.alsa-project.org/files/pub/utils/alsa-utils-${PV}.tar.bz2"
-SRC_URI[sha256sum] = "5ad79f349e59c30c9a4929ad4995ebee33267473e0e632d7c1a30e2b093d3327"
-
-inherit autotools gettext pkgconfig manpages
 
 # alsa-utils is an empty meta-package
 FILES:${PN} = ""
