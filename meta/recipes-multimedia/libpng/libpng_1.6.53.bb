@@ -48,8 +48,9 @@ do_install_ptest() {
     install -m 755 ${S}/contrib/tools/*.sh ${D}${PTEST_PATH}/src/contrib/tools
     install -m 644 ${S}/contrib/tools/*.c ${S}/contrib/tools/*.h ${D}${PTEST_PATH}/src/contrib/tools
 
-    # Install .libs directory binaries to ptest path
-    install -m 755 ${B}/.libs/pngtest ${B}/.libs/pngstest ${B}/.libs/pngimage ${B}/.libs/pngunknown ${B}/.libs/pngvalid ${D}${PTEST_PATH}/src
+    for file in $(makefile-getvar ${B}/Makefile check_PROGRAMS); do
+        ${B}/libtool --mode=install install ${B}/$file ${D}${PTEST_PATH}/src
+    done
 
     # Copy png files to ptest path
     cd ${S} && find contrib -name '*.png' | cpio -pd ${D}${PTEST_PATH}/src
