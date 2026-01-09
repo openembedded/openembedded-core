@@ -222,6 +222,42 @@ def wic_list(args, scripts_path):
 
     return False
 
+_DEBUGFS_VERSION = None
+_DEBUGFS_WARNED = False
+
+def debugfs_version_check(debugfs_path, min_ver=(1, 46, 5)):
+    global _DEBUGFS_VERSION, _DEBUGFS_WARNED
+
+    if _DEBUGFS_WARNED:
+        return
+
+    # Detect version once
+    if _DEBUGFS_VERSION is None:
+        out = ""
+        for flag in ("-V", "-v"):
+            try:
+                out = exec_cmd(f"{debugfs_path} {flag}")
+                break
+            except Exception:
+                continue
+
+        import re
+        m = re.search(r"(\d+)\.(\d+)\.(\d+)", out or "")
+        _DEBUGFS_VERSION = tuple(map(int, m.groups())) if m else None
+
+    ver = _DEBUGFS_VERSION
+
+    # Compare and warn once
+    if ver is not None and ver < min_ver:
+        logger.warning(
+            "debugfs %s detected (< 1.46.5): Directory copies into ext* partitions "
+            "via scripted debugfs (-f) may be unreliable. Consider using a newer "
+            "debugfs, for example via a native sysroot from a newer SDK.",
+            ".".join(map(str, ver)) if ver else "unknown"
+        )
+
+    _DEBUGFS_WARNED = True
+
 
 class Disk:
     def __init__(self, imagepath, native_sysroot, fstypes=('fat', 'ext')):
@@ -352,6 +388,7 @@ class Disk:
         if self.partitions[pnum].fstype.startswith('ext'):
             if isinstance(src, str): # host to image case
                 if os.path.isdir(src):
+                    debugfs_version_check(self.debugfs)
                     base = os.path.abspath(src)
                     base_parent = os.path.dirname(base)
                     cmds = []
