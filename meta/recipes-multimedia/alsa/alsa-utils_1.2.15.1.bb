@@ -9,7 +9,7 @@ SECTION = "console/utils"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://alsactl/utils.c;beginline=3;endline=18;md5=96cc06a4cebe5eb7975688ffb0e65642"
-DEPENDS = "alsa-lib ncurses libsamplerate0"
+DEPENDS = "alsa-lib ncurses libsamplerate0 bash"
 
 PACKAGECONFIG ??= "udev"
 
@@ -29,83 +29,54 @@ SRC_URI[sha256sum] = "5ad79f349e59c30c9a4929ad4995ebee33267473e0e632d7c1a30e2b09
 
 inherit autotools gettext pkgconfig manpages
 
-# This are all packages that we need to make. Also, the now empty alsa-utils
-# ipk depends on them.
-
-ALSA_UTILS_PKGS = "\
-             ${@bb.utils.contains('PACKAGECONFIG', 'bat', 'alsa-utils-alsabat', '', d)} \
-             alsa-utils-alsamixer \
-             alsa-utils-alsatplg \
-             alsa-utils-midi \
-             alsa-utils-aplay \
-             alsa-utils-amixer \
-             alsa-utils-aconnect \
-             alsa-utils-iecset \
-             alsa-utils-speakertest \
-             alsa-utils-aseqnet \
-             alsa-utils-aseqdump \
-             alsa-utils-aseqsend \
-             alsa-utils-alsactl \
-             alsa-utils-alsaloop \
-             alsa-utils-alsaucm \
-             alsa-utils-scripts \
-             alsa-utils-nhltdmicinfo \
-            "
-
-PACKAGES += "${ALSA_UTILS_PKGS}"
-RDEPENDS:${PN} += "${ALSA_UTILS_PKGS}"
-
+# alsa-utils is an empty meta-package
 FILES:${PN} = ""
-ALLOW_EMPTY:alsa-utils = "1"
-FILES:alsa-utils-alsabat     = "${bindir}/alsabat"
-FILES:alsa-utils-alsatplg    = "${bindir}/alsatplg ${libdir}/alsa-topology"
-FILES:alsa-utils-aplay       = "${bindir}/aplay ${bindir}/arecord ${bindir}/axfer"
-FILES:alsa-utils-amixer      = "${bindir}/amixer"
-FILES:alsa-utils-alsamixer   = "${bindir}/alsamixer"
-FILES:alsa-utils-speakertest = "${bindir}/speaker-test ${datadir}/sounds/alsa/ ${datadir}/alsa/speaker-test/"
-FILES:alsa-utils-midi        = "${bindir}/aplaymidi* ${bindir}/arecordmidi* ${bindir}/amidi"
-FILES:alsa-utils-aconnect    = "${bindir}/aconnect"
-FILES:alsa-utils-aseqnet     = "${bindir}/aseqnet"
-FILES:alsa-utils-aseqsend    = "${bindir}/aseqsend"
-FILES:alsa-utils-iecset      = "${bindir}/iecset"
-FILES:alsa-utils-alsactl     = "${sbindir}/alsactl */udev/rules.d/90-alsa-restore.rules */*/udev/rules.d/90-alsa-restore.rules ${systemd_unitdir} ${localstatedir}/lib/alsa ${datadir}/alsa/init/"
-FILES:alsa-utils-aseqdump    = "${bindir}/aseqdump"
-FILES:alsa-utils-alsaloop    = "${bindir}/alsaloop"
-FILES:alsa-utils-alsaucm     = "${bindir}/alsaucm */udev/rules.d/89-alsa-ucm.rules */*/udev/rules.d/89-alsa-ucm.rules"
-FILES:alsa-utils-scripts     = "${sbindir}/alsaconf \
-               ${sbindir}/alsa-info.sh \
-               ${sbindir}/alsabat-test.sh \
-              "
-FILES:alsa-utils-nhltdmicinfo = "${bindir}/nhlt-dmic-info"
+ALLOW_EMPTY:${PN} = "1"
 
-SUMMARY:alsa-utils-alsabat      = "Command-line sound tester for ALSA sound card driver"
-SUMMARY:alsa-utils-alsatplg     = "Converts topology text files into binary format for kernel"
-SUMMARY:alsa-utils-aplay        = "Play (and record) sound files using ALSA"
-SUMMARY:alsa-utils-amixer       = "Command-line control for ALSA mixer and settings"
-SUMMARY:alsa-utils-alsamixer    = "ncurses-based control for ALSA mixer and settings"
-SUMMARY:alsa-utils-speakertest  = "ALSA surround speaker test utility"
-SUMMARY:alsa-utils-midi         = "Miscellaneous MIDI utilities for ALSA"
-SUMMARY:alsa-utils-aconnect     = "ALSA sequencer connection manager"
-SUMMARY:alsa-utils-aseqnet      = "Network client/server for ALSA sequencer"
-SUMMARY:alsa-utils-iecset       = "ALSA utility for setting/showing IEC958 (S/PDIF) status bits"
-SUMMARY:alsa-utils-alsactl      = "Saves/restores ALSA-settings in /etc/asound.state"
-SUMMARY:alsa-utils-aseqdump     = "Shows the events received at an ALSA sequencer port"
-SUMMARY:alsa-utils-alsaloop     = "ALSA PCM loopback utility"
-SUMMARY:alsa-utils-alsaucm      = "ALSA Use Case Manager"
-SUMMARY:alsa-utils-scripts      = "Shell scripts that show help info and create ALSA configuration files"
-SUMMARY:alsa-utils-nhltdmicinfo = "Dumps microphone array information from ACPI NHLT table"
+FILES:${PN}-alsabat      = "${sbindir}/alsabat-test.sh"
+FILES:${PN}-alsactl      = "*/udev/rules.d/90-alsa-restore.rules */*/udev/rules.d/90-alsa-restore.rules ${systemd_unitdir} ${localstatedir}/lib/alsa ${datadir}/alsa/init/"
+FILES:${PN}-alsatplg     = "${libdir}/alsa-topology"
+FILES:${PN}-amidi        = "${bindir}/amidi ${bindir}/aplaymidi* ${bindir}/arecordmidi*"
+FILES:${PN}-aplay        = "${bindir}/aplay ${bindir}/arecord ${bindir}/axfer"
+FILES:${PN}-speaker-test = "${datadir}/sounds/alsa/"
 
-RRECOMMENDS:alsa-utils-alsactl = "alsa-states"
+SUMMARY:${PN}-aconnect       = "ALSA sequencer connection manager"
+SUMMARY:${PN}-alsabat        = "Command-line sound tester for ALSA sound card driver"
+SUMMARY:${PN}-alsaconf       = "ALSA driver configurator script"
+SUMMARY:${PN}-alsactl        = "Saves/restores ALSA-settings in /etc/asound.state"
+SUMMARY:${PN}-alsa-info      = "Gather information about ALSA subsystem"
+SUMMARY:${PN}-alsaloop       = "ALSA PCM loopback utility"
+SUMMARY:${PN}-alsamixer      = "ncurses-based control for ALSA mixer and settings"
+SUMMARY:${PN}-alsatplg       = "Converts topology text files into binary format for kernel"
+SUMMARY:${PN}-alsaucm        = "ALSA Use Case Manager"
+SUMMARY:${PN}-amidi          = "Miscellaneous MIDI utilities for ALSA"
+SUMMARY:${PN}-amixer         = "Command-line control for ALSA mixer and settings"
+SUMMARY:${PN}-aplay          = "Play (and record) sound files using ALSA"
+SUMMARY:${PN}-aseqdump       = "Shows the events received at an ALSA sequencer port"
+SUMMARY:${PN}-aseqnet        = "Network client/server for ALSA sequencer"
+SUMMARY:${PN}-aseqsend       = "Send arbitrary messages to ALSA seqencer port"
+SUMMARY:${PN}-iecset         = "ALSA utility for setting/showing IEC958 (S/PDIF) status bits"
+SUMMARY:${PN}-nhlt-dmic-info = "Dumps microphone array information from ACPI NHLT table"
+SUMMARY:${PN}-speaker-test   = "ALSA surround speaker test utility"
 
-do_install() {
-	autotools_do_install
+RRECOMMENDS:${PN}-alsactl = "alsa-states"
 
+do_install:append() {
 	# If udev is disabled, we told configure to install the rules
 	# in /unwanted, so we can remove them now. If udev is enabled,
 	# then /unwanted won't exist and this will have no effect.
 	rm -rf ${D}/unwanted
 }
 
-PROVIDES = "alsa-utils-alsaconf alsa-utils-scripts"
+python populate_packages:prepend() {
+    pn = d.getVar("PN")
+    packages = do_split_packages(d, d.getVar("bindir"), r"^([^.]+).*$", pn + "-%s", "alsa-utils tool %s", extra_depends="")
+    packages += do_split_packages(d, d.getVar("sbindir"), r"^([^.]+).*$", pn + "-%s", "alsa-utils tool %s", extra_depends="")
+    d.setVar("RDEPENDS:" + pn, " ".join(packages))
+}
 
-RDEPENDS:${PN}-scripts += "bash"
+PACKAGES_DYNAMIC = "^${PN}-.*"
+
+RDEPENDS:${PN}-alsa-info += "bash"
+RDEPENDS:${PN}-alsabat += "bash"
+RDEPENDS:${PN}-alsaconf += "bash"
