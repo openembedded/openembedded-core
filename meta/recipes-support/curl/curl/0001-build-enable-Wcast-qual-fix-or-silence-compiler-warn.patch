@@ -1,0 +1,85 @@
+From 9989d5392e9e61c81fdd3e464511ddd8d73c2f87 Mon Sep 17 00:00:00 2001
+From: Viktor Szakats <commit@vsz.me>
+Date: Fri, 31 Jan 2025 23:20:46 +0100
+Subject: [PATCH] build: enable `-Wcast-qual`, fix or silence compiler warnings
+
+The issues found fell into these categories, with the applied fixes:
+
+- const was accidentally stripped.
+  Adjust code to not cast or cast with const.
+
+- const/volatile missing from arguments, local variables.
+  Constify arguments or variables, adjust/delete casts. Small code
+  changes in a few places.
+
+- const must be stripped because an API dependency requires it.
+  Strip `const` with `CURL_UNCONST()` macro to silence the warning out
+  of our control. These happen at API boundaries. Sometimes they depend
+  on dependency version, which this patch handles as necessary. Also
+  enable const support for the zlib API, using `ZLIB_CONST`. Supported
+  by zlib 1.2.5.2 and newer.
+
+- const must be stripped because a curl API requires it.
+  Strip `const` with `CURL_UNCONST()` macro to silence the warning out
+  of our immediate control. For example we promise to send a non-const
+  argument to a callback, though the data is const internally.
+
+- other cases where we may avoid const stripping by code changes.
+  Also silenced with `CURL_UNCONST()`.
+
+- there are 3 places where `CURL_UNCONST()` is cast again to const.
+  To silence this type of warning:
+  ```
+  lib/vquic/curl_osslq.c:1015:29: error: to be safe all intermediate
+    pointers in cast from 'unsigned char **' to 'const unsigned char **'
+    must be 'const' qualified [-Werror=cast-qual]
+  lib/cf-socket.c:734:32: error: to be safe all intermediate pointers in
+    cast from 'char **' to 'const char **' must be 'const' qualified
+    [-Werror=cast-qual]
+  ```
+  There may be a better solution, but I couldn't find it.
+
+These cases are handled in separate subcommits, but without further
+markup.
+
+If you see a `-Wcast-qual` warning in curl, we appreciate your report
+about it.
+
+Closes #16142
+
+Upstream-Status: Backport [https://github.com/curl/curl/commit/9989d5392e9e61c81fdd3e464511ddd8d73c2f87]
+
+Picked only header file definition, not complete code refactoring.
+CURL_UNCONST will be probably needed also by further CVE patches due to this rework.
+
+Also later modified by removing VS2008 code per 2e1a045d8985e5daa4d9a4f908ed870a16d8e41e.
+
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ lib/curl_setup_once.h | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/lib/curl_setup_once.h b/lib/curl_setup_once.h
+index bf0ee663d3..df5b44c478 100644
+--- a/lib/curl_setup_once.h
++++ b/lib/curl_setup_once.h
+@@ -69,10 +69,18 @@
+ #include <unistd.h>
+ #endif
+ 
+-#ifdef USE_WOLFSSL
++#if defined(HAVE_STDINT_H) || defined(USE_WOLFSSL)
+ #include <stdint.h>
+ #endif
+ 
++/* Macro to strip 'const' without triggering a compiler warning.
++ Use* it for APIs that do not or cannot support the const qualifier. */
++#ifdef HAVE_STDINT_H
++#  define CURL_UNCONST(p) ((void *)(uintptr_t)(const void *)(p))
++#else
++#  define CURL_UNCONST(p) ((void *)(p))  /* Fall back to simple cast */
++#endif
++
+ #ifdef USE_SCHANNEL
+ /* Must set this before <schannel.h> is included directly or indirectly by
+    another Windows header. */
