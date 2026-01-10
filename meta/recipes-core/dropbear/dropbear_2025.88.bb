@@ -22,6 +22,11 @@ SRC_URI = "http://matt.ucc.asn.au/dropbear/releases/dropbear-${PV}.tar.bz2 \
            file://0001-Fix-proxycmd-without-netcat.patch \
            ${@bb.utils.contains('DISTRO_FEATURES', 'pam', '${PAM_SRC_URI}', '', d)} \
            file://CVE-2019-6111.patch \
+           file://CVE-2025-14282-01.patch \
+           file://CVE-2025-14282-02.patch \
+           file://CVE-2025-14282-03.patch \
+           file://CVE-2025-14282-04.patch \
+           file://CVE-2025-14282-05.patch \
            "
 
 SRC_URI[sha256sum] = "783f50ea27b17c16da89578fafdb6decfa44bb8f6590e5698a4e4d3672dc53d4"
