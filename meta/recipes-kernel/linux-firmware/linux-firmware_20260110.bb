@@ -636,6 +636,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-ath12k-qcn9274 \
              ${PN}-ath12k-wcn7850 \
              ${PN}-qca \
+             ${PN}-qca-qca2066 \
              ${PN}-qca-qca61x4-serial \
              ${PN}-qca-qca61x4-usb \
              ${PN}-qca-qca6390 \
@@ -646,7 +647,6 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-qca-wcn399x \
              ${PN}-qca-wcn6750 \
              ${PN}-qca-wcn685x \
-             ${PN}-qca-qca2066 \
              ${PN}-qca-wcn7850 \
              \
              ${PN}-imx-sdma-license ${PN}-imx-sdma-imx6q ${PN}-imx-sdma-imx7d \
@@ -934,6 +934,7 @@ LICENSE:${PN}-ath11k-wcn6855 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath12k = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath12k-qcn9274 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-ath12k-wcn7850 = "Firmware-qualcommAthos_ath10k"
+LICENSE:${PN}-qca-qca2066 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-qca61x4-serial = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-qca61x4-usb = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-qca6390 = "Firmware-qualcommAthos_ath10k"
@@ -944,7 +945,6 @@ LICENSE:${PN}-qca-wcn3988 = "Firmware-qcom"
 LICENSE:${PN}-qca-wcn399x = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-wcn6750 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-wcn685x = "Firmware-qualcommAthos_ath10k"
-LICENSE:${PN}-qca-qca2066 = "Firmware-qualcommAthos_ath10k"
 LICENSE:${PN}-qca-wcn7850 = "Firmware-qcom"
 
 FILES:${PN}-ar3k-license = "${nonarch_base_libdir}/firmware/LICENSE.QualcommAtheros_ar3k"
@@ -982,6 +982,41 @@ FILES:${PN}-ath12k-wcn7850 = "${nonarch_base_libdir}/firmware/ath12k/WCN7850"
 # -ath12k is a virtual package that depends upon all ath12k packages.
 ALLOW_EMPTY:${PN}-ath12k = "1"
 
+FILES:${PN}-qca-qca2066 = " \
+  ${nonarch_base_libdir}/firmware/qca/hpbtfw21.tlv* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.bin* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.bin* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.301* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.302* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.301* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.302* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.309* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.309* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.30a* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.30a* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.b8c* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.b9f* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba0* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba1* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba2* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba3* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba4* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.baa* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.bb8* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.b10c* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21.b111* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b8c* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b9f* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba0* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba1* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba2* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba3* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba4* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.baa* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.bb8* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b10c* \
+  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b111* \
+"
 FILES:${PN}-qca-qca61x4-serial = " \
   ${nonarch_base_libdir}/firmware/qca/nvm_0*.bin* \
   ${nonarch_base_libdir}/firmware/qca/rampatch_0*.bin* \
@@ -1040,41 +1075,6 @@ FILES:${PN}-qca-wcn685x = " \
   ${nonarch_base_libdir}/firmware/qca/wcnhpnv21.b* \
   ${nonarch_base_libdir}/firmware/qca/wcnhpnv21g.b* \
 "
-FILES:${PN}-qca-qca2066 = " \
-  ${nonarch_base_libdir}/firmware/qca/hpbtfw21.tlv* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.bin* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.bin* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.301* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.302* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.301* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.302* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.309* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.309* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.30a* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.30a* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.b8c* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.b9f* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba0* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba1* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba2* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba3* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.ba4* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.baa* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.bb8* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.b10c* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21.b111* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b8c* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b9f* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba0* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba1* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba2* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba3* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.ba4* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.baa* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.bb8* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b10c* \
-  ${nonarch_base_libdir}/firmware/qca/hpnv21g.b111* \
-"
 FILES:${PN}-qca-wcn7850 = " \
   ${nonarch_base_libdir}/firmware/qca/hmtbtfw20.tlv* \
   ${nonarch_base_libdir}/firmware/qca/hmtnv20.b10f* \
@@ -1108,6 +1108,7 @@ RDEPENDS:${PN}-ath12k += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath12k-qcn9274 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath12k-wcn7850 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca += "${PN}-ath10k-license ${PN}-qcom-license"
+RDEPENDS:${PN}-qca-qca2066 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca-qca61x4-serial += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca-qca61x4-usb += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca-qca6390 += "${PN}-ath10k-license"
@@ -1118,7 +1119,6 @@ RDEPENDS:${PN}-qca-wcn3988 += "${PN}-qcom-license"
 RDEPENDS:${PN}-qca-wcn399x += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca-wcn6750 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca-wcn685x += "${PN}-ath10k-license"
-RDEPENDS:${PN}-qca-qca2066 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca-wcn7850 += "${PN}-qcom-license"
 # For ralink
 LICENSE:${PN}-ralink = "Firmware-ralink-firmware"
