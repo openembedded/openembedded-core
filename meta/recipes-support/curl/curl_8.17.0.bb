@@ -15,6 +15,7 @@ SRC_URI = " \
     file://disable-tests \
     file://no-test-timeout.patch \
     file://CVE-2025-13034.patch \
+    file://CVE-2025-14017.patch \
 "
 
 SRC_URI:append:class-nativesdk = " \
