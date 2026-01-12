@@ -16,7 +16,6 @@ SRC_URI = "http://ftp.isc.org/isc/kea/${PV}/${BP}.tar.xz \
            file://kea-dhcp-ddns-server \
            file://kea.volatiles \
            file://fix-multilib-conflict.patch \
-           file://fix_pid_keactrl.patch \
            file://0001-src-lib-log-logger_unittest_support.cc-do-not-write-.patch \
            file://0001-build-boost-1.89.0-fixes.patch \
            file://0001-meson-use-a-runtime-safe-interpreter-string.patch \
@@ -88,10 +87,12 @@ do_install:append() {
     rm -rf ${D}${datadir}/${BPN}/meson-info
     rm -rf ${D}${runtimedir}
     rm -rf ${D}${localstatedir}
+
+    # Remove keactrl
+    rm -f ${D}${sbindir}/keactrl ${D}${sysconfdir}/kea/keactrl.conf
 }
 
-CONFFILES:${PN} = "${sysconfdir}/kea/keactrl.conf \
-                   ${sysconfdir}/kea/kea-ctrl-agent.conf \
+CONFFILES:${PN} = "${sysconfdir}/kea/kea-ctrl-agent.conf \
                    ${sysconfdir}/kea/kea-dhcp-ddns.conf \
                    ${sysconfdir}/kea/kea-dhcp4.conf \
                    ${sysconfdir}/kea/kea-dhcp6.conf \
