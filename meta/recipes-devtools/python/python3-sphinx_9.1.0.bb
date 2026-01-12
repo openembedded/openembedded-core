@@ -22,7 +22,7 @@ RDEPENDS:${PN} = "\
     python3-packaging \
     python3-pygments \
     python3-requests \
-    python3-roman-numerals-py \
+    python3-roman-numerals \
     python3-snowballstemmer \
     python3-sphinxcontrib-applehelp \
     python3-sphinxcontrib-devhelp \
