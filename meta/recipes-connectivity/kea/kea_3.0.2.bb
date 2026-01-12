@@ -76,13 +76,15 @@ do_install:append() {
            ${D}${sbindir}/kea-admin
     rm -rf ${D}${datadir}/${BPN}/meson-info
     rm -rf ${D}${runtimedir}
+    rm -rf ${D}${localstatedir}
 }
 
-do_install:append() {
-    rm -rf "${D}${localstatedir}"
-}
-
-CONFFILES:${PN} = "${sysconfdir}/kea/keactrl.conf"
+CONFFILES:${PN} = "${sysconfdir}/kea/keactrl.conf \
+                   ${sysconfdir}/kea/kea-ctrl-agent.conf \
+                   ${sysconfdir}/kea/kea-dhcp-ddns.conf \
+                   ${sysconfdir}/kea/kea-dhcp4.conf \
+                   ${sysconfdir}/kea/kea-dhcp6.conf \
+                  "
 
 PACKAGES =+ "${PN}-python"
 FILES:${PN}-python = "${nonarch_libdir}/python*/site-packages/*"
