@@ -1658,6 +1658,7 @@ INITRAMFS_IMAGE = "core-image-initramfs-boot"
     def test_extra_partition_plugin(self):
         """Test extra partition plugin"""
         config = dedent("""\
+        IMAGE_EXTRA_PARTITION_FILES_name-foo = "bar.conf"
         IMAGE_EXTRA_PARTITION_FILES_label-foo = "bar.conf;foo.conf"
         IMAGE_EXTRA_PARTITION_FILES_uuid-e7d0824e-cda3-4bed-9f54-9ef5312d105d = "bar.conf;foobar.conf bar2.conf;foobar2.conf bar3.conf bar4.conf"
         IMAGE_EXTRA_PARTITION_FILES = "foo/*"
@@ -1689,9 +1690,13 @@ INITRAMFS_IMAGE = "core-image-initramfs-boot"
 
         try:
             with NamedTemporaryFile("w", suffix=".wks") as wks:
-                wks.writelines(['part / --source extra_partition --ondisk sda --label foo --align 4 --size 5M\n',
-                                'part / --source extra_partition --ondisk sda --fstype=vfat --uuid e7d0824e-cda3-4bed-9f54-9ef5312d105d --align 4 --size 5M\n',
-                                'part / --source extra_partition --ondisk sda --fstype=ext4 --label bar --align 4 --size 5M\n'])
+                wks.writelines([
+                    'part / --source extra_partition --ondisk sda --sourceparams "name=foo" --align 4 --size 5M\n',
+                    'part / --source extra_partition --ondisk sda --label foo --align 4 --size 5M\n',
+                    'part / --source extra_partition --ondisk sda --fstype=vfat --uuid e7d0824e-cda3-4bed-9f54-9ef5312d105d --align 4 --size 5M\n',
+                    'part / --source extra_partition --ondisk sda --fstype=ext4 --label bar --align 4 --size 5M\n',
+                    'bootloader --ptable gpt\n',
+                ])
                 wks.flush()
                 _, wicimg = self._get_wic(wks.name)
 
@@ -1699,14 +1704,15 @@ INITRAMFS_IMAGE = "core-image-initramfs-boot"
             partls = result.output.split('\n')[1:]
 
             # Assert the number of partitions is correct
-            self.assertEqual(3, len(partls), msg="Expect 3 partitions, not %s" % result.output)
+            self.assertEqual(4, len(partls), msg="Expect 4 partitions, not %s" % result.output)
 
             # Fstype column from 'wic ls' should be fstype as given in the part command
-            for part_id, part_fs in enumerate(["fat16", "fat16", "ext4"]):
+            for part_id, part_fs in enumerate(["fat16", "fat16", "fat16", "ext4"]):
                 self.assertIn(part_fs, partls[part_id])
 
             # For each partition, assert expected files exist
             for part, part_glob in enumerate([
+                ["bar.conf"],
                 ["foo.conf"],
                 ["foobar.conf", "foobar2.conf", "bar3.conf", "bar4.conf"],
                 ["bar.conf", "bar2.conf"],

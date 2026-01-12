@@ -18,15 +18,17 @@ class ExtraPartitionPlugin(SourcePlugin):
     The plugin supports:
     - Glob pattern matching for file selection.
     - File renaming.
-    - Suffixes to specify the target partition (by label, UUID, or partname),
-      enabling multiple extra partitions to coexist.
+    - Suffixes to specify the target partition (by params-name, label, UUID,
+      or partname), enabling multiple extra partitions to coexist.
 
     For example:
 
+        IMAGE_EXTRA_PARTITION_FILES_name-randomname = "bar.conf;foo.conf"
         IMAGE_EXTRA_PARTITION_FILES_label-foo = "bar.conf;foo.conf"
         IMAGE_EXTRA_PARTITION_FILES_uuid-e7d0824e-cda3-4bed-9f54-9ef5312d105d = "bar.conf;foobar.conf"
         IMAGE_EXTRA_PARTITION_FILES = "foo/*"
         WICVARS:append = "\
+            IMAGE_EXTRA_PARTITION_FILES_name-randomname \
             IMAGE_EXTRA_PARTITION_FILES_label-foo \
             IMAGE_EXTRA_PARTITION_FILES_uuid-e7d0824e-cda3-4bed-9f54-9ef5312d105d \
         "
@@ -53,11 +55,21 @@ class ExtraPartitionPlugin(SourcePlugin):
                 raise WicError("Couldn't find DEPLOY_DIR_IMAGE, exiting")
 
         extra_files = None
-        for (fmt, id) in (("_uuid-%s", part.uuid), ("_label-%s", part.label), ("_part-name-%s", part.part_name), (None, None)):
-            if fmt:
-                var = fmt % id
-            else:
+        for (fmt, part_id) in (
+                ("_name-%s", source_params.get("name")),
+                ("_uuid-%s", part.uuid),
+                ("_label-%s", part.label),
+                ("_part-name-%s", part.part_name),
+                (None, None)
+        ):
+            if fmt is None:
                 var = ""
+            elif part_id is not None:
+                var = fmt % part_id
+            else:
+                continue
+
+            logger.debug("Looking for extra files in %s" % cls.image_extra_partition_files_var_name + var)
             extra_files = get_bitbake_var(cls.image_extra_partition_files_var_name + var)
             if extra_files is not None:
                 break
