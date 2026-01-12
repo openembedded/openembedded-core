@@ -14,6 +14,7 @@ SRC_URI = "http://ftp.isc.org/isc/kea/${PV}/${BP}.tar.xz \
            file://kea-dhcp4-server \
            file://kea-dhcp6-server \
            file://kea-dhcp-ddns-server \
+           file://kea.volatiles \
            file://fix-multilib-conflict.patch \
            file://fix_pid_keactrl.patch \
            file://0001-src-lib-log-logger_unittest_support.cc-do-not-write-.patch \
@@ -63,17 +64,27 @@ do_compile:prepend:class-target() {
 }
 
 do_install:append() {
-    install -d ${D}${sysconfdir}/init.d
-    install -d ${D}${systemd_system_unitdir}
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'true', 'false', d)}; then
+        install -d ${D}${sysconfdir}/init.d
+        install -d ${D}/${sysconfdir}/default/volatiles
 
-    install -m 0644 ${UNPACKDIR}/kea-dhcp*service ${D}${systemd_system_unitdir}
-    install -m 0755 ${UNPACKDIR}/kea-*-server ${D}${sysconfdir}/init.d
-    sed -i -e 's,@SBINDIR@,${sbindir},g' -e 's,@BASE_BINDIR@,${base_bindir},g' \
-           -e 's,@LOCALSTATEDIR@,${localstatedir},g' -e 's,@SYSCONFDIR@,${sysconfdir},g' \
-           ${D}${systemd_system_unitdir}/kea-dhcp*service ${D}${sbindir}/keactrl
+        install -m 0755 ${UNPACKDIR}/kea-*-server ${D}${sysconfdir}/init.d
+        install -m 0644 ${UNPACKDIR}/kea.volatiles ${D}/${sysconfdir}/default/volatiles/99_kea
+    fi
+
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+        install -d ${D}${systemd_system_unitdir}
+        install -m 0644 ${UNPACKDIR}/kea-dhcp*service ${D}${systemd_system_unitdir}
+
+        sed -i -e 's,@SBINDIR@,${sbindir},g' -e 's,@BASE_BINDIR@,${base_bindir},g' \
+            -e 's,@LOCALSTATEDIR@,${localstatedir},g' -e 's,@SYSCONFDIR@,${sysconfdir},g' \
+            ${D}${systemd_system_unitdir}/kea-dhcp*service
+    fi
+
     sed -i -e "s:${B}:@abs_top_builddir_placeholder@:g" \
            -e "s:${S}:@abs_top_srcdir_placeholder@:g" \
            ${D}${sbindir}/kea-admin
+
     rm -rf ${D}${datadir}/${BPN}/meson-info
     rm -rf ${D}${runtimedir}
     rm -rf ${D}${localstatedir}
