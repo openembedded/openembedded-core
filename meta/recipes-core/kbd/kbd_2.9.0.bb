@@ -25,6 +25,7 @@ RCONFLICTS:${PN} = "console-tools"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/${BPN}/${BP}.tar.xz \
            file://0001-Preserve-only-necessary-metadata-during-install.patch \
+           file://0001-libkbdfile-Fix-problem-with-undeclared-sym_gzopen.patch \
            "
 
 SRC_URI[sha256sum] = "fb3197f17a99eb44d22a3a1a71f755f9622dd963e66acfdea1a45120951b02ed"
@@ -32,9 +33,11 @@ SRC_URI[sha256sum] = "fb3197f17a99eb44d22a3a1a71f755f9622dd963e66acfdea1a4512095
 # 'gzip -n' is set due to https://github.com/legionus/kbd/issues/124
 EXTRA_OECONF = "--disable-tests --enable-compress='gzip -n'"
 PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'pam', d)} \
+                   zlib \
                   "
 
 PACKAGECONFIG[pam] = "--enable-vlock, --disable-vlock, libpam,"
+PACKAGECONFIG[zlib] = "--with-zlib=yes, --with-zlib=no, zlib"
 
 PACKAGES += "${PN}-consolefonts ${PN}-keymaps-pine ${PN}-keymaps ${PN}-unimaps ${PN}-consoletrans"
 
