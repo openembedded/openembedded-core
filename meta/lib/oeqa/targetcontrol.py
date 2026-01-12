@@ -127,6 +127,7 @@ class QemuTarget(BaseTarget):
                             logfile = self.qemulog,
                             kernel = self.kernel,
                             boottime = int(d.getVar("TEST_QEMUBOOT_TIMEOUT")),
+                            native_sysroot = d.getVar("RECIPE_SYSROOT_NATIVE"),
                             tmpfsdir = d.getVar("RUNQEMU_TMPFS_DIR"),
                             logger = logger)
         else:
@@ -140,6 +141,7 @@ class QemuTarget(BaseTarget):
                             use_kvm = use_kvm,
                             dump_dir = dump_dir,
                             logger = logger,
+                            native_sysroot = d.getVar("RECIPE_SYSROOT_NATIVE"),
                             tmpfsdir = d.getVar("RUNQEMU_TMPFS_DIR"),
                             serial_ports = len(d.getVar("SERIAL_CONSOLES").split()),
                             boot_patterns = boot_patterns)
