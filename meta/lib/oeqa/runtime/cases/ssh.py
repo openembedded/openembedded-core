@@ -32,7 +32,7 @@ class SSHTest(OERuntimeTestCase):
               time.sleep(5)
               continue
           else:
-              run_network_serialdebug(self.target.runner)
+              run_network_serialdebug(self.target)
               self.fail("uname failed with \"%s\" (exit code %s)" % (output, status))
         if status != 0:
             self.fail("ssh failed with \"%s\" (exit code %s)" % (output, status))
