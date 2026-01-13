@@ -32,7 +32,10 @@ def run_network_serialdebug(target):
     status, output = target.runner.run_serial("ping -c 1 %s" % target.ip)
     print("ping on target for %s: %s %s" % (target.ip, output, status))
     # Have to use a full path for netstat which isn't in HOSTTOOLS
-    subprocess.call(["/usr/bin/netstat", "-tunape"])
-    subprocess.call(["/usr/bin/netstat", "-ei"])
+    try:
+        subprocess.call(["/usr/bin/netstat", "-tunape"])
+        subprocess.call(["/usr/bin/netstat", "-ei"])
+    except (OSError, subprocess.SubprocessError) as e:
+        print("netstat failed: %s" % e)
     subprocess.call(["ps", "-awx"], shell=True)
     print("PID: %s %s" % (str(os.getpid()), time.time()))
