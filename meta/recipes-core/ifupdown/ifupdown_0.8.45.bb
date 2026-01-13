@@ -5,9 +5,9 @@ This package provides the tools ifup and ifdown which may be used to \
 configure (or, respectively, deconfigure) network interfaces, based on \
 the file /etc/network/interfaces."
 LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://COPYING;md5=94d55d512a9ba36caa9b7df079bae19f"
+LIC_FILES_CHKSUM = "file://COPYING;md5=570a9b3749dd0463a1778803b12a6dce"
 
-SRC_URI = "git://salsa.debian.org/debian/ifupdown.git;protocol=https;branch=master \
+SRC_URI = "git://salsa.debian.org/debian/ifupdown.git;protocol=https;branch=master;tag=${PV} \
            file://99_network \
            file://run-ptest \
            file://0001-Define-FNM_EXTMATCH-for-musl.patch \
@@ -16,7 +16,7 @@ SRC_URI = "git://salsa.debian.org/debian/ifupdown.git;protocol=https;branch=mast
            file://defn2-c-man-don-t-rely-on-dpkg-architecture-to-set-a.patch \
            file://tweak-ptest-script.patch \
            "
-SRCREV = "7d44f9ce6717a4a496fd46f28c52e12dbf5bafdd"
+SRCREV = "9ec193ec5a36f94ac8c647cdb6fe9b49c1a26fed"
 
 inherit ptest update-alternatives
 
