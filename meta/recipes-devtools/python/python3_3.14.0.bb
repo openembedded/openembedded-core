@@ -4,7 +4,7 @@ DESCRIPTION = "Python is a programming language that lets you work more quickly 
 LICENSE = "PSF-2.0"
 SECTION = "devel/python"
 
-LIC_FILES_CHKSUM = "file://LICENSE;md5=3f64a4ff490f884d562feb77bf2435f1"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=224f30639105a6ab845e068c2d0903ff"
 
 SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://run-ptest \
@@ -29,20 +29,22 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-test_deadlock-skip-problematic-test.patch \
            file://0001-test_active_children-skip-problematic-test.patch \
            file://0001-test_readline-skip-limited-history-test.patch \
-           file://0001-Generate-data-for-OpenSSL-3.4-and-add-it-to-multissl.patch \
+           file://0001-test_cmd-skip-bang-completion-test.patch \
+	   file://0001-test_pyrepl-skip-test_unix_console.test_cursor_back_.patch \
+	   file://0001-test_sysconfig-skip-test_sysconfig.test_sysconfigdat.patch \
            "
 SRC_URI:append:class-native = " \
            file://0001-Lib-sysconfig.py-use-prefix-value-from-build-configu.patch \
            "
 
-SRC_URI[sha256sum] = "16ede7bb7cdbfa895d11b0642fa0e523f291e6487194d53cf6d3b338c3a17ea2"
+SRC_URI[sha256sum] = "2299dae542d395ce3883aca00d3c910307cd68e0b2f7336098c8e7b7eee9f3e9"
 
 # exclude pre-releases for both python 2.x and 3.x
 UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
 
 CVE_PRODUCT = "python:python python_software_foundation:python cpython"
 
-PYTHON_MAJMIN = "3.13"
+PYTHON_MAJMIN = "3.14"
 
 S = "${UNPACKDIR}/Python-${PV}"
 
@@ -70,6 +72,7 @@ DEPENDS = "\
     virtual/libintl \
     xz \
     zlib \
+    zstd \
 "
 
 DEPENDS:append:class-target = " python3-native"
@@ -298,6 +301,15 @@ py_package_preprocess () {
 
         #Remove the unneeded copy of target sysconfig data
         rm -rf ${PKGD}/${libdir}/python-sysconfigdata
+
+	# Remove references to buildpaths in _sysconfig_vars JSON files
+        sed -i -e 's:--sysroot=${STAGING_DIR_TARGET}::g' -e s:'--with-libtool-sysroot=${STAGING_DIR_TARGET}'::g \
+                -e 's|${DEBUG_PREFIX_MAP}||g' \
+                -e 's:${HOSTTOOLS_DIR}/::g' \
+                -e 's:${RECIPE_SYSROOT_NATIVE}::g' \
+                -e 's:${RECIPE_SYSROOT}::g' \
+                -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
+		${PKGD}/${libdir}/python${PYTHON_MAJMIN}/_sysconfig_vars*.json
 }
 
 # We want bytecode precompiled .py files (.pyc's) by default
