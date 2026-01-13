@@ -16,8 +16,9 @@ SKIP="$SKIP exit-1.\*"
 SKIP="$SKIP \*io-46.1"
 # io-13.6 explicitly says it can fail on slow/loaded machines
 SKIP="$SKIP \*io-13.6"
-# 14825
-SKIP="$SKIP socket-\* socket_inet-\*"
+# The socket tests seem to be problematic with tight timing conditions, skip them all.
+# 14825 15495
+SKIP="$SKIP socket-\* socket_inet\* socket_inet6\*"
 # These tests seem to be unreliable:
 # https://core.tcl-lang.org/tcl/tktview/3764f4e81f1483ab554c6d60f8483887bde28221
 SKIP="$SKIP http11-\*"
