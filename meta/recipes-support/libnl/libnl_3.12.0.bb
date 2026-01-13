@@ -18,6 +18,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/${BPN}${@d.getVar('PV').replace('.','_')}
            file://run-ptest \
            file://0002-tests-skip-various-tests-when-kernel-returns-EOPNOTS.patch \
            file://0001-tests-add-and-use-_nltst_skip_eopnotsupp-helper.patch \
+           file://0001-tests-cksuite-all-netns.c-skip-route_1-test.patch \
            "
 
 SRC_URI[sha256sum] = "fc51ca7196f1a3f5fdf6ffd3864b50f4f9c02333be28be4eeca057e103c0dd18"
