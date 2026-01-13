@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=715a99d2dd552e6188e74d4ed2914d5a"
 
 SRC_URI = "git://git.sr.ht/~kennylevinsen/seatd;protocol=https;branch=master \
            file://init"
-SRCREV = "566ffeb032af42865dc1210e48cec08368059bb9"
+SRCREV = "a3c56c324c3a84474cc1615d94ccd6a6255d0c10"
 
 inherit meson pkgconfig systemd update-rc.d useradd
 
