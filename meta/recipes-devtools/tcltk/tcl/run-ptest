@@ -24,12 +24,11 @@ SKIP="$SKIP http11-\*"
 # tries to access google.com
 SKIP="$SKIP httpProxy-\*"
 
-for i in tests/*.test; do
-    i=$(basename $i)
-    ./tcltest tests/all.tcl -file $i -skip "$SKIP"
+for name in tests/*.test; do
+    ./tcltest $name -skip "$SKIP"
     if [ $? -eq 0 ]; then
-        echo "PASS: $i"
+        echo "PASS: $name"
     else
-        echo "FAIL: $i"
+        echo "FAIL: $name"
     fi
 done
