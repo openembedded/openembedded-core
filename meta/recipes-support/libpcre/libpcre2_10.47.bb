@@ -39,7 +39,8 @@ EXTRA_OECONF = "\
 "
 CFLAGS += "-D_REENTRANT"
 CXXFLAGS:append:powerpc = " -lstdc++"
-LDFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', '-Wl,--undefined-version', '', d)}"
+LDFLAGS:append:class-target = " ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', '-Wl,--undefined-version', '', d)}"
+LDFLAGS:append:class-nativesdk = " ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', '-Wl,--undefined-version', '', d)}"
 
 PACKAGES =+ "libpcre2-16 libpcre2-32 pcre2grep pcre2grep-doc pcre2test pcre2test-doc"
 
