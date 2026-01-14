@@ -13,7 +13,7 @@ CVE_PRODUCT = "international_components_for_unicode"
 S = "${UNPACKDIR}/icu/source"
 STAGING_ICU_DIR_NATIVE = "${STAGING_DATADIR_NATIVE}/${BPN}/${PV}"
 
-ICU_MAJOR_VER = "${@d.getVar('PV').split('-')[0]}"
+ICU_MAJOR_VER = "${@d.getVar('PV').split('.')[0]}"
 
 inherit autotools pkgconfig github-releases
 
