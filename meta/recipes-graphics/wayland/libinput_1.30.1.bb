@@ -10,7 +10,7 @@ SECTION = "libs"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=bab4ac7dc1c10bc0fb037dc76c46ef8a"
 
-DEPENDS = "libevdev udev mtdev"
+DEPENDS = "libevdev udev"
 
 SRC_URI = "git://gitlab.freedesktop.org/libinput/libinput.git;protocol=https;branch=1.30-branch;tag=${PV} \
            file://run-ptest \
@@ -22,6 +22,7 @@ UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 inherit meson pkgconfig lib_package ptest
 
 # Patch out build directory, otherwise it leaks into ptest binary
+# https://gitlab.freedesktop.org/libinput/libinput/-/issues/1230
 do_configure:append() {
     sed -i -e "s,${WORKDIR},,g" config.h
     if [ -e "litest-config.h" ]; then
@@ -29,14 +30,14 @@ do_configure:append() {
     fi
 }
 
-PACKAGECONFIG ??= "${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
-PACKAGECONFIG[libwacom] = "-Dlibwacom=true,-Dlibwacom=false,libwacom"
+PACKAGECONFIG ??= "mtdev ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
 PACKAGECONFIG[gui] = "-Ddebug-gui=true,-Ddebug-gui=false,cairo gtk+3 wayland-native"
+PACKAGECONFIG[lua] = "-Dlua-plugins=enabled,-Dlua-plugins=disabled,lua"
+PACKAGECONFIG[libwacom] = "-Dlibwacom=true,-Dlibwacom=false,libwacom"
+PACKAGECONFIG[mtdev] = "-Dmtdev=true,-Dmtdev=false,mtdev"
 PACKAGECONFIG[tests] = "-Dtests=true -Dinstall-tests=true,-Dtests=false -Dinstall-tests=false"
 
-UDEVDIR = "`pkg-config --variable=udevdir udev`"
-
-EXTRA_OEMESON += "-Dudev-dir=${UDEVDIR} \
+EXTRA_OEMESON += "-Dudev-dir=$(pkg-config --variable=udevdir udev) \
                   -Ddocumentation=false \
                   -Dzshcompletiondir=no"
 
