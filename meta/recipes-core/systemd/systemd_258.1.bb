@@ -21,8 +21,8 @@ REQUIRED_DISTRO_FEATURES += "systemd"
 SRC_URI += " \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
-           ${@bb.utils.contains('PACKAGECONFIG', 'polkit_hostnamed_fallback', 'file://org.freedesktop.hostname1_no_polkit.conf', '', d)} \
-           ${@bb.utils.contains('PACKAGECONFIG', 'polkit_hostnamed_fallback', 'file://00-hostnamed-network-user.conf', '', d)} \
+           file://org.freedesktop.hostname1_no_polkit.conf \
+           file://00-hostnamed-network-user.conf \
            file://init \
            file://99-default.preset \
            file://systemd-pager.sh \
