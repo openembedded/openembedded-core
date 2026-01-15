@@ -4,24 +4,26 @@ Date: Wed, 22 May 2024 14:02:55 +0200
 Subject: [PATCH] configure: lookup meson exutable from PATH
 
 Upstream-Status: Inappropriate [workaround, would need a real fix for upstream]
+
+Update context for qemu 10.2.0.
+
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
 ---
- configure | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ configure | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/configure b/configure
-index 274a77876..84e429409 100755
+index 82cace1..83bbda9 100755
 --- a/configure
 +++ b/configure
-@@ -995,12 +995,7 @@ mkvenv="$python ${source_path}/python/scripts/mkvenv.py"
- $mkvenv ensuregroup --dir "${source_path}/python/wheels" \
-      ${source_path}/pythondeps.toml meson || exit 1
+@@ -993,10 +993,7 @@ get_pwd() {
+     fi
+ }
  
--# At this point, we expect Meson to be installed and available.
--# We expect mkvenv or pip to have created pyvenv/bin/meson for us.
--# We ignore PATH completely here: we want to use the venv's Meson
--# *exclusively*.
--
--meson="$(cd pyvenv/bin; pwd)/meson"
+-meson="$(cd pyvenv/bin; get_pwd)/meson"
+-if [ -f "$meson$EXESUF" ]; then
+-  meson="$meson$EXESUF"
+-fi
 +meson=`which meson`
  
  # Conditionally ensure Sphinx is installed.

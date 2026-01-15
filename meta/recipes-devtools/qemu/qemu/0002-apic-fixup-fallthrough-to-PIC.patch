@@ -24,16 +24,20 @@ serviced, is -1.
 Signed-off-by: Mark Asselstine <mark.asselstine@windriver.com>
 Upstream-Status: Submitted [https://lists.gnu.org/archive/html/qemu-devel/2013-04/msg00878.html]
 Signed-off-by: He Zhe <zhe.he@windriver.com>
+
+Update context for qemu 10.2.0.
+
+Signed-off-by: Kai Kang <kai.kang@windriver.com>
 ---
  hw/intc/apic.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/hw/intc/apic.c b/hw/intc/apic.c
-index 143d08f1a..5bb008d59 100644
+index aad253a..212b01f 100644
 --- a/hw/intc/apic.c
 +++ b/hw/intc/apic.c
-@@ -756,7 +756,7 @@ int apic_accept_pic_intr(DeviceState *dev)
-     APICCommonState *s = APIC(dev);
+@@ -740,7 +740,7 @@ int apic_accept_pic_intr(APICCommonState *s)
+ {
      uint32_t lvt0;
  
 -    if (!s)
