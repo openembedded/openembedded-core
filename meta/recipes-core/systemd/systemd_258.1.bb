@@ -84,6 +84,7 @@ PACKAGECONFIG ??= " \
     resolved \
     serial-getty-generator \
     set-time-epoch \
+    shell-profile-dropins \
     sysusers \
     timedated \
     timesyncd \
@@ -197,6 +198,7 @@ PACKAGECONFIG[resolved] = "-Dresolve=true,-Dresolve=false"
 PACKAGECONFIG[rfkill] = "-Drfkill=true,-Drfkill=false"
 PACKAGECONFIG[seccomp] = "-Dseccomp=enabled,-Dseccomp=disabled,libseccomp"
 PACKAGECONFIG[selinux] = "-Dselinux=enabled,-Dselinux=disabled,libselinux,initscripts-sushell"
+PACKAGECONFIG[shell-profile-dropins] = ",-Dshellprofiledir=no"
 PACKAGECONFIG[smack] = "-Dsmack=true,-Dsmack=false"
 PACKAGECONFIG[sysext] = "-Dsysext=true, -Dsysext=false"
 PACKAGECONFIG[sysusers] = "-Dsysusers=true,-Dsysusers=false"
