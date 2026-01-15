@@ -168,7 +168,7 @@ diff --git a/src/runtime/os_linux.go b/src/runtime/os_linux.go
 index c9d25a5be8..f9fe1b5f33 100644
 --- a/src/runtime/os_linux.go
 +++ b/src/runtime/os_linux.go
-@@ -486,7 +486,8 @@ func setsig(i uint32, fn uintptr) {
+@@ -487,7 +487,8 @@ func setsig(i uint32, fn uintptr) {
  	sigfillset(&sa.sa_mask)
  	// Although Linux manpage says "sa_restorer element is obsolete and
  	// should not be used". x86_64 kernel requires it. Only use it on
@@ -178,7 +178,7 @@ index c9d25a5be8..f9fe1b5f33 100644
  	if GOARCH == "386" || GOARCH == "amd64" {
  		sa.sa_restorer = abi.FuncPCABI0(sigreturn__sigaction)
  	}
-@@ -562,6 +563,21 @@ func sysSigaction(sig uint32, new, old *sigactiont) {
+@@ -563,6 +564,21 @@ func sysSigaction(sig uint32, new, old *sigactiont) {
  //go:noescape
  func rt_sigaction(sig uintptr, new, old *sigactiont, size uintptr) int32
  
