@@ -11,7 +11,7 @@ require common-source.inc
 
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=8a15a0759ef07f2682d2ba4b893c9afe"
 
-DEPENDS = "llvm-tblgen-native libffi libxml2 zlib zstd"
+DEPENDS = "llvm-tblgen-native libffi libxml2 zlib zstd binutils"
 
 inherit cmake pkgconfig lib_package multilib_header
 
@@ -50,6 +50,7 @@ EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=MinSizeRel \
                   -DLLVM_TOOL_YAML2OBJ_BUILD=OFF \
                   -DLLVM_NATIVE_TOOL_DIR=${STAGING_BINDIR_NATIVE} \
                   -DLLVM_TABLEGEN=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
+                  -DLLVM_BINUTILS_INCDIR=${STAGING_INCDIR} \
                   -DCROSS_TOOLCHAIN_FLAGS_NATIVE='-DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain-native.cmake' \
                  "
 
@@ -125,6 +126,10 @@ llvm_sysroot_preprocess() {
         install -d ${SYSROOT_DESTDIR}${bindir_crossscripts}/
         install -m 0755 ${S}/llvm/tools/llvm-config/llvm-config ${SYSROOT_DESTDIR}${bindir_crossscripts}/
 }
+
+PACKAGES =+ "llvm-linker-tools"
+
+FILES:llvm-linker-tools = "${libdir}/LLVMgold* ${libdir}/libLTO.so.*"
 
 FILES:${PN}-dev += "${libdir}/llvm-config"
 
