@@ -42,7 +42,7 @@ finish_run() {
 		mount --move /run $ROOTFS_DIR/run
 
 		cd $ROOTFS_DIR
-		exec switch_root $ROOTFS_DIR ${bootparam_init:-/sbin/init}
+		exec switch_root $ROOTFS_DIR ${bootparam_init:-/sbin/init} "$@"
 	else
 		debug "No rootfs has been set"
 	fi
