@@ -11,6 +11,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
                     file://alsactl/utils.c;beginline=3;endline=18;md5=96cc06a4cebe5eb7975688ffb0e65642"
 DEPENDS = "alsa-lib ncurses libsamplerate0 bash"
 
+# Only needed as the dynamic packaging was altered, remove on upgrade
+PR = "r1"
+
 # alsa-utils specified in SRC_URI due to alsa-utils-scripts recipe
 SRC_URI = "https://www.alsa-project.org/files/pub/utils/alsa-utils-${PV}.tar.bz2"
 SRC_URI[sha256sum] = "7aaaafbfb01942113ec0c31e51f705910e81079205088ca2f8f137a3869e1a3a"
@@ -35,7 +38,7 @@ FILES:${PN}-alsabat      = "${sbindir}/alsabat-test.sh"
 FILES:${PN}-alsactl      = "*/udev/rules.d/90-alsa-restore.rules */*/udev/rules.d/90-alsa-restore.rules ${systemd_unitdir} ${localstatedir}/lib/alsa ${datadir}/alsa/init/"
 FILES:${PN}-alsatplg     = "${libdir}/alsa-topology"
 FILES:${PN}-amidi        = "${bindir}/amidi ${bindir}/aplaymidi* ${bindir}/arecordmidi*"
-FILES:${PN}-aplay        = "${bindir}/aplay ${bindir}/arecord ${bindir}/axfer"
+FILES:${PN}-aplay        = "${bindir}/aplay ${bindir}/arecord"
 FILES:${PN}-speaker-test = "${datadir}/sounds/alsa/"
 
 SUMMARY:${PN}-aconnect       = "ALSA sequencer connection manager"
@@ -53,11 +56,15 @@ SUMMARY:${PN}-aplay          = "Play (and record) sound files using ALSA"
 SUMMARY:${PN}-aseqdump       = "Shows the events received at an ALSA sequencer port"
 SUMMARY:${PN}-aseqnet        = "Network client/server for ALSA sequencer"
 SUMMARY:${PN}-aseqsend       = "Send arbitrary messages to ALSA seqencer port"
+SUMMARY:${PN}-axfer          = "Transfer audio data frames"
 SUMMARY:${PN}-iecset         = "ALSA utility for setting/showing IEC958 (S/PDIF) status bits"
 SUMMARY:${PN}-nhlt-dmic-info = "Dumps microphone array information from ACPI NHLT table"
 SUMMARY:${PN}-speaker-test   = "ALSA surround speaker test utility"
 
 RRECOMMENDS:${PN}-alsactl = "alsa-states"
+
+RPROVIDES:${PN}-aplay += "${PN}-arecord"
+RPROVIDES:${PN}-amidi += "${PN}-aplaymidi ${PN}-aplaymidi2 ${PN}-arecordmidi ${PN}-arecordmidi2"
 
 do_install:append() {
 	# If udev is disabled, we told configure to install the rules
