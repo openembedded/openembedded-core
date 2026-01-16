@@ -29,11 +29,6 @@ SRC_URI[sha256sum] = "9f5cae93f4fffc1fbc05ae99cdfc708cd60dfd6612ffc0512827025c02
 UPSTREAM_CHECK_URI = "https://gitlab.freedesktop.org/fontconfig/fontconfig/-/tags"
 UPSTREAM_CHECK_REGEX = "releases/(?P<pver>.+)"
 
-do_configure:prepend() {
-    # work around https://bugs.freedesktop.org/show_bug.cgi?id=101280
-    rm -f ${S}/src/fcobjshash.h ${S}/src/fcobjshash.gperf
-}
-
 do_install:append:class-target() {
     # duplicate fc-cache for postinstall script
     mkdir -p ${D}${libexecdir}
