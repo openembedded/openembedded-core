@@ -23,6 +23,7 @@ DEPENDS = "expat freetype zlib gperf-native util-linux"
 SRC_URI = "https://gitlab.freedesktop.org/api/v4/projects/890/packages/generic/fontconfig/${PV}/fontconfig-${PV}.tar.xz \
            file://revert-static-pkgconfig.patch \
            file://musl-fix.patch \
+           file://0001-build-Added-missing-target-rule-dependencies.patch \
            "
 SRC_URI[sha256sum] = "9f5cae93f4fffc1fbc05ae99cdfc708cd60dfd6612ffc0512827025c026fa541"
 
