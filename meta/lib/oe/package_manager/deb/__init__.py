@@ -213,6 +213,7 @@ class DpkgPM(OpkgDpkgPM):
 
     def update(self):
         os.environ['APT_CONFIG'] = self.apt_conf_file
+        os.environ['DPKG_ADMINDIR'] = '/var/lib/dpkg'
 
         self.deploy_dir_lock()
 
@@ -231,6 +232,7 @@ class DpkgPM(OpkgDpkgPM):
             return
 
         os.environ['APT_CONFIG'] = self.apt_conf_file
+        os.environ['DPKG_ADMINDIR'] = '/var/lib/dpkg'
 
         extra_args = ""
         if hard_depends_only:
@@ -282,6 +284,7 @@ class DpkgPM(OpkgDpkgPM):
         os.environ['IPKG_OFFLINE_ROOT'] = self.target_rootfs
         os.environ['OPKG_OFFLINE_ROOT'] = self.target_rootfs
         os.environ['INTERCEPT_DIR'] = self.intercepts_dir
+        os.environ['DPKG_ADMINDIR'] = '/var/lib/dpkg'
 
         if with_dependencies:
             os.environ['APT_CONFIG'] = self.apt_conf_file
@@ -424,6 +427,7 @@ class DpkgPM(OpkgDpkgPM):
 
     def fix_broken_dependencies(self):
         os.environ['APT_CONFIG'] = self.apt_conf_file
+        os.environ['DPKG_ADMINDIR'] = '/var/lib/dpkg'
 
         cmd = "%s %s --allow-unauthenticated -f install" % (self.apt_get_cmd, self.apt_args)
 
