@@ -214,7 +214,11 @@ read_only_rootfs_hook () {
 	# If stateless-rootfs is enabled this is always done as we don't want to save keys then
 	if ${@ 'true' if not bb.utils.contains('IMAGE_FEATURES', 'overlayfs-etc', True, False, d) or bb.utils.contains('IMAGE_FEATURES', 'stateless-rootfs', True, False, d) else 'false'}; then
 		if [ -d ${IMAGE_ROOTFS}/etc/ssh ]; then
-			if [ -e ${IMAGE_ROOTFS}/etc/ssh/ssh_host_rsa_key ]; then
+			ssh_host_key_checkpath=$(sed -n 's/^[ \t]*HostKey[ \t]\+\(.*\)/\1/p' ${IMAGE_ROOTFS}/etc/ssh/sshd_config | head -1)
+			if [ ! -e "$ssh_host_key_checkpath" ]; then
+				ssh_host_key_checkpath=$(ls ${IMAGE_ROOTFS}/etc/ssh/ssh_host_*_key | cut -f1 | head -1)
+			fi
+			if [ -e "$ssh_host_key_checkpath" ]; then
 				echo "SYSCONFDIR=\${SYSCONFDIR:-/etc/ssh}" >> ${IMAGE_ROOTFS}/etc/default/ssh
 				echo "SSHD_OPTS=" >> ${IMAGE_ROOTFS}/etc/default/ssh
 			else
