@@ -160,6 +160,7 @@ python do_generate_vex () {
 
     cve_write_data_json(d, cve_data, cves_status)
 }
+do_generate_vex[vardeps] += "CVE_STATUS CVE_CHECK_STATUSMAP"
 
 addtask generate_vex before do_build
 

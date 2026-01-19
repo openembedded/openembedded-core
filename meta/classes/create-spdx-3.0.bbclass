@@ -159,6 +159,8 @@ do_create_spdx[vardeps] += "\
     SPDX_PROFILES \
     SPDX_NAMESPACE_PREFIX \
     SPDX_UUID_NAMESPACE \
+    CVE_STATUS \
+    CVE_CHECK_STATUSMAP \
     "
 
 addtask do_create_spdx after \
