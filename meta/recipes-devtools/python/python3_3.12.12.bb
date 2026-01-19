@@ -36,6 +36,7 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-test_readline-skip-limited-history-test.patch \
            file://CVE-2025-6075.patch \
            file://CVE-2025-12084.patch \
+           file://CVE-2025-13836.patch \
            "
 
 SRC_URI:append:class-native = " \
