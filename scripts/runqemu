@@ -198,9 +198,9 @@ class BaseConfig(object):
         self.bitbake_e = ''
         self.snapshot = False
         self.wictypes = ('wic.zst', 'wic', 'wic.vmdk', 'wic.qcow2', 'wic.vdi', "wic.vhd", "wic.vhdx")
+        self.tartypes = ('tar.zst', 'tar.bz2', 'tar.gz', 'tar.xz', 'tar')
         self.fstypes = ('ext2', 'ext3', 'ext4', 'ext2.zst', 'ext3.zst', 'ext4.zst',
                         'jffs2', 'nfs', 'btrfs', 'cpio.gz', 'cpio', 'ramfs',
-                        'tar.bz2', 'tar.gz', 'tar.zst',
                         'squashfs', 'squashfs-xz', 'squashfs-lzo',
                         'squashfs-lz4', 'squashfs-zst',
                         'erofs', 'erofs-lz4', 'erofs-lz4hc')
@@ -335,12 +335,12 @@ class BaseConfig(object):
 
     def check_arg_fstype(self, fst):
         """Check and set FSTYPE"""
-        if fst not in self.fstypes + self.vmtypes + self.wictypes:
+        if fst not in self.fstypes + self.vmtypes + self.wictypes + self.tartypes:
             logger.warning("Maybe unsupported FSTYPE: %s" % fst)
         if not self.fstype or self.fstype == fst:
             if fst == 'ramfs':
                 fst = 'cpio.gz'
-            if fst in ('tar.bz2', 'tar.gz'):
+            if fst in self.tartypes:
                 fst = 'nfs'
             self.fstype = fst
         else:
@@ -383,7 +383,7 @@ class BaseConfig(object):
             # Check filename against self.fstypes can handle <file>.cpio.gz,
             # otherwise, its type would be "gz", which is incorrect.
             fst = ""
-            for t in self.fstypes + self.vmtypes + self.wictypes:
+            for t in self.fstypes + self.vmtypes + self.wictypes + self.tartypes:
                 if p.endswith(t):
                     fst = t
                     break
@@ -543,7 +543,7 @@ to your build configuration.
 
         unknown_arg = ""
         for arg in sys.argv[1:]:
-            if arg in self.fstypes + self.vmtypes + self.wictypes:
+            if arg in self.fstypes + self.vmtypes + self.wictypes + self.tartypes:
                 self.check_arg_fstype(arg)
             elif arg == 'nographic':
                 self.nographic = True
@@ -1074,7 +1074,7 @@ to your build configuration.
 
         self.unfs_opts="nfsvers=3,port=%s,tcp,mountport=%s%s" % (nfsd_port, mountd_port, qb_nfsrootfs_extra_opt)
 
-        # Extract .tar.bz2 or .tar.bz if no nfs dir
+        # Extract .tar* if no nfs dir
         if not (self.rootfs and os.path.isdir(self.rootfs)):
             src_prefix = '%s/%s' % (self.get('DEPLOY_DIR_IMAGE'), self.get('IMAGE_LINK_NAME'))
             dest = "%s-nfsroot" % src_prefix
@@ -1083,14 +1083,13 @@ to your build configuration.
                 self.rootfs = dest
             else:
                 src = ""
-                src1 = '%s.tar.bz2' % src_prefix
-                src2 = '%s.tar.gz' % src_prefix
-                if os.path.exists(src1):
-                    src = src1
-                elif os.path.exists(src2):
-                    src = src2
+                for s in self.tartypes:
+                    candidate = '%s.%s' % (src_prefix, s)
+                    if os.path.exists(candidate):
+                        src = candidate
+                        break
                 if not src:
-                    raise RunQemuError("No NFS_DIR is set, and can't find %s or %s to extract" % (src1, src2))
+                    raise RunQemuError("No NFS_DIR is set, and can't find %s.[%s] to extract" % (src_prefix, '|'.join(self.tartypes)))
                 logger.info('NFS_DIR not found, extracting %s to %s' % (src, dest))
                 cmd = ('runqemu-extract-sdk', src, dest)
                 logger.info('Running %s...' % str(cmd))
