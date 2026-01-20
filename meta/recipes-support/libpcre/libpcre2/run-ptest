@@ -1,0 +1,44 @@
+#!/bin/sh
+
+echo "START: ptest-runner"
+date +"%Y-%m-%dT%H:%M"
+echo "BEGIN: $(pwd)"
+
+# Space-separated list of test binaries
+TESTS="pcre2posix_test RunGrepTest RunTest"
+
+total=0
+pass=0
+fail=0
+results=""
+
+for T in $TESTS; do
+    echo "Running $T"
+    total=$((total + 1))
+    if ./"$T"; then
+        echo "PASS: $T"
+        pass=$((pass + 1))
+        results="${results}\nPASS:  ${T}"
+    else
+        echo "FAIL: $T"
+        fail=$((fail + 1))
+        results="${results}\nFAIL:  ${T}"
+    fi
+done
+echo "============================================================================"
+echo "Testsuite summary for PCRE"
+echo "============================================================================"
+
+if [ -n "$results" ]; then
+    printf "%b\n" "$results"
+fi
+
+# Summary with per-test details
+echo "============================================================================"
+echo "# TOTAL: $total"
+echo "# PASS:  $pass"
+echo "# FAIL:  $fail"
+echo "============================================================================"
+
+# Exit code based on failures
+[ "$fail" -eq 0 ] && exit 0 || exit 1
