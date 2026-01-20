@@ -11,7 +11,7 @@ import oe.types
 from oeqa.core.decorator import OETestTag
 from oeqa.core.decorator.data import skipIfNotArch, skipIfNotMachine
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import bitbake, runqemu, get_bb_var
+from oeqa.utils.commands import bitbake, runqemu, get_bb_var, get_bb_vars
 
 
 @OETestTag("runqemu")
@@ -189,17 +189,25 @@ class QemuTest(OESelftestTestCase):
     def setUpClass(cls):
         super(QemuTest, cls).setUpClass()
         cls.recipe = 'core-image-minimal'
-        cls.machine = get_bb_var('MACHINE')
-        cls.deploy_dir_image = get_bb_var('DEPLOY_DIR_IMAGE')
-        cls.image_link_name = get_bb_var('IMAGE_LINK_NAME', cls.recipe)
-        cls.cmd_common = "runqemu nographic snapshot"
-        cls.qemuboot_conf = "%s.qemuboot.conf" % (cls.image_link_name)
-        cls.qemuboot_conf = os.path.join(cls.deploy_dir_image, cls.qemuboot_conf)
+        cls.image_fstypes = "tar.zst"
 
         cls.write_config(cls,
 """
-IMAGE_FSTYPES += "tar.bz2"
-""")
+IMAGE_FSTYPES += "%s"
+""" % cls.image_fstypes)
+
+        bb_vars = get_bb_vars([
+            'DEPLOY_DIR_IMAGE',
+            'IMAGE_LINK_NAME',
+            'MACHINE',
+            ],
+            cls.recipe)
+        cls.deploy_dir_image = bb_vars['DEPLOY_DIR_IMAGE']
+        cls.image_link_name = bb_vars['IMAGE_LINK_NAME']
+        cls.machine = bb_vars['MACHINE']
+        cls.cmd_common = "runqemu nographic snapshot"
+        cls.qemuboot_conf = "%s.qemuboot.conf" % (cls.image_link_name)
+        cls.qemuboot_conf = os.path.join(cls.deploy_dir_image, cls.qemuboot_conf)
 
         bitbake(cls.recipe)
 
@@ -231,7 +239,7 @@ IMAGE_FSTYPES += "tar.bz2"
             self.assertTrue(qemu_shutdown_succeeded, 'Failed: %s does not shutdown within timeout(%s)' % (self.machine, shutdown_timeout))
 
     def test_qemu_can_boot_nfs_and_shutdown(self):
-        rootfs_tar = "%s.tar.bz2" % (self.image_link_name)
+        rootfs_tar = "%s.%s" % (self.image_link_name, self.image_fstypes)
         rootfs_tar = os.path.join(self.deploy_dir_image, rootfs_tar)
         self.assertExists(rootfs_tar)
         cmd = "%s %s" % (self.cmd_common, rootfs_tar)
