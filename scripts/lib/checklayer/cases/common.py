@@ -32,13 +32,14 @@ class CommonCheckLayer(OECheckLayerTestCase):
 
         # If a layer's README references another README, then the checks below are not valid
         if re.search('README', data, re.IGNORECASE):
+            print("Layer README references another README; skipping further README checks.")
             return
 
-        self.assertIn('maintainer', data.lower())
-        self.assertIn('patch', data.lower())
+        self.assertIn('maintainer', data.lower(), msg="No maintainer info found in README.")
+        self.assertIn('patch', data.lower(), msg="No patching information found in README.")
         # Check that there is an email address in the README
         email_regex = re.compile(r"[^@]+@[^@]+")
-        self.assertTrue(email_regex.match(data))
+        self.assertTrue(email_regex.match(data), msg="No email address found in README.")
 
     def find_file_by_name(self, globs):
         """
