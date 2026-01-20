@@ -39,7 +39,7 @@ class CommonCheckLayer(OECheckLayerTestCase):
         self.assertIn('patch', data.lower(), msg="No patching information found in README.")
         # Check that there is an email address in the README
         email_regex = re.compile(r"[^@]+@[^@]+")
-        self.assertTrue(email_regex.match(data), msg="No email address found in README.")
+        self.assertTrue(email_regex.search(data), msg="No email address found in README.")
 
     def find_file_by_name(self, globs):
         """
