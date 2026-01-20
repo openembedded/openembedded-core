@@ -202,7 +202,8 @@ class SystemdUnit():
         try:
             for dependent in config.get('Install', prop):
                 # expand any %i to instance (ignoring escape sequence %%)
-                dependent = re.sub("([^%](%%)*)%i", "\\g<1>{}".format(instance), dependent)
+                if instance is not None:
+                    dependent = re.sub("([^%](%%)*)%i", "\\g<1>{}".format(re.escape(instance)), dependent)
                 wants = systemdir / "{}.{}".format(dependent, dirstem) / service
                 add_link(wants, target)
 
@@ -212,13 +213,13 @@ class SystemdUnit():
     def enable(self, units_enabled=[]):
         # if we're enabling an instance, first extract the actual instance
         # then figure out what the template unit is
-        template = re.match(r"[^@]+@(?P<instance>[^\.]*)\.", self.unit)
+        template = re.match(r"[^@]+@(?P<instance>.*)\.", self.unit)
         instance_unit_name = None
         if template:
             instance = template.group('instance')
             if instance != "":
                 instance_unit_name = self.unit
-            unit = re.sub(r"@[^\.]*\.", "@.", self.unit, 1)
+            unit = re.sub(r"@{}\.".format(re.escape(instance)), "@.", self.unit, 1)
         else:
             instance = None
             unit = self.unit
