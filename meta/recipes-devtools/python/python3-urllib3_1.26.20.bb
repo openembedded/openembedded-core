@@ -9,6 +9,7 @@ inherit pypi setuptools3
 
 SRC_URI += " \
     file://CVE-2025-50181.patch \
+    file://CVE-2025-66418.patch \
 "
 
 RDEPENDS:${PN} += "\
