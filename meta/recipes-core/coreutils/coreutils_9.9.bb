@@ -15,6 +15,8 @@ inherit autotools gettext texinfo
 
 SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
            file://remove-usr-local-lib-from-m4.patch \
+           file://0001-fix-lseek-copy-loop.patch \
+           file://0002-fix-lseek-copy-loop.patch \
            file://run-ptest \
            "
 SRC_URI[sha256sum] = "19bcb6ca867183c57d77155eae946c5eced88183143b45ca51ad7d26c628ca75"

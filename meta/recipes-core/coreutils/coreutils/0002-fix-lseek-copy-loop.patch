@@ -1,0 +1,58 @@
+From 33bc44e1ba3aa4c70f3cd16aa9c41331543986dd Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?P=C3=A1draig=20Brady?= <P@draigBrady.com>
+Date: Mon, 5 Jan 2026 14:46:33 +0000
+Subject: [PATCH] copy: protect against infinite loop due to pathological race
+
+Consider:
+
+1. In infer_scantype():
+    - SEEK_DATA returns 0
+      - hole punched at 0
+    - SEEK_HOLE returns 0 (now a hole)
+    - Cache scan_inference->hole_start = 0
+2. In lseek_copy():
+      - data written at 0
+    - ext_start = 0, use cached hole_start = 0
+    - ext_len = 0
+    - now loop doesn't progress
+
+* src/copy-file-data.c (lseek_copy): Apply a more defensive check
+to ensure we only use the cached offsets in SCAN_INFERENCE once.
+This protects against an infinite loop where an extent (at SRC_POS)
+flip flops between data and hole extent while infer_scantype()
+and lseek_copy() are inspecting it.  I.e. ensure we use SEEK_HOLE
+to progress the copy.
+
+Upstream-Status: Backport [commit 33bc44e1ba3aa4c70f3cd16aa9c41331543986dd]
+Signed-off-by: Paul Barker <paul@pbarker.dev>
+---
+ src/copy-file-data.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/src/copy-file-data.c b/src/copy-file-data.c
+index 56b669fe72..9bc4311af4 100644
+--- a/src/copy-file-data.c
++++ b/src/copy-file-data.c
+@@ -335,12 +335,19 @@ lseek_copy (int src_fd, int dest_fd, char **abuf, idx_t buf_size,
+ 
+   debug->sparse_detection = COPY_DEBUG_EXTERNAL;
+ 
++  bool used_scan_inference = false;
++
+   for (off_t ext_start = scan_inference->ext_start;
+        0 <= ext_start && ext_start < max_ipos; )
+     {
+-      off_t ext_end = (ext_start == src_pos
+-                       ? scan_inference->hole_start
+-                       : lseek (src_fd, ext_start, SEEK_HOLE));
++      off_t ext_end;
++      if (ext_start == src_pos && ! used_scan_inference)
++        {
++          ext_end = scan_inference->hole_start;
++          used_scan_inference = true;
++        }
++      else
++        ext_end = lseek (src_fd, ext_start, SEEK_HOLE);
+       if (0 <= ext_end)
+         ext_end = MIN (ext_end, max_ipos);
+       else
