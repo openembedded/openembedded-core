@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6f65012d1daf98cb09b386cfb68df26b"
 
 inherit autotools gettext texinfo update-alternatives pkgconfig
 
-DEPENDS += "autoconf-archive-native"
+DEPENDS += "autoconf-archive-native pod2man-native"
 
 SRC_URI = "${GNU_MIRROR}/wget/wget-${PV}.tar.gz \
            file://0002-improve-reproducibility.patch \
