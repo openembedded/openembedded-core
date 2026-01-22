@@ -1,0 +1,62 @@
+From 3339e2e8c6324fde73a0c5b292fc9f2e5c86931d Mon Sep 17 00:00:00 2001
+From: Yi Zhao <yi.zhao@windriver.com>
+Date: Wed, 21 Jan 2026 20:45:30 +0800
+Subject: [PATCH] Make python site path configurable
+
+By making the python site path configurable, we can set the correct
+installation directory when enabling multilib.
+
+Upstream-Status: Inappropriate [oe specific]
+
+Signed-off-by: Yi Zhao <yi.zhao@windriver.com>
+---
+ docs/meson.build  | 4 ++--
+ meson.build       | 4 ++--
+ meson_options.txt | 1 +
+ 3 files changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/docs/meson.build b/docs/meson.build
+index d9ad736..4bf2a9c 100644
+--- a/docs/meson.build
++++ b/docs/meson.build
+@@ -15,5 +15,5 @@ custom_target('reference_docs.json',
+   command: [meson.current_source_dir() / 'collect-sections.py', '@OUTPUT@'],
+   build_always_stale: true,
+   install: true,
+-  install_dir: py.get_install_dir() / 'blueprintcompiler',
+-)
+\ No newline at end of file
++  install_dir: get_option('python_site_dir') / 'blueprintcompiler',
++)
+diff --git a/meson.build b/meson.build
+index 405ed10..2a8d324 100644
+--- a/meson.build
++++ b/meson.build
+@@ -25,7 +25,7 @@ config = configuration_data({
+ if meson.is_subproject()
+   config.set('MODULE_PATH', meson.current_source_dir())
+ else
+-  config.set('MODULE_PATH', py.get_install_dir())
++  config.set('MODULE_PATH', get_option('python_site_dir'))
+ endif
+ 
+ blueprint_compiler = configure_file(
+@@ -39,7 +39,7 @@ blueprint_compiler = configure_file(
+ if meson.is_subproject()
+   meson.override_find_program('blueprint-compiler', blueprint_compiler)
+ else
+-  install_subdir('blueprintcompiler', install_dir: py.get_install_dir())
++  install_subdir('blueprintcompiler', install_dir: get_option('python_site_dir'))
+ endif
+ 
+ subdir('tests')
+diff --git a/meson_options.txt b/meson_options.txt
+index c3c5661..5e71bfa 100644
+--- a/meson_options.txt
++++ b/meson_options.txt
+@@ -1 +1,2 @@
+ option('docs', type: 'boolean', value: false)
++option('python_site_dir', type: 'string', value: '')
+-- 
+2.34.1
+
