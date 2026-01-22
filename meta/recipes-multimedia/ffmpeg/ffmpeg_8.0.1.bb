@@ -38,6 +38,7 @@ ARM_INSTRUCTION_SET:armv6 = "arm"
 # Should be API compatible with libav (which was a fork of ffmpeg)
 PROVIDES = "libav"
 
+DEPENDS = "pod2man-native"
 DEPENDS:append:x86 = " nasm-native"
 DEPENDS:append:x86-64 = " nasm-native"
 
