@@ -26,7 +26,7 @@ SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
 
 SRC_URI[sha256sum] = "821ab0695c842eab51752a81980c92b0410c7eadd04103f791d5d2a526784966"
 
-DEPENDS = "libgpg-error libassuan"
+DEPENDS = "libgpg-error-native libgpg-error libassuan"
 
 RRECOMMENDS:${PN} += "${PN}-tool"
 
