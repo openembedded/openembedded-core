@@ -34,6 +34,8 @@ DEPENDS += "perlcross-native zlib virtual/crypt"
 # make 4.1 has race issues with the double-colon usage of MakeMaker, see #14096
 DEPENDS += "make-native"
 
+PROVIDES = "pod2man"
+
 PERL_LIB_VER = "${@'.'.join(d.getVar('PV').split('.')[0:2])}.0"
 
 PACKAGECONFIG ??= "gdbm"
