@@ -3317,13 +3317,9 @@ RDEPENDS:${PN}-vxge = "${PN}-vxge-license"
 LICENSE:${PN}-whiteheat = "GPL-2.0-only"
 FILES:${PN}-whiteheat = "${nonarch_base_libdir}/firmware/whiteheat*"
 
-# For wil6210 - Qualcomm Atheros support for 11ad family of chips
-LICENSE:${PN}-qualcommatheros-ath10k-license = "Firmware-qualcommAthos_ath10k"
-FILES:${PN}-qualcommatheros-ath10k-license = "${nonarch_base_libdir}/firmware/LICENSE.QualcommAtheros_ath10k"
-
 LICENSE:${PN}-wil6210 = "Firmware-qualcommAthos_ath10k"
 FILES:${PN}-wil6210 = "${nonarch_base_libdir}/firmware/wil6210*"
-RDEPENDS:${PN}-wil6210 = "${PN}-qualcommatheros-ath10k-license"
+RDEPENDS:${PN}-wil6210 = "${PN}-ath10k-license"
 
 # For xe - Intel Graphics driver
 LICENSE:${PN}-xe-license = "Firmware-xe"
