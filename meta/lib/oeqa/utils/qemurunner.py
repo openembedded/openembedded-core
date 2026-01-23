@@ -130,7 +130,7 @@ class QemuRunner:
 
     def log(self, msg, extension=""):
         if self.logfile:
-            with codecs.open(self.logfile + extension, "ab") as f:
+            with open(file=self.logfile + extension, mode="ab") as f:
                 f.write(msg)
         self.msg += self.decode_qemulog(msg)
 
