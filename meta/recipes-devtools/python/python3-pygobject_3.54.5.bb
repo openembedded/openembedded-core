@@ -19,6 +19,8 @@ DEPENDS += "python3 glib-2.0"
 GNOME_COMPRESS_TYPE = "gz"
 GNOMEBN = "pygobject"
 
+SRC_URI += "file://semicolon.patch"
+
 SRC_URI[archive.sha256sum] = "b6656f6348f5245606cf15ea48c384c7f05156c75ead206c1b246c80a22fb585"
 
 S = "${UNPACKDIR}/${GNOMEBN}-${PV}"
