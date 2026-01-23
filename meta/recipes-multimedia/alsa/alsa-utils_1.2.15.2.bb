@@ -77,6 +77,13 @@ python populate_packages:prepend() {
     pn = d.getVar("PN")
     packages = do_split_packages(d, d.getVar("bindir"), r"^([^.]+).*$", pn + "-%s", "alsa-utils tool %s", extra_depends="")
     packages += do_split_packages(d, d.getVar("sbindir"), r"^([^.]+).*$", pn + "-%s", "alsa-utils tool %s", extra_depends="")
+
+    # Remove packages that are handled by manual FILES assignments
+    tools_in_manual_packages = [
+        "aplaymidi", "aplaymidi2", "arecordmidi", "arecordmidi2", "axfer", "alsabat-test"
+    ]
+    packages = [pkg for pkg in packages if not any(pkg.endswith("-" + tool) for tool in tools_in_manual_packages)]
+
     d.setVar("RDEPENDS:" + pn, " ".join(packages))
 }
 
