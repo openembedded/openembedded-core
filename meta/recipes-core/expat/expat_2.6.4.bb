@@ -41,6 +41,8 @@ SRC_URI = "${GITHUB_BASE_URI}/download/R_${VERSION_TAG}/expat-${PV}.tar.bz2  \
            file://CVE-2025-59375-22.patch \
            file://CVE-2025-59375-23.patch \
            file://CVE-2025-59375-24.patch \
+           file://CVE-2026-24515-01.patch \
+           file://CVE-2026-24515-02.patch \
            "
 
 GITHUB_BASE_URI = "https://github.com/libexpat/libexpat/releases/"
