@@ -99,6 +99,10 @@ CACHED_CONFIGUREVARS += "ac_cv_path_PATH_PASSWD_PROG=${bindir}/passwd"
 # We don't want to depend on libblockfile
 CACHED_CONFIGUREVARS += "ac_cv_header_maillock_h=no"
 
+# This allows overriding the key location
+OPENSSH_HOST_KEY_DIR_READONLY_CONFIG ?= "/var/run/ssh"
+OPENSSH_HOST_KEY_DIR ?= "/etc/ssh"
+
 do_configure:prepend () {
 	export LD="${CC}"
 	install -m 0600 ${UNPACKDIR}/sshd_config ${B}/
@@ -113,24 +117,24 @@ sshd_hostkey_setup() {
 	# Enable specific ssh host keys
 	sed -i '/HostKey/d' ${D}${sysconfdir}/ssh/sshd_config
 	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-rsa','true','false',d)}; then
-		echo "HostKey /etc/ssh/ssh_host_rsa_key" >> ${D}${sysconfdir}/ssh/sshd_config
+		echo "HostKey ${OPENSSH_HOST_KEY_DIR}/ssh_host_rsa_key" >> ${D}${sysconfdir}/ssh/sshd_config
 	fi
 	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-ecdsa','true','false',d)}; then
-		echo "HostKey /etc/ssh/ssh_host_ecdsa_key" >> ${D}${sysconfdir}/ssh/sshd_config
+		echo "HostKey ${OPENSSH_HOST_KEY_DIR}/ssh_host_ecdsa_key" >> ${D}${sysconfdir}/ssh/sshd_config
 	fi
 	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-ed25519','true','false',d)}; then
-		echo "HostKey /etc/ssh/ssh_host_ed25519_key" >> ${D}${sysconfdir}/ssh/sshd_config
+		echo "HostKey ${OPENSSH_HOST_KEY_DIR}/ssh_host_ed25519_key" >> ${D}${sysconfdir}/ssh/sshd_config
 	fi
 
 	sed -i '/HostKey/d' ${D}${sysconfdir}/ssh/sshd_config_readonly
 	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-rsa','true','false',d)}; then
-		echo "HostKey /var/run/ssh/ssh_host_rsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+		echo "HostKey ${OPENSSH_HOST_KEY_DIR_READONLY_CONFIG}/ssh_host_rsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
 	fi
 	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-ecdsa','true','false',d)}; then
-		echo "HostKey /var/run/ssh/ssh_host_ecdsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+		echo "HostKey ${OPENSSH_HOST_KEY_DIR_READONLY_CONFIG}/ssh_host_ecdsa_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
 	fi
 	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-ed25519','true','false',d)}; then
-		echo "HostKey /var/run/ssh/ssh_host_ed25519_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+		echo "HostKey ${OPENSSH_HOST_KEY_DIR_READONLY_CONFIG}/ssh_host_ed25519_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
 	fi
 }
 
