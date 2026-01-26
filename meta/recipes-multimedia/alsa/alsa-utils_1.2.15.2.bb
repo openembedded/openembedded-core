@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 DEPENDS = "alsa-lib ncurses libsamplerate0 bash"
 
 # Only needed as the dynamic packaging was altered, remove on upgrade
-PR = "r1"
+PR = "r2"
 
 # alsa-utils specified in SRC_URI due to alsa-utils-scripts recipe
 SRC_URI = "https://www.alsa-project.org/files/pub/utils/alsa-utils-${PV}.tar.bz2"
@@ -63,6 +63,7 @@ SUMMARY:${PN}-speaker-test   = "ALSA surround speaker test utility"
 
 RRECOMMENDS:${PN}-alsactl = "alsa-states"
 
+RPROVIDES:${PN}-alsabat += "${PN}-alsabat-test"
 RPROVIDES:${PN}-aplay += "${PN}-arecord"
 RPROVIDES:${PN}-amidi += "${PN}-aplaymidi ${PN}-aplaymidi2 ${PN}-arecordmidi ${PN}-arecordmidi2"
 
