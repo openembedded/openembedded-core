@@ -24,7 +24,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/Linux-PAM-${PV}.tar.xz \
            file://pam-volatiles.conf \
            "
 
-SRC_URI[sha256sum] = "21dbcec6e01dd578f14789eac9024a18941e6f2702a05cf91b28c232eeb26ab0"
+SRC_URI[sha256sum] = "3d86b6383fb5fd9eb9578d2cd47d92801191f4bf3f9bc61419bfefc8aa1e531a"
 
 DEPENDS = "bison-native flex-native libxml2-native virtual/crypt"
 
@@ -47,7 +47,7 @@ FILES:${PN} = " \
     ${nonarch_libdir}/tmpfiles.d/*.conf \
 "
 FILES:${PN}-dev += "${base_libdir}/security/*.la ${libdir}/*.la ${libdir}/lib*${SOLIBSDEV}"
-FILES:${PN}-runtime = "${sysconfdir} ${sbindir} ${nonarch_libdir}/systemd/system"
+FILES:${PN}-runtime = "${sysconfdir} ${sbindir} ${nonarch_libdir}/systemd/system  ${datadir}/pam" 
 FILES:${PN}-xtests = "${datadir}/Linux-PAM/xtests"
 
 # libpam installs /etc/environment for use with the pam_env plugin. Make sure it is
@@ -165,7 +165,7 @@ CONFFILES:${PN}-runtime += "${sysconfdir}/pam.d/common-auth"
 CONFFILES:${PN}-runtime += "${sysconfdir}/pam.d/common-password"
 CONFFILES:${PN}-runtime += "${sysconfdir}/pam.d/common-session-noninteractive"
 CONFFILES:${PN}-runtime += "${sysconfdir}/pam.d/common-account"
-CONFFILES:${PN}-runtime += "${sysconfdir}/security/limits.conf"
+CONFFILES:${PN}-runtime += "${datadir}/pam/security/limits.conf"
 
 GITHUB_BASE_URI = "https://github.com/linux-pam/linux-pam/releases"
 
