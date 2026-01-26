@@ -358,8 +358,10 @@ do_install () {
 	fi
 
 	# Remove the sysvinit specific configuration file for systemd systems to avoid confusion
-	if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'false', 'true', d)}; then
+	if ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'false', 'true', d)} &&
+		${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
 		rm -f ${D}${sysconfdir}/syslog-startup.conf
+		rm -f ${D}${sysconfdir}/syslog.conf
 	fi
 }
 
