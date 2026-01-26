@@ -7,7 +7,7 @@ inherit pypi python_setuptools_build_meta
 
 PYPI_PACKAGE = "yamllint"
 
-SRC_URI[sha256sum] = "81f7c0c5559becc8049470d86046b36e96113637bcbe4753ecef06977c00245d"
+SRC_URI[sha256sum] = "09e5f29531daab93366bb061e76019d5e91691ef0a40328f04c927387d1d364d"
 
 RDEPENDS:${PN} += "python3-pathspec python3-pyyaml"
 
