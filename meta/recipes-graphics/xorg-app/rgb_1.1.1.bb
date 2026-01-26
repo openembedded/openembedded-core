@@ -7,10 +7,10 @@ lookup, the rgb program to convert the text file into the binary database \
 format."
 
 DEPENDS += " xorgproto util-macros"
-LIC_FILES_CHKSUM = "file://COPYING;md5=ef598adbe241bd0b0b9113831f6e249a"
+LIC_FILES_CHKSUM = "file://COPYING;md5=dc4f23db04773a414e3c39cc97a9f415"
 PE = "1"
 
 SRC_URI_EXT = "xz"
-SRC_URI[sha256sum] = "fc03d7f56e5b2a617668167f8927948cce54f93097e7ccd9f056077f479ed37b"
+SRC_URI[sha256sum] = "c80ff280a02f56c30fadc2dfa210fc6979c4ab968afa315278cb97768b64ecab"
 
 FILES:${PN} += "${datadir}/X11"
