@@ -27,6 +27,9 @@
 # deemed to be limiting in terms of expanding support to more and more knobs
 # that might need to be turned to customize a config build.
 #
+# NOTE: Suport for this legacy flow is now deprecated and will be removed from
+#       master after the wrynose LTS release.
+#
 # UBOOT_MACHINE = ""
 # UBOOT_CONFIG ??= <default>
 # UBOOT_CONFIG[foo] = "foo_config,images,binary"
@@ -181,14 +184,19 @@ python () {
                 if config == f: 
                     found = True
                     items = v.split(',')
+                    if items[0] and len(items) > 1:
+                        bb.warn('Legacy use of UBOOT_CONFIG[%s] = "%s" is deprecated.  Please move to using UBOOT_CONFIG_* variables:' % (f, v))
+                        bb.warn('    UBOOT_CONFIG[%s] = "%s"' % (f, items[0]))
                     if items[0] and len(items) > 3:
                         raise bb.parse.SkipRecipe('Only config,images,binary can be specified!')
                     d.appendVar('UBOOT_MACHINE', ' ' + items[0])
                     # IMAGE_FSTYPES appending
                     if len(items) > 1 and items[1]:
+                        bb.warn('    UBOOT_CONFIG_IMAGE_FSTYPES[%s] = "%s"' % (f, items[1]))
                         bb.debug(1, "Staging '%s' for IMAGE_FSTYPES." % items[1])
                         imagefstype = items[1]
                     if len(items) > 2 and items[2]:
+                        bb.warn('    UBOOT_CONFIG_BINARY[%s] = "%s"' % (f, items[2]))
                         bb.debug(1, "Staging '%s' for UBOOT_CONFIG_BINARY." % items[2])
                         binary = items[2]
                     break
