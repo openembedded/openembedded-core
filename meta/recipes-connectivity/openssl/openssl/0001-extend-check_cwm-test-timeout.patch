@@ -20,7 +20,7 @@ index 4a1e886a71..39f8c61ef9 100644
 +++ b/test/radix/main.c
 @@ -25,6 +25,11 @@ static int test_script(int idx)
      int testresult;
-     TERP_CONFIG cfg = {0};
+     TERP_CONFIG cfg = { 0 };
  
 +    // check_cwm test sometimes times out, the default 3000ms is
 +    // not enough if the test execution starves for CPU
