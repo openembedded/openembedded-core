@@ -9,10 +9,15 @@
 
 import argparse
 import json
+import math
+import copy
 import logging
 import os
 import re
 import sys
+from urllib.request import urlopen
+from urllib import error
+
 from collections import namedtuple, OrderedDict
 from operator import attrgetter
 from xml.etree import ElementTree as ET
@@ -24,7 +29,7 @@ import scriptpath
 from build_perf import print_table
 from build_perf.report import (metadata_xml_to_json, results_xml_to_json,
                                aggregate_data, aggregate_metadata, measurement_stats,
-                               AggregateTestData)
+                               AggregateTestData, TimeVal, SizeVal)
 from build_perf import html
 from buildstats import BuildStats, diff_buildstats, BSVerDiff
 
@@ -292,6 +297,49 @@ class BSSummary(object):
             if ver_diff.rchanged:
                 self.ver_diff['Revision changed'] = [(n, "{} &rarr; {}".format(r.left.evr, r.right.evr)) for n, r in ver_diff.rchanged.items()]
 
+# Helpers for generating chart JSON
+
+CLASS_MAP = {
+    TimeVal: "time",
+    SizeVal: "size",
+}
+
+# Sanitize inf and nan, because JSON doesn’t support those
+def sanitize(obj):
+    if isinstance(obj, float):
+        if not math.isfinite(obj):
+            return None
+        return obj
+
+    if isinstance(obj, dict):
+        return {k: sanitize(v) for k, v in obj.items()}
+
+    if isinstance(obj, list):
+        return [sanitize(v) for v in obj]
+
+    if isinstance(obj, tuple):
+        return [sanitize(v) for v in obj]  # JSON has no tuples
+
+    # leave everything else alone
+    return obj
+
+# Default json.dump handlers for unknown data types 
+def json_default(obj):
+    # Class objects (only TimeVal and SizeVal)
+    if obj in CLASS_MAP:
+        return CLASS_MAP[obj]
+    
+    # Custom object instances (BSSummary)
+    if hasattr(obj, "__dict__"):
+        # This happens _after_ sanitze(tests) in json.dump,
+        # so we need to sanitize again…
+        return sanitize(obj.__dict__)
+
+    # NaN / Infinity (JSON does not like these)
+    if isinstance(obj, float) and not math.isfinite(obj):
+        return None
+
+    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
 def print_html_report(data, id_comp, buildstats):
     """Print report in html format"""
@@ -374,6 +422,109 @@ def print_html_report(data, id_comp, buildstats):
     chart_opts = {'haxis': {'min': get_data_item(data[0][0], 'layers.meta.commit_count'),
                             'max': get_data_item(data[-1][0], 'layers.meta.commit_count')}
                  }
+
+    # Get commit annotations from Yocto’s git,
+    # mush them into the metadata object,
+    # and also output them as a POJO so eCharts can use them
+
+    commitAnnotationsURL = 'https://git.yoctoproject.org/yocto-buildstats/plain/annotations.json'
+    commitAnnotationsJSON = {}
+    try:
+        response = urlopen(commitAnnotationsURL)
+        commitAnnotationsJSON = json.loads(response.read())
+        # Splice the annotations into the metadata
+        commit = metadata.get('commit', {})
+        annotations_out = {}
+
+        if (h := commit.get('value')) in commitAnnotationsJSON:
+            annotations_out['value'] = commitAnnotationsJSON[h]
+
+        if (h := commit.get('value_old')) in commitAnnotationsJSON:
+            annotations_out['value_old'] = commitAnnotationsJSON[h]
+
+        if annotations_out:
+            metadata['commit_annotation'] = annotations_out
+            metadata['commit_annotation']['title'] = "Commit annotation"
+
+    except error.URLError as e:
+        logging.debug(f"Couldn't find any commit annotations at {commitAnnotationsURL}, reason: {e.reason}.")
+    except json.decoder.JSONDecodeError as e:
+        logging.error(f"Invalid JSON received from {commitAnnotationsURL}, error: {e}")
+    except Exception as e:
+        logging.exception(f"Unexpected error while loading annotations: {e}")
+
+    ### JSONifying data for consumption by Apache eCharts
+    
+    # Make a copy of tests to pare down into what we need as JSON
+    tests_for_JSON = copy.deepcopy(tests)
+
+    # Some transformation pipeline functions, because we don't want to output the
+    # entire JSON to the html file, that would be wasteful.
+    def skip_failed_tests(test):
+        if test.get('status') != 'SUCCESS':
+            return None
+        return test
+
+    # Adds the div ids so each chart knows where to render itself into
+    def add_chart_ids(test):
+        for measurement in test.get('measurements', []):
+            measurement['chart_elem_start_time_id'] = f"{test.get('name', '')}_{measurement.get('name', '')}_chart_start_time"
+            measurement['chart_elem_commit_count_id'] = f"{test.get('name', '')}_{measurement.get('name', '')}_chart_commit_count"
+        return test
+
+    # Compose sample series data for the charts
+    def parse_samples(test):
+        for measurement in test.get('measurements', []):
+            start_time_samples = []
+            commit_count_samples = []
+            combo_samples = []
+            for sample in measurement.get('samples', []):
+                # Mean is either a TimeVal or a SizeVal
+                mean = sample.get('mean')
+                # One chart shows duration in minutes/size over start time
+                # The other shows duration in minutes/size over commit count
+                duration_in_minutes = None
+                if isinstance(mean, TimeVal):
+                    hh, mm, ss = mean.hms()
+                    duration_in_minutes = hh*60 + mm + int(ss)/60 + int(ss*1000) % 1000/3600;
+                # Charts either need the time in minutes (from TimeVal) as their value, or size (SizeVal)
+                start_time_samples.append([int(sample.get('start_time')) * 1000, duration_in_minutes if duration_in_minutes is not None else mean])
+                commit_count_samples.append([sample.get('commit_num'), duration_in_minutes if duration_in_minutes is not None else mean])
+                combo_samples.append([int(sample.get('start_time')) * 1000, sample.get('commit_num'), sample.get('commit'), duration_in_minutes if duration_in_minutes is not None else mean])
+            # For echarts consumption, all we need is samples in the format [time_in_milliseconds, build_length_in_minutes],
+            # eg [1760544944000, 59.42388888888889]
+            measurement['combo_samples'] = combo_samples
+        return test
+
+    # Throw away all the large things we don't need
+    def clean_measurements(test):
+        for m in test.get('measurements', []):
+            m.pop('buildstats', None)
+            m.pop('value', None)
+            m.pop('samples', None)
+        return test
+
+    # Apply pipeline
+    for i, test in enumerate(tests_for_JSON):
+        for func in (skip_failed_tests, add_chart_ids, parse_samples, clean_measurements):
+            test = func(test)
+            if test is None:  # skip this test entirely
+                break
+        if test is not None:
+            tests_for_JSON[i] = test
+    
+    json_str = json.dumps(
+        sanitize(tests_for_JSON),
+        indent=2,
+        default=json_default,
+        allow_nan=False,
+    )
+    
+    # Output all the JSON to the head of the report html
+    print(f"""<script type="text/javascript">
+    const commitAnnotations = {commitAnnotationsJSON}
+    const chartData = {json_str}
+</script>""")
 
     print(html.template.render(title="Build Perf Test Report",
                                metadata=metadata, test_data=tests,

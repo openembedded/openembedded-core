@@ -1,24 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-{# Scripts, for visualization#}
-<!--START-OF-SCRIPTS-->
 <script src=" https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js "></script>
 
-{# Render measurement result charts #}
-{% for test in test_data %}
-  {% if test.status == 'SUCCESS' %}
-    {% for measurement in test.measurements %}
-      {% set chart_elem_start_time_id = test.name + '_' + measurement.name + '_chart_start_time' %}
-      {% set chart_elem_commit_count_id = test.name + '_' + measurement.name + '_chart_commit_count' %}
-      {% include 'measurement_chart.html' %}
-    {% endfor %}
-  {% endif %}
-{% endfor %}
-
-<!--END-OF-SCRIPTS-->
-
-{# Styles #}
 <style>
 :root {
   --text: #000;
@@ -103,12 +87,22 @@ table {
 tr {
   border-bottom: 1px solid var(--trborder);
 }
-tr:first-child {
+thead {
   border-bottom: 1px solid var(--trtopborder);
 }
 tr:last-child {
   border-bottom: none;
 }
+
+table.meta-table tbody td, table.meta-table tbody th {
+  vertical-align: top;
+  line-height: 1.5em;
+}
+
+.fixed-table-header-width {
+  width: 40%;
+}
+
 a {
   text-decoration: none;
   font-weight: bold;
@@ -133,6 +127,19 @@ button:hover {
 .tab button.active {
   background-color: #d6d9e0;
 }
+
+.chart-tooltip {
+  max-width: 70vw;
+}
+
+.chart-tooltip ul {
+  padding-left: 1.5em;
+}
+
+.chart-tooltip li {
+  max-width: 30em;
+  text-wrap: auto;
+}
 @media (prefers-color-scheme: dark) {
   :root {
     --text: #e9e8fa;
@@ -154,6 +161,16 @@ button:hover {
     background-color: #545a69;
   }
 }
+
+@media (max-width: 1024px) {
+  body {
+    margin-inline: 0.5em;
+  }
+  .card-container {
+    padding-inline: 0;
+  }
+}
+
 </style>
 
 <title>{{ title }}</title>
@@ -169,23 +186,28 @@ button:hover {
   <h2>General</h2>
   <h4>The table provides an overview of the comparison between two selected commits from the same branch.</h4>
   <table class="meta-table" style="width: 100%">
-    <tr>
-      <th></th>
-      <th>Current commit</th>
-      <th>Comparing with</th>
-    </tr>
-    {% for key, item in metadata.items() %}
-    <tr>
-      <th>{{ item.title }}</th>
-      {%if key == 'commit' %}
-        <td>{{ poky_link(item.value) }}</td>
-        <td>{{ poky_link(item.value_old) }}</td>
-      {% else %}
-        <td>{{ item.value }}</td>
-        <td>{{ item.value_old }}</td>
-      {% endif %}
-    </tr>
-    {% endfor %}
+    <thead>
+      <tr>
+        <th></th>
+        <th class="fixed-table-header-width">Current commit</th>
+        <th class="fixed-table-header-width">Comparing with</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for key, item in metadata.items() %}
+      <tr>
+        <th>{{ item.title }}</th>
+        {%if key == 'commit' %}
+          <td>{{ poky_link(item.value) }}{%if metadata.commit_annotation and metadata.commit_annotation.value %}<br>{{metadata.commit_annotation.value}}{% endif %}</td>
+          <td>{{ poky_link(item.value_old) }}{%if metadata.commit_annotation and metadata.commit_annotation.value %}<br>{{metadata.commit_annotation.value_old}}{% endif %}</td>
+        {% elif key == 'commit_annotation' %}
+        {% else %}
+          <td>{{ item.value }}</td>
+          <td>{{ item.value_old }}</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+    </tbody>
   </table>
 
   {# Test result summary #}
@@ -380,7 +402,137 @@ button:hover {
   {% endfor %}
 </div>
 
-<script>
+<script type="text/javascript">
+
+const getCommonChartConfig = (measurement) => {
+  return {
+    tooltip: {
+      trigger: 'axis',
+      enterable: true,
+      className: 'chart-tooltip',
+      position: function (point, params, dom, rect, size) {
+        return [point[0], '0%'];
+      },
+    },
+    xAxis: {
+      type: 'time',
+    },
+    yAxis: {
+      name: measurement.value_type == 'time' ? 'Duration in minutes' : 'Disk size in MB',
+      type: 'value',
+      min: function(value) {
+        return Math.round(value.min - 0.5);
+      },
+      max: function(value) {
+        return Math.round(value.max + 0.5);
+      }
+    },
+    dataZoom: [
+      {
+        type: 'slider',
+        xAxisIndex: 0,
+        filterMode: 'none'
+      },
+    ]
+  }
+}
+
+const drawChart = (chart_id, chartOptions) => {
+  const chart_div = document.getElementById(chart_id);
+  const theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default'
+
+  const chart = echarts.init(chart_div, theme, {height: 320});
+  chart.setOption(chartOptions);
+  window.addEventListener('resize', () => {
+    chart.resize();
+  });
+  requestAnimationFrame(() => chart.resize());
+}
+
+const generateTooltip = (param, sample, type) => {
+  // Data might be an array of arrays (for startTime charts) or an arraay of commit numbers (for commit number charts)
+  const value = Array.isArray(param[0].value) ? param[0].value[1] : param[0].value
+  const formattedDate = new Date(sample[0][0]).toString().replace(/GMT[+-]\d{4}/, '').replace(/\(.*\)/, '(CEST)');
+
+  // Add commit hash to the tooltip as a link
+  const commitLink = `https://git.yoctoproject.org/yocto-buildstats/commit/?id=${sample[0][2]}`
+  const commitAnnotation = commitAnnotations[sample[0][2]]
+  console.log('commitAnnotation', commitAnnotation)
+  if (type == 'time') {
+    const hours = Math.floor(value/60)
+    const minutes = Math.floor(value % 60)
+    const seconds = Math.floor((value * 60) % 60)
+    return `<ul>
+  <li><strong>Duration:</strong> ${hours}:${minutes}:${seconds}</li>
+  <li><strong>Commit number:</strong> <a href="${commitLink}" target="_blank" rel="noreferrer noopener">${sample[0][1]}</a></li>
+  ${commitAnnotation ? `<li><strong>Commit annotation:</strong> ${commitAnnotation}</li>` : ''}
+  <li><strong>Start time:</strong> ${formattedDate}</li>
+</ul>
+`
+  }
+  return `<strong>Size:</strong> ${value.toFixed(2)} MB, <strong>Commit number:</strong> <a href="${commitLink}" target="_blank" rel="noreferrer noopener">${sample[0][1]}</a>, <br/> <strong>Start time:</strong> ${formattedDate}`;
+}
+
+chartData.forEach(test => {
+  // sample array is:
+  // [start_time_in_ms, commit_num, commit_hash, duration_in_minutes_or_size]
+  test.measurements.forEach(measurement => {
+    const sharedChartConfig = getCommonChartConfig(measurement)
+    const startTimeChartConfig = {
+      ...sharedChartConfig,
+      tooltip: {
+        ...sharedChartConfig.tooltip,
+        formatter: function (param) {
+          const sample = measurement.combo_samples.filter(([start_time_in_ms, commit_num, commit_hash, duration_in_minutes_or_size]) => param[0].axisValue === start_time_in_ms)
+          return generateTooltip(param, sample, measurement.value_type)
+        }
+      },
+      series: [
+        {
+          name: measurement.value_type,
+          type: 'line',
+          symbol: 'none',
+          data: measurement.combo_samples.map((sample) => {
+            return [sample[0], sample[3]]
+          })
+        }
+      ]
+    }
+    const commitCountChartConfig = {
+      ...sharedChartConfig,
+      // Custom xAxis that displays the commit numbers
+      xAxis: {
+        name: 'Commit count',
+        type: 'category',
+        data: measurement.combo_samples.map((sample) => {
+            return sample[1]
+          })
+      },
+      tooltip: {
+        ...sharedChartConfig.tooltip,
+        formatter: function (param) {
+          const sample = measurement.combo_samples.filter(([start_time_in_ms, commit_num, commit_hash, duration_in_minutes_or_size]) => param[0].axisValue == commit_num)
+          return generateTooltip(param, sample, measurement.value_type)
+        }
+      },
+      series: [
+        {
+          name: measurement.value_type,
+          type: 'line',
+          symbol: 'none',
+          data: measurement.combo_samples.map((sample) => {
+            return sample[3]
+          })
+        }
+      ]
+    }
+    drawChart(measurement.chart_elem_start_time_id, startTimeChartConfig)
+    drawChart(measurement.chart_elem_commit_count_id, commitCountChartConfig)
+  })
+})
+
+
+
 function openChart(event, chartType, chartName) {
   let i, tabcontents, tablinks
   tabcontents = document.querySelectorAll(`.${chartName}_tabcontent > .tabcontent`);
