@@ -29,6 +29,7 @@ PTESTS_FAST = "\
     json-c \
     json-glib \
     libcheck \
+    libconfig \
     libconvert-asn1-perl \
     libexif \
     libgpg-error\
