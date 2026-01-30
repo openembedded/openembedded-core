@@ -36,6 +36,7 @@ python do_build_native_sysroot () {
 }
 do_build_native_sysroot[cleandirs] = "${STANDALONE_SYSROOT_NATIVE}"
 do_build_native_sysroot[nostamp] = "1"
+do_build_native_sysroot[lockfiles] = "${WORKDIR}/build-sysroots.lock"
 addtask do_build_native_sysroot
 
 python do_build_target_sysroot () {
@@ -47,6 +48,7 @@ python do_build_target_sysroot () {
 }
 do_build_target_sysroot[cleandirs] = "${STANDALONE_SYSROOT}"
 do_build_target_sysroot[nostamp] = "1"
+do_build_target_sysroot[lockfiles] = "${WORKDIR}/build-sysroots.lock"
 addtask do_build_target_sysroot
 
 do_clean[cleandirs] += "${STANDALONE_SYSROOT} ${STANDALONE_SYSROOT_NATIVE}"
