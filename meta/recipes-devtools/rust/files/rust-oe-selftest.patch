@@ -207,7 +207,7 @@ index 551485469d3..575db924968 100644
 --- a/tests/ui/abi/rust-cold-works-with-rustic-args.rs
 +++ b/tests/ui/abi/rust-cold-works-with-rustic-args.rs
 @@ -1,6 +1,7 @@
- //@ add-core-stubs
+ //@ add-minicore
  //@ build-pass
  //@ compile-flags: -Clink-dead-code=true
 +//@ ignore-riscv64
