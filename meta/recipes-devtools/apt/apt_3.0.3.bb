@@ -38,7 +38,7 @@ inherit cmake perlnative bash-completion useradd
 
 # User is added to allow apt to drop privs, will runtime warn without
 USERADD_PACKAGES = "${PN}"
-USERADD_PARAM:${PN} = "--system --home /nonexistent --no-create-home _apt"
+USERADD_PARAM:${PN} = "--system --home /nonexistent --no-create-home --no-user-group --gid nogroup _apt"
 
 BBCLASSEXTEND = "native nativesdk"
 
