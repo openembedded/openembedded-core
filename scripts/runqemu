@@ -986,6 +986,12 @@ to your build configuration.
                 v = os.path.dirname(self.qemuboot)
             self.set(k_upper, v)
 
+        # Parse QB_GRAPHICS to set internal flags if not already set by command-line
+        if not self.nographic and self.get('QB_GRAPHICS'):
+            if '-nographic' in self.get('QB_GRAPHICS'):
+                logger.debug('Detected -nographic in QB_GRAPHICS, setting nographic mode')
+                self.nographic = True
+
     def validate_paths(self):
         """Ensure all relevant path variables are set"""
         # When we're started with a *.qemuboot.conf arg assume that image
