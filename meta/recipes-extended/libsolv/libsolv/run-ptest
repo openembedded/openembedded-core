@@ -1,0 +1,21 @@
+#!/bin/sh
+
+cd test
+
+for t in allowuninstall alternative blacklist choicerules choose cleandeps \
+         cplxdeps distupgrade evrcmp excludefromweak favor focus forcebest \
+         lock lockstep multiversion namespace proof recommendations sat \
+         selection strictrepoprio strongrecommends targeted testcase weakdeps \
+         whatprovideswithdisabled yumobs; do
+
+    if [ -x ./runtestcases.sh ] && [ -d testcases/$t ]; then
+        ./runtestcases.sh ../tools/testsolv testcases/$t
+        if [ $? -eq 0 ]; then
+            echo "PASS: $t"
+        else
+            echo "FAIL: $t"
+        fi
+    else
+        echo "SKIP: $t"
+    fi
+done
