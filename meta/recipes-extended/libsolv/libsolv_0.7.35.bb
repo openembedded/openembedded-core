@@ -10,13 +10,14 @@ DEPENDS = "expat zlib zstd"
 
 SRC_URI = "git://github.com/openSUSE/libsolv.git;branch=master;protocol=https;tag=${PV} \
            file://0001-utils-Conside-musl-when-wrapping-qsort_r.patch \
+           file://run-ptest \
 "
 
 SRCREV = "fb4b4340d46108cb365113e432642d6024886c7a"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
-inherit cmake
+inherit cmake ptest
 
 PACKAGECONFIG ??= "${@bb.utils.contains('PACKAGE_CLASSES','package_rpm','rpm','',d)}"
 PACKAGECONFIG[rpm] = "-DENABLE_RPMMD=ON -DENABLE_RPMDB=ON,,rpm"
@@ -29,3 +30,26 @@ FILES:${PN}-tools = "${bindir}/*"
 FILES:${PN}ext = "${libdir}/${PN}ext.so.*"
 
 BBCLASSEXTEND = "native nativesdk"
+
+do_compile_ptest() {
+    cmake_runcmake_build --target testsolv
+}
+
+do_install_ptest() {
+    install -d ${D}${PTEST_PATH}/tools
+    install -d ${D}${PTEST_PATH}/test
+
+    if [ -f ${B}/tools/testsolv ]; then
+        install -m 0755 ${B}/tools/testsolv ${D}${PTEST_PATH}/tools/
+    fi
+
+    if [ -f ${S}/test/runtestcases.sh ]; then
+        install -m 0755 ${S}/test/runtestcases.sh ${D}${PTEST_PATH}/test/
+    fi
+
+    if [ -d ${S}/test/testcases ]; then
+        cp -r ${S}/test/testcases ${D}${PTEST_PATH}/test/
+    fi
+}
+
+RDEPENDS:${PN}-ptest += "bash"
