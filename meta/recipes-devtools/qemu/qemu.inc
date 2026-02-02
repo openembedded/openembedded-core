@@ -32,6 +32,7 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://0008-Define-MAP_SYNC-and-MAP_SHARED_VALIDATE-on-needed-li.patch \
            file://0010-configure-lookup-meson-exutable-from-PATH.patch \
            file://0011-qemu-Ensure-pip-and-the-python-venv-aren-t-used-for-.patch \
+           file://0001-linux-user-elfload.c-Correction-to-HWCAP2-accessor.patch \
            file://qemu-guest-agent.init \
            file://qemu-guest-agent.udev \
            "
