@@ -7,9 +7,16 @@
 
 import os
 import logging
-from devtool.ide_plugins import IdeBase, GdbCrossConfig
+from devtool.ide_plugins import IdeBase, GdbCrossConfig, GdbServerModes
 
 logger = logging.getLogger('devtool')
+
+
+class GdbCrossConfigNone(GdbCrossConfig):
+    def __init__(self, image_recipe, modified_recipe, binary,
+                 gdbserver_default_mode=GdbServerModes.MULTI):
+        super().__init__(image_recipe, modified_recipe, binary,
+                         gdbserver_default_mode)
 
 
 class IdeNone(IdeBase):
@@ -44,9 +51,10 @@ class IdeNone(IdeBase):
         script_path = modified_recipe.gen_install_deploy_script(args)
         logger.info("Created: %s" % script_path)
 
-        self.initialize_gdb_cross_configs(image_recipe, modified_recipe)
+        self.initialize_gdb_cross_configs(
+            image_recipe, modified_recipe, GdbCrossConfigNone)
 
-        IdeBase.gen_oe_scrtips_sym_link(modified_recipe)
+        IdeBase.gen_oe_scripts_sym_link(modified_recipe)
 
 
 def register_ide_plugin(ide_plugins):

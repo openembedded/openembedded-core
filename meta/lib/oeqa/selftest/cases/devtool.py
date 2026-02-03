@@ -2660,7 +2660,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertIn("PASS: cpp-example-lib", output)
 
         # Verify remote debugging works
-        self._gdb_cross_debugging(
+        self._gdb_cross_debugging_multi(
             qemu, recipe_name, example_exe, MAGIC_STRING_ORIG)
 
         # Replace the Magic String in the code, compile and deploy to Qemu
@@ -2685,7 +2685,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertIn("PASS: cpp-example-lib", output)
 
         # Verify remote debugging works wit the modified magic string
-        self._gdb_cross_debugging(
+        self._gdb_cross_debugging_multi(
             qemu, recipe_name, example_exe, MAGIC_STRING_NEW)
 
     def _gdb_cross(self):
@@ -2701,7 +2701,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertEqual(r.status, 0)
         self.assertIn("GNU gdb", r.output)
 
-    def _gdb_cross_debugging(self, qemu, recipe_name, example_exe, magic_string):
+    def _gdb_cross_debugging_multi(self, qemu, recipe_name, example_exe, magic_string):
         """Verify gdb-cross is working
 
         Test remote debugging:
@@ -2720,7 +2720,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         """
         sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
         gdbserver_script = os.path.join(self._workspace_scripts_dir(
-            recipe_name), 'gdbserver_1234_usr-bin-' + example_exe + '_m')
+            recipe_name), 'gdbserver_1234_usr-bin-' + example_exe + '_multi')
         gdb_script = os.path.join(self._workspace_scripts_dir(
             recipe_name), 'gdb_1234_usr-bin-' + example_exe)
 
@@ -2734,11 +2734,13 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertIn("gdbserver ", r.output)
 
         # Check the pid file is correct
-        test_cmd = "cat /proc/$(cat /tmp/gdbserver_1234_usr-bin-" + \
-            example_exe + "/pid)/cmdline"
+        test_cmd = "'cat /proc/$(cat /tmp/gdbserver_1234_usr-bin-" + \
+            example_exe + "_multi/gdbserver.pid)/cmdline'"
         r = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, test_cmd), output_log=self._cmd_logger)
         self.assertEqual(r.status, 0)
         self.assertIn("gdbserver", r.output)
+        self.assertIn("--multi", r.output)
+        self.assertIn("1234", r.output)
 
         # Test remote debugging works
         gdb_batch_cmd = " --batch -ex 'break main' -ex 'run'"
@@ -2747,6 +2749,8 @@ class DevtoolIdeSdkTests(DevtoolBase):
         gdb_batch_cmd += " -ex 'print CppExample::test_string.compare(\"cpp-example-lib %saaa\")'" % magic_string
         gdb_batch_cmd += " -ex 'list cpp-example-lib.hpp:14,14'"
         gdb_batch_cmd += " -ex 'continue'"
+        return gdb_batch_cmd
+
         r = runCmd(gdb_script + gdb_batch_cmd, output_log=self._cmd_logger)
         self.logger.debug("%s %s returned: %s", gdb_script,
                           gdb_batch_cmd, r.output)

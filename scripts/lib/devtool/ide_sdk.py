@@ -46,17 +46,17 @@ class TargetDevice:
     """SSH remote login parameters"""
 
     def __init__(self, args):
-        self.extraoptions = ''
+        self.extraoptions = []
         if args.no_host_check:
-            self.extraoptions += '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+            self.extraoptions += ['-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no']
         self.ssh_sshexec = 'ssh'
         if args.ssh_exec:
             self.ssh_sshexec = args.ssh_exec
         self.ssh_port = ''
         if args.port:
-            self.ssh_port = "-p %s" % args.port
+            self.ssh_port = ['-p', args.port]
         if args.key:
-            self.extraoptions += ' -i %s' % args.key
+            self.extraoptions += ['-i', args.key]
 
         self.target = args.target
         target_sp = args.target.split('@')
@@ -265,6 +265,112 @@ class RecipeNotModified:
         self.name = name
         self.bootstrap_tasks = [name + ':do_populate_sysroot']
 
+class ExecutableBinary:
+    """Represent an installed executable binary of a modified recipe"""
+
+    def __init__(self, image_dir_d, binary_path,
+                 systemd_services, init_scripts):
+        self.image_dir_d = image_dir_d
+        self.binary_path = binary_path
+        self.init_script = None
+        self.systemd_service = None
+
+        self._init_service_for_binary(systemd_services)
+        self._init_init_script_for_binary(init_scripts)
+
+    def _init_service_for_binary(self, systemd_services):
+        """Find systemd service file that handles this binary"""
+        service_dirs = [
+            'etc/systemd/system',
+            'lib/systemd/system',
+            'usr/lib/systemd/system'
+        ]
+        for _, services in systemd_services.items():
+            for service in services:
+                for service_dir in service_dirs:
+                    service_path = os.path.join(self.image_dir_d, service_dir, service)
+                    if os.path.exists(service_path):
+                        try:
+                            with open(service_path, 'r') as f:
+                                for line in f:
+                                    if line.strip().startswith('ExecStart='):
+                                        exec_start = line.strip()[10:].strip()  # Remove 'ExecStart='
+                                        # Remove any leading modifiers like '-' or '@'
+                                        exec_start = exec_start.lstrip('-@')
+                                        # Get the first word (the executable path)
+                                        exec_binary = exec_start.split()[0] if exec_start.split() else ''
+                                        if exec_binary == self.binary_path or exec_binary.endswith('/' + self.binary_path.lstrip('/')):
+                                            logger.debug("Found systemd service for binary %s: %s" % (self.binary_path, service))
+                                            self.systemd_service = service
+                        except (IOError, OSError):
+                            continue
+
+    def _init_init_script_for_binary(self, init_scripts):
+        """Find SysV init script that handles this binary"""
+        init_dirs = [
+            'etc/init.d',
+            'etc/rc.d/init.d'
+        ]
+        for _, init_scripts in init_scripts.items():
+            for init_script in init_scripts:
+                for init_dir in init_dirs:
+                    init_path = os.path.join(self.image_dir_d, init_dir, init_script)
+                    if os.path.exists(init_path):
+                        init_script_path = os.path.join("/", init_dir, init_script)
+                        binary_name = os.path.basename(self.binary_path)
+                        # if the init script file name is equal to the binary file name, return it directly
+                        if os.path.basename(init_script) == binary_name:
+                            logger.debug("Found SysV init script for binary %s: %s" % (self.binary_path, init_script_path))
+                            self.init_script = init_script_path
+                        # Otherwise check if the script containes a reference to the binary
+                        try:
+                            with open(init_path, 'r') as f:
+                                content = f.read()
+                                pattern = r'\b' + re.escape(binary_name) + r'\b'
+                                if re.search(pattern, content):
+                                    logger.debug("Found SysV init script for binary %s: %s" % (self.binary_path, init_script_path))
+                                    self.init_script = init_script_path
+                                    return
+                        except (IOError, OSError):
+                            continue
+
+    @property
+    def binary_host_path(self):
+        """Get the absolute path of this binary on the host"""
+        return os.path.join(self.image_dir_d, self.binary_path.lstrip('/'))
+
+    @property
+    def runs_as_service(self):
+        """Check if this binary is run by a service or init script"""
+        return self.systemd_service is not None or self.init_script is not None
+
+    @property
+    def start_command(self):
+        """Get the command to start this binary"""
+        if self.systemd_service:
+            return "systemctl start %s" % self.systemd_service
+        if self.init_script:
+            return "%s start" % self.init_script
+        return None
+
+    @property
+    def stop_command(self):
+        """Get the command to stop this binary"""
+        if self.systemd_service:
+            return "systemctl stop %s" % self.systemd_service
+        if self.init_script:
+            return "%s stop" % self.init_script
+        return None
+
+    @property
+    def pid_command(self):
+        """Get the command to get the PID of this binary"""
+        if self.systemd_service:
+            return "systemctl show --property MainPID --value %s" % self.systemd_service
+        if self.init_script:
+            return "pidof %s" % os.path.basename(self.binary_path)
+        return None
+
 
 class RecipeModified:
     """Handling of recipes in the workspace created by devtool modify"""
@@ -308,6 +414,9 @@ class RecipeModified:
         self.target_dbgsrc_dir = None
         self.topdir = None
         self.workdir = None
+        # Service management
+        self.systemd_services = {}
+        self.init_scripts = {}
         # replicate bitbake build environment
         self.exported_vars = None
         self.cmd_compile = None
@@ -323,6 +432,9 @@ class RecipeModified:
         self.mesonopts = None
         self.extra_oemeson = None
         self.meson_cross_file = None
+
+        # Populated after bitbake built all the recipes
+        self._installed_binaries = None
 
     def initialize(self, config, workspace, tinfoil):
         recipe_d = parse_recipe(
@@ -378,6 +490,8 @@ class RecipeModified:
         self.workdir = os.path.realpath(recipe_d.getVar('WORKDIR'))
 
         self.__init_exported_variables(recipe_d)
+        self.__init_systemd_services(recipe_d)
+        self.__init_init_scripts(recipe_d)
 
         if bb.data.inherits_class('cmake', recipe_d):
             self.oecmake_generator = recipe_d.getVar('OECMAKE_GENERATOR')
@@ -497,6 +611,41 @@ class RecipeModified:
                 continue
 
         self.exported_vars = exported_vars
+
+    def __init_systemd_services(self, d):
+        """Find all systemd service files for the recipe."""
+        services = {}
+        if bb.data.inherits_class('systemd', d):
+            systemd_packages = d.getVar('SYSTEMD_PACKAGES')
+            if systemd_packages:
+                for package in systemd_packages.split():
+                    services[package] = d.getVar('SYSTEMD_SERVICE:' + package).split()
+        self.systemd_services = services
+
+    def __init_init_scripts(self, d):
+        """Find all SysV init scripts for the recipe."""
+        init_scripts = {}
+        if bb.data.inherits_class('update-rc.d', d):
+            script_packages = d.getVar('INITSCRIPT_PACKAGES')
+            if script_packages:
+                for package in script_packages.split():
+                    initscript_name = d.getVar('INITSCRIPT_NAME:' + package)
+                    if initscript_name:
+                        # Handle both single script and multiple scripts
+                        scripts = initscript_name.split()
+                        if scripts:
+                            init_scripts[package] = scripts
+            else:
+                # If INITSCRIPT_PACKAGES is not set, check for default INITSCRIPT_NAME
+                initscript_name = d.getVar('INITSCRIPT_NAME')
+                if initscript_name:
+                    scripts = initscript_name.split()
+                    if scripts:
+                        # Use PN as the default package name when INITSCRIPT_PACKAGES is not set
+                        pn = d.getVar('PN')
+                        if pn:
+                            init_scripts[pn] = scripts
+        self.init_scripts = init_scripts
 
     def __init_cmake_preset_cache(self, d):
         """Get the arguments passed to cmake
@@ -662,9 +811,12 @@ class RecipeModified:
             return True
         return False
 
-    def find_installed_binaries(self):
+    @property
+    def installed_binaries(self):
         """find all executable elf files in the image directory"""
-        binaries = []
+        if self._installed_binaries:
+            return self._installed_binaries
+        binaries = {}
         d_len = len(self.d)
         re_so = re.compile(r'.*\.so[.0-9]*$')
         for root, _, files in os.walk(self.d, followlinks=False):
@@ -675,8 +827,12 @@ class RecipeModified:
                     continue
                 abs_name = os.path.join(root, file)
                 if os.access(abs_name, os.X_OK) and RecipeModified.is_elf_file(abs_name):
-                    binaries.append(abs_name[d_len:])
-        return sorted(binaries)
+                    binary_path = abs_name[d_len:]
+                    binary = ExecutableBinary(self.d, binary_path,
+                                              self.systemd_services, self.init_scripts)
+                    binaries[binary_path] = binary
+        self._installed_binaries = dict(sorted(binaries.items()))
+        return self._installed_binaries
 
     def gen_deploy_target_script(self, args):
         """Generate a script which does what devtool deploy-target does

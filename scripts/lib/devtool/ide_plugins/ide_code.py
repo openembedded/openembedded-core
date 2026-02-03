@@ -9,14 +9,26 @@ import json
 import logging
 import os
 import shutil
-from devtool.ide_plugins import BuildTool, IdeBase, GdbCrossConfig, get_devtool_deploy_opts
+from devtool.ide_plugins import BuildTool, IdeBase, GdbCrossConfig, GdbServerModes, get_devtool_deploy_opts
 
 logger = logging.getLogger('devtool')
 
 
 class GdbCrossConfigVSCode(GdbCrossConfig):
-    def __init__(self, image_recipe, modified_recipe, binary):
-        super().__init__(image_recipe, modified_recipe, binary, False)
+    def __init__(self, image_recipe, modified_recipe, binary,
+                 gdbserver_default_mode=GdbServerModes.ONCE):
+        super().__init__(image_recipe, modified_recipe, binary,
+                         gdbserver_default_mode)
+
+    def target_ssh_gdbserver_kill_args(self):
+        """Get the ssh command arguments to kill gdbserver on the target device
+
+        returns something like:
+          ['-p', '2222', 'root@target', '"kill $(pgrep -o -f \'gdbserver --attach :1234\') 2>/dev/null || true"']
+        """
+        return self._target_ssh_gdbserver_args() + [
+            self._target_gdbserver_kill_cmd()
+        ]
 
     def initialize(self):
         self._gen_gdbserver_start_script()
@@ -207,20 +219,20 @@ class IdeVSCode(IdeBase):
         IdeBase.update_json_file(
             self.dot_code_dir(modified_recipe), prop_file, properties_dicts)
 
-    def vscode_launch_bin_dbg(self, gdb_cross_config):
+    def vscode_launch_bin_dbg(self, gdb_cross_config, gdbserver_mode):
         modified_recipe = gdb_cross_config.modified_recipe
 
         launch_config = {
-            "name": gdb_cross_config.id_pretty,
+            "name": gdb_cross_config.id_pretty_mode(gdbserver_mode),
             "type": "cppdbg",
             "request": "launch",
-            "program": os.path.join(modified_recipe.d, gdb_cross_config.binary.lstrip('/')),
+            "program": gdb_cross_config.binary.binary_host_path,
             "stopAtEntry": True,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "externalConsole": False,
             "MIMode": "gdb",
-            "preLaunchTask": gdb_cross_config.id_pretty,
+            "preLaunchTask": gdb_cross_config.id_pretty_mode(gdbserver_mode),
             "miDebuggerPath": modified_recipe.gdb_cross.gdb,
             "miDebuggerServerAddress": "%s:%d" % (modified_recipe.gdb_cross.host, gdb_cross_config.gdbserver_port)
         }
@@ -260,6 +272,12 @@ class IdeVSCode(IdeBase):
 
         launch_config['sourceFileMap'] = src_file_map
         launch_config['setupCommands'] = setup_commands
+
+        # Add postDebugTask for attach mode to clean up gdbserver
+        if gdbserver_mode == GdbServerModes.ATTACH:
+            kill_task_label = "kill_gdbserver_" + gdb_cross_config.id_pretty_mode(gdbserver_mode)
+            launch_config["postDebugTask"] = kill_task_label
+
         return launch_config
 
     def vscode_launch(self, modified_recipe):
@@ -268,7 +286,8 @@ class IdeVSCode(IdeBase):
         configurations = []
         for gdb_cross_config in self.gdb_cross_configs:
             if gdb_cross_config.modified_recipe is modified_recipe:
-                configurations.append(self.vscode_launch_bin_dbg(gdb_cross_config))
+                for gdbserver_mode in gdb_cross_config.gdbserver_modes():
+                    configurations.append(self.vscode_launch_bin_dbg(gdb_cross_config, gdbserver_mode))
         launch_dict = {
             "version": "0.2.0",
             "configurations": configurations
@@ -294,15 +313,12 @@ class IdeVSCode(IdeBase):
         for gdb_cross_config in self.gdb_cross_configs:
             if gdb_cross_config.modified_recipe is not modified_recipe:
                 continue
-            tasks_dict['tasks'].append(
-                {
-                    "label": gdb_cross_config.id_pretty,
+            for gdbserver_mode in gdb_cross_config.gdbserver_modes():
+                new_task = {
+                    "label": gdb_cross_config.id_pretty_mode(gdbserver_mode),
                     "type": "shell",
                     "isBackground": True,
-                    "dependsOn": [
-                        install_task_name
-                    ],
-                    "command": gdb_cross_config.gdbserver_script,
+                    "command": gdb_cross_config.gdbserver_script(gdbserver_mode),
                     "problemMatcher": [
                         {
                             "pattern": [
@@ -320,7 +336,38 @@ class IdeVSCode(IdeBase):
                             }
                         }
                     ]
-                })
+                }
+                # Deploy the artifacts to the target before starting gdbserver if not already running
+                if gdbserver_mode != GdbServerModes.ATTACH:
+                    new_task['dependsOn'] = [
+                        install_task_name
+                    ]
+
+                tasks_dict['tasks'].append(new_task)
+
+                # For attach mode, add a kill task to stop a previously running gdbserver
+                # This is a known issue with gdbserver --attach that it does not terminate
+                # after detaching. With this helper task, it is possible to:
+                # 1. Start debugging in attach mode
+                # 2. Add breakpoints, step, continue, etc.
+                # 3. Press the Continue button
+                # 4. Press the Stop button which detaches gdbserver from the debugged process
+                # 5. Start debugging again in attach mode
+                # Without this kill task, step 5 would fail because gdbserver is still running
+                if gdbserver_mode == GdbServerModes.ATTACH:
+                    new_task_kill_label = "kill_gdbserver_"+ gdb_cross_config.id_pretty_mode(gdbserver_mode)
+                    new_task_kill = {
+                        "label": new_task_kill_label,
+                        "type": "shell",
+                        "command": gdb_cross_config.gdb_cross.target_device.ssh_sshexec,
+                        "args": gdb_cross_config.target_ssh_gdbserver_kill_args(),
+                        "presentation": {
+                            "close": True
+                        },
+                        "problemMatcher": []
+                    }
+                    tasks_dict['tasks'].append(new_task_kill)
+
         tasks_file = 'tasks.json'
         IdeBase.update_json_file(
             self.dot_code_dir(modified_recipe), tasks_file, tasks_dict)
@@ -410,15 +457,12 @@ class IdeVSCode(IdeBase):
             for gdb_cross_config in self.gdb_cross_configs:
                 if gdb_cross_config.modified_recipe is not modified_recipe:
                     continue
-                tasks_dict['tasks'].append(
-                    {
-                        "label": gdb_cross_config.id_pretty,
+                for gdbserver_mode in gdb_cross_config.gdbserver_modes():
+                    new_task = {
+                        "label": gdb_cross_config.id_pretty(gdbserver_mode),
                         "type": "shell",
                         "isBackground": True,
-                        "dependsOn": [
-                            dt_build_deploy_label
-                        ],
-                        "command": gdb_cross_config.gdbserver_script,
+                        "command": gdb_cross_config.gdbserver_script(gdbserver_mode),
                         "problemMatcher": [
                             {
                                 "pattern": [
@@ -436,7 +480,12 @@ class IdeVSCode(IdeBase):
                                 }
                             }
                         ]
-                    })
+                    }
+                    if gdbserver_mode != GdbServerModes.ATTACH:
+                        new_task['dependsOn'] = [
+                            dt_build_deploy_label
+                        ]
+                    tasks_dict['tasks'].append(new_task)
         tasks_file = 'tasks.json'
         IdeBase.update_json_file(
             self.dot_code_dir(modified_recipe), tasks_file, tasks_dict)
@@ -453,7 +502,7 @@ class IdeVSCode(IdeBase):
         self.vscode_c_cpp_properties(modified_recipe)
         if args.target:
             self.initialize_gdb_cross_configs(
-                image_recipe, modified_recipe, gdb_cross_config_class=GdbCrossConfigVSCode)
+                image_recipe, modified_recipe, GdbCrossConfigVSCode)
             self.vscode_launch(modified_recipe)
             self.vscode_tasks(args, modified_recipe)
 
