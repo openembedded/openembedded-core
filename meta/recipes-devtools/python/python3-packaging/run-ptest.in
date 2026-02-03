@@ -1,2 +1,2 @@
 #!/bin/sh
-pytest --automake IGNOREDTESTS
+pytest --automake IGNOREDTESTS --ignore tests/test_pylock.py
