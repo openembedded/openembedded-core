@@ -171,3 +171,10 @@ FILES:libswscale = "${libdir}/libswscale${SOLIBS}"
 FILES:${PN}-examples = "${datadir}/${BPN}/examples"
 
 CVE_PRODUCT = "ffmpeg libswresample libavcodec"
+
+CVE_STATUS_GROUPS = "CVE_STATUS_WRONG_CPE"
+CVE_STATUS_WRONG_CPE = "CVE-2023-51791 CVE-2023-51793 CVE-2023-51794 CVE-2023-51795 CVE-2023-51796 CVE-2023-51797 CVE-2023-51798 CVE-2025-22921"
+CVE_STATUS_WRONG_CPE[status] = "fixed-version: these CVEs are fixed in used version"
+
+CVE_STATUS[CVE-2025-25468] = "fixed-version: these CVEs are fixed since v8.0"
+CVE_STATUS[CVE-2025-25469] = "fixed-version: these CVEs are fixed since v8.0"
