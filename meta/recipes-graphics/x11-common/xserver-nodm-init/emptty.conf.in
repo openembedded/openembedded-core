@@ -17,7 +17,7 @@ DEFAULT_USER=xuser
 AUTOLOGIN=true
 
 # The default session used, if Autologin is enabled. If session is not found in list of session, it proceeds to manual selection.
-AUTOLOGIN_SESSION=Default X11 Desktop
+AUTOLOGIN_SESSION=@DEFAULT_SESSION@
 
 # If Autologin is enabled and session does not start correctly, the number of retries in short period is kept to eventually stop the infinite loop of restarts. -1 is for infinite retries, 0 is for no retry.
 # AUTOLOGIN_MAX_RETRY=2

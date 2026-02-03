@@ -1,5 +1,0 @@
-[Desktop Entry]
-Encoding=UTF-8
-Type=Application
-Name=Default X11 Desktop
-Exec=x-session-manager
