@@ -526,7 +526,9 @@ FILES:${PN}-container = "${sysconfdir}/dbus-1/system.d/org.freedesktop.import1.c
                          ${systemd_system_unitdir}/busnames.target.wants/org.freedesktop.machine1.busname \
                          ${systemd_system_unitdir}/local-fs.target.wants/var-lib-machines.mount \
                          ${systemd_system_unitdir}/machines.target.wants/var-lib-machines.mount \
+                         ${systemd_system_unitdir}/sockets.target.wants/systemd-machined.socket \
                          ${systemd_system_unitdir}/remote-fs.target.wants/var-lib-machines.mount \
+                         ${systemd_system_unitdir}/container-getty@.service \
                          ${systemd_system_unitdir}/machine.slice \
                          ${systemd_system_unitdir}/machines.target \
                          ${systemd_system_unitdir}/org.freedesktop.import1.busname \
@@ -536,6 +538,9 @@ FILES:${PN}-container = "${sysconfdir}/dbus-1/system.d/org.freedesktop.import1.c
                          ${systemd_system_unitdir}/systemd-machined.socket \
                          ${systemd_system_unitdir}/dbus-org.freedesktop.machine1.service \
                          ${systemd_system_unitdir}/var-lib-machines.mount \
+                         ${systemd_user_unitdir}/machine.slice \
+                         ${systemd_user_unitdir}/machines.target \
+                         ${systemd_user_unitdir}/systemd-nspawn@.service \
                          ${nonarch_libdir}/systemd/systemd-import \
                          ${nonarch_libdir}/systemd/systemd-importd \
                          ${nonarch_libdir}/systemd/systemd-machined \
