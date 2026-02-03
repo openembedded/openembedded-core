@@ -1,14 +1,15 @@
-SUMMARY = "Simple Xserver Init Script (no dm)"
+SUMMARY = "Simple Xserver Init Script and user account"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
 SECTION = "x11"
 
 SRC_URI = "file://emptty.conf.in \
-           file://default.desktop"
+           file://default.desktop \
+           file://system-xuser.conf"
 
 S = "${UNPACKDIR}"
 
-inherit features_check
+inherit features_check useradd
 
 REQUIRED_DISTRO_FEATURES = "x11"
 
@@ -26,10 +27,19 @@ do_install() {
 
     sed -i "s:@NO_CURSOR_ARG@:${NO_CURSOR_ARG}:" ${D}${sysconfdir}/emptty/conf
     sed -i "s:@BLANK_ARGS@:${BLANK_ARGS}:" ${D}${sysconfdir}/emptty/conf
+
+    install -D -m 0644 ${S}/system-xuser.conf ${D}${sysconfdir}/dbus-1/system.d/system-xuser.conf
 }
 
 FILES:${PN} = "${sysconfdir}/emptty/conf \
-               ${datadir}/xsessions/default.desktop"
+               ${datadir}/xsessions/default.desktop \
+               ${sysconfdir}/dbus-1/system.d/system-xuser.conf"
 
-RDEPENDS:${PN} = "emptty xuser-account"
+USERADD_PACKAGES = "${PN}"
+USERADD_PARAM:${PN} = "--create-home \
+                       --groups video,tty,audio,input,shutdown,disk,nopasswdlogin \
+                       --user-group xuser"
+GROUPADD_PARAM:${PN} = "-r nopasswdlogin"
+
+RDEPENDS:${PN} = "emptty"
 RPROVIDES:${PN} += "virtual-emptty-conf"
