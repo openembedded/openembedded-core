@@ -14,6 +14,7 @@ import shutil
 import stat
 import subprocess
 import sys
+import shlex
 from argparse import RawTextHelpFormatter
 from enum import Enum
 
@@ -397,6 +398,7 @@ class RecipeModified:
         self.bpn = None
         self.d = None
         self.debug_build = None
+        self.reverse_debug_prefix_map = {}
         self.fakerootcmd = None
         self.fakerootenv = None
         self.libdir = None
@@ -408,10 +410,10 @@ class RecipeModified:
         self.recipe_id = None
         self.recipe_sysroot = None
         self.recipe_sysroot_native = None
+        self.s = None
         self.staging_incdir = None
         self.strip_cmd = None
         self.target_arch = None
-        self.target_dbgsrc_dir = None
         self.topdir = None
         self.workdir = None
         # Service management
@@ -479,13 +481,13 @@ class RecipeModified:
             recipe_d.getVar('RECIPE_SYSROOT'))
         self.recipe_sysroot_native = os.path.realpath(
             recipe_d.getVar('RECIPE_SYSROOT_NATIVE'))
+        self.s = recipe_d.getVar('S')
         self.staging_bindir_toolchain = os.path.realpath(
             recipe_d.getVar('STAGING_BINDIR_TOOLCHAIN'))
         self.staging_incdir = os.path.realpath(
             recipe_d.getVar('STAGING_INCDIR'))
         self.strip_cmd = recipe_d.getVar('STRIP')
         self.target_arch = recipe_d.getVar('TARGET_ARCH')
-        self.target_dbgsrc_dir = recipe_d.getVar('TARGET_DBGSRC_DIR')
         self.topdir = recipe_d.getVar('TOPDIR')
         self.workdir = os.path.realpath(recipe_d.getVar('WORKDIR'))
 
@@ -503,6 +505,9 @@ class RecipeModified:
             self.extra_oemeson = recipe_d.getVar('EXTRA_OEMESON')
             self.meson_cross_file = recipe_d.getVar('MESON_CROSS_FILE')
             self.build_tool = BuildTool.MESON
+
+        self.reverse_debug_prefix_map = self._init_reverse_debug_prefix_map(
+            recipe_d.getVar('DEBUG_PREFIX_MAP'))
 
         # Recipe ID is the identifier for IDE config sections
         self.recipe_id = self.bpn + "-" + self.package_arch
@@ -562,6 +567,70 @@ class RecipeModified:
     def solib_search_path_str(self, image):
         """Return a : separated list of paths usable by GDB's set solib-search-path"""
         return ':'.join(self.solib_search_path(image))
+
+    def _init_reverse_debug_prefix_map(self, debug_prefix_map):
+        """Parses GCC map options and returns a mapping of target to host paths.
+
+        This function scans a string containing GCC options such as -fdebug-prefix-map,
+        -fmacro-prefix-map, and -ffile-prefix-map (in both '--option value' and '--option=value'
+        forms), extracting all mappings from target paths (used in debug info) to host source
+        paths. If multiple mappings for the same target path are found, the most suitable
+        host path is selected (preferring 'sources' over 'build' directories).
+        """
+        prefixes = ("-fdebug-prefix-map", "-fmacro-prefix-map", "-ffile-prefix-map")
+        all_mappings = {}
+        args = shlex.split(debug_prefix_map)
+        i = 0
+
+        # Collect all mappings, storing potentially multiple host paths per target path
+        while i < len(args):
+            arg = args[i]
+            mapping = None
+            for prefix in prefixes:
+                if arg == prefix:
+                    i += 1
+                    mapping = args[i]
+                    break
+                elif arg.startswith(prefix + '='):
+                    mapping = arg[len(prefix)+1:]
+                    break
+            if mapping:
+                host_path, target_path = mapping.split('=', 1)
+                if target_path:
+                    if target_path not in all_mappings:
+                        all_mappings[target_path] = []
+                    all_mappings[target_path].append(os.path.realpath(host_path))
+            i += 1
+
+        # Select the best host path for each target path (only 1:1 mappings are supported by GDB)
+        mappings = {}
+        unused_host_paths = []
+        for target_path, host_paths in all_mappings.items():
+            if len(host_paths) == 1:
+                mappings[target_path] = host_paths[0]
+            else:
+                # First priority path for sources is the source directory S
+                # Second priority path is any other directory
+                # Least priority is the build directory B, which probably contains only generated source files
+                sources_paths = [path for path in host_paths if os.path.realpath(path).startswith(os.path.realpath(self.s))]
+                if sources_paths:
+                    mappings[target_path] = sources_paths[0]
+                    unused_host_paths.extend([path for path in host_paths if path != sources_paths[0]])
+                else:
+                    # If no 'sources' path, prefer non-'build' paths
+                    non_build_paths = [path for path in host_paths if not os.path.realpath(path).startswith(os.path.realpath(self.b))]
+                    if non_build_paths:
+                        mappings[target_path] = non_build_paths[0]
+                        unused_host_paths.extend([path for path in host_paths if path != non_build_paths[0]])
+                    else:
+                        # Fall back to first path if all are build paths
+                        mappings[target_path] = host_paths[0]
+                        unused_host_paths.extend(host_paths[1:])
+
+        if unused_host_paths:
+            logger.info("Some source directories mapped by -fdebug-prefix-map are not included in the debugger search paths. Ignored host paths: %s", unused_host_paths)
+
+        return mappings
 
     def __init_exported_variables(self, d):
         """Find all variables with export flag set.
