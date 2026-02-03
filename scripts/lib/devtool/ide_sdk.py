@@ -15,6 +15,7 @@ import stat
 import subprocess
 import sys
 import shlex
+import glob
 from argparse import RawTextHelpFormatter
 from enum import Enum
 
@@ -414,6 +415,7 @@ class RecipeModified:
         self.staging_incdir = None
         self.strip_cmd = None
         self.target_arch = None
+        self.tcoverride = None
         self.topdir = None
         self.workdir = None
         # Service management
@@ -437,6 +439,7 @@ class RecipeModified:
 
         # Populated after bitbake built all the recipes
         self._installed_binaries = None
+        self._gdb_pretty_print_scripts = None
 
     def initialize(self, config, workspace, tinfoil):
         recipe_d = parse_recipe(
@@ -488,6 +491,7 @@ class RecipeModified:
             recipe_d.getVar('STAGING_INCDIR'))
         self.strip_cmd = recipe_d.getVar('STRIP')
         self.target_arch = recipe_d.getVar('TARGET_ARCH')
+        self.tcoverride = recipe_d.getVar('TCOVERRIDE')
         self.topdir = recipe_d.getVar('TOPDIR')
         self.workdir = os.path.realpath(recipe_d.getVar('WORKDIR'))
 
@@ -631,6 +635,28 @@ class RecipeModified:
             logger.info("Some source directories mapped by -fdebug-prefix-map are not included in the debugger search paths. Ignored host paths: %s", unused_host_paths)
 
         return mappings
+
+    @property
+    def gdb_pretty_print_scripts(self):
+        if self._gdb_pretty_print_scripts is None:
+            if self.tcoverride == "toolchain-gcc":
+                gcc_python_helpers_pattern = os.path.join(self.recipe_sysroot, "usr", "share", "gcc-*", "python")
+                gcc_python_helpers_dirs = glob.glob(gcc_python_helpers_pattern)
+                if gcc_python_helpers_dirs:
+                    gcc_python_helpers = gcc_python_helpers_dirs[0]
+                else:
+                    logger.warning("Could not find gcc python helpers directory matching: %s", gcc_python_helpers_pattern)
+                    gcc_python_helpers = ""
+                pretty_print_scripts = [
+                    "import sys",
+                    "sys.path.insert(0, '" + gcc_python_helpers + "')",
+                    "from libstdcxx.v6.printers import register_libstdcxx_printers",
+                    "register_libstdcxx_printers(None)"
+                ]
+                self._gdb_pretty_print_scripts = pretty_print_scripts
+            else:
+                self._gdb_pretty_print_scripts = ""
+        return self._gdb_pretty_print_scripts
 
     def __init_exported_variables(self, d):
         """Find all variables with export flag set.

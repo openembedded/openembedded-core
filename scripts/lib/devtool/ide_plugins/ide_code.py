@@ -290,6 +290,20 @@ class IdeVSCode(IdeBase):
             logger.warning(
                 "Cannot setup debug symbols configuration for GDB. IMAGE_GEN_DEBUGFS is not enabled.")
 
+        # Enable pretty-printing for gdb for resolving STL types with help of python scripts
+        pretty_printing_cmd = modified_recipe.gdb_pretty_print_scripts
+        if pretty_printing_cmd:
+            setup_commands += [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "python " +";".join(pretty_printing_cmd)
+                },
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing"
+                }
+            ]
+
         launch_config['sourceFileMap'] = src_file_map
         launch_config['setupCommands'] = setup_commands
 
