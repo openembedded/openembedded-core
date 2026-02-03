@@ -266,18 +266,26 @@ class IdeVSCode(IdeBase):
             launch_config['additionalSOLibSearchPath'] = modified_recipe.solib_search_path_str(
                 gdb_cross_config.image_recipe)
             # First: Search for sources of this recipe in the workspace folder
-            if modified_recipe.pn in modified_recipe.target_dbgsrc_dir:
-                src_file_map[modified_recipe.target_dbgsrc_dir] = "${workspaceFolder}"
-            else:
-                logger.error(
-                    "TARGET_DBGSRC_DIR must contain the recipe name PN.")
+            # If compiled with DEBUG_PREFIX_MAP = "", no reverse map is is needed. The binaries
+            # contain the full path to the source files. But by default there is a reverse map.
+            for target_path, host_path in modified_recipe.reverse_debug_prefix_map.items():
+                if host_path.startswith(modified_recipe.real_srctree):
+                    src_file_map[target_path] = "${workspaceFolder}" + host_path[len(modified_recipe.real_srctree):]
+                else:
+                    src_file_map[target_path] = host_path
+
             # Second: Search for sources of other recipes in the rootfs-dbg
-            if modified_recipe.target_dbgsrc_dir.startswith("/usr/src/debug"):
+            # We expect that /usr/src/debug/${PN}/${PV} or no mapping is used for the recipes
+            # own sources and we can use the key "/usr/src/debug" for the rootfs-dbg.
+            if "/usr/src/debug" in src_file_map:
+                logger.error(
+                    'Key "/usr/src/debug" already exists in src_file_map. '
+                    'Something with DEBUG_PREFIX_MAP looks unexpected and finding '
+                    'sources in the rootfs-dbg will not work as expected.'
+                )
+            else:
                 src_file_map["/usr/src/debug"] = os.path.join(
                     gdb_cross_config.image_recipe.rootfs_dbg, "usr", "src", "debug")
-            else:
-                logger.error(
-                    "TARGET_DBGSRC_DIR must start with /usr/src/debug.")
         else:
             logger.warning(
                 "Cannot setup debug symbols configuration for GDB. IMAGE_GEN_DEBUGFS is not enabled.")
