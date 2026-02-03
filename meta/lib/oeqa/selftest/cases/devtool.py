@@ -2714,7 +2714,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         $1 = 0
         print CppExample::test_string.compare("cpp-example-lib Magic: 123456789aaa")
         $2 = -3
-        list cpp-example-lib.hpp:13,13
+        list cpp-example-lib.hpp:14,14
         13	    inline static const std::string test_string = "cpp-example-lib Magic: 123456789";
         continue
         """
@@ -2745,7 +2745,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         gdb_batch_cmd += " -ex 'break CppExample::print_json()' -ex 'continue'"
         gdb_batch_cmd += " -ex 'print CppExample::test_string.compare(\"cpp-example-lib %s\")'" % magic_string
         gdb_batch_cmd += " -ex 'print CppExample::test_string.compare(\"cpp-example-lib %saaa\")'" % magic_string
-        gdb_batch_cmd += " -ex 'list cpp-example-lib.hpp:13,13'"
+        gdb_batch_cmd += " -ex 'list cpp-example-lib.hpp:14,14'"
         gdb_batch_cmd += " -ex 'continue'"
         r = runCmd(gdb_script + gdb_batch_cmd, output_log=self._cmd_logger)
         self.logger.debug("%s %s returned: %s", gdb_script,
