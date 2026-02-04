@@ -192,6 +192,15 @@ concat_dtb() {
 				-k "${UBOOT_DTB_BINARY}" \
 				-f ${B}/unused.itb
 		fi
+
+		# Regenerate binman image with the newly signed key
+		if [ "${UBOOT_BINMAN_IMAGE}" = "1" ] && [ -f "..binman_stamp.cmd" ]; then
+			binman_cmd=$(sed -n 's/^cmd_[^:]*:= *//p' ..binman_stamp.cmd)
+			dtb_binary=$(basename ${UBOOT_DTB_BINARY} .dtb)
+			binman_cmd="${binman_cmd} -a of-list=\"${dtb_binary}\" -a default-dt=\"${dtb_binary}\""
+			eval ${binman_cmd}
+		fi
+
 		cp ${UBOOT_DTB_BINARY} ${UBOOT_DTB_SIGNED}
 	fi
 
