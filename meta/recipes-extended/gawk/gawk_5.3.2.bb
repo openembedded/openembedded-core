@@ -15,6 +15,9 @@ LICENSE:${PN} = "GPL-3.0-or-later"
 LICENSE:${PN}:append = " ${@bb.utils.contains('PACKAGECONFIG', 'pma-if-64bit', ' & AGPL-3.0-or-later', '', d)}"
 
 PACKAGECONFIG ??= "readline mpfr"
+# Make native builds lean
+PACKAGECONFIG:class-native = ""
+
 PACKAGECONFIG[readline] = "--with-readline,--without-readline,readline"
 PACKAGECONFIG[mpfr] = "--with-mpfr,--without-mpfr, mpfr"
 # pma: persistent memory allocator:
