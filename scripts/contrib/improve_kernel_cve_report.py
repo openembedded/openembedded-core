@@ -106,7 +106,7 @@ def get_kernel_cves(datadir, compiled_files, version):
                     "status": "Ignored",
                     "detail": "not-applicable-config",
                     "summary": description,
-                    "description": f"Source code not compiled by config. {affected_files}"
+                    "description": f"Source code not compiled by config. {sorted(affected_files)}"
                 }
                 not_applicable_config +=1
             # Check if we have backport
