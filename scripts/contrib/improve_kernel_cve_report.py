@@ -358,6 +358,7 @@ def cve_update(cve_data, cve, entry):
         cve_data[cve] = copy_data(cve_data[cve], entry)
         return
     if cve_data[cve]['status'] == entry['status']:
+        cve_data[cve] = copy_data(cve_data[cve], entry)
         return
     if entry['status'] == "Unpatched" and cve_data[cve]['status'] == "Patched":
         # Backported-patch (e.g. vendor kernel repo with cherry-picked CVE patch)
