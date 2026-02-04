@@ -53,5 +53,6 @@ LTO ?= "${LTO_DEFAULT}"
 
 SELECTED_OPTIMIZATION:append = "${@bb.utils.contains('DISTRO_FEATURES', 'lto', ' ${LTO}', '', d)}"
 TARGET_LDFLAGS:append:class-target = "${@bb.utils.contains('DISTRO_FEATURES', 'lto', ' ${LTO}', '', d)}"
+TARGET_LDFLAGS:append:class-target = "${@bb.utils.contains('DISTRO_FEATURES', 'lto', ' ${DEBUG_PREFIX_MAP}', '', d)}"
 
 SELECTED_OPTIMIZATION[vardeps] += "LTO LTOEXTRA"
