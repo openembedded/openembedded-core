@@ -164,7 +164,7 @@ def get_kernel_cves(datadir, compiled_files, version):
                     "status": "Patched",
                     "detail": "fixed-version",
                     "summary": description,
-                    "description": f"fixed-version: Fixed from version {last_affected}"
+                    "description": f"Fixed from version {last_affected}"
                 }
                 not_vulnerable += 1
             elif backport_base == base_version:
