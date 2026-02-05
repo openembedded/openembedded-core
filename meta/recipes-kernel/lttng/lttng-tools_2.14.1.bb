@@ -49,14 +49,11 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://run-ptest \
            file://lttng-sessiond.service \
            file://disable-tests.patch \
-           file://0001-gen-ust-events-constructor-change-rpath-to-libdir-li.patch \
-           file://0001-eventfd.cpp-Remove-the-scope-resolution-operator.patch \
            file://disable-tests2.patch \
-           file://0001-liblttng-ctl-drop-index-allocator-symbols-from-versi.patch \
            file://libc++.patch \
            "
 
-SRC_URI[sha256sum] = "d8c39c26cec13b7bd82551cd52a22efc358b888e36ebcf9c1b60ef1c3a3c2fd3"
+SRC_URI[sha256sum] = "0e68eb27923621c4bc127cfce40422d28cf7e473fedf6229ae6c32ba5c5b7c6d"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages systemd
 
@@ -93,7 +90,6 @@ do_install_ptest () {
     for f in Makefile tests/Makefile tests/utils/utils.sh tests/regression/tools/save-load/*.lttng \
             tests/regression/tools/save-load/configuration/load-42*.lttng tests/regression/tools/health/test_health.sh \
             tests/regression/tools/metadata/utils.sh tests/regression/tools/rotation/rotate_utils.sh \
-            tests/regression/tools/notification/util_event_generator.sh \
             tests/regression/tools/trace-format/ust-local-trace-pretty.expect \
             tests/regression/tools/trace-format/kernel-local-trace-pretty.expect \
             tests/regression/tools/base-path/*.lttng; do
