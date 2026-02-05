@@ -62,7 +62,7 @@ class LtpPosixTest(LtpPosixBase):
     def runltp(self, posix_group):
             cmd = "/opt/ltp/bin/run-posix-option-group-test.sh %s 2>@1 | tee /opt/ltp/results/%s" % (posix_group, posix_group)
             starttime = time.time()
-            (status, output) = self.target.run(cmd)
+            (status, output) = self.target.run(cmd, 600)
             endtime = time.time()
 
             with open(os.path.join(self.ltptest_log_dir, "%s" % posix_group), 'w') as f:
