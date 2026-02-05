@@ -1,0 +1,74 @@
+From 0a5c21579ba4f25f547a5390e8f7fbe46ef3717a Mon Sep 17 00:00:00 2001
+From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Date: Thu, 5 Feb 2026 18:09:48 +0100
+Subject: [PATCH] Add debug
+
+Upstream-Status: Inappropriate [debug]
+
+Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+---
+ testcases/open_posix_testsuite/bin/run-tests.sh             | 1 +
+ .../conformance/interfaces/sigwait/6-1.c                    | 6 ++++++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/testcases/open_posix_testsuite/bin/run-tests.sh b/testcases/open_posix_testsuite/bin/run-tests.sh
+index c2fddcf53733..b05b80850120 100755
+--- a/testcases/open_posix_testsuite/bin/run-tests.sh
++++ b/testcases/open_posix_testsuite/bin/run-tests.sh
+@@ -46,6 +46,7 @@ run_test() {
+ 
+ 	complog=$(basename $testname).log.$$
+ 
++	echo "Running ${testname}"
+ 	sh -c "$SCRIPT_DIR/t0 $TIMEOUT_VAL ./$1 $(cat ./$(echo "$1" | sed 's,\.[^\.]*,,').args 2>/dev/null)" > $complog 2>&1
+ 
+ 	ret_code=$?
+diff --git a/testcases/open_posix_testsuite/conformance/interfaces/sigwait/6-1.c b/testcases/open_posix_testsuite/conformance/interfaces/sigwait/6-1.c
+index 1d1fddedd609..9ea3d333d0f1 100644
+--- a/testcases/open_posix_testsuite/conformance/interfaces/sigwait/6-1.c
++++ b/testcases/open_posix_testsuite/conformance/interfaces/sigwait/6-1.c
+@@ -114,6 +114,7 @@ int main(void)
+ 	/* Initialize output */
+ 	output_init();
+ 
++	printf("%s %s %d\n", __FILE__, __func__, __LINE__);
+ 	/* Set the signal mask */
+ 	ret = sigemptyset(&setusr);
+ 
+@@ -135,6 +136,7 @@ int main(void)
+ 
+ 	/* Create the children */
+ 
++	printf("%s %s %d\n", __FILE__, __func__, __LINE__);
+ 	for (i = 0; i < NTHREADS; i++) {
+ 		ret = pthread_create(&ch[i], NULL, threaded, NULL);
+ 
+@@ -150,8 +152,10 @@ int main(void)
+ 		UNRESOLVED(ret, "Failed to raise the signal");
+ 	}
+ 
++	printf("%s %s %d\n", __FILE__, __func__, __LINE__);
+ 	sleep(1);
+ 
++	printf("%s %s %d\n", __FILE__, __func__, __LINE__);
+ 	if (n_awaken != 1) {
+ 		output("%d threads were awaken\n", n_awaken);
+ 		FAILED("Unexpected number of threads awaken");
+@@ -175,6 +179,7 @@ int main(void)
+ 		}
+ 	}
+ 
++	printf("%s %s %d\n", __FILE__, __func__, __LINE__);
+ 	/* Test passed */
+ #if VERBOSE > 0
+ 
+@@ -182,5 +187,6 @@ int main(void)
+ 
+ #endif
+ 
++	printf("%s %s %d\n", __FILE__, __func__, __LINE__);
+ 	PASSED;
+ }
+-- 
+2.47.3
+
