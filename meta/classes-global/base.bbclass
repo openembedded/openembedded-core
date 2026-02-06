@@ -111,6 +111,22 @@ def get_lic_checksum_file_list(d):
             bb.fatal(d.getVar('PN') + ": LIC_FILES_CHKSUM contains an invalid URL: " + url)
     return " ".join(filelist)
 
+# Please see https://bugzilla.yoctoproject.org/show_bug.cgi?id=16087 for details
+# This can be removed after host distributions with kernels < 5.18
+# (e.g. rhel 8/9 and derivatives) are taken out of testing and support.
+def write_ld_wrapper(srctool, desttool):
+    wrapper = "#!/bin/sh\n{} --no-rosegment $@".format(srctool)
+
+    stdout, _ = bb.process.run("{} --help".format(srctool))
+    if "--no-rosegment" in stdout:
+        with open(desttool, 'w') as f:
+            f.write(wrapper)
+        import stat
+        st = os.stat(desttool)
+        os.chmod(desttool, st.st_mode | stat.S_IEXEC)
+    else:
+        os.symlink(srctool, desttool)
+
 def setup_hosttools_dir(dest, toolsvar, d, fatal=True):
     tools = d.getVar(toolsvar).split()
     origbbenv = d.getVar("BB_ORIGENV", False)
@@ -139,7 +155,10 @@ def setup_hosttools_dir(dest, toolsvar, d, fatal=True):
             if os.path.islink(srctool) and os.path.basename(os.readlink(srctool)) == 'ccache':
                 srctool = bb.utils.which(path, tool, executable=True, direction=1)
             if srctool:
-                os.symlink(srctool, desttool)
+                if tool == "ld" or tool.startswith("ld."):
+                    write_ld_wrapper(srctool, desttool)
+                else:
+                    os.symlink(srctool, desttool)
             else:
                 notfound.append(tool)
 
