@@ -1,6 +1,7 @@
 require ${BPN}.inc
 
 PACKAGECONFIG = " \
+	expat \
 	gallium \
 	video-codecs \
 	${@bb.utils.filter('DISTRO_FEATURES', 'x11 vulkan wayland glvnd', d)} \
