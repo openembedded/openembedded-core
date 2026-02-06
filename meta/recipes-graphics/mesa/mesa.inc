@@ -43,7 +43,8 @@ do_install:append() {
   fi
 }
 
-DEPENDS = "makedepend-native flex-native bison-native libxml2-native zlib chrpath-replacement-native python3-mako-native gettext-native python3-pyyaml-native"
+# All dependencies **MUST** be -native. If not, then add a PACKAGECONFIG for it.
+DEPENDS = "makedepend-native flex-native bison-native libxml2-native chrpath-replacement-native python3-mako-native gettext-native python3-pyyaml-native"
 EXTRANATIVEPATH += "chrpath-native"
 
 inherit meson pkgconfig python3native gettext features_check rust
@@ -166,6 +167,7 @@ PACKAGECONFIG[expat] = "-Dexpat=enabled, -Dexpat=disabled, expat"
 PACKAGECONFIG[tools] = "-Dtools=${@strip_comma('${TOOLS}')}, -Dtools='', ${TOOLS_DEPS}"
 # Depends on expat PACKAGECONFIG!
 PACKAGECONFIG[xmlconfig] = "-Dxmlconfig=enabled, -Dxmlconfig=disabled"
+PACKAGECONFIG[zlib] = "-Dzlib=enabled, -Dzlib=disabled, zlib"
 
 GALLIUMDRIVERS_LLVMPIPE = ",llvmpipe"
 GALLIUMDRIVERS_SOFTPIPE = ",softpipe"

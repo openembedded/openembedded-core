@@ -10,6 +10,7 @@ PACKAGECONFIG = " \
 	${@bb.utils.contains('DISTRO_FEATURES', 'vulkan', 'zink', '', d)} \
 	${@bb.utils.contains_any('DISTRO_FEATURES', 'opengl vulkan', 'virtio', '', d)} \
 	xmlconfig \
+	zlib \
 "
 
 PACKAGECONFIG:append:x86 = " libclc gallium-llvm intel amd nouveau svga"
