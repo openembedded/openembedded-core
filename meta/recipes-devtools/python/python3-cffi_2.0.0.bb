@@ -6,7 +6,8 @@ DEPENDS += "libffi python3-pycparser"
 
 SRC_URI[sha256sum] = "44d1b5909021139fe36001ae048dbdde8214afa20200eda0f64c068cac5d5529"
 
-SRC_URI += "file://run-ptest"
+SRC_URI += "file://run-ptest \
+            file://0001-Make-test_parsing-more-resilient-to-changes-in.patch"
 
 inherit pypi python_setuptools_build_meta ptest pkgconfig
 
