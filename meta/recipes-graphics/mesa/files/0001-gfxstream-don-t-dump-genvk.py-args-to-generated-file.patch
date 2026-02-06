@@ -1,23 +1,25 @@
-From c0f067e86bc9f7fbc60c2539dc612a050ee2569f Mon Sep 17 00:00:00 2001
+From 4315c28739dcade156ac9384c99ba552b6d85b40 Mon Sep 17 00:00:00 2001
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 Date: Wed, 19 Nov 2025 11:36:42 +0200
 Subject: [PATCH] gfxstream: don't dump genvk.py args to generated files
 
 Full command lines include full path to the output file, which triggers
-the 'buildpath' QA warning. Drop the args and print only a basename of
-the script used to generate the file.
+reproducibility warnings (e.g. in Yocto builds). Drop the args and print
+only a basename of the script used to generate the file.
 
-Upstream-Status: Submitted [https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/38875]
 Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Part-of: <https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/38875>
+Upstream-Status: Backport [https://gitlab.freedesktop.org/mesa/mesa/-/commit/4315c28739dcade156ac9384c99ba552b6d85b40]
+Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
 ---
  src/gfxstream/codegen/scripts/cerealgenerator.py | 8 +-------
  1 file changed, 1 insertion(+), 7 deletions(-)
 
 diff --git a/src/gfxstream/codegen/scripts/cerealgenerator.py b/src/gfxstream/codegen/scripts/cerealgenerator.py
-index 077571e9eda5..217c3e1d0e94 100644
+index a171af83641..5e34ea64bd1 100644
 --- a/src/gfxstream/codegen/scripts/cerealgenerator.py
 +++ b/src/gfxstream/codegen/scripts/cerealgenerator.py
-@@ -254,13 +254,7 @@ def banner_command(argv):
+@@ -285,13 +285,7 @@ def banner_command(argv):
         Return a string corresponding to the command, with platform-specific
         paths removed."""
  
