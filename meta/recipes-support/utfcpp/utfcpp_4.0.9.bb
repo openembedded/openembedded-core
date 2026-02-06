@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=e4224ccaecb14d942c71d31bef20d78c \
 SRC_URI = "git://github.com/nemtrif/utfcpp;protocol=https;branch=master;tag=v${PV} \
            file://run-ptest"
 
-SRCREV = "f9319195dfddf369f68f18e7c0039b3f351797fd"
+SRCREV = "63d64de49fd6b829f7c8694df5ab2ee625cb7134"
 
 inherit cmake ptest
 
