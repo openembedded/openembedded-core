@@ -105,6 +105,7 @@ def run_diffoscope(a_dir, b_dir, html_dir, max_report_size=0, max_diff_block_lin
            '--max-diff-block-lines', str(max_diff_block_lines),
            '--exclude-directory-metadata', 'yes',
            '--html-dir', html_dir,
+           '--jquery', 'https://code.jquery.com/jquery-3.7.1.min.js',
            a_dir, b_dir]
     return runCmd(cmd, **kwargs)
 
@@ -319,10 +320,9 @@ class ReproducibleTests(OESelftestTestCase):
 
         # Build native utilities
         self.write_config('')
-        bitbake("diffoscope-native diffutils-native jquery-native -c addto_recipe_sysroot")
+        bitbake("diffoscope-native diffutils-native -c addto_recipe_sysroot")
         diffutils_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "diffutils-native")
         diffoscope_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "diffoscope-native")
-        jquery_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "jquery-native")
 
         if self.save_results:
             os.makedirs(self.save_results, exist_ok=True)
@@ -397,9 +397,6 @@ class ReproducibleTests(OESelftestTestCase):
                 self.logger.info('Running diffoscope')
                 package_dir = os.path.join(save_dir, 'packages')
                 package_html_dir = os.path.join(package_dir, 'diff-html')
-
-                # Copy jquery to improve the diffoscope output usability
-                self.copy_file(os.path.join(jquery_sysroot, 'usr/share/javascript/jquery/jquery.min.js'), os.path.join(package_html_dir, 'jquery.js'))
 
                 run_diffoscope('reproducibleA', 'reproducibleB-extended', package_html_dir, max_report_size=self.max_report_size,
                         max_diff_block_lines_saved=self.max_diff_block_lines_saved,
