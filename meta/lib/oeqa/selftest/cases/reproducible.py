@@ -98,11 +98,15 @@ def compare_file(reference, test, diffutils_sysroot):
     return result
 
 def run_diffoscope(a_dir, b_dir, html_dir, max_report_size=0, max_diff_block_lines=1024, max_diff_block_lines_saved=0, **kwargs):
-    return runCmd(['diffoscope', '--no-default-limits', '--max-report-size', str(max_report_size),
-                   '--max-diff-block-lines-saved', str(max_diff_block_lines_saved),
-                   '--max-diff-block-lines', str(max_diff_block_lines),
-                   '--exclude-directory-metadata', 'yes', '--html-dir', html_dir, a_dir, b_dir],
-                **kwargs)
+    cmd = ['diffoscope',
+           '--no-default-limits',
+           '--max-report-size', str(max_report_size),
+           '--max-diff-block-lines-saved', str(max_diff_block_lines_saved),
+           '--max-diff-block-lines', str(max_diff_block_lines),
+           '--exclude-directory-metadata', 'yes',
+           '--html-dir', html_dir,
+           a_dir, b_dir]
+    return runCmd(cmd, **kwargs)
 
 class DiffoscopeTests(OESelftestTestCase):
     diffoscope_test_files = os.path.join(os.path.dirname(os.path.abspath(__file__)), "diffoscope")
