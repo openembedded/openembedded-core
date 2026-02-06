@@ -44,7 +44,7 @@ do_install:append() {
 }
 
 # All dependencies **MUST** be -native. If not, then add a PACKAGECONFIG for it.
-DEPENDS = "makedepend-native flex-native bison-native libxml2-native chrpath-replacement-native python3-mako-native gettext-native python3-pyyaml-native"
+DEPENDS = "makedepend-native flex-native bison-native chrpath-replacement-native python3-mako-native gettext-native python3-pyyaml-native"
 EXTRANATIVEPATH += "chrpath-native"
 
 inherit meson pkgconfig python3native gettext features_check rust
