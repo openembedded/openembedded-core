@@ -22,6 +22,11 @@ require ${BPN}-crates.inc
 
 inherit pypi python_maturin cargo-update-recipe-crates pkgconfig
 
+PACKAGECONFIG ??= "legacy-openssl"
+PACKAGECONFIG[legacy-openssl] = ",,,openssl-ossl-module-legacy"
+
+export CRYPTOGRAPHY_BUILD_OPENSSL_NO_LEGACY = "${@bb.utils.contains('PACKAGECONFIG', 'legacy-openssl', '0', '1', d)}"
+
 DEPENDS += " \
     python3-cffi-native \
     openssl \
