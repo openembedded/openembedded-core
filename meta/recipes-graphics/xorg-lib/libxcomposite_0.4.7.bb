@@ -12,7 +12,7 @@ compositing transformations through a client."
 require xorg-lib-common.inc
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=3f2907aad541f6f226fbc58cc1b3cdf1"
+LIC_FILES_CHKSUM = "file://COPYING;md5=51f7b67ceb9dc21dd53952d0b7727b4e"
 
 DEPENDS += " xorgproto virtual/libx11 libxfixes libxext"
 PROVIDES = "xcomposite"
@@ -22,4 +22,4 @@ PE = "1"
 
 XORG_PN = "libXcomposite"
 
-SRC_URI[sha256sum] = "fe40bcf0ae1a09070eba24088a5eb9810efe57453779ec1e20a55080c6dc2c87"
+SRC_URI[sha256sum] = "8bdf310967f484503fa51714cf97bff0723d9b673e0eecbf92b3f97c060c8ccb"
