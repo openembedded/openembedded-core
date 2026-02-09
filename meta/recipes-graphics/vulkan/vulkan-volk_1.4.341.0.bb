@@ -7,10 +7,10 @@ BUGTRACKER = "https://github.com/zeux/volk"
 SECTION = "libs"
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE.md;md5=fb3d6e8051a71edca1e54bc38d35e5af"
+LIC_FILES_CHKSUM = "file://LICENSE.md;md5=cfcbdd69e15396e371f639c69acf40bf"
 
-SRC_URI = "git://github.com/zeux/volk.git;branch=master;protocol=https"
-SRCREV = "4f3bcee79618a9abe79f4c717c50379197c77512"
+SRC_URI = "git://github.com/zeux/volk.git;branch=master;protocol=https;tag=vulkan-sdk-${PV}"
+SRCREV = "d979819fd03de3a7606d6e23d6ff4968942599da"
 
 REQUIRED_DISTRO_FEATURES = "vulkan"
 
