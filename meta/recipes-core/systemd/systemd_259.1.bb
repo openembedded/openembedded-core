@@ -35,25 +35,6 @@ SRC_URI += " \
            file://0003-Do-not-create-var-log-README.patch \
            "
 
-# patches needed by musl
-SRC_URI:append:libc-musl = " ${SRC_URI_MUSL}"
-SRC_URI_MUSL = "\
-               file://0004-musl.h-introduce-header-file-and-add-__THROW.patch \
-               file://0005-add-fallback-parse_printf_format-implementation.patch \
-               file://0006-Make-mallinfo-related-contents-glibc-specific.patch \
-               file://0007-add-src-include-override-sys-prctl.h-to-avoid-redefi.patch \
-               file://0008-distinguish-XSI-compliant-strerror_r-from-GNU-specif.patch \
-               file://0009-errno-util-Make-STRERROR-portable-for-musl.patch \
-               file://0010-src-basic-format-util.h-define-RLIM_FMT-to-fit-musl-.patch \
-               file://0011-src-include-override-malloc.h-define-dummy-malloc_tr.patch \
-               file://0012-src-shared-condition.c-avoid-using-glibc-ConditionVe.patch \
-               file://0013-build-path.c-avoid-boot-time-segfault-for-musl.patch \
-               file://0014-Handle-missing-gshadow-for-musl.patch \
-               file://0015-Avoid-sequence-point-error.patch \
-               file://0016-Fix-the-segfault-for-glob-related-codes-and-define-d.patch \
-               file://0017-Always-include-netinet-if_ether.h-first.patch \
-               "
-
 PAM_PLUGINS = " \
     pam-plugin-unix \
     pam-plugin-loginuid \
@@ -114,8 +95,6 @@ PACKAGECONFIG:remove:libc-musl = " \
 # https://github.com/seccomp/libseccomp/issues/347
 PACKAGECONFIG:remove:mipsarch = "seccomp"
 
-TARGET_CC_ARCH:append:libc-musl = " -D__UAPI_DEF_ETHHDR=0 -D_LARGEFILE64_SOURCE"
-
 # Some of the dependencies are weak-style recommends - if not available at runtime,
 # systemd won't fail but the library-related feature will be skipped with a warning.
 
@@ -155,8 +134,6 @@ PACKAGECONFIG[idn] = "-Didn=true,-Didn=false"
 PACKAGECONFIG[ima] = "-Dima=true,-Dima=false"
 # importd requires journal-upload/xz/zlib/bzip2/gcrypt
 PACKAGECONFIG[importd] = "-Dimportd=enabled,-Dimportd=disabled,glib-2.0"
-# Update NAT firewall rules
-PACKAGECONFIG[iptc] = "-Dlibiptc=enabled,-Dlibiptc=disabled,iptables"
 PACKAGECONFIG[journal-color] = ",,,less"
 PACKAGECONFIG[journal-upload] = "-Dlibcurl=enabled,-Dlibcurl=disabled,curl"
 PACKAGECONFIG[kmod] = "-Dkmod=enabled,-Dkmod=disabled,kmod,libkmod"
@@ -244,6 +221,7 @@ EXTRA_OEMESON += "-Dnobody-user=nobody \
                   ${@bb.utils.contains('DISTRO_FEATURES', 'zeroconf', '-Ddefault-mdns=no -Ddefault-llmnr=no', '', d)} \
                   -Ddbus=disabled \
                   -Dtests=false \
+                  -Dlibc=${TCLIBC} \
                   "
 
 # Hardcode target binary paths to avoid using paths from sysroot or worse
@@ -443,6 +421,7 @@ USERADD_PACKAGES = "${PN} \
                     ${@bb.utils.contains('PACKAGECONFIG', 'networkd', '${PN}-networkd', '', d)} \
 "
 GROUPADD_PARAM:${PN} = "-r systemd-journal;"
+GROUPADD_PARAM:${PN} += "-r empower;"
 GROUPADD_PARAM:udev = "-r render"
 GROUPADD_PARAM:${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'polkit_hostnamed_fallback', '-r systemd-hostname;', '', d)}"
 USERADD_PARAM:${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'coredump', '--system -d / -M --shell /sbin/nologin systemd-coredump;', '', d)}"
@@ -785,6 +764,7 @@ FILES:udev += "${base_sbindir}/udevd \
                ${nonarch_libdir}/udev/rules.d/60-drm.rules \
                ${nonarch_libdir}/udev/rules.d/60-evdev.rules \
                ${nonarch_libdir}/udev/rules.d/60-fido-id.rules \
+               ${nonarch_libdir}/udev/rules.d/60-gpiochip.rules \
                ${nonarch_libdir}/udev/rules.d/60-infiniband.rules \
                ${nonarch_libdir}/udev/rules.d/60-input-id.rules \
                ${nonarch_libdir}/udev/rules.d/60-persistent-alsa.rules \
@@ -811,6 +791,7 @@ FILES:udev += "${base_sbindir}/udevd \
                ${nonarch_libdir}/udev/rules.d/80-net-setup-link.rules \
                ${nonarch_libdir}/udev/rules.d/81-net-bridge.rules \
                ${nonarch_libdir}/udev/rules.d/81-net-dhcp.rules \
+               ${nonarch_libdir}/udev/rules.d/82-net-auto-link-local.rules \
                ${nonarch_libdir}/udev/rules.d/90-image-dissect.rules \
                ${nonarch_libdir}/udev/rules.d/90-vconsole.rules \
                ${nonarch_libdir}/udev/rules.d/90-iocost.rules \
@@ -847,12 +828,6 @@ python __anonymous() {
     if bb.utils.contains('PACKAGECONFIG', 'homed', True, False, d) and not bb.utils.contains('PACKAGECONFIG', 'userdb openssl cryptsetup', True, False, d):
         bb.error("PACKAGECONFIG[homed] requires PACKAGECONFIG[userdb], PACKAGECONFIG[openssl] and PACKAGECONFIG[cryptsetup]")
 }
-
-python do_warn_musl() {
-    if d.getVar('TCLIBC') == "musl":
-        bb.warn("Using systemd with musl is not recommended since it is not supported upstream and some patches are known to be problematic.")
-}
-addtask warn_musl before do_configure
 
 ALTERNATIVE:${PN} = "halt reboot shutdown poweroff \
                      ${@bb.utils.contains('PACKAGECONFIG', 'resolved', 'resolv-conf', '', d)}"
