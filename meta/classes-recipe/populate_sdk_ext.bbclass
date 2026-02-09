@@ -37,6 +37,7 @@ ESDK_LOCALCONF_REMOVE ?= "CONF_VERSION \
                              SSTATE_MIRRORS \
                              DL_DIR \
                              SSTATE_DIR \
+                             BB_HASHSERVE_DB_DIR \
                              TMPDIR \
                              BB_SERVER_TIMEOUT \
                             "
