@@ -28,12 +28,10 @@ S = "${UNPACKDIR}/${BPN}-${PV}-stable"
 PACKAGECONFIG ??= ""
 PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
 
-inherit autotools github-releases
+inherit autotools github-releases ptest multilib_header
 
 # Needed for Debian packaging
 LEAD_SONAME = "libevent-2.1.so"
-
-inherit ptest multilib_header
 
 DEPENDS = "zlib"
 
