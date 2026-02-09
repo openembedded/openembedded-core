@@ -12,11 +12,13 @@ SRC_URI = "git://git.kernel.org/pub/scm/utils/mdadm/mdadm.git;protocol=https;bra
            file://run-ptest \
            file://0001-Fix-the-path-of-corosync-and-dlm-header-files-check.patch \
            file://mdadm.init \
+           file://0001-Makefile-install-mdcheck.patch \
+           file://0001-restripe.c-Use-_FILE_OFFSET_BITS-to-enable-largefile.patch \
            file://0002-Create.c-include-linux-falloc.h-for-FALLOC_FL_ZERO_R.patch \
-           file://0001-raid6check.c-restripe.c-Use-64-bit-off_t-across-both.patch \
+           file://xmalloc.patch \
            "
 
-SRCREV = "8f0c7692d48414ff7b3fe927ce75799c65ef24b1"
+SRCREV = "8e56efac9afd7080bb42bae4b77cdad5f345633a"
 
 inherit ptest systemd
 
@@ -35,7 +37,7 @@ CFLAGS:append:mipsarchn32 = ' -D__SANE_USERSPACE_TYPES__'
 
 EXTRA_OEMAKE = 'CHECK_RUN_DIR=0 CWFLAGS="" CXFLAGS="${CFLAGS}" SYSTEMD_DIR=${systemd_system_unitdir} \
                 BINDIR="${base_sbindir}" UDEVDIR="${nonarch_base_libdir}/udev" LDFLAGS="${LDFLAGS}" \
-                SYSROOT="${STAGING_DIR_TARGET}" MISCDIR="${datadir}/${BPN}" STRIP='
+                SYSROOT="${STAGING_DIR_TARGET}" STRIP='
 
 DEBUG_OPTIMIZATION:append = " -Wno-error"
 
