@@ -10,8 +10,8 @@ LICENSE = "GPL-2.0-or-later & LGPL-2.1-or-later & BSD-3-Clause"
 LICENSE:${PN} = "LGPL-2.1-or-later & BSD-3-Clause"
 LICENSE:${PN}-dev = "GPL-2.0-or-later & LGPL-2.1-or-later"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-                    file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c \
+LIC_FILES_CHKSUM = "file://COPYING;md5=570a9b3749dd0463a1778803b12a6dce \
+                    file://COPYING.LIB;md5=4bf661c1e3793e55c8d1051bc5e0ae21 \
                     file://LICENSES;md5=034b4e369944ad4b52a68368f1cf98b8 \
                     "
 
@@ -26,7 +26,7 @@ SRC_URI = "${GNUPG_MIRROR}/libgcrypt/libgcrypt-${PV}.tar.bz2 \
            file://no-bench-slope.patch \
            file://run-ptest \
            "
-SRC_URI[sha256sum] = "6ba59dd192270e8c1d22ddb41a07d95dcdbc1f0fb02d03c4b54b235814330aac"
+SRC_URI[sha256sum] = "0311454e678189bad62a7e9402a9dd793025efff6e7449898616e2fc75e0f4f5"
 
 BINCONFIG = "${bindir}/libgcrypt-config"
 
