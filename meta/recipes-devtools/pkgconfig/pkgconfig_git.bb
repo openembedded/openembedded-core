@@ -19,7 +19,7 @@ SRC_URI = "git://gitlab.freedesktop.org/pkg-config/pkg-config.git;branch=master;
 		   file://0001-Backport-g-s-size-g-u-intptr-atomics-in-builtin-glib.patch \
            "
 
-inherit autotools
+inherit autotools pkgconfig
 
 # Because of a faulty test, the current auto mode always evaluates to no,
 # so just continue that behaviour.
@@ -29,7 +29,7 @@ EXTRA_OECONF += "--disable-indirect-deps"
 PACKAGECONFIG ??= "glib"
 PACKAGECONFIG:class-native = ""
 
-PACKAGECONFIG[glib] = "--without-internal-glib,--with-internal-glib,glib-2.0 pkgconfig-native"
+PACKAGECONFIG[glib] = "--without-internal-glib,--with-internal-glib,glib-2.0"
 
 BBCLASSEXTEND = "native nativesdk"
 
