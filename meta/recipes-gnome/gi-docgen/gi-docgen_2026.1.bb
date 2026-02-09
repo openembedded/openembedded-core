@@ -8,9 +8,9 @@ HOMEPAGE = "https://gnome.pages.gitlab.gnome.org/gi-docgen/"
 LICENSE = "GPL-3.0-or-later & Apache-2.0"
 LIC_FILES_CHKSUM = "file://gi-docgen.py;beginline=1;endline=5;md5=2dc0f1f01202478cfe813c0e7f80b326"
 
-SRC_URI = "git://gitlab.gnome.org/GNOME/gi-docgen.git;protocol=https;branch=main"
+SRC_URI = "git://gitlab.gnome.org/GNOME/gi-docgen.git;protocol=https;branch=main;tag=${PV}"
 
-SRCREV = "9eedfa6572cc9929583f926493751adb85805ffb"
+SRCREV = "3142afb34f5dee4889c92d3bc8ec2bd2aabb90b7"
 
 inherit python_setuptools_build_meta
 
