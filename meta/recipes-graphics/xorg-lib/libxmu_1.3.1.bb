@@ -27,4 +27,4 @@ FILES:libxmuu = "${libdir}/libXmuu.so.*"
 
 BBCLASSEXTEND = "native"
 
-SRC_URI[sha256sum] = "fcb27793248a39e5fcc5b9c4aec40cc0734b3ca76aac3d7d1c264e7f7e14e8b2"
+SRC_URI[sha256sum] = "81a99e94c4501e81c427cbaa4a11748b584933e94b7a156830c3621256857bc4"
