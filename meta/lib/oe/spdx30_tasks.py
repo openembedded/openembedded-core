@@ -838,12 +838,14 @@ def create_spdx(d):
 
     if d.getVar("SPDX_INCLUDE_PACKAGECONFIG", True) != "0":
         packageconfig = (d.getVar("PACKAGECONFIG") or "").split()
-        all_features = (d.getVarFlags("PACKAGECONFIG") or {}).keys()
+        all_features = set((d.getVarFlags("PACKAGECONFIG") or {}).keys())
+        blacklisted_features = {"doc"}
 
         if all_features:
             enabled = set(packageconfig)
-            all_features_set = set(all_features)
-            disabled = all_features_set - enabled
+            disabled = all_features - enabled
+            all_features -= disabled & blacklisted_features
+            disabled -= blacklisted_features
 
             for feature in sorted(all_features):
                 status = "enabled" if feature in enabled else "disabled"
