@@ -14,10 +14,11 @@ SRC_URI = " \
     file://run-ptest \
     file://disable-tests \
     file://no-test-timeout.patch \
+    file://0001-config2setopts-fix-for-disable-aws-build-configurati.patch \
 "
 
 SRC_URI:append:class-nativesdk = " \
-           file://environment.d-curl.sh \
+    file://environment.d-curl.sh \
 "
 
 SRC_URI[sha256sum] = "40df79166e74aa20149365e11ee4c798a46ad57c34e4f68fd13100e2c9a91946"
