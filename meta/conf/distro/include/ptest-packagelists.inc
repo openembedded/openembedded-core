@@ -29,6 +29,7 @@ PTESTS_FAST = "\
     json-c \
     json-glib \
     libarchive \
+    libassuan \
     libcheck \
     libconvert-asn1-perl \
     libexif \
