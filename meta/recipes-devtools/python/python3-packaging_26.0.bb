@@ -3,21 +3,20 @@ HOMEPAGE = "https://github.com/pypa/packaging"
 LICENSE = "Apache-2.0 | BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=faadaedca9251a90b205c9167578ce91"
 
-SRC_URI[sha256sum] = "d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f"
+SRC_URI[sha256sum] = "00243ae351a257117b6a241061796684b084ed1c516a08c48a3f7e147a9d80b4"
 
 SRC_URI += "file://run-ptest.in"
 
 inherit pypi python_flit_core ptest
 
-BBCLASSEXTEND = "native nativesdk"
-
 # Bootstrap the native build
 DEPENDS:remove:class-native = "python3-build-native"
 RDEPENDS:${PN} += "python3-profile"
 
+# This test needs tomli_w which isn't currently in meta/
+SKIPLIST = "--ignore=tests/test_pylock.py"
 # https://github.com/pypa/packaging/issues/850
-SKIPLIST ?= ""
-SKIPLIST:libc-musl = "--deselect tests/test_manylinux.py::test_is_manylinux_compatible_old --ignore=tests/test_tags.py"
+SKIPLIST:append:libc-musl = " --deselect tests/test_manylinux.py::test_is_manylinux_compatible_old --ignore=tests/test_tags.py"
 
 do_compile:class-native () {
     python_flit_core_do_manual_build
@@ -41,3 +40,5 @@ RDEPENDS:${PN}-ptest = "\
 # The ptest package contains prebuilt test binaries
 INSANE_SKIP:${PN} = "already-stripped"
 INSANE_SKIP:${PN}-ptest = "arch"
+
+BBCLASSEXTEND = "native nativesdk"
