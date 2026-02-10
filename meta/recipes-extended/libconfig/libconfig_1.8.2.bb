@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=17c8e32f0f72580cc2906b409d46b5ac"
 
 SRC_URI = " \
     git://github.com/hyperrealm/libconfig.git;protocol=https;branch=master;tag=v${PV} \
+    file://run-ptest \
 "
 SRCREV = "a42cb47c1526a4f2ed025fcbb2289863375bc898"
 
@@ -17,7 +18,7 @@ DEPENDS += "bison-native flex-native"
 
 UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>\d+(\.\d+)+)$"
 
-inherit autotools pkgconfig
+inherit autotools pkgconfig ptest
 
 PACKAGE_BEFORE_PN = "${PN}++"
 FILES:${PN}++ = "${libdir}/${BPN}++*${SOLIBS}"
@@ -26,4 +27,14 @@ FILES:${PN}++ = "${libdir}/${BPN}++*${SOLIBS}"
 do_compile:prepend() {
     rm -f ${S}/lib/grammar.[ch]
     rm -f ${S}/lib/scanner.[ch]
+}
+
+do_compile_ptest() {
+    oe_runmake -C tests check TESTS=
+}
+
+do_install_ptest() {
+    install -d ${D}${PTEST_PATH}/tests
+    ${B}/libtool --mode=install install -m 0755 ${B}/tests/libconfig_tests ${D}${PTEST_PATH}/tests/libconfig_tests
+    cp -r ${S}/tests/testdata ${D}${PTEST_PATH}/tests/
 }

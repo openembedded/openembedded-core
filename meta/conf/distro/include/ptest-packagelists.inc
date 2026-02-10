@@ -31,6 +31,7 @@ PTESTS_FAST = "\
     libarchive \
     libassuan \
     libcheck \
+    libconfig \
     libconvert-asn1-perl \
     libexif \
     libgpg-error\
