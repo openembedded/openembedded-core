@@ -29,12 +29,14 @@ PACKAGECONFIG[zstd] = "--with-zstd,--without-zstd,zstd,"
 
 EXTRA_OECONF += "--enable-largefile --without-iconv"
 
-SRC_URI = "https://libarchive.org/downloads/libarchive-${PV}.tar.gz"
+SRC_URI = "https://libarchive.org/downloads/libarchive-${PV}.tar.gz \
+           file://run-ptest \
+          "
 UPSTREAM_CHECK_URI = "https://www.libarchive.org/"
 
 SRC_URI[sha256sum] = "8a60f3a7bfd59c54ce82ae805a93dba65defd04148c3333b7eaa2102f03b7ffd"
 
-inherit autotools update-alternatives pkgconfig
+inherit autotools update-alternatives pkgconfig ptest
 
 CPPFLAGS += "-I${WORKDIR}/extra-includes"
 
@@ -62,3 +64,27 @@ ALTERNATIVE_LINK_NAME[cpio] = "${base_bindir}/cpio"
 ALTERNATIVE_TARGET[cpio] = "${bindir}/bsdcpio"
 
 BBCLASSEXTEND = "native nativesdk"
+
+do_compile_ptest() {
+    oe_runmake check TESTS=
+}
+
+do_install_ptest() {
+    install -d ${D}${PTEST_PATH}
+
+    for test in libarchive_test bsdtar_test bsdcpio_test bsdcat_test bsdunzip_test; do
+            ${B}/libtool --mode=install install -m 0755 ${B}/$test ${D}${PTEST_PATH}/$test
+    done
+
+    for dir in libarchive tar cpio cat unzip; do
+            install -d ${D}${PTEST_PATH}/$dir/test
+            cp -r ${S}/$dir/test/* ${D}${PTEST_PATH}/$dir/test/
+    done
+
+    ln -sf ${bindir}/bsdtar ${D}${PTEST_PATH}/bsdtar
+    ln -sf ${bindir}/bsdcpio ${D}${PTEST_PATH}/bsdcpio
+    ln -sf ${bindir}/bsdcat ${D}${PTEST_PATH}/bsdcat
+    ln -sf ${bindir}/bsdunzip ${D}${PTEST_PATH}/bsdunzip
+}
+
+RDEPENDS:${PN}-ptest += "bsdtar bsdcpio"

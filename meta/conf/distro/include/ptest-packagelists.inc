@@ -28,6 +28,7 @@ PTESTS_FAST = "\
     icu \
     json-c \
     json-glib \
+    libarchive \
     libcheck \
     libconvert-asn1-perl \
     libexif \
