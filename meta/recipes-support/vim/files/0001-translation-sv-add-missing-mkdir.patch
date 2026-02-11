@@ -1,0 +1,52 @@
+From 2dd7e39942f4f7740c3a645148521d3b6b443c41 Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@arm.com>
+Date: Wed, 11 Feb 2026 14:39:06 +0000
+Subject: [PATCH] translation(sv): add missing mkdir
+
+The installtutor target doesn't explicitly create the Swedish directory
+that it is going to put files into:
+
+  make[1]: Entering directory 'vim-9.1.2128/src'
+  /bin/sh install-sh -c -d DESTDIR/usr/share/vim/vim91
+  chmod 755 DESTDIR/usr/share/vim/vim91
+  /bin/sh install-sh -c -d DESTDIR/usr/share/vim/vim91/tutor/en
+  chmod 755 DESTDIR/usr/share/vim/vim91/tutor/en
+  /bin/sh install-sh -c -d DESTDIR/usr/share/vim/vim91/tutor/sr
+  chmod 755 DESTDIR/usr/share/vim/vim91/tutor/sr
+  /bin/sh install-sh -c -d DESTDIR/usr/share/vim/vim91/tutor/it
+  chmod 755 DESTDIR/usr/share/vim/vim91/tutor/it
+  /bin/sh install-sh -c -d DESTDIR/usr/share/vim/vim91/tutor/ru
+  chmod 755 DESTDIR/usr/share/vim/vim91/tutor/ru
+  cp ../runtime/tutor/README* ../runtime/tutor/tutor* DESTDIR/usr/share/vim/vim91/tutor
+  cp ../runtime/tutor/en/* DESTDIR/usr/share/vim/vim91/tutor/en/
+  cp ../runtime/tutor/it/* DESTDIR/usr/share/vim/vim91/tutor/it/
+  cp ../runtime/tutor/ru/* DESTDIR/usr/share/vim/vim91/tutor/ru/
+  cp ../runtime/tutor/sr/* DESTDIR/usr/share/vim/vim91/tutor/sr/
+  cp ../runtime/tutor/sv/* DESTDIR/usr/share/vim/vim91/tutor/sv/
+  cp: target 'DESTDIR/usr/share/vim/vim91/tutor/sv/': No such file or directory
+
+Add the missing dependency on $(DEST_TUTOR)/sv to ensure this directory
+is created.
+
+Upstream-Status: Submitted [https://github.com/vim/vim/pull/19385]
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ src/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Makefile b/src/Makefile
+index 75d8ff6c1c..b4c31bed60 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -2487,7 +2487,7 @@ installgtutorbin: $(DEST_BIN)
+ 	$(INSTALL_DATA) gvimtutor $(DEST_BIN)/$(GVIMNAME)tutor
+ 	chmod $(SCRIPTMOD) $(DEST_BIN)/$(GVIMNAME)tutor
+ 
+-installtutor: $(DEST_RT) $(DEST_TUTOR)/en $(DEST_TUTOR)/it $(DEST_TUTOR)/sr $(DEST_TUTOR)/ru
++installtutor: $(DEST_RT) $(DEST_TUTOR)/en $(DEST_TUTOR)/it $(DEST_TUTOR)/sr $(DEST_TUTOR)/sv $(DEST_TUTOR)/ru
+ 	-$(INSTALL_DATA) $(TUTORSOURCE)/README* $(TUTORSOURCE)/tutor* $(DEST_TUTOR)
+ 	-$(INSTALL_DATA) $(TUTORSOURCE)/en/* $(DEST_TUTOR)/en/
+ 	-$(INSTALL_DATA) $(TUTORSOURCE)/it/* $(DEST_TUTOR)/it/
+-- 
+2.43.0
+
