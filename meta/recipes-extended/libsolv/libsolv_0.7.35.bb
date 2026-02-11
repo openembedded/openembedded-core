@@ -38,18 +38,9 @@ do_compile_ptest() {
 do_install_ptest() {
     install -d ${D}${PTEST_PATH}/tools
     install -d ${D}${PTEST_PATH}/test
-
-    if [ -f ${B}/tools/testsolv ]; then
-        install -m 0755 ${B}/tools/testsolv ${D}${PTEST_PATH}/tools/
-    fi
-
-    if [ -f ${S}/test/runtestcases.sh ]; then
-        install -m 0755 ${S}/test/runtestcases.sh ${D}${PTEST_PATH}/test/
-    fi
-
-    if [ -d ${S}/test/testcases ]; then
-        cp -r ${S}/test/testcases ${D}${PTEST_PATH}/test/
-    fi
+    install -m 0755 ${B}/tools/testsolv ${D}${PTEST_PATH}/tools/
+    install -m 0755 ${S}/test/runtestcases.sh ${D}${PTEST_PATH}/test/
+    cp -r ${S}/test/testcases ${D}${PTEST_PATH}/test/
 }
 
 RDEPENDS:${PN}-ptest += "bash"
