@@ -11,7 +11,7 @@ XORG_PN = "libX11"
 SRC_URI += "file://0001-Drop-x11-dependencies.patch \
            "
 
-SRC_URI[sha256sum] = "c9a287a5aefa9804ce3cfafcf516fe96ed3f7e8e45c0e2ee59e84c86757df518"
+SRC_URI[sha256sum] = "fa026f9bb0124f4d6c808f9aef4057aad65e7b35d8ff43951cef0abe06bb9a9a"
 
 REQUIRED_DISTRO_FEATURES = ""
 CONFLICT_DISTRO_FEATURES = "x11"
