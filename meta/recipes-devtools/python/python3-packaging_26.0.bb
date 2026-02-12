@@ -15,8 +15,8 @@ RDEPENDS:${PN} += "python3-profile"
 
 # This test needs tomli_w which isn't currently in meta/
 SKIPLIST = "--ignore=tests/test_pylock.py"
-# https://github.com/pypa/packaging/issues/850
-SKIPLIST:append:libc-musl = " --deselect tests/test_manylinux.py::test_is_manylinux_compatible_old --ignore=tests/test_tags.py"
+# Tests don't handle manylinux+musl (https://github.com/pypa/packaging/issues/850)
+SKIPLIST:append:libc-musl = " --deselect=tests/test_manylinux.py::test_is_manylinux_compatible_old --deselect=tests/test_tags.py::TestManylinuxPlatform --deselect=tests/test_tags.py::TestSysTags"
 
 do_compile:class-native () {
     python_flit_core_do_manual_build
