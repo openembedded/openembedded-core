@@ -249,6 +249,10 @@ def setup_git_repo(repodir, version, devbranch, basetag='devtool-base', d=None):
                     remote_url = stdout.splitlines()[0]
                     logger.error(os.path.relpath(os.path.join(root, ".."), root))
                     bb.process.run('git submodule add %s %s' % (remote_url, os.path.relpath(root, os.path.join(root, ".."))), cwd=os.path.join(root, ".."))
+                    # Do not descend into nested git repos that have submodules themselves.
+                    if ".gitmodules" in files:
+                        logger.warning('Nested git repository with submodules %s; devtool will not recurse into it', root)
+                        dirs[:] = []
                     found = True
                 if found:
                     oe.patch.GitApplyTree.commitIgnored("Add additional submodule from SRC_URI", dir=os.path.join(root, ".."), d=d)
