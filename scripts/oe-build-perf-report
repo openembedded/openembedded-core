@@ -432,19 +432,6 @@ def print_html_report(data, id_comp, buildstats):
     try:
         response = urlopen(commitAnnotationsURL)
         commitAnnotationsJSON = json.loads(response.read())
-        # Splice the annotations into the metadata
-        commit = metadata.get('commit', {})
-        annotations_out = {}
-
-        if (h := commit.get('value')) in commitAnnotationsJSON:
-            annotations_out['value'] = commitAnnotationsJSON[h]
-
-        if (h := commit.get('value_old')) in commitAnnotationsJSON:
-            annotations_out['value_old'] = commitAnnotationsJSON[h]
-
-        if annotations_out:
-            metadata['commit_annotation'] = annotations_out
-            metadata['commit_annotation']['title'] = "Commit annotation"
 
     except error.URLError as e:
         logging.debug(f"Couldn't find any commit annotations at {commitAnnotationsURL}, reason: {e.reason}.")

@@ -140,6 +140,11 @@ button:hover {
   max-width: 30em;
   text-wrap: auto;
 }
+
+.annotation-container:not(:empty) {
+  display: inline-block;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --text: #e9e8fa;
@@ -198,8 +203,8 @@ button:hover {
       <tr>
         <th>{{ item.title }}</th>
         {%if key == 'commit' %}
-          <td>{{ poky_link(item.value) }}{%if metadata.commit_annotation and metadata.commit_annotation.value %}<br>{{metadata.commit_annotation.value}}{% endif %}</td>
-          <td>{{ poky_link(item.value_old) }}{%if metadata.commit_annotation and metadata.commit_annotation.value %}<br>{{metadata.commit_annotation.value_old}}{% endif %}</td>
+          <td>{{ poky_link(item.value) }}<span class="annotation-container" data-commit="{{ item.value }}"></span></td>
+          <td>{{ poky_link(item.value_old) }}<span class="annotation-container" data-commit="{{ item.value_old }}"></span></td>
         {% elif key == 'commit_annotation' %}
         {% else %}
           <td>{{ item.value }}</td>
@@ -529,6 +534,17 @@ chartData.forEach(test => {
     drawChart(measurement.chart_elem_start_time_id, startTimeChartConfig)
     drawChart(measurement.chart_elem_commit_count_id, commitCountChartConfig)
   })
+
+  // Splice commit annotations into the table at the top of the page
+  if (commitAnnotations) {
+    document.querySelectorAll("[data-commit]").forEach((item) => {
+      const commitNumber = item.getAttribute("data-commit")
+      const matchingAnnotation = commitAnnotations[commitNumber]
+      if (matchingAnnotation) {
+        item.innerText = matchingAnnotation
+      }
+    })
+  }
 })
 
 
