@@ -58,11 +58,30 @@ def rust_tool(d, target_var):
     return "rust = %s" % repr(cmd)
 
 def bindgen_args(d):
+    # Variables may have clang-specific values and this function is only called
+    # for bindgen_clang_args, meaning the args must be the ones used by clang.
+    # The default toolchain may not be clang and some recipes may use two
+    # toolchains (e.g. mesa rusticl/gallium-llvm requires clang but not the
+    # other drivers in the recipe).
+    # This is necessary for example for ARM big.LITTLE CPU architecture where
+    # -mcpu will be set to e.g. cortex-a76.cortex-a55 for GCC but clang doesn't
+    # support big.LITTLE so we need to have cortex-a55 only, see CPU_TUNE_ARG
+    # variable.
+    # Therefore, to know which parameters bindgen must use with clang, we
+    # simulate using clang by setting the TCOVERRIDE to toolchain-clang
+    # temporarily.
+    # This is of course unnecessary if the default toolchain is already clang.
+    if d.getVar('TCOVERRIDE') != 'toolchain-clang':
+        localdata = bb.data.createCopy(d)
+        localdata.setVar('TCOVERRIDE', 'toolchain-clang')
+    else:
+        localdata = d
+
     args = '${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS} --target=${TARGET_SYS}'
     # For SDK packages TOOLCHAIN_OPTIONS don't contain full sysroot path
-    if bb.data.inherits_class("nativesdk", d):
+    if bb.data.inherits_class("nativesdk", localdata):
         args += ' --sysroot=${STAGING_DIR_HOST}${SDKPATHNATIVE}${prefix_nativesdk}'
-    items = d.expand(args).split()
+    items = localdata.expand(args).split()
     return repr(items[0] if len(items) == 1 else items)
 
 addtask write_config before do_configure
