@@ -5,17 +5,18 @@ than repeated in many programs throughout the system."
 HOMEPAGE = "https://salsa.debian.org/iso-codes-team/iso-codes"
 BUGTRACKER = "https://salsa.debian.org/iso-codes-team/iso-codes/issues"
 
-LICENSE = "LGPL-2.1-only"
-LIC_FILES_CHKSUM = "file://COPYING;md5=4bf661c1e3793e55c8d1051bc5e0ae21"
+LICENSE = "LGPL-2.1-or-later"
+LIC_FILES_CHKSUM = "file://LICENSES/LGPL-2.1-or-later.txt;md5=310c7c93cf5181c6b0cc8229a1f3c6f6 \
+                    file://REUSE.toml;md5=222088771af8590daba65c39e4747321"
 
 SRC_URI = "git://salsa.debian.org/iso-codes-team/iso-codes.git;protocol=https;branch=main;tag=v${PV}"
-SRCREV = "0f3a862394265a31d8465fc5e627d6429bbd8394"
+SRCREV = "74623235ae99f6e835e1e465017ce4c544ae6b53"
 
 # inherit gettext cannot be used, because it adds gettext-native to BASEDEPENDS which
 # are inhibited by allarch
 DEPENDS = "gettext-native"
 
-inherit allarch autotools
+inherit allarch meson
 
 FILES:${PN} += "${datadir}/xml/"
 
