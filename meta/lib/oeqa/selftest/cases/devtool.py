@@ -1156,6 +1156,31 @@ class DevtoolModifyTests(DevtoolBase):
         result = bitbake(testrecipe)
         self.assertEqual(result.status, 0, "Bitbake failed, exit code %s, output %s" % (result.status, result.output))
 
+    def test_devtool_modify_nested_gitsm(self):
+        """Checks that a recipe with multiple sources including a git repo with a nested git repo with
+        submodules can be used with devtool modify
+        """
+        testrecipe = 'devtool-test-git-gitsm'
+        src_uri = get_bb_var('SRC_URI', testrecipe)
+        self.assertIn('git://', src_uri, 'This test expects the %s recipe to fetch a git source' % testrecipe)
+        self.assertIn('gitsm://', src_uri, 'This test expects the %s recipe to fetch a gitsm source' % testrecipe)
+        # Try modifying a recipe
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
+        self.assertEqual(result.status, 0, "Could not modify recipe %s. Output: %s" % (testrecipe, result.output))
+        # Test devtool status
+        result = runCmd('devtool status')
+        self.assertIn(testrecipe, result.output)
+        self.assertIn(tempdir, result.output)
+        # Submodules in repo-gitsm should be extracted
+        source_repo_gitsm_gitmodules = os.path.join(tempdir, 'nested/repo-gitsm')
+        self.assertExists(source_repo_gitsm_gitmodules, 'Nested repo repo-gitsm not found')
+        self.assertExists(os.path.join(source_repo_gitsm_gitmodules, 'bitbake'), 'Submodule not found')
+        self.assertExists(os.path.join(source_repo_gitsm_gitmodules, 'bitbake-gitsm-test1'), 'Submodule not found')
+
 class DevtoolUpdateTests(DevtoolBase):
 
     def test_devtool_update_recipe(self):
