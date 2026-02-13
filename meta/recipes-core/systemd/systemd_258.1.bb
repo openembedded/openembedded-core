@@ -18,6 +18,10 @@ REQUIRED_DISTRO_FEATURES += "usrmerge"
 # that we don't build both udev and systemd in world builds.
 REQUIRED_DISTRO_FEATURES += "systemd"
 
+# Systemd used to work with sysvinit compatibility but upstream plans to remove
+# this and hence we can no longer support it
+CONFLICT_DISTRO_FEATURES += "sysvinit"
+
 SRC_URI += " \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
@@ -62,7 +66,7 @@ PACKAGECONFIG ??= " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'minidebuginfo', 'coredump elfutils', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'wifi', 'rfkill', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'xkbcommon', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'sysvinit', 'link-udev-shared', d)} \
+    link-udev-shared \
     backlight \
     binfmt \
     gshadow \
@@ -297,13 +301,6 @@ do_install() {
 	done
 
 	install -m 0644 ${UNPACKDIR}/00-create-volatile.conf ${D}${nonarch_libdir}/tmpfiles.d/
-
-	if ${@bb.utils.contains('DISTRO_FEATURES','sysvinit','true','false',d)}; then
-		install -d ${D}${sysconfdir}/init.d
-		install -m 0755 ${UNPACKDIR}/init ${D}${sysconfdir}/init.d/systemd-udevd
-		sed -i s%@UDEVD@%${nonarch_libdir}/systemd/systemd-udevd% ${D}${sysconfdir}/init.d/systemd-udevd
-		install -Dm 0755 ${S}/src/systemctl/systemd-sysv-install.SKELETON ${D}${systemd_unitdir}/systemd-sysv-install
-	fi
 
 	if ${@bb.utils.contains('FILESYSTEM_PERMS_TABLES', 'files/fs-perms-volatile-log.txt', 'true', 'false', d)}; then
 		# base-files recipe provides /var/log which is a symlink to /var/volatile/log
@@ -839,10 +836,9 @@ INITSCRIPT_PACKAGES = "udev"
 INITSCRIPT_NAME:udev = "systemd-udevd"
 INITSCRIPT_PARAMS:udev = "start 03 S ."
 
-python __anonymous() {
-    if not bb.utils.contains('DISTRO_FEATURES', 'sysvinit', True, False, d):
-        d.setVar("INHIBIT_UPDATERCD_BBCLASS", "1")
+INHIBIT_UPDATERCD_BBCLASS = "1"
 
+python __anonymous() {
     if bb.utils.contains('DISTRO_FEATURES', 'systemd-resolved', True, False, d) and not bb.utils.contains('PACKAGECONFIG', 'nss-resolve resolved', True, False, d):
         bb.error("DISTRO_FEATURES[systemd-resolved] requires PACKAGECONFIG[nss-resolve, resolved]")
 
