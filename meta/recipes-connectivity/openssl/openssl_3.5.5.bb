@@ -29,6 +29,7 @@ PACKAGECONFIG:class-native = ""
 PACKAGECONFIG:class-nativesdk = ""
 
 PACKAGECONFIG[cryptodev-linux] = "enable-devcryptoeng,disable-devcryptoeng,cryptodev-linux,,cryptodev-module"
+PACKAGECONFIG[legacy] = ",no-legacy"
 PACKAGECONFIG[tls1] = ",no-tls1"
 PACKAGECONFIG[tls1_1] = ",no-tls1_1"
 PACKAGECONFIG[manpages] = ""
@@ -277,7 +278,8 @@ CONFFILES:openssl-conf = "${sysconfdir}/ssl/openssl.cnf"
 
 RRECOMMENDS:libcrypto += "openssl-conf ${PN}-ossl-module-legacy"
 RDEPENDS:${PN}-misc = "perl"
-RDEPENDS:${PN}-ptest += "openssl-bin perl perl-modules bash sed openssl-engines openssl-ossl-module-legacy"
+RDEPENDS:${PN}-ptest += "openssl-bin perl perl-modules bash sed openssl-engines"
+RRECOMMENDS:${PN}-ptest += "${PN}-ossl-module-legacy"
 
 RDEPENDS:${PN}-bin += "openssl-conf"
 
