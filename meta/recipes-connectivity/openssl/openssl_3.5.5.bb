@@ -29,8 +29,8 @@ PACKAGECONFIG:class-native = ""
 PACKAGECONFIG:class-nativesdk = ""
 
 PACKAGECONFIG[cryptodev-linux] = "enable-devcryptoeng,disable-devcryptoeng,cryptodev-linux,,cryptodev-module"
-PACKAGECONFIG[no-tls1] = "no-tls1"
-PACKAGECONFIG[no-tls1_1] = "no-tls1_1"
+PACKAGECONFIG[tls1] = ",no-tls1"
+PACKAGECONFIG[tls1_1] = ",no-tls1_1"
 PACKAGECONFIG[manpages] = ""
 PACKAGECONFIG[fips] = "enable-fips"
 
