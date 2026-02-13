@@ -35,6 +35,7 @@ PTESTS_FAST = "\
     libconvert-asn1-perl \
     libexif \
     libgpg-error\
+    libksba \
     libmd \
     libnl \
     libpcre \

@@ -18,19 +18,37 @@ DEPENDS = "libgpg-error"
 
 BINCONFIG = "${bindir}/ksba-config"
 
-inherit autotools binconfig-disabled pkgconfig texinfo
+inherit autotools binconfig-disabled pkgconfig texinfo ptest
 
 require recipes-support/gnupg/drop-unknown-suffix.inc
 
 UPSTREAM_CHECK_URI = "https://gnupg.org/download/index.html"
 SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
-           file://ksba-add-pkgconfig-support.patch"
+           file://ksba-add-pkgconfig-support.patch \
+           file://run-ptest \
+           "
 
 SRC_URI[sha256sum] = "cf72510b8ebb4eb6693eef765749d83677a03c79291a311040a5bfd79baab763"
 
 do_configure:prepend () {
 	# Else these could be used in preference to those in aclocal-copy
 	rm -f ${S}/m4/gpg-error.m4
+}
+
+do_compile_ptest() {
+    oe_runmake -C tests check TESTS=
+}
+
+do_install_ptest() {
+    install -d ${D}${PTEST_PATH}/tests
+
+    for test in ${B}/tests/cert-basic ${B}/tests/t-cms-parser ${B}/tests/t-crl-parser \
+                ${B}/tests/t-der-builder ${B}/tests/t-dnparser ${B}/tests/t-ocsp \
+                ${B}/tests/t-oid ${B}/tests/t-reader; do
+        ${B}/libtool --mode=install install -m 0755 $test ${D}${PTEST_PATH}/tests/
+    done
+
+    cp -r ${S}/tests/samples ${D}${PTEST_PATH}/tests/
 }
 
 BBCLASSEXTEND = "native nativesdk"
