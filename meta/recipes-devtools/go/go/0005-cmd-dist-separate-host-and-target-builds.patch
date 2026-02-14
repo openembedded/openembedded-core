@@ -87,7 +87,7 @@ index b62e518030..0c54d82300 100644
  	xatexit(func() {
  		if files := xreaddir(goosGoarch); len(files) == 0 {
  			xremove(goosGoarch)
-@@ -1420,14 +1426,20 @@ func cmdbootstrap() {
+@@ -1415,14 +1421,20 @@ func cmdbootstrap() {
  	defer timelog("end", "dist bootstrap")
  
  	var debug, distpack, force, noBanner, noClean bool
@@ -109,7 +109,7 @@ index b62e518030..0c54d82300 100644
  
  	if noClean {
  		xprintf("warning: --no-clean is deprecated and has no effect; use 'go install std cmd' instead\n")
-@@ -1439,6 +1451,18 @@ func cmdbootstrap() {
+@@ -1434,6 +1446,18 @@ func cmdbootstrap() {
  			"Use the -force flag to build anyway.\n", goos, goarch)
  	}
  
@@ -128,7 +128,7 @@ index b62e518030..0c54d82300 100644
  	// Set GOPATH to an internal directory. We shouldn't actually
  	// need to store files here, since the toolchain won't
  	// depend on modules outside of vendor directories, but if
-@@ -1517,9 +1541,14 @@ func cmdbootstrap() {
+@@ -1512,9 +1536,14 @@ func cmdbootstrap() {
  		xprintf("\n")
  	}
  
@@ -143,7 +143,7 @@ index b62e518030..0c54d82300 100644
  	goBootstrap := pathf("%s/go_bootstrap", tooldir)
  	if debug {
  		run("", ShowOutput|CheckExit, pathf("%s/compile", tooldir), "-V=full")
-@@ -1547,7 +1576,11 @@ func cmdbootstrap() {
+@@ -1542,7 +1571,11 @@ func cmdbootstrap() {
  		xprintf("\n")
  	}
  	xprintf("Building Go toolchain2 using go_bootstrap and Go toolchain1.\n")
@@ -155,7 +155,7 @@ index b62e518030..0c54d82300 100644
  	// Now that cmd/go is in charge of the build process, enable GOEXPERIMENT.
  	os.Setenv("GOEXPERIMENT", goexperiment)
  	// No need to enable PGO for toolchain2.
-@@ -1600,6 +1633,7 @@ func cmdbootstrap() {
+@@ -1595,6 +1628,7 @@ func cmdbootstrap() {
  		os.Setenv("GOCACHE", oldgocache)
  	}
  
@@ -163,7 +163,7 @@ index b62e518030..0c54d82300 100644
  	if goos == oldgoos && goarch == oldgoarch {
  		// Common case - not setting up for cross-compilation.
  		timelog("build", "toolchain")
-@@ -1643,6 +1677,42 @@ func cmdbootstrap() {
+@@ -1638,6 +1672,42 @@ func cmdbootstrap() {
  		checkNotStale(toolenv(), goBootstrap, toolchain...)
  		copyfile(pathf("%s/compile4", tooldir), pathf("%s/compile", tooldir), writeExec)
  	}
@@ -206,7 +206,7 @@ index b62e518030..0c54d82300 100644
  
  	// Check that there are no new files in $GOROOT/bin other than
  	// go and gofmt and $GOOS_$GOARCH (target bin when cross-compiling).
-@@ -1665,8 +1735,12 @@ func cmdbootstrap() {
+@@ -1660,8 +1730,12 @@ func cmdbootstrap() {
  		}
  	}
  
