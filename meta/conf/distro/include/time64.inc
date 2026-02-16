@@ -1,3 +1,8 @@
+# An overview of Y2038 issues, and how to prepare a yocto-based
+# product for that date is available at
+# https://www.youtube.com/watch?v=eaOHJHFMobw
+# https://osseu2024.sched.com/event/1ej4C/
+#
 # To simulate Y2038 occurring in qemu, add to your build configuration:
 # QB_OPT_APPEND:append = " -rtc base=2040-02-02"
 #
