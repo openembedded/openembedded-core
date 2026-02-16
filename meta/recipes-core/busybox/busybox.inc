@@ -4,6 +4,7 @@ HOMEPAGE = "https://www.busybox.net"
 BUGTRACKER = "https://bugs.busybox.net/"
 
 DEPENDS += "kern-tools-native virtual/crypt"
+DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'libselinux', '', d)}"
 
 # bzip2 applet in busybox is based on lightly-modified bzip2-1.0.4 source
 # the GPL is version 2 only
@@ -86,6 +87,7 @@ def features_to_busybox_settings(d):
     busybox_cfg(bb.utils.contains('DISTRO_FEATURES', 'ipv4', True, False, d), 'CONFIG_FEATURE_IFUPDOWN_IPV4', cnf, rem)
     busybox_cfg(bb.utils.contains('DISTRO_FEATURES', 'ipv6', True, False, d), 'CONFIG_FEATURE_IFUPDOWN_IPV6', cnf, rem)
     busybox_cfg(bb.utils.contains_any('DISTRO_FEATURES', 'bluetooth wifi', True, False, d), 'CONFIG_RFKILL', cnf, rem)
+    busybox_cfg(bb.utils.contains('DISTRO_FEATURES', 'selinux', True, False, d), 'CONFIG_SELINUX', cnf, rem)
     return "\n".join(cnf), "\n".join(rem)
 
 # X, Y = ${@features_to_busybox_settings(d)}
