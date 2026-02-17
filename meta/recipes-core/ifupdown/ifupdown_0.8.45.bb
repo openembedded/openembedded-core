@@ -17,6 +17,7 @@ SRC_URI = "git://salsa.debian.org/debian/ifupdown.git;protocol=https;branch=mast
            file://tweak-ptest-script.patch \
            "
 SRCREV = "9ec193ec5a36f94ac8c647cdb6fe9b49c1a26fed"
+UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
 inherit ptest update-alternatives
 
