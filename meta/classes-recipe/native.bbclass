@@ -166,18 +166,7 @@ python native_virtclass_handler () {
     d.setVarFilter("PACKAGES", "native_filter(val, '" + pn + "', '" + bpn + "')")
     d.setVarFilter("PACKAGES_DYNAMIC", "native_filter(val, '" + pn + "', '" + bpn + "', regex=True)")
 
-    provides = e.data.getVar("PROVIDES")
-    nprovides = []
-    for prov in provides.split():
-        if prov.find(pn) != -1:
-            nprovides.append(prov)
-        elif not prov.endswith("-native"):
-            nprovides.append(prov + "-native")
-        else:
-            nprovides.append(prov)
-    e.data.setVar("PROVIDES", ' '.join(nprovides))
-
-
+    d.setVarFilter("PROVIDES", "native_filter(val, '" + pn + "', '" + bpn + "')")
 }
 
 addhandler native_virtclass_handler
