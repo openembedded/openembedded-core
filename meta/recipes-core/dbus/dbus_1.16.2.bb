@@ -3,7 +3,8 @@ DESCRIPTION = "D-Bus is a message bus system, a simple way for applications to t
 HOMEPAGE = "https://dbus.freedesktop.org"
 SECTION = "base"
 
-inherit meson pkgconfig gettext upstream-version-is-even ptest-gnome
+inherit_defer ${@bb.utils.contains('VIRTUAL-RUNTIME_dbus', 'dbus', 'ptest-gnome', '', d)}
+inherit meson pkgconfig gettext upstream-version-is-even
 
 LICENSE = "AFL-2.1 | GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb0ffc69a965797a3d6686baa153ef05 \
