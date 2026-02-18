@@ -122,10 +122,10 @@ INHIBIT_SYSROOT_STRIP ??= ""
 
 python native_virtclass_handler () {
     import re
-    pn = e.data.getVar("PN")
+    pn = d.getVar("PN")
     if not pn.endswith("-native"):
         return
-    bpn = e.data.getVar("BPN")
+    bpn = d.getVar("BPN")
 
     # Set features here to prevent appends and distro features backfill
     # from modifying native distro features
@@ -135,7 +135,7 @@ python native_virtclass_handler () {
     d.setVar("DISTRO_FEATURES", " ".join(sorted(features | filtered)))
     d.setVar("DISTRO_FEATURES_BACKFILL", "")
 
-    classextend = e.data.getVar('BBCLASSEXTEND') or ""
+    classextend = d.getVar('BBCLASSEXTEND') or ""
     if "native" not in classextend:
         return
 
@@ -157,11 +157,11 @@ python native_virtclass_handler () {
     for pkg in re.split(r"\${@(?:{.*?}|.)+?}|\s", d.getVar("PACKAGES", False)):
         if not pkg:
             continue
-        map_dependencies("RDEPENDS", e.data, pkg)
-        map_dependencies("RRECOMMENDS", e.data, pkg)
-        map_dependencies("RSUGGESTS", e.data, pkg)
-        map_dependencies("RPROVIDES", e.data, pkg)
-        map_dependencies("RREPLACES", e.data, pkg)
+        map_dependencies("RDEPENDS", d, pkg)
+        map_dependencies("RRECOMMENDS", d, pkg)
+        map_dependencies("RSUGGESTS", d, pkg)
+        map_dependencies("RPROVIDES", d, pkg)
+        map_dependencies("RREPLACES", d, pkg)
 
     d.setVarFilter("PACKAGES", "native_filter(val, '" + pn + "', '" + bpn + "')")
     d.setVarFilter("PACKAGES_DYNAMIC", "native_filter(val, '" + pn + "', '" + bpn + "', regex=True)")
