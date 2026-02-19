@@ -124,6 +124,8 @@ python do_configure() {
 
     # [llvm]
     config.add_section("llvm")
+    if d.getVar('PN') == "rust-native":
+        config.set("llvm", "link-shared", e(True))
     config.set("llvm", "static-libstdcpp", e(False))
     config.set("llvm", "download-ci-llvm", e(False))
     if "llvm" in (d.getVar('TC_CXX_RUNTIME') or ""):
