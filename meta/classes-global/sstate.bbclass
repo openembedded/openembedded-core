@@ -1043,15 +1043,16 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
             sstatefile = d.expand(getsstatefile(tid, siginfo, d))
             tasklist.append((tid, sstatefile))
 
+        progress = summary or len(tasklist) >= 100
+        if progress:
+            msg = "Checking sstate mirror object availability"
+            bb.event.fire(bb.event.ProcessStarted(msg, len(tasklist)), d)
+
         if tasklist:
             nproc = min(int(d.getVar("BB_NUMBER_THREADS")), len(tasklist))
 
             ## thread-safe counter
             cnt_tasks_done = itertools.count(start = 1)
-            progress = len(tasklist) >= 100
-            if progress:
-                msg = "Checking sstate mirror object availability"
-                bb.event.fire(bb.event.ProcessStarted(msg, len(tasklist)), d)
 
             # Have to setup the fetcher environment here rather than in each thread as it would race
             fetcherenv = bb.fetch2.get_fetcher_environment(d)
@@ -1066,8 +1067,8 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
                 checkstatus_end()
                 bb.event.disable_threadlock()
 
-            if progress:
-                bb.event.fire(bb.event.ProcessFinished(msg), d)
+        if progress:
+            bb.event.fire(bb.event.ProcessFinished(msg), d)
 
     inheritlist = d.getVar("INHERIT")
     if "toaster" in inheritlist:
