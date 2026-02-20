@@ -45,6 +45,8 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://CVE-2025-12464.patch \
            file://0001-python-backport-Remove-deprecated-get_event_loop-cal.patch \
            file://0002-python-backport-avoid-creating-additional-event-loop.patch \
+           file://CVE-2025-11234-01.patch \
+           file://CVE-2025-11234-02.patch \
            "
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
