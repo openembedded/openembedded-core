@@ -33,6 +33,8 @@ SRC_URI += " \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0002-implment-systemd-sysv-install-for-OE.patch \
            file://0003-Do-not-create-var-log-README.patch \
+           file://0001-udev-move-functions.patch \
+           file://0002-udev-do-not-build-full-list-of-dependencies.patch \
            "
 
 PAM_PLUGINS = " \
