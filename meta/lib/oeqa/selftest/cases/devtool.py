@@ -3354,8 +3354,12 @@ class DevtoolIdeSdkTests(DevtoolBase):
         cmake_native = os.path.normpath(result_cmake.output.strip())
         self.assertExists(cmake_native)
 
-        runCmdEnv('cmake %s' % cpp_example_src, cwd=tempdir_cmake, output_log=self._cmd_logger)
-        runCmdEnv('cmake --build %s' % tempdir_cmake, cwd=tempdir_cmake, output_log=self._cmd_logger)
+        result_cmake = runCmdEnv('cmake -S %s -B %s' % (cpp_example_src, tempdir_cmake),
+                                 cwd=tempdir_cmake, output_log=self._cmd_logger)
+        self.assertIn("Build files have been written to: %s" % tempdir_cmake, result_cmake.output)
+        result_cmake = runCmdEnv('cmake --build %s' % tempdir_cmake,
+                                 cwd=tempdir_cmake, output_log=self._cmd_logger)
+        self.assertIn("Built target", result_cmake.output)
 
         # Verify the printed note really referres to a cmake executable
         cmake_native_code = ""
