@@ -155,20 +155,23 @@ class IdeVSCode(IdeBase):
 
         # Define kernel exclude patterns once
         kernel_exclude_patterns = [
+            "*.cache/**",
+            "*.ko",
+            "*.mod.c",
+            "*.mod",
             "**/.*.cmd",
             "**/.*.d",
             "**/.*.S",
             "**/.tmp*",
-            "**/*.tmp",
-            "**/*.o",
             "**/*.a",
             "**/*.builtin",
+            "**/*.map",
+            "**/*.modinfo",
+            "**/*.o",
             "**/*.order",
             "**/*.orig",
             "**/*.symvers",
-            "**/*.modinfo",
-            "**/*.map",
-            "*.cache/**"
+            "**/*.tmp"
         ]
         files_excludes_kernel = {pattern: True for pattern in kernel_exclude_patterns}
 
