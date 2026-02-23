@@ -4,7 +4,6 @@ Date: Mon, 31 Mar 2025 20:48:52 +0200
 Subject: [PATCH] fix(null) : improve error handlings when passing a null
  pointer to some functions from lz4frame
 
-CVE: CVE-2025-62813
 Upstream-Status: Backport [https://github.com/lz4/lz4/commit/f64efec011c058bd70348576438abac222fe6c82]
 Signed-off-by: Peter Marko <peter.marko@siemens.com>
 ---
