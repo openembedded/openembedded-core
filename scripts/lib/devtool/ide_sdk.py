@@ -427,6 +427,11 @@ class RecipeModified:
         self.__oe_init_dir = None
         # main build tool used by this recipe
         self.build_tool = BuildTool.UNDEFINED
+        # Whether this recipe benefits from gdbserver and rootfs-dbg in the image.
+        self.wants_gdbserver = True
+        # Whether to warn when DEBUG_BUILD is not set.  Kernel modules are built
+        # by the kernel's build system and DEBUG_BUILD does not influence them.
+        self.wants_debug_build = True
         # build_tool = cmake
         self.oecmake_generator = None
         self.cmake_cache_vars = None
@@ -1156,12 +1161,14 @@ def ide_setup(args, config, basepath, workspace):
             exec_build_env_command(
                 config.init_path, basepath, bb_cmd_late, watch=True)
 
+    wants_gdbserver = any(
+        r.wants_gdbserver for r in recipes_modified)
     for recipe_image in recipes_images:
-        if (recipe_image.gdbserver_missing):
+        if wants_gdbserver and recipe_image.gdbserver_missing:
             logger.warning(
                 "gdbserver not installed in image %s. Remote debugging will not be available" % recipe_image)
 
-        if recipe_image.combine_dbg_image is False:
+        if wants_gdbserver and recipe_image.combine_dbg_image is False:
             logger.warning(
                 'IMAGE_CLASSES += "image-combined-dbg" is missing for image %s. Remote debugging will not find debug symbols from rootfs-dbg.' % recipe_image)
 
@@ -1178,7 +1185,7 @@ def ide_setup(args, config, basepath, workspace):
             ide.setup_modified_recipe(
                 args, recipe_image, recipe_modified)
 
-            if recipe_modified.debug_build != '1':
+            if recipe_modified.wants_debug_build and recipe_modified.debug_build != '1':
                 logger.warn(
                     'Recipe %s is compiled with release build configuration. '
                     'You might want to add DEBUG_BUILD = "1" to %s. '
