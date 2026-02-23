@@ -19,12 +19,19 @@ class BuildTool(Enum):
     UNDEFINED = auto()
     CMAKE = auto()
     MESON = auto()
+    KERNEL_MODULE = auto()
 
     @property
     def is_c_ccp(self):
         if self is BuildTool.CMAKE:
             return True
         if self is BuildTool.MESON:
+            return True
+        return False
+
+    @property
+    def is_c_cpp_kernel(self):
+        if self.is_c_ccp or self is BuildTool.KERNEL_MODULE:
             return True
         return False
 

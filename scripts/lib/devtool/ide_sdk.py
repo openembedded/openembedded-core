@@ -24,6 +24,7 @@ import bb
 from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, DevtoolError, parse_recipe
 from devtool.standard import get_real_srctree
 from devtool.ide_plugins import BuildTool
+from oe.kernel_module import kernel_module_os_env
 
 
 logger = logging.getLogger('devtool')
@@ -441,6 +442,11 @@ class RecipeModified:
         self.mesonopts = None
         self.extra_oemeson = None
         self.meson_cross_file = None
+        # kernel module
+        self.make_targets = None
+        self.extra_oemake = None
+        self.kernel_cc = None
+        self.staging_kernel_dir = None
 
         # Populated after bitbake built all the recipes
         self._installed_binaries = None
@@ -514,9 +520,32 @@ class RecipeModified:
             self.extra_oemeson = recipe_d.getVar('EXTRA_OEMESON')
             self.meson_cross_file = recipe_d.getVar('MESON_CROSS_FILE')
             self.build_tool = BuildTool.MESON
+        elif bb.data.inherits_class('module', recipe_d):
+            self.build_tool = BuildTool.KERNEL_MODULE
+            self.wants_gdbserver = False
+            self.wants_debug_build = False
+            make_targets = recipe_d.getVar('MAKE_TARGETS')
+            if make_targets:
+                self.make_targets = shlex.split(make_targets)
+            else:
+                self.make_targets = ["all"]
+            extra_oemake = recipe_d.getVar('EXTRA_OEMAKE')
+            if extra_oemake:
+                self.extra_oemake = shlex.split(extra_oemake)
+            else:
+                self.extra_oemake = []
+            self.kernel_cc = recipe_d.getVar('KERNEL_CC')
+            self.staging_kernel_dir = recipe_d.getVar('STAGING_KERNEL_DIR')
+            # Export up the environment for building kernel modules
+            kernel_module_os_env(recipe_d, self.exported_vars)
 
-        self.reverse_debug_prefix_map = self._init_reverse_debug_prefix_map(
-            recipe_d.getVar('DEBUG_PREFIX_MAP'))
+        # For the kernel the KERNEL_CC variable contains the prefix-map arguments
+        if self.build_tool is BuildTool.KERNEL_MODULE:
+            self.reverse_debug_prefix_map = self._init_reverse_debug_prefix_map(
+                self.kernel_cc)
+        else:
+            self.reverse_debug_prefix_map = self._init_reverse_debug_prefix_map(
+                recipe_d.getVar('DEBUG_PREFIX_MAP'))
 
         # Recipe ID is the identifier for IDE config sections
         self.recipe_id = self.bpn + "-" + self.package_arch
