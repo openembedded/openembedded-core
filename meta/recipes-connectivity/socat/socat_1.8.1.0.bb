@@ -43,8 +43,6 @@ PACKAGECONFIG ??= "readline openssl"
 PACKAGECONFIG[readline] = "--enable-readline,--disable-readline,readline"
 PACKAGECONFIG[openssl] = "--enable-openssl,--disable-openssl,openssl"
 
-CFLAGS += "-fcommon"
-
 do_install:prepend () {
     mkdir -p ${D}${bindir}
     install -d ${D}${bindir} ${D}${mandir}/man1
