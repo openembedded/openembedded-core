@@ -516,6 +516,7 @@ class GitApplyTree(PatchTree):
         import tempfile
         import shutil
         tempdir = tempfile.mkdtemp(prefix='oepatch')
+        patches = []
         try:
             for name, rev in startcommits.items():
                 shellcmd = ["git", "format-patch", "--no-signature", "--no-numbered", rev, "-o", tempdir]
@@ -553,11 +554,14 @@ class GitApplyTree(PatchTree):
                         outfile = notes.get(GitApplyTree.original_patch, os.path.basename(srcfile))
 
                         bb.utils.mkdirhier(os.path.join(outdir, name))
-                        with open(os.path.join(outdir, name, outfile), 'w') as of:
+                        patch = os.path.join(outdir, name, outfile)
+                        with open(patch, 'w') as of:
                             for line in patchlines:
                                 of.write(line)
+                        patches.append(patch)
         finally:
             shutil.rmtree(tempdir)
+        return patches
 
     def _need_dirty_check(self):
         fetch = bb.fetch2.Fetch([], self.d)
