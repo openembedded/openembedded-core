@@ -16,11 +16,10 @@ SRC_URI = "git://github.com/vim/vim.git;branch=master;protocol=https;tag=v${PV} 
            file://disable_acl_header_check.patch \
            file://0001-src-Makefile-improve-reproducibility.patch \
            file://no-path-adjust.patch \
-           file://0001-translation-sv-add-missing-mkdir.patch \
            "
 
-PV .= ".2144"
-SRCREV = "55c12373f073bacfc97d757e8f4da3daf472e4ac"
+PV .= ".0"
+SRCREV = "e7e21018fc0b60c153c8e668f696d95e574cc5a4"
 
 # Do not consider .z in x.y.z, as that is updated with every commit
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+)\.0"
