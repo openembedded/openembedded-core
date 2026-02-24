@@ -2314,6 +2314,11 @@ class DevtoolUpgradeTests(DevtoolBase):
         result = runCmd('git status --porcelain', cwd=tempdir)
         self.assertIn('M maps.c', result.output)
         result = runCmd('git commit maps.c -m "Add a comment to the code"', cwd=tempdir)
+        # Make another change to the source
+        result = runCmd('sed -i \'/^#include "mdadm.h"/a \\/* Here is another comment *\\/\' maps.c', cwd=tempdir)
+        result = runCmd('git status --porcelain', cwd=tempdir)
+        self.assertIn('M maps.c', result.output)
+        result = runCmd('git commit maps.c -m "Add another comment to the code"', cwd=tempdir)
         for entry in os.listdir(recipedir):
             filesdir = os.path.join(recipedir, entry)
             if os.path.isdir(filesdir):
@@ -2333,8 +2338,15 @@ class DevtoolUpgradeTests(DevtoolBase):
         self.assertNotIn(recipe, result.output, 'Recipe should have been reset by finish but wasn\'t')
         self.assertNotExists(os.path.join(self.workspacedir, 'recipes', recipe), 'Recipe directory should not exist after finish')
         expected_status = [(' M', '.*/%s$' % os.path.basename(oldrecipefile)),
-                           ('??', '.*/.*-Add-a-comment-to-the-code.patch$')]
+                           ('??', '.*/.*-Add-a-comment-to-the-code.patch$'),
+                           ('??', '.*/.*-Add-another-comment-to-the-code.patch$')]
         self._check_repo_status(recipedir, expected_status)
+        result = runCmd('git diff %s' % os.path.basename(oldrecipefile), cwd=os.path.dirname(oldrecipefile))
+        # Check that the recipe got updated as expected
+        # Can't use self._check_diff() as the order of the added files matter.
+        result = result.output.splitlines()
+        self.assertEqual('+           file://0001-Add-a-comment-to-the-code.patch \\', result[8])
+        self.assertEqual('+           file://0002-Add-another-comment-to-the-code.patch \\', result[9])
 
     def test_devtool_finish_modify_otherlayer(self):
         recipe, oldrecipefile, recipedir, filesdir = self._setup_test_devtool_finish_modify()
@@ -2343,7 +2355,7 @@ class DevtoolUpgradeTests(DevtoolBase):
         relpth = os.path.relpath(recipedir, os.path.join(get_bb_var('COREBASE'), 'meta'))
         appenddir = os.path.join(get_test_layer(), relpth)
         self.track_for_cleanup(appenddir)
-        # Try finish to the original layer
+        # Try finish to another layer than the original layer
         self.add_command_to_tearDown('rm -rf %s ; cd %s ; git checkout %s' % (recipedir, os.path.dirname(recipedir), recipedir))
         result = runCmd('devtool finish %s meta-selftest' % recipe)
         result = runCmd('devtool status')
@@ -2356,15 +2368,19 @@ class DevtoolUpgradeTests(DevtoolBase):
         recipefn = recipefn.split('_')[0] + '_%'
         appendfile = os.path.join(appenddir, recipefn + '.bbappend')
         self.assertExists(appendfile, 'bbappend %s should have been created but wasn\'t' % appendfile)
+        # Check that the bbappend got created as expected
+        with open(appendfile, 'r') as f:
+            newlines = f.readlines()
+        self.assertEqual('SRC_URI += "file://0001-Add-a-comment-to-the-code.patch file://0002-Add-another-comment-to-the-code.patch"\n', newlines[2])
         newdir = os.path.join(appenddir, recipe)
         files = os.listdir(newdir)
-        foundpatch = None
-        for fn in files:
-            if fnmatch.fnmatch(fn, '*-Add-a-comment-to-the-code.patch'):
-                foundpatch = fn
+        foundpatch = False
+        for fn in files[:]:
+            if fnmatch.fnmatch(fn, '*-Add-a*-comment-to-the-code.patch'):
+                files.remove(fn)
+                foundpatch = True
         if not foundpatch:
             self.fail('No patch file created next to bbappend')
-        files.remove(foundpatch)
         if files:
             self.fail('Unexpected file(s) copied next to bbappend: %s' % ', '.join(files))
 
