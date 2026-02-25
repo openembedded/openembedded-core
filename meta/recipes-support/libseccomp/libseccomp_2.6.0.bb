@@ -61,4 +61,4 @@ do_install_ptest() {
 FILES:${PN} += "${PYTHON_SITEPACKAGES_DIR}/"
 
 RDEPENDS:${PN} += "${@bb.utils.contains('PACKAGECONFIG', 'python', 'python3', '', d)}"
-RDEPENDS:${PN}-ptest = "coreutils bash"
+RDEPENDS:${PN}-ptest = "coreutils bash diffutils"
