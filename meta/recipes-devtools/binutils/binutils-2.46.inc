@@ -12,16 +12,13 @@ LIC_FILES_CHKSUM = "\
 
 # When upgrading to next major release, ensure that there is no trailing .0, so
 # that upstream version check can work correctly.
-PV = "2.45.1"
-CVE_VERSION = "2.45.1"
-SRCBRANCH ?= "binutils-2_45-branch"
+PV = "2.46"
+CVE_VERSION = "2.46"
+SRCBRANCH ?= "binutils-2_46-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-CVE_STATUS[CVE-2025-7545] = "cpe-stable-backport: fix available in used git hash"
-CVE_STATUS[CVE-2025-7546] = "cpe-stable-backport: fix available in used git hash"
-
-SRCREV ?= "cb948f3e16a93ff03d0bc5cec6c4e5bdc7e7c17f"
+SRCREV ?= "49d4d3fafa4ec4ff5a3460d91d5b1ed5286487db"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${SRCBRANCH};protocol=https"
 SRC_URI = "\
      ${BINUTILS_GIT_URI} \
@@ -36,15 +33,4 @@ SRC_URI = "\
      file://0012-Only-generate-an-RPATH-entry-if-LD_RUN_PATH-is-not-e.patch \
      file://0013-Define-alignof-using-_Alignof-when-using-C11-or-newe.patch \
      file://0014-Remove-duplicate-pe-dll.o-entry-deom-targ_extra_ofil.patch \
-     file://0001-aarch64-constify-BTI-and-GCS-report-functions.patch \
-     file://0015-CVE-2025-11081.patch \
-     file://0016-CVE-2025-11082.patch \
-     file://0017-CVE-2025-11083.patch \
-     file://CVE-2025-11414.patch \
-     file://CVE-2025-11412.patch \
-     file://CVE-2025-11413.patch \
-     file://CVE-2025-11495.patch \
-     file://0018-CVE-2025-11494.patch \
-     file://0019-CVE-2025-11839.patch \
-     file://0020-CVE-2025-11840.patch \
 "
