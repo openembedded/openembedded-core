@@ -1,7 +1,7 @@
 SUMMARY = "AppStream is a collaborative effort for making machine-readable software metadata easily available."
 HOMEPAGE = "https://github.com/ximion/appstream"
 LICENSE = "LGPL-2.1-only"
-LIC_FILES_CHKSUM = "file://COPYING;md5=435ed639f84d4585d93824e7da3d85da"
+LIC_FILES_CHKSUM = "file://COPYING;md5=4bf661c1e3793e55c8d1051bc5e0ae21"
 
 DEPENDS = " \
     appstream-native \
@@ -10,7 +10,7 @@ DEPENDS = " \
     docbook-xml-dtd4-native \
     gperf-native \
     glib-2.0 \
-    libyaml \
+    libfyaml \
     libxml2 \
     libxmlb \
     libxslt-native \
@@ -19,7 +19,7 @@ DEPENDS = " \
     python3-pygments-native \
 "
 
-inherit meson gobject-introspection gettext gi-docgen pkgconfig vala
+inherit meson gobject-introspection gettext gi-docgen pkgconfig vala bash-completion
 
 GIR_MESON_OPTION = "gir"
 GIDOCGEN_MESON_OPTION = "apidocs"
@@ -30,15 +30,17 @@ SRC_URI = " \
 	file://0002-Do-not-build-qt-tests.patch \
 	file://0003-Fix-PACKAGE_PREFIX_DIR-in-qt-cmake-AppStreamQtConfig.patch \
 "
-SRC_URI[sha256sum] = "db4439db6a33de3ca1041473501610844ddf1b72ae23016c05242c681c380b4d"
+SRC_URI[sha256sum] = "46b4257100e25a6468ceed7b3ab82441f47b119da3398d30aea6d7b91174b586"
 
 S = "${UNPACKDIR}/AppStream-${PV}"
 
 PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)}"
+PACKAGECONFIG:append:class-target = " bash-completion"
 
 PACKAGECONFIG[systemd] = "-Dsystemd=true,-Dsystemd=false,systemd"
 PACKAGECONFIG[stemming] = "-Dstemming=true,-Dstemming=false,libstemmer"
 PACKAGECONFIG[qt6] = "-Dqt=true,-Dqt=false,qtbase"
+PACKAGECONFIG[bash-completion] = "-Dbash-completion=true,-Dbash-completion=false"
 
 FILES:${PN} += "${datadir}"
 
