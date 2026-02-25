@@ -953,6 +953,15 @@ def check_sanity_everybuild(status, d):
         if val.find('%') != -1:
             status.addresult("Error, you have an invalid character (%) in your %s directory path which causes problems with python string formatting. Please move the installation to a directory which doesn't include any % characters." % checkdir)
 
+    # Redundant slashes (trailing slash or consecutive slashes) in TMPDIR
+    # break the sstate staging machinery which relies on exact string matching
+    # of manifest paths.  Reject any TMPDIR that differs from its normalised form.
+    tmpdir = d.getVar('TMPDIR')
+    if tmpdir and tmpdir != os.path.normpath(tmpdir):
+        status.addresult("Error, TMPDIR (%s) contains redundant slashes. "
+            "Please set TMPDIR to a clean path with no trailing slash or "
+            "consecutive slashes (e.g. %s).\n" % (tmpdir, os.path.normpath(tmpdir)))
+
     # Check the format of MIRRORS, PREMIRRORS and SSTATE_MIRRORS
     import re
     mirror_vars = ['MIRRORS', 'PREMIRRORS', 'SSTATE_MIRRORS']
