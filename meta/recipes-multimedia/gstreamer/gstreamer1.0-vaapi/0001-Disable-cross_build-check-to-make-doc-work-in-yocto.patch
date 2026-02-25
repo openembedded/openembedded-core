@@ -1,0 +1,32 @@
+Subject: [PATCH] Disable cross_build check to make doc work in yocto.
+
+Upstream-Status: Inappropriate [oe-specific]
+
+Signed-off-by: Liu Yiding <liuyd.fnst@fujitsu.com>
+---
+ docs/meson.build | 9 ---------
+ 1 file changed, 9 deletions(-)
+
+diff --git a/docs/meson.build b/docs/meson.build
+index ad5f785..1e7a808 100644
+--- a/docs/meson.build
++++ b/docs/meson.build
+@@ -4,15 +4,6 @@ if get_option('doc').disabled()
+   subdir_done()
+ endif
+ 
+-if meson.is_cross_build()
+-    if get_option('doc').enabled()
+-        error('Documentation enabled but building the doc while cross building is not supported yet.')
+-    endif
+-
+-    message('Documentation not built as building it while cross building is not supported yet.')
+-    subdir_done()
+-endif
+-
+ if static_build
+     if get_option('doc').enabled()
+         error('Documentation enabled but not supported when building statically.')
+-- 
+2.43.0
+
