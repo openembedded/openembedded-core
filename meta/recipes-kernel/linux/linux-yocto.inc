@@ -88,9 +88,6 @@ do_kernel_configme[depends] += '${@bb.utils.contains("KERNEL_DEBUG", "True", "pa
 EXTRA_OEMAKE += '${@bb.utils.contains("KERNEL_DEBUG", "True", "", "PAHOLE=false", d)}'
 
 do_devshell:prepend() {
-    # setup native pkg-config variables (kconfig scripts call pkg-config directly, cannot generically be overriden to pkg-config-native)
-    d.setVar("PKG_CONFIG_PATH", "")
-    d.setVar("PKG_CONFIG_LIBDIR", "${STAGING_LIBDIR_NATIVE}/pkgconfig:${STAGING_DATADIR_NATIVE}/pkgconfig")
-    d.setVarFlag("PKG_CONFIG_SYSROOT_DIR", "unexport", "1")
-    d.appendVar("OE_TERMINAL_EXPORTS", " PKG_CONFIG_PATH PKG_CONFIG_LIBDIR PKG_CONFIG_SYSROOT_DIR")
+    d.setVar("HOSTPKG_CONFIG", "pkg-config-native")
+    d.appendVar("OE_TERMINAL_EXPORTS", " HOSTPKG_CONFIG")
 }
