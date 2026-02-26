@@ -21,3 +21,6 @@ RDEPENDS:${PN} = "python3-io python3-logging python3-stringold python3-threading
 FILES:${PN}-dev += "${libdir}/pkgconfig"
 
 BBCLASSEXTEND = "native nativesdk"
+
+# Add CVE_PRODUCT to match the NVD CPE product name
+CVE_PRODUCT = "freedesktop:dbus"
