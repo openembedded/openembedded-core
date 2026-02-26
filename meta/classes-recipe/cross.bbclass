@@ -33,8 +33,8 @@ PACKAGE_ARCH = "${BUILD_ARCH}"
 
 MULTIMACH_TARGET_SYS = "${BUILD_ARCH}${BUILD_VENDOR}-${BUILD_OS}"
 
-export PKG_CONFIG_DIR = "${exec_prefix}/lib/pkgconfig"
-export PKG_CONFIG_SYSROOT_DIR = ""
+PKG_CONFIG_LIBDIR = "${exec_prefix}/lib/pkgconfig:${exec_prefix}/share/pkgconfig"
+PKG_CONFIG_SYSROOT_DIR = ""
 
 TARGET_CPPFLAGS = ""
 TARGET_CFLAGS = ""

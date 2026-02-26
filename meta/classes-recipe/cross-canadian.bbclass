@@ -161,8 +161,7 @@ libexecdir = "${exec_prefix}/libexec/${TARGET_ARCH}${TARGET_VENDOR}-${TARGET_OS}
 
 FILES:${PN} = "${prefix}"
 
-export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${exec_prefix}/lib/pkgconfig"
-export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
+PKG_CONFIG_LIBDIR = "${STAGING_DIR_HOST}${exec_prefix}/lib/pkgconfig:${STAGING_DIR_HOST}${exec_prefix}/share/pkgconfig"
 
 do_populate_sysroot[stamp-extra-info] = ""
 do_packagedata[stamp-extra-info] = ""

@@ -73,9 +73,6 @@ exec_prefix = "${SDKPATHNATIVE}${prefix_nativesdk}"
 baselib = "lib"
 sbindir = "${bindir}"
 
-export PKG_CONFIG_DIR = "${STAGING_DIR_HOST}${libdir}/pkgconfig"
-export PKG_CONFIG_SYSROOT_DIR = "${STAGING_DIR_HOST}"
-
 python nativesdk_virtclass_handler () {
     pn = e.data.getVar("PN")
     if not (pn.endswith("-nativesdk") or pn.startswith("nativesdk-")):
