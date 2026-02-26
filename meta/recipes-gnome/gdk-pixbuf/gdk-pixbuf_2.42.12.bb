@@ -22,6 +22,7 @@ SRC_URI += "\
            file://run-ptest \
            file://fatal-loader.patch \
            file://0001-meson.build-allow-a-subset-of-tests-in-cross-compile.patch \
+           file://CVE-2025-6199.patch \
            "
 
 GIR_MESON_OPTION = 'introspection'
