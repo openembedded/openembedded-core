@@ -3,6 +3,7 @@ KBRANCH ?= "v6.16/standard/preempt-rt/base"
 require recipes-kernel/linux/linux-yocto.inc
 
 # CVE exclusions
+include recipes-kernel/linux/cve-exclusion.inc
 include recipes-kernel/linux/cve-exclusion_6.16.inc
 
 # Skip processing of this recipe if it is not explicitly specified as the
