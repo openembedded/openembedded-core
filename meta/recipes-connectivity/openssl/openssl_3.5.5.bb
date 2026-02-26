@@ -269,7 +269,7 @@ PACKAGES =+ "libcrypto libssl openssl-conf ${PN}-engines ${PN}-misc ${PN}-ossl-m
 
 FILES:libcrypto = "${libdir}/libcrypto${SOLIBS}"
 FILES:libssl = "${libdir}/libssl${SOLIBS}"
-FILES:openssl-conf = "${sysconfdir}/ssl/openssl.cnf \
+FILES:openssl-conf = "${sysconfdir}/ssl/openssl.cnf* \
                       ${libdir}/ssl-3/openssl.cnf* \
                       "
 FILES:${PN}-engines = "${libdir}/engines-3"
