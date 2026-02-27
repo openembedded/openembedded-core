@@ -33,7 +33,7 @@ class WestonTest(OERuntimeTestCase):
 
     def run_weston_init(self):
         if 'systemd' in self.tc.td['VIRTUAL-RUNTIME_init_manager']:
-            self.target.run('systemd-run --collect --unit=weston-ptest.service --uid=0 -p PAMName=login -p TTYPath=/dev/tty6 -E XDG_RUNTIME_DIR=/tmp -E WAYLAND_DISPLAY=wayland-0 /usr/bin/weston --socket=wayland-1 --log=%s' % self.weston_log_file)
+            self.target.run(self.get_weston_command('systemd-run --collect --unit=weston-ptest.service --uid=0 -p PAMName=login -p TTYPath=/dev/tty6 -E XDG_RUNTIME_DIR -E WAYLAND_DISPLAY /usr/bin/weston --socket=wayland-2 --log=%s' % self.weston_log_file))
         else:
             self.target.run(self.get_weston_command('openvt -- weston --socket=wayland-2 --log=%s' % self.weston_log_file))
 
@@ -51,12 +51,18 @@ class WestonTest(OERuntimeTestCase):
 
     @OEHasPackage(['wayland-utils'])
     def test_wayland_info(self):
-        if 'systemd' in self.tc.td['VIRTUAL-RUNTIME_init_manager']:
-            command = 'XDG_RUNTIME_DIR=/run wayland-info'
-        else:
-            command = self.get_weston_command('wayland-info')
+        command = self.get_weston_command('wayland-info')
         status, output = self.target.run(command)
-        self.assertEqual(status, 0, msg='wayland-info error: %s' % output)
+        msg = 'wayland-info error: %s' % output
+
+        # dump last 20 lines of emptty log in case of failure
+        log_cmd = 'tail -n 20 /var/log/emptty/7.log'
+        msg += '\n\n===== start: snippet =====\n\n'
+        msg += 'file: /var/log/emptty/7.log\n\n'
+        msg += '\n\n%s\n\n' % self.target.run(log_cmd)[1]
+        msg += '\n\n===== end: snippet =====\n\n'
+
+        self.assertEqual(status, 0, msg=msg)
 
     @OEHasPackage(['weston'])
     def test_weston_can_initialize_new_wayland_compositor(self):
