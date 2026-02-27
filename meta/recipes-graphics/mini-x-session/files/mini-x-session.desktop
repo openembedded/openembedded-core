@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Mini X Session
+Comment=Very simple session manager for X
+Type=Application
+Exec=mini-x-session
+DesktopNames=matchbox

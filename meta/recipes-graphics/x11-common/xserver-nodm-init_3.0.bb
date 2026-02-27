@@ -4,7 +4,6 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384
 SECTION = "x11"
 
 SRC_URI = "file://emptty.conf.in \
-           file://default.desktop \
            file://system-xuser.conf"
 
 S = "${UNPACKDIR}"
@@ -18,21 +17,23 @@ PACKAGECONFIG ??= "blank"
 PACKAGECONFIG[blank] = ""
 PACKAGECONFIG[nocursor] = ""
 
+# matchbox-session seems to be the current preferred session provider
+DEFAULT_SESSION ??= "matchbox-session"
+
 do_install() {
     install -D -p -m0644 ${S}/emptty.conf.in ${D}${sysconfdir}/emptty/conf
-    install -D -p -m0644 ${S}/default.desktop ${D}${datadir}/xsessions/default.desktop
 
     BLANK_ARGS="${@bb.utils.contains('PACKAGECONFIG', 'blank', '', '-s 0 -dpms', d)}"
     NO_CURSOR_ARG="${@bb.utils.contains('PACKAGECONFIG', 'nocursor', '-nocursor', '', d)}"
 
     sed -i "s:@NO_CURSOR_ARG@:${NO_CURSOR_ARG}:" ${D}${sysconfdir}/emptty/conf
     sed -i "s:@BLANK_ARGS@:${BLANK_ARGS}:" ${D}${sysconfdir}/emptty/conf
+    sed -i "s:@DEFAULT_SESSION@:${DEFAULT_SESSION}:" ${D}${sysconfdir}/emptty/conf
 
     install -D -m 0644 ${S}/system-xuser.conf ${D}${sysconfdir}/dbus-1/system.d/system-xuser.conf
 }
 
 FILES:${PN} = "${sysconfdir}/emptty/conf \
-               ${datadir}/xsessions/default.desktop \
                ${sysconfdir}/dbus-1/system.d/system-xuser.conf"
 
 USERADD_PACKAGES = "${PN}"

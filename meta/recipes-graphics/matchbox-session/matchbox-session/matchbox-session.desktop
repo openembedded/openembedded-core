@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Matchbox Session
+Comment=Very simple session manager for matchbox tools
+Type=Application
+Exec=matchbox-session
+DesktopNames=matchbox
