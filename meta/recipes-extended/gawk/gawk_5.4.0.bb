@@ -25,12 +25,12 @@ PACKAGECONFIG[mpfr] = "--with-mpfr,--without-mpfr, mpfr"
 # Note that PMA works only for 64-bit targets and is automatically disabled at configure time otherwise.
 PACKAGECONFIG[pma-if-64bit] = "--enable-pma,--disable-pma, "
 
-SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.gz \
+SRC_URI = "${GNU_MIRROR}/gawk/gawk-${PV}.tar.xz \
            file://run-ptest \
            file://0001-configure.ac-re-enable-disabled-printf-features.patch \
            "
 
-SRC_URI[sha256sum] = "8639a1a88fb411a1be02663739d03e902a6d313b5c6fe024d0bfeb3341a19a11"
+SRC_URI[sha256sum] = "3dd430f0cd3b4428c6c3f6afc021b9cd3c1f8c93f7a688dc268ca428a90b4ac1"
 
 inherit autotools gettext texinfo update-alternatives
 
