@@ -24,7 +24,8 @@ FILES:${PN} = "${sysconfdir}/dbus-1/system.d/system-xuser.conf"
 
 USERADD_PACKAGES = "${PN}"
 USERADD_PARAM:${PN} = "--create-home \
-                       --groups video,tty,audio,input,shutdown,disk \
+                       --groups video,tty,audio,input,shutdown,disk,nopasswdlogin \
                        --user-group xuser"
+GROUPADD_PARAM:${PN} = "-r nopasswdlogin"
 
 ALLOW_EMPTY:${PN} = "1"

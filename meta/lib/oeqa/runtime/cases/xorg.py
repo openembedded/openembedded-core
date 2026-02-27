@@ -20,4 +20,12 @@ class XorgTest(OERuntimeTestCase):
         status, output = self.target.run(cmd)
         msg = ('Xorg does not appear to be running %s' %
               self.target.run(self.tc.target_cmds['ps'])[1])
+
+        # dump last 20 lines of emptty log in case of failure
+        log_cmd = 'tail -n 20 /var/log/emptty/7.log'
+        msg += '\n\n===== start: snippet =====\n\n'
+        msg += 'file: /var/log/emptty/7.log\n\n'
+        msg += '\n\n%s\n\n' % self.target.run(log_cmd)[1]
+        msg += '\n\n===== end: snippet =====\n\n'
+
         self.assertEqual(status, 0, msg=msg)
