@@ -9,6 +9,7 @@ SUMMARY ?= "${MCNAME} ptest image."
 HOMEPAGE = "https://www.yoctoproject.org/"
 
 PTESTS = "${PTESTS_SLOW} ${PTESTS_FAST}"
+PTEST_RUNNER_TIMEOUT:virtclass-mcextend-python3-cffi = "600"
 
 IMAGE_INSTALL:append = " ${MCNAME}-ptest openssh"
 
