@@ -59,7 +59,8 @@ class PtestRunnerTest(OERuntimeTestCase):
         ptest_dirs = [ '/usr/lib' ]
         if not libdir in ptest_dirs:
             ptest_dirs.append(libdir)
-        status, output = self.target.run('ptest-runner -t 450 -d \"{}\"'.format(' '.join(ptest_dirs)), 0)
+        ptest_timeout = self.td.get('PTEST_RUNNER_TIMEOUT', '450')
+        status, output = self.target.run('ptest-runner -t {} -d \"{}\"'.format(ptest_timeout, ' '.join(ptest_dirs)), 0)
         os.makedirs(ptest_log_dir)
         with open(ptest_runner_log, 'w') as f:
             f.write(output)
