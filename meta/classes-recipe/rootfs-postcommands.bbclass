@@ -45,7 +45,7 @@ POSTINST_LOGFILE ?= "${localstatedir}/log/postinstall.log"
 SYSTEMD_DEFAULT_TARGET ?= '${@bb.utils.contains_any("IMAGE_FEATURES", [ "x11-base", "weston" ], "graphical.target", "multi-user.target", d)}'
 ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains("DISTRO_FEATURES", "systemd", "set_systemd_default_target systemd_sysusers_check systemd_handle_machine_id", "", d)}'
 
-ROOTFS_POSTPROCESS_COMMAND += 'empty_var_volatile'
+ROOTFS_POSTPROCESS_COMMAND += 'empty_var_volatile add_emptty_inittab'
 
 ROOTFS_POSTPROCESS_COMMAND += '${@bb.utils.contains("DISTRO_FEATURES", "overlayfs", "overlayfs_qa_check", "", d)}'
 
@@ -190,6 +190,18 @@ systemd_handle_machine_id() {
             systemctl --root="${IMAGE_ROOTFS}" --preset-mode=enable-only preset-all
             systemctl --root="${IMAGE_ROOTFS}" --global --preset-mode=enable-only preset-all
         fi
+    fi
+}
+
+#
+# A hook function to work around limitations of legacy inittab behavior
+#
+add_emptty_inittab() {
+    [ -f ${IMAGE_ROOTFS}${sysconfdir}/inittab ] || return 0
+
+    if ${@bb.utils.contains_any("IMAGE_FEATURES", [ "x11-base", "weston" ], "true", "false", d)}
+    then
+	echo "7:5:respawn:${bindir}/emptty -t 7 -d" >> ${IMAGE_ROOTFS}${sysconfdir}/inittab
     fi
 }
 
