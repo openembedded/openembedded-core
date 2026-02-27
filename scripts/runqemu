@@ -997,17 +997,21 @@ to your build configuration.
                 logger.info('Setting DEPLOY_DIR_IMAGE to folder containing %s (%s)' % (self.qemuboot, imgdir))
                 self.set('DEPLOY_DIR_IMAGE', imgdir)
 
-        # If the STAGING_*_NATIVE directories from the config file don't exist
+        oecore_native_sysroot = self.get('OECORE_NATIVE_SYSROOT')
+        if oecore_native_sysroot:
+            logger.info('In SDK environment, setting STAGING_BINDIR_NATIVE from OECORE_NATIVE_SYSROOT (%s)' % oecore_native_sysroot)
+            self.set('STAGING_BINDIR_NATIVE', '%s/usr/bin' % oecore_native_sysroot)
+
+        # If the STAGING_BINDIR_NATIVE directories from the config file don't exist
         # and we're in a sourced OE build directory try to extract the paths
         # from `bitbake -e`
-        havenative = os.path.exists(self.get('STAGING_DIR_NATIVE')) and \
-            os.path.exists(self.get('STAGING_BINDIR_NATIVE'))
+        havenative = os.path.exists(os.path.exists(self.get('STAGING_BINDIR_NATIVE')))
 
         if not havenative:
             if not self.bitbake_e:
                 self.load_bitbake_env()
 
-            native_vars = ['STAGING_DIR_NATIVE']
+            native_vars = ['STAGING_BINDIR_NATIVE']
             for nv in native_vars:
                 s = re.search('^%s="(.*)"' % nv, self.bitbake_e, re.M)
                 if s and s.group(1) != self.get(nv):
