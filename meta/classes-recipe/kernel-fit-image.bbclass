@@ -28,6 +28,21 @@ python () {
     if providerdtb:
         d.appendVarFlag('do_compile', 'depends', ' virtual/dtb:do_populate_sysroot')
         d.setVar('EXTERNAL_KERNEL_DEVICETREE', "${RECIPE_SYSROOT}/boot/devicetree")
+
+    # Parse loadables config
+    loadables = d.getVar('FIT_LOADABLES')
+    if loadables:
+        # Check that the loadables configuration variables are not set directly
+        # directly, then assign them a synthetic value for testability purposes
+        for v in ['FIT_LOADABLE_ARCH', 'FIT_LOADABLE_COMPRESSION',
+                  'FIT_LOADABLE_DESCRIPTION', 'FIT_LOADABLE_ENTRYPOINT',
+                  'FIT_LOADABLE_FILENAME', 'FIT_LOADABLE_LOADADDRESS',
+                  'FIT_LOADABLE_OS', 'FIT_LOADABLE_TYPE']:
+            if d.getVar(v):
+                raise bb.parse.SkipRecipe("You cannot use %s as a variable, you can only set flags." % v)
+
+            synt_value = " ? ".join([ d.getVarFlag(v, loadable) or "" for loadable in loadables.split() ])
+            d.setVar(v, synt_value)
 }
 
 do_configure[noexec] = "1"
@@ -138,6 +153,39 @@ python do_compile() {
 
         if not found:
             bb.fatal("Could not find a valid initramfs type for %s, the supported types are: %s" % (d.getVar('INITRAMFS_IMAGE_NAME'), d.getVar('FIT_SUPPORTED_INITRAMFS_FSTYPES')))
+
+    #
+    # Prepare loadables sections
+    #
+    for loadable in d.getVar('FIT_LOADABLES').split():
+        loadable_file = d.getVarFlag('FIT_LOADABLE_FILENAME', loadable)
+        if not loadable_file:
+            bb.fatal("File for loadable %s not specified through FIT_LOADABLE_FILENAME[%s]" % (loadable, loadable))
+
+        loadable_loadaddress = d.getVarFlag('FIT_LOADABLE_LOADADDRESS', loadable)
+        if not loadable_loadaddress:
+            bb.fatal("Load address for loadable %s not specified through FIT_LOADABLE_LOADADDRESS[%s]" % (loadable, loadable))
+
+        # Optional parameters
+        loadable_arch = d.getVarFlag('FIT_LOADABLE_ARCH', loadable)
+        loadable_compression = d.getVarFlag('FIT_LOADABLE_COMPRESSION', loadable)
+        loadable_description = d.getVarFlag('FIT_LOADABLE_DESCRIPTION', loadable) or ("%s loadable" % loadable)
+        loadable_entrypoint = d.getVarFlag('FIT_LOADABLE_ENTRYPOINT', loadable)
+        loadable_os = d.getVarFlag('FIT_LOADABLE_OS', loadable)
+        loadable_type = d.getVarFlag('FIT_LOADABLE_TYPE', loadable)
+
+        # Check if loadable artifact exists
+        loadable_path = os.path.join(d.getVar("DEPLOY_DIR_IMAGE"), loadable_file)
+        if not os.path.exists(loadable_path):
+            bb.fatal("File for loadable %s not found at %s" % (loadable, loadable_path))
+
+        root_node.fitimage_emit_section_loadable(loadable,
+                                                 loadable_path, loadable_type,
+                                                 loadable_description,
+                                                 loadable_compression,
+                                                 loadable_arch, loadable_os,
+                                                 loadable_loadaddress,
+                                                 loadable_entrypoint)
 
     # Generate the configuration section
     root_node.fitimage_emit_section_config(d.getVar("FIT_CONF_DEFAULT_DTB"), d.getVar("FIT_CONF_MAPPINGS"))

@@ -203,6 +203,15 @@ class FitImageTestCase(OESelftestTestCase):
             dtb_symlinks.append("am335x-bonegreen-ext-alias.dtb")
         return (all_dtbs, dtb_symlinks)
 
+    @staticmethod
+    def _get_loadables(bb_vars):
+        """Return a list of loadable names"""
+        loadables = []
+        var_loadables = bb_vars.get('FIT_LOADABLES')
+        if var_loadables:
+            loadables += var_loadables.split()
+        return loadables
+
     def _is_req_dict_in_dict(self, found_dict, req_dict):
         """
         Check if all key-value pairs in the required dictionary are present in the found dictionary.
@@ -417,6 +426,9 @@ class KernelFitImageBase(FitImageTestCase):
             'FIT_DESC',
             'FIT_HASH_ALG',
             'FIT_KERNEL_COMP_ALG',
+            'FIT_LOADABLES',
+            'FIT_LOADABLE_ENTRYPOINT',
+            'FIT_LOADABLE_LOADADDRESS',
             'FIT_SIGN_ALG',
             'FIT_SIGN_INDIVIDUAL',
             'FIT_UBOOT_ENV',
@@ -520,6 +532,7 @@ class KernelFitImageBase(FitImageTestCase):
         fit_uboot_env = bb_vars['FIT_UBOOT_ENV']
         initramfs_image = bb_vars['INITRAMFS_IMAGE']
         initramfs_image_bundle = bb_vars['INITRAMFS_IMAGE_BUNDLE']
+        loadables = FitImageTestCase._get_loadables(bb_vars)
         uboot_sign_enable = bb_vars.get('UBOOT_SIGN_ENABLE')
 
         # image nodes
@@ -543,6 +556,9 @@ class KernelFitImageBase(FitImageTestCase):
             images.append('ramdisk-1')
         else:
             not_images.append('ramdisk-1')
+
+        if loadables:
+            images += loadables
 
         # configuration nodes (one per DTB, symlink, and mappings)
         configurations = []
@@ -694,6 +710,7 @@ class KernelFitImageBase(FitImageTestCase):
         fit_uboot_env = bb_vars['FIT_UBOOT_ENV']
         initramfs_image = bb_vars['INITRAMFS_IMAGE']
         initramfs_image_bundle = bb_vars['INITRAMFS_IMAGE_BUNDLE']
+        loadables = FitImageTestCase._get_loadables(bb_vars)
         uboot_sign_enable = bb_vars['UBOOT_SIGN_ENABLE']
         uboot_sign_img_keyname = bb_vars['UBOOT_SIGN_IMG_KEYNAME']
         uboot_sign_keyname = bb_vars['UBOOT_SIGN_KEYNAME']
@@ -721,6 +738,13 @@ class KernelFitImageBase(FitImageTestCase):
                 "Load Address": bb_vars['UBOOT_RD_LOADADDRESS'],
                 "Entry Point": bb_vars['UBOOT_RD_ENTRYPOINT']
             }
+        # Create one section per loadable
+        for index,loadable in enumerate(loadables):
+            loadaddress = bb_vars['FIT_LOADABLE_LOADADDRESS'].split("?")[index].strip()
+            req_sections[loadable] = { "Load Address": loadaddress }
+            entrypoint = bb_vars['FIT_LOADABLE_ENTRYPOINT'].split("?")[index].strip()
+            if entrypoint:
+                req_sections[loadable]['Entry Point'] = entrypoint
         # Create a configuration section for each DTB
         if dtb_files:
             for dtb in dtb_files + dtb_symlinks:
@@ -740,6 +764,8 @@ class KernelFitImageBase(FitImageTestCase):
                     }
                 if initramfs_image and initramfs_image_bundle != "1":
                     req_sections[conf_name]['Init Ramdisk'] = "ramdisk-1"
+                if loadables:
+                    req_sections[conf_name]['Loadables'] = ",".join(loadables)
         else:
             conf_name = bb_vars['FIT_CONF_PREFIX'] +  '1'
             req_sections[conf_name] = {
@@ -747,6 +773,8 @@ class KernelFitImageBase(FitImageTestCase):
             }
             if initramfs_image and initramfs_image_bundle != "1":
                 req_sections[conf_name]['Init Ramdisk'] = "ramdisk-1"
+            if loadables:
+                req_sections[conf_name]['Loadables'] = ",".join(loadables)
 
         # Add signing related properties if needed
         if uboot_sign_enable == "1":
@@ -831,6 +859,8 @@ class KernelFitImageRecipeTests(KernelFitImageBase):
                      in the Image Tree Source. Not all the fields are tested,
                      only the key fields that wont vary between different
                      architectures.
+                     3. The load address and (if defined) entrypoint address
+                     of each loadable are as expected in the Image Tree Source.
         Product:     oe-core
         Author:      Usama Arif <usama.arif@arm.com>
         """
@@ -848,6 +878,14 @@ UBOOT_LOADADDRESS = "0x80080000"
 UBOOT_ENTRYPOINT = "0x80080000"
 FIT_DESC = "A model description"
 FIT_CONF_PREFIX = "foo-"
+# Use the linux.bin kernel image as loadable file to avoid building other components
+FIT_LOADABLES = "loadable1 loadable2"
+FIT_LOADABLE_FILENAME[loadable1] = "linux.bin"
+FIT_LOADABLE_LOADADDRESS[loadable1] = "0x86000000"
+FIT_LOADABLE_TYPE[loadable1] = "firmware"
+FIT_LOADABLE_FILENAME[loadable2] = "linux.bin"
+FIT_LOADABLE_LOADADDRESS[loadable2] = "0x87000000"
+FIT_LOADABLE_TYPE[loadable2] = "firmware"
 """
         config = self._config_add_kernel_classes(config)
         self.write_config(config)
@@ -1122,6 +1160,7 @@ class FitImagePyTests(KernelFitImageBase):
             'FIT_KEY_GENRSA_ARGS': "-F4",
             'FIT_KEY_REQ_ARGS': "-batch -new",
             'FIT_KEY_SIGN_PKCS': "-x509",
+            'FIT_LOADABLES': "",
             'FIT_LINUX_BIN': "linux.bin",
             'FIT_PAD_ALG': "pkcs-1.5",
             'FIT_SIGN_ALG': "rsa2048",
@@ -1197,6 +1236,12 @@ class FitImagePyTests(KernelFitImageBase):
                 "core-image-minimal-initramfs",
                 bb_vars.get("UBOOT_RD_LOADADDRESS"), bb_vars.get("UBOOT_RD_ENTRYPOINT"))
 
+        loadables = FitImageTestCase._get_loadables(bb_vars)
+        for loadable in loadables:
+            root_node.fitimage_emit_section_loadable(loadable,
+                "a-dir/loadable-%s" % loadable,
+                "loadable-type")
+
         root_node.fitimage_emit_section_config(bb_vars['FIT_CONF_DEFAULT_DTB'], bb_vars.get('FIT_CONF_MAPPINGS'))
         root_node.write_its_file(fitimage_its_path)
 
@@ -1252,6 +1297,13 @@ class FitImagePyTests(KernelFitImageBase):
         # This should raise an exception because the extra-conf mapping references a non-existent DTB
         with self.assertRaises(BBHandledException):
             self._test_fitimage_py(bb_vars_overrides)
+
+    def test_fitimage_py_conf_loadables(self):
+        """Test FIT_LOADABLES basic functionality"""
+        bb_vars_overrides = {
+            'FIT_LOADABLES': "my-loadable",
+        }
+        self._test_fitimage_py(bb_vars_overrides)
 
 
 class UBootFitImageTests(FitImageTestCase):

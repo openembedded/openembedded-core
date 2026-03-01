@@ -195,6 +195,7 @@ class ItsNodeRootKernel(ItsNode):
         self._ramdisk = None
         self._bootscr = None
         self._setup = None
+        self._loadables = []
 
     def _sanitize_sign_config(self):
         if self._sign_enable:
@@ -396,6 +397,29 @@ class ItsNodeRootKernel(ItsNode):
         )
         self._ramdisk = ramdisk_node
 
+    def fitimage_emit_section_loadable(self, name, filepath, type=None, description=None, compression=None, arch=None, os=None, load=None, entry=None):
+        """Emit one fitImage ITS loadable section"""
+        opt_props = {
+            "data": '/incbin/("' + filepath + '")',
+            "arch": arch if arch is not None else self._arch,
+            "os": os if os is not None else "linux",
+        }
+
+        if load:
+            opt_props["load"] = f"<{load}>"
+        if entry:
+            opt_props["entry"] = f"<{entry}>"
+
+        loadable_node = self.its_add_node_image(
+            name,
+            description if description is not None else name,
+            type if type is not None else "firmware",
+            compression if compression is not None else "none",
+            opt_props
+        )
+
+        self._loadables.append(loadable_node)
+
     def _fitimage_emit_one_section_config(self, conf_node_name, dtb=None):
         """Emit the fitImage ITS configuration section"""
         opt_props = {}
@@ -433,6 +457,12 @@ class ItsNodeRootKernel(ItsNode):
             opt_props["setup"] = self._setup.name
             if self._sign_enable:
                 sign_entries.append("setup")
+
+        if len(self._loadables) > 0:
+            conf_desc.append("loadables")
+            opt_props["loadables"] = [ loadable.name for loadable in self._loadables ]
+            if self._sign_enable:
+                sign_entries.append("loadables")
 
         # First added configuration is the default configuration
         default_flag = "0"
