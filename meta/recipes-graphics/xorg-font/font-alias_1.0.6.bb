@@ -19,4 +19,4 @@ inherit allarch
 
 PE = "1"
 
-SRC_URI[sha256sum] = "9f89e217bb73e0e3636a0a493fbf8b7c995156e0c53d9a0476d201b67c2d6b6e"
+SRC_URI[sha256sum] = "f6a5e968b616e728a981fd1fd9ed5fe2ca0fe18fbe072b1888cb3f71b701e4c0"
