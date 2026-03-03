@@ -24,6 +24,16 @@ SRC_URI = "https://www.gnupg.org/ftp/gcrypt/gnutls/v${SHRT_VER}/gnutls-${PV}.tar
            file://run-ptest \
            file://Add-ptest-support.patch \
            file://CVE-2025-9820.patch \
+           file://CVE-2025-14831-1.patch \
+           file://CVE-2025-14831-2.patch \
+           file://CVE-2025-14831-3.patch \
+           file://CVE-2025-14831-4.patch \
+           file://CVE-2025-14831-5.patch \
+           file://CVE-2025-14831-6.patch \
+           file://CVE-2025-14831-7.patch \
+           file://CVE-2025-14831-8.patch \
+           file://CVE-2025-14831-9.patch \
+           file://CVE-2025-14831-10.patch \
            "
 
 SRC_URI[sha256sum] = "db7fab7cce791e7727ebbef2334301c821d79a550ec55c9ef096b610b03eb6b7"
