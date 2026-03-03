@@ -14,7 +14,7 @@ SRC_URI = "http://netfilter.org/projects/iptables/files/iptables-${PV}.tar.xz \
            file://ip6tables.service \
            file://ip6tables.rules \
            "
-SRC_URI[sha256sum] = "d87303d55ef8c92bcad4dd3f978b26d272013642b029425775f5bad1009fe7b2"
+SRC_URI[sha256sum] = "8e7ee962601492de6503d171d4a948092ab18f89f111de72e3037c1f40cfb846"
 
 SYSTEMD_SERVICE:${PN} = "\
     iptables.service \
