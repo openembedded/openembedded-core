@@ -1,4 +1,4 @@
-From 67f37aafcc8ef5d2eb006387e7bec21f74518727 Mon Sep 17 00:00:00 2001
+From 6a5ac5476207fa745f9a2890042cc98dd892b999 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@intel.com>
 Date: Tue, 9 Aug 2016 12:12:02 +0100
 Subject: [PATCH] connman: disable version-scripts to fix crashes at startup
@@ -23,10 +23,10 @@ Signed-off-by: Peter Tatrai <peter.tatrai.ext@siemens.com>
  1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 3dc3bb5..3be5ccb 100644
+index 1e44314..f5366ad 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -143,8 +143,7 @@ src_connmand_LDADD = gdbus/libgdbus-internal.la $(builtin_libadd) \
+@@ -142,8 +142,7 @@ src_connmand_LDADD = gdbus/libgdbus-internal.la $(builtin_libadd) \
  			@GIO_LIBS@ @GLIB_LIBS@ @DBUS_LIBS@ @GNUTLS_LIBS@ \
  			-lresolv -ldl -lrt
  
@@ -36,7 +36,7 @@ index 3dc3bb5..3be5ccb 100644
  
  src_connmand_wait_online_SOURCES = src/connmand-wait-online.c
  
-@@ -187,8 +186,7 @@ vpn_connman_vpnd_LDADD = gdbus/libgdbus-internal.la $(builtin_vpn_libadd) \
+@@ -186,8 +185,7 @@ vpn_connman_vpnd_LDADD = gdbus/libgdbus-internal.la $(builtin_vpn_libadd) \
  				@GIO_LIBS@ @GLIB_LIBS@ @DBUS_LIBS@ @GNUTLS_LIBS@ \
  				-lresolv -ldl
  
