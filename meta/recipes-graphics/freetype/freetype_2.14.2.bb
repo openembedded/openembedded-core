@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=eeb073d5fb86d23c52bb9b84aa256307 \
                     "
 
 SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/${BPN}/${BP}.tar.xz"
-SRC_URI[sha256sum] = "32427e8c471ac095853212a37aef816c60b42052d4d9e48230bab3bdf2936ccc"
+SRC_URI[sha256sum] = "4b62dcab4c920a1a860369933221814362e699e26f55792516d671e6ff55b5e1"
 
 UPSTREAM_CHECK_REGEX = "freetype-(?P<pver>\d+(\.\d+)+)"
 
