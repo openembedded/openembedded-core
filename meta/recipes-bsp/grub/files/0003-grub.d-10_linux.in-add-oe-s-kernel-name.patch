@@ -1,4 +1,4 @@
-From a80592e20f6c4b928a22862f52f268ab9d9908b2 Mon Sep 17 00:00:00 2001
+From 3715ca04466dfa120e18650d2c481f40d2066ca9 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 13 Jan 2016 19:28:00 +0000
 Subject: [PATCH] grub.d/10_linux.in: add oe's kernel name
@@ -9,18 +9,17 @@ that the grub-mkconfig and grub-install can work correctly.
 We only need add the bzImage to util/grub.d/10_linux.in, but also add it
 to util/grub.d/20_linux_xen.in to keep compatibility.
 
-Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
-
 Upstream-Status: Inappropriate [OE specific]
 
+Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
  util/grub.d/10_linux.in     | 6 +++---
  util/grub.d/20_linux_xen.in | 2 +-
  2 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/util/grub.d/10_linux.in b/util/grub.d/10_linux.in
-index cc393be..8545cb6 100644
+index 07649cd..d5ec745 100644
 --- a/util/grub.d/10_linux.in
 +++ b/util/grub.d/10_linux.in
 @@ -166,12 +166,12 @@ machine=`uname -m`
@@ -40,7 +39,7 @@ index cc393be..8545cb6 100644
  	done ;;
  esac
 diff --git a/util/grub.d/20_linux_xen.in b/util/grub.d/20_linux_xen.in
-index 94dd8be..36cd554 100644
+index 27bff00..6cc7bfc 100644
 --- a/util/grub.d/20_linux_xen.in
 +++ b/util/grub.d/20_linux_xen.in
 @@ -181,7 +181,7 @@ EOF
