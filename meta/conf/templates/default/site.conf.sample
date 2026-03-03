@@ -6,10 +6,6 @@
 # changes incompatibly
 SCONF_VERSION = "1"
 
-# Uncomment to cause CVS to use the proxy host specified
-#CVS_PROXY_HOST = "proxy.example.com"
-#CVS_PROXY_PORT = "81"
-
 # For svn, you need to create ~/.subversion/servers containing:
 #[global]
 #http-proxy-host = proxy.example.com
