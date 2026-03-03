@@ -8,7 +8,7 @@ SRC_URI = "git://github.com/rpm-software-management/libcomps.git;branch=master;t
            file://0001-Do-not-set-PYTHON_INSTALL_DIR-by-running-python.patch \
            "
 
-SRCREV = "e75e85ffd2c7f2a2a96d8eaf45d8dc4f2c73153d"
+SRCREV = "8d439dd015d4c6f637e64e1160201345883138e9"
 
 inherit cmake setuptools3-base
 
