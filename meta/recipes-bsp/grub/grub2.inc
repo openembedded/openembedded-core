@@ -17,6 +17,8 @@ SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
            file://0001-autogen.sh-exclude-.pc-from-po-POTFILES.in.patch \
            file://0002-grub-module-explicitly-keeps-symbole-.module_license.patch \
            file://0003-grub.d-10_linux.in-add-oe-s-kernel-name.patch \
+           file://0001-Revert-configure-Check-linker-for-image-base-support.patch \
+           file://0002-Revert-configure-Print-a-more-helpful-error-if-autoc.patch \
 "
 
 SRC_URI[sha256sum] = "d0415fbb3e739237064e173743a6e5f60c33a81ec02a069cc9152d80efff4967"
@@ -26,7 +28,7 @@ CVE_STATUS[CVE-2023-4001]  = "not-applicable-platform: Applies only to RHEL/Fedo
 CVE_STATUS[CVE-2024-1048]  = "not-applicable-platform: Applies only to RHEL/Fedora"
 CVE_STATUS[CVE-2024-2312]  = "not-applicable-platform: Applies only to Ubuntu"
 
-DEPENDS = "flex-native bison-native gettext-native gawk-replacement-native autoconf-archive-native"
+DEPENDS = "flex-native bison-native gettext-native gawk-replacement-native"
 
 GRUB_COMPATIBLE_HOST = '(x86_64.*|i.86.*|arm.*|aarch64.*|loongarch64.*|riscv.*)-(linux.*|freebsd.*)'
 COMPATIBLE_HOST = "${GRUB_COMPATIBLE_HOST}"
