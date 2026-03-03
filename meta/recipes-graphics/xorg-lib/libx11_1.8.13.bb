@@ -7,7 +7,7 @@ basic functions of the window system."
 require xorg-lib-common.inc
 
 LICENSE = "MIT & BSD-1-Clause & HPND & HPND-sell-variant & ISC"
-LIC_FILES_CHKSUM = "file://COPYING;md5=1d49cdd2b386c5db11ec636d680b7116"
+LIC_FILES_CHKSUM = "file://COPYING;md5=8f2a1d92c4a50eedcf7c12672b908851"
 
 DEPENDS += "xorgproto \
             xtrans \
@@ -23,7 +23,7 @@ XORG_PN = "libX11"
 
 SRC_URI += "file://disable_tests.patch"
 
-SRC_URI[sha256sum] = "fa026f9bb0124f4d6c808f9aef4057aad65e7b35d8ff43951cef0abe06bb9a9a"
+SRC_URI[sha256sum] = "69606f485c2c07c14ef64f75b7bb326d48587af33795d9ab3e607c0b5f94f11c"
 
 inherit gettext
 
