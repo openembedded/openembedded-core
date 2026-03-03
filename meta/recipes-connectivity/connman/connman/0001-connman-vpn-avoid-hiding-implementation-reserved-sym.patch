@@ -1,4 +1,4 @@
-From eac489c872c775c88bbd85b4cec6c1d47ad9e6a6 Mon Sep 17 00:00:00 2001
+From 37ccc55f9493bdcd31bcca29ac35347ca156da2d Mon Sep 17 00:00:00 2001
 From: Peter Tatrai <peter.tatrai.ext@siemens.com>
 Date: Sun, 7 Sep 2025 09:25:20 +0200
 Subject: [PATCH] connman, vpn: avoid hiding implementation-reserved symbols
@@ -45,6 +45,3 @@ index b887706..5cad344 100644
 -		*;
 +		[!_]*;
  };
--- 
-2.47.2
-
