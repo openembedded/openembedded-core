@@ -251,7 +251,8 @@ python () {
             # Ensure the uboot specific menuconfig settings do not leak into other recipes
             if 'u-boot' in recipename:
                 if len(ubootconfig) == 1:
-                    d.setVar('KCONFIG_CONFIG_ROOTDIR', os.path.join("${B}", d.getVar("UBOOT_MACHINE").strip()))
+                    builddir = "%s-%s" % (d.getVar("UBOOT_MACHINE").strip(), config)
+                    d.setVar('KCONFIG_CONFIG_ROOTDIR', os.path.join("${B}", builddir))
                 else:
                     # Disable menuconfig for multiple configs
                     d.setVar('KCONFIG_CONFIG_ENABLE_MENUCONFIG', "false")
