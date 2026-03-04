@@ -1,7 +1,7 @@
-From bc089af8ce38ad268bc4283040ec28241c5064a6 Mon Sep 17 00:00:00 2001
-From: Alexander Kanavin <alex@linutronix.de>
-Date: Thu, 18 Dec 2025 18:43:20 +0100
-Subject: [PATCH] tests: revert 'Take care of deprecated
+From f031ecef6ced1b275b0cfd11855ce333525cb335 Mon Sep 17 00:00:00 2001
+From: Wang Mingyu <liuyd.fnst@fujitsu.com>
+Date: Tue, 3 Mar 2026 05:32:46 +0000
+Subject: [PATCH] tests: revert 'Take care of deprecated 
  assert_cmd::Command::cargo_bin'
 
 This reverts https://gitlab.gnome.org/GNOME/librsvg/-/commit/fdc004ac6304f2cd7206541b9a7bf901cf6a9dd6
@@ -15,22 +15,25 @@ https://gitlab.gnome.org/GNOME/librsvg/-/issues/1119#note_2644649
 
 Upstream-Status: Inappropriate [see above]
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+
+Update for 2.62.0.
+Signed-off-by: Liu Yiding <liuyd.fnst@fujitsu.com>
 ---
  rsvg_convert/tests/rsvg_convert.rs | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/rsvg_convert/tests/rsvg_convert.rs b/rsvg_convert/tests/rsvg_convert.rs
-index 3d0a340..90a4c2f 100644
+index dbf6dd7..2dbc8f6 100644
 --- a/rsvg_convert/tests/rsvg_convert.rs
 +++ b/rsvg_convert/tests/rsvg_convert.rs
-@@ -3,7 +3,6 @@ mod internal_predicates;
- use internal_predicates::file;
+@@ -4,7 +4,6 @@ use internal_predicates::file;
  
+ use assert_cmd::Command;
  use assert_cmd::assert::IntoOutputPredicate;
 -use assert_cmd::cargo::cargo_bin_cmd;
- use assert_cmd::Command;
  #[cfg(system_deps_have_cairo_pdf)]
  use chrono::{TimeZone, Utc};
+ use predicates::boolean::*;
 @@ -50,7 +49,7 @@ impl RsvgConvert {
          let path_str = config_file_path.to_str().unwrap();
          eprintln!("FONTCONFIG_FILE={path_str}");
@@ -40,3 +43,6 @@ index 3d0a340..90a4c2f 100644
          command.env("FONTCONFIG_FILE", config_file_path);
  
          RsvgConvert {
+-- 
+2.43.0
+

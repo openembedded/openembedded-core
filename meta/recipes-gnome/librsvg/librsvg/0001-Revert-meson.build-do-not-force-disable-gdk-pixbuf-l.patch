@@ -1,8 +1,8 @@
-From 33ece256bf7c156a34ab1ee3709718e38829cc9e Mon Sep 17 00:00:00 2001
-From: Gyorgy Sarvari <skandigraun@gmail.com>
-Date: Wed, 6 Aug 2025 13:50:21 +0200
-Subject: [PATCH] Revert "meson.build: do not force-disable gdk-pixbuf-loader
- in cross builds"
+From 5acff9721a8291f19dd50dc10919d4df73559acb Mon Sep 17 00:00:00 2001
+From: Liu Yiding
+Date: Tue, 3 Mar 2026 05:21:45 +0000
+Subject: [PATCH] Revert "meson.build: do not force-disable gdk-pixbuf-loader 
+in cross builds"
 
 This reverts commit 994582cfa995d00f9472dc22f8237b6571b4c510.
 
@@ -21,12 +21,15 @@ To avoid this, revert back to disable gdk-pixbuf-loader for cross-builds
 Upstream-Status: Submitted [https://gitlab.gnome.org/GNOME/librsvg/-/merge_requests/1123]
 
 Signed-off-by: Gyorgy Sarvari <skandigraun@gmail.com>
+
+Update for 2.62.0.
+Signed-off-by: Liu Yiding <liuyd.fnst@fujitsu.com>
 ---
  gdk-pixbuf-loader/meson.build | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/gdk-pixbuf-loader/meson.build b/gdk-pixbuf-loader/meson.build
-index 6fa10a6..c51d803 100644
+index 951d2d1..7b6f479 100644
 --- a/gdk-pixbuf-loader/meson.build
 +++ b/gdk-pixbuf-loader/meson.build
 @@ -36,7 +36,7 @@ pixbuf_thumbnailer = configure_file(
@@ -35,15 +38,18 @@ index 6fa10a6..c51d803 100644
  
 -if meson.can_run_host_binaries()
 +if not meson.is_cross_build()
-   gdk_pixbuf_query_loaders = find_program(pixbuf_dep.get_variable(pkgconfig: 'gdk_pixbuf_query_loaders', default_value: 'gdk-pixbuf-query-loaders'))
- endif
- 
-@@ -48,7 +48,7 @@ pixbufloader_svg_install_args = [
+   gdk_pixbuf_query_loaders = find_program(pixbuf_dep.get_variable(pkgconfig: 'gdk_pixbuf_query_loaders', default_value: 'gdk-pixbuf-query-loaders')).path()
+ else
+   gdk_pixbuf_query_loaders = pixbuf_dep.get_variable(pkgconfig: 'gdk_pixbuf_query_loaders', pkgconfig_define: ['prefix', prefix])
+@@ -50,7 +50,7 @@ pixbufloader_svg_install_args = [
  ]
  
  # Tell people to run gdk-pixbuf-query-loaders manually for cross builds
 -if not meson.can_run_host_binaries()
-+if meson.is_cross_build()
++if not meson.is_cross_build()
    pixbufloader_svg_install_args += '--show-cross-message'
  endif
  
+-- 
+2.43.0
+
