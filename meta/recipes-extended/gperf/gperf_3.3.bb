@@ -10,10 +10,6 @@ SRC_URI[sha256sum] = "fd87e0aba7e43ae054837afd6cd4db03a3f2693deb3619085e6ed9d8d9
 
 inherit autotools
 
-# The nested configures don't find the parent aclocal.m4 out of the box, so tell
-# it where to look explicitly (mirroring the behaviour of upstream's Makefile.devel).
-EXTRA_AUTORECONF += " -I ${S} --exclude=aclocal"
-
 CFLAGS += "-std=gnu17"
 
 BBCLASSEXTEND = "native nativesdk"
