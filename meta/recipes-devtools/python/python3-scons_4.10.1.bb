@@ -18,7 +18,6 @@ RDEPENDS:${PN}:class-target = "\
   python3-json \
   python3-shell \
   python3-pickle \
-  python3-pkg-resources \
   python3-pprint \
   "
 
