@@ -11,7 +11,7 @@ CVE_PRODUCT = "python3-setuptools python:setuptools"
 SRC_URI += " \
             file://0001-_distutils-sysconfig.py-make-it-possible-to-substite.patch"
 
-SRC_URI[sha256sum] = "f36b47402ecde768dbfafc46e8e4207b4360c654f1f3bb84475f0a28628fb19c"
+SRC_URI[sha256sum] = "22e0a2d69474c6ae4feb01951cb69d515ed23728cf96d05513d36e42b62b37cb"
 
 DEPENDS += "python3"
 
@@ -25,7 +25,6 @@ RDEPENDS:${PN} = "\
     python3-netserver \
     python3-numbers \
     python3-pickle \
-    python3-pkg-resources \
     python3-pkgutil \
     python3-plistlib \
     python3-shell \
@@ -37,18 +36,6 @@ RDEPENDS:${PN} = "\
 "
 
 BBCLASSEXTEND = "native nativesdk"
-
-# The pkg-resources module can be used by itself, without the package downloader
-# and easy_install. Ship it in a separate package so that it can be used by
-# minimal distributions.
-PACKAGES =+ "python3-pkg-resources "
-FILES:python3-pkg-resources = "${PYTHON_SITEPACKAGES_DIR}/pkg_resources/*"
-RDEPENDS:python3-pkg-resources = "\
-    python3-compression \
-    python3-email \
-    python3-plistlib \
-    python3-pprint \
-"
 
 # This used to use the bootstrap install which didn't compile. Until we bump the
 # tmpdir version we can't compile the native otherwise the sysroot unpack fails
