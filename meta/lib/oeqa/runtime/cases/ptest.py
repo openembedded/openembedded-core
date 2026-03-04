@@ -35,7 +35,7 @@ class PtestRunnerTest(OERuntimeTestCase):
         self.do_ptestrunner()
 
     def do_ptestrunner(self):
-        status, output = self.target.run('which ptest-runner', 0)
+        status, output = self.target.run('which ptest-runner')
         if status != 0:
             self.skipTest("No -ptest packages are installed in the image")
 
