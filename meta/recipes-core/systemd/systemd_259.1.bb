@@ -515,8 +515,12 @@ FILES:${PN}-container = "${sysconfdir}/dbus-1/system.d/org.freedesktop.import1.c
                          ${systemd_system_unitdir}/systemd-machined.socket \
                          ${systemd_system_unitdir}/dbus-org.freedesktop.machine1.service \
                          ${systemd_system_unitdir}/var-lib-machines.mount \
+                         ${systemd_user_unitdir}/sockets.target.wants/systemd-machined.socket \
+                         ${systemd_user_unitdir}/dbus-org.freedesktop.machine1.service \
                          ${systemd_user_unitdir}/machine.slice \
                          ${systemd_user_unitdir}/machines.target \
+                         ${systemd_user_unitdir}/systemd-machined.service \
+                         ${systemd_user_unitdir}/systemd-machined.socket \
                          ${systemd_user_unitdir}/systemd-nspawn@.service \
                          ${nonarch_libdir}/systemd/systemd-import \
                          ${nonarch_libdir}/systemd/systemd-importd \
@@ -525,6 +529,7 @@ FILES:${PN}-container = "${sysconfdir}/dbus-1/system.d/org.freedesktop.import1.c
                          ${exec_prefix}/lib/tmpfiles.d/systemd-nspawn.conf \
                          ${exec_prefix}/lib/tmpfiles.d/README \
                          ${systemd_system_unitdir}/systemd-nspawn@.service \
+                         ${datadir}/dbus-1/services/org.freedesktop.machine1.service \
                          ${datadir}/dbus-1/system-services/org.freedesktop.import1.service \
                          ${datadir}/dbus-1/system-services/org.freedesktop.machine1.service \
                          ${datadir}/dbus-1/system.d/org.freedesktop.import1.conf \
