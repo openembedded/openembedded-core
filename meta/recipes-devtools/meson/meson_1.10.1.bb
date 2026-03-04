@@ -19,7 +19,7 @@ UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)$"
 
 inherit python_setuptools_build_meta github-releases
 
-RDEPENDS:${PN} = "ninja python3-modules python3-pkg-resources"
+RDEPENDS:${PN} = "ninja python3-modules"
 
 FILES:${PN} += "${datadir}/polkit-1"
 
