@@ -9,7 +9,7 @@ SRC_URI = "gitsm://github.com/KhronosGroup/Vulkan-Samples.git;branch=main;protoc
            "
 
 UPSTREAM_CHECK_COMMITS = "1"
-SRCREV = "97fcdeecf2db26a78b432b285af3869a65bb00bd"
+SRCREV = "3abbdf8b5a3bf250f6475f9fe674567b14e9b1ad"
 
 UPSTREAM_CHECK_GITTAGREGEX = "These are not the releases you're looking for"
 
