@@ -1011,6 +1011,29 @@ def check_sanity_everybuild(status, d):
     if d.getVar("SSTATE_MIRRORS") and hashserv and hashserv.startswith("unix://") and not d.getVar("BB_HASHSERVE_UPSTREAM"):
         bb.warn("You are using a local hash equivalence server but have configured an sstate mirror. This will likely mean no sstate will match from the mirror. You may wish to disable the hash equivalence use (BB_HASHSERVE), or use a hash equivalence server alongside the sstate mirror.")
 
+    # Check that when SSTATE_DIR is shared between builds, hashserve database is not private to a build
+    hashserv_proto,_,hashserv_path,_,_,_ = bb.fetch2.decodeurl(hashserv)
+    if hashserv_proto == "unix":
+        dbdir = d.getVar("BB_HASHSERVE_DB_DIR") or d.getVar("PERSISTENT_DIR") or d.getVar("CACHE")
+        topdir = d.getVar("TOPDIR")
+        sstatedir = d.getVar("SSTATE_DIR")
+
+        if (hashserv_path.startswith(topdir) and dbdir.startswith(topdir) and not sstatedir.startswith(topdir)):
+            if bb.utils.is_path_on_nfs(sstatedir):
+                bb.warn("""Sstate directory is on a shared NFS (it is set via SSTATE_DIR to {}),
+    but hash equivalency database is inside this particular build directory {}.
+
+    This will prevent sstate reuse, and it is recommended to set up a permanently running hash equivalency server
+    according to https://docs.yoctoproject.org/dev-manual/hashequivserver.html""".format(sstatedir, topdir))
+            else:
+                bb.warn("""Sstate directory is shared between several builds (it is set via SSTATE_DIR to {}),
+    but hash equivalency database is inside this particular build directory {}.
+
+    This will prevent sstate reuse, and it is recommended to set the location for the database to a common path
+    via BB_HASHSERVE_DB_DIR, for example:
+
+    BB_HASHSERVE_DB_DIR = \"${{SSTATE_DIR}}\"""".format(sstatedir, topdir))
+
     # Check that TMPDIR hasn't changed location since the last time we were run
     tmpdir = d.getVar('TMPDIR')
     checkfile = os.path.join(tmpdir, "saved_tmpdir")
