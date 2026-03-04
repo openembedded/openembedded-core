@@ -166,13 +166,6 @@ autotools_do_configure() {
 		cd ${AUTOTOOLS_SCRIPT_PATH}
 		# aclocal looks in the native sysroot by default, so tell it to also look in the target sysroot.
 		ACLOCAL="aclocal --aclocal-path=${STAGING_DATADIR}/aclocal/"
-		# autoreconf is too shy to overwrite aclocal.m4 if it doesn't look
-		# like it was auto-generated.  Work around this by blowing it away
-		# by hand, unless the package specifically asked not to run aclocal.
-		if ! echo ${EXTRA_AUTORECONF} | grep -q "aclocal"; then
-			bbnote Removing existing aclocal.m4
-			rm -f aclocal.m4
-		fi
 		if [ -e configure.in ]; then
 			CONFIGURE_AC=configure.in
 		else
