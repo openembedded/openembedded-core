@@ -28,7 +28,7 @@ SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://run-ptest \
            "
 
-SRC_URI[sha256sum] = "cf72510b8ebb4eb6693eef765749d83677a03c79291a311040a5bfd79baab763"
+SRC_URI[sha256sum] = "0f4510f1c7a679c3545990a31479f391ad45d84e039176309d42f80cf41743f5"
 
 do_configure:prepend () {
 	# Else these could be used in preference to those in aclocal-copy
