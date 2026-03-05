@@ -116,6 +116,7 @@ def write_license_files(d, license_manifest, pkg_dic, rootfs):
     bad_licenses = oe.license.expand_wildcard_licenses(d, bad_licenses)
     pkgarchs = d.getVar("SSTATE_ARCHS").split()
     pkgarchs.reverse()
+    incompatible_packages = []
 
     exceptions = (d.getVar("INCOMPATIBLE_LICENSE_EXCEPTIONS") or "").split()
     with open(license_manifest, "w") as license_file:
@@ -123,7 +124,7 @@ def write_license_files(d, license_manifest, pkg_dic, rootfs):
             remaining_bad_licenses = oe.license.apply_pkg_license_exception(pkg, bad_licenses, exceptions)
             incompatible_licenses = oe.license.incompatible_pkg_license(d, remaining_bad_licenses, pkg_dic[pkg]["LICENSE"])
             if incompatible_licenses:
-                bb.fatal("Package %s cannot be installed into the image because it has incompatible license(s): %s" %(pkg, ' '.join(incompatible_licenses)))
+                incompatible_packages.append("%s (%s)" % (pkg, ' '.join(incompatible_licenses)))
             else:
                 incompatible_licenses = oe.license.incompatible_pkg_license(d, bad_licenses, pkg_dic[pkg]["LICENSE"])
                 if incompatible_licenses:
@@ -171,6 +172,9 @@ def write_license_files(d, license_manifest, pkg_dic, rootfs):
                                        "The license listed %s was not in the "\
                                        "licenses collected for recipe %s"
                                        % (lic, pkg_dic[pkg]["PN"]), d)
+    if incompatible_packages:
+        bb.fatal("Some packages cannot be installed into the image because they have incompatible licenses:\n\t%s" % ("\n\t".join(incompatible_packages)))
+
     oe.qa.exit_if_errors(d)
 
     # Two options here:
