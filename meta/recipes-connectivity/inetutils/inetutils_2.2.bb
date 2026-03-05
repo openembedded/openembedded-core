@@ -26,6 +26,7 @@ SRC_URI = "${GNU_MIRROR}/inetutils/inetutils-${PV}.tar.xz \
            file://0002-CVE-2023-40303-Indent-changes-in-previous-commit.patch \
            file://CVE-2026-24061-01.patch \
            file://CVE-2026-24061-02.patch \
+           file://CVE-2026-28372.patch \
 "
 
 inherit autotools gettext update-alternatives texinfo
