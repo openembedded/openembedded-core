@@ -12,11 +12,9 @@ DEPENDS = "file-replacement-native"
 DEPENDS:class-native = "bzip2-replacement-native"
 
 SRC_URI = "git://github.com/file/file.git;branch=master;protocol=https \
-           file://0001-Use-4-in-default-reset-previous-negative-offset-in-m.patch \
-           file://0001-PR-579-net147-Fix-stack-overrun.patch \
            "
 
-SRCREV = "c5aa4f7f8d5063fb3c37ad57bf54bb67ec641a09"
+SRCREV = "7d20612996567ecedec7f5c58f7bf15c2cf42c19"
 
 inherit autotools update-alternatives
 
