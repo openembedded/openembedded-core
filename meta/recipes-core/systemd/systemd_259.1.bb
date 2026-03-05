@@ -904,3 +904,9 @@ pkg_prerm:udev-hwdb () {
 }
 
 require dlopen-deps.inc
+
+python do_warn_musl() {
+    if d.getVar('TCLIBC') == "musl":
+        bb.warn("Using systemd with musl is experimental, see https://github.com/systemd/systemd/blob/9ca4334/NEWS#L524 for details")
+}
+addtask warn_musl before do_configure
