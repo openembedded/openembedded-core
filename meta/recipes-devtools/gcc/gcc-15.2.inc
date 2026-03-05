@@ -74,6 +74,8 @@ SRC_URI = "${BASEURI} \
            file://0025-gcc-testsuite-tweaks-for-mips-OE.patch \
            file://0026-fix-pr90579-testcases.patch \
            file://0027-gcc15-pr122394.patch \
+	   file://0028-fix-gcc-libitm-false-postives-01.patch \
+	   file://0028-fix-gcc-libitm-false-postives-02.patch \
            file://0001-mapper-localhost-might-not-be-known.patch \
 "
 
