@@ -699,6 +699,7 @@ FILES:${PN} = " ${base_bindir}/* \
                 ${exec_prefix}/lib/sysctl.d \
                 ${exec_prefix}/lib/sysusers.d \
                 ${exec_prefix}/lib/environment.d \
+                ${exec_prefix}/lib/nvpcr \
                 ${exec_prefix}/lib/pcrlock.d \
                 ${localstatedir} \
                 ${nonarch_libdir}/modprobe.d/systemd.conf \
