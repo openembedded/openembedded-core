@@ -7,19 +7,18 @@ GNU M4 also has built-in functions for including files, running shell commands, 
 inherit autotools texinfo ptest gettext
 
 SRC_URI = "${GNU_MIRROR}/m4/m4-${PV}.tar.gz \
-           file://0001-gettext-h-Avoid-gcc-Wformat-security-warnings-with-d.patch \
            "
 SRC_URI:append:class-target = " file://run-ptest \
                                 file://0001-test-c32ispunct-Check-for-musl-along-with-glibc.patch \
                                 file://serial-tests-config.patch \
                               "
 
-SRC_URI[sha256sum] = "6ac4fc31ce440debe63987c2ebbf9d7b6634e67a7c3279257dc7361de8bdb3ef"
+SRC_URI[sha256sum] = "38ae59f7a30bf9c108193cc5c25fbb06014f21e230c7ede2eff614f7b7c37ed8"
 
 LICENSE = "GPL-3.0-only"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464\
-	            file://examples/COPYING;md5=4031593b2166d6c47cae282d944a7ede"
+	            file://examples/COPYING;md5=005f2e201a0526c1d1d79dd6303ecf23"
 
 EXTRA_OECONF += "--without-libsigsegv-prefix"
 
