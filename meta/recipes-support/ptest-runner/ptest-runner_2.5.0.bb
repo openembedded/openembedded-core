@@ -9,8 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=751419260aa954499f7abaabaa882bbe"
 
 SRCREV = "7429fdd52abb5b08a9e8acef14b1bc4604f09c8f"
 
-SRC_URI = "git://git.yoctoproject.org/ptest-runner2;branch=master;protocol=https \
-"
+SRC_URI = "git://git.yoctoproject.org/ptest-runner2;branch=master;protocol=https;tag=v${PV}"
 
 FILES:${PN} = "${bindir}/ptest-runner ${bindir}/ptest-runner-collect-system-data"
 
