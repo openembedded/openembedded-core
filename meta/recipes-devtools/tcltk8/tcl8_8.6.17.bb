@@ -42,11 +42,10 @@ EXTRA_AUTORECONF = "--exclude=aclocal"
 
 EXTRA_OECONF = "--enable-threads --disable-rpath --enable-man-suffix=tcl8"
 
-# Prevent installing copy of tzdata based on tzdata installation on the build host
-# It doesn't install tzdata if one of the following files exist on the host:
-# /usr/share/zoneinfo/UTC /usr/share/zoneinfo/GMT /usr/share/lib/zoneinfo/UTC /usr/share/lib/zoneinfo/GMT /usr/lib/zoneinfo/UTC /usr/lib/zoneinfo/GMT
-# otherwise "/usr/lib/tcl8.6/tzdata" is included in tcl package
-EXTRA_OECONF += "--with-tzdata=no"
+PACKAGECONFIG ??= ""
+# Use of system tzdata is not recommended at present:
+# https://core.tcl-lang.org/tcl/tktview/51aa53616067cb63900b17ca1d71f07b094ffa1a
+PACKAGECONFIG[system-tzdata] = "--with-tzdata=no,--with-tzdata=yes,,tzdata"
 
 do_install() {
 	autotools_do_install
@@ -73,7 +72,7 @@ FILES:${PN}-dev += "${libdir}/tcl8Config.sh ${libdir}/tcl8ooConfig.sh"
 
 # isn't getting picked up by shlibs code
 RDEPENDS:${PN} += "tcl8-lib"
-RDEPENDS:${PN}-ptest += "libgcc locale-base-en-us tzdata"
+RDEPENDS:${PN}-ptest += "libgcc locale-base-en-us"
 
 BBCLASSEXTEND = "native nativesdk"
 
