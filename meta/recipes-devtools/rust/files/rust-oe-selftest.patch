@@ -6,6 +6,7 @@ Upstream-Status: Inappropriate [OE testing specific]
 Signed-off-by: Yash Shinde <Yash.Shinde@windriver.com>
 # added executable-no-mangle-strip.rs ignore
 Signed-off-by: Peter Tatrai <Peter.Tatrai@siemens.com>
+Signed-off-by: Deepesh Varatharajan <Deepesh.Varatharajan@windriver.com>
 ---
 diff --git a/compiler/rustc_errors/src/markdown/tests/term.rs b/compiler/rustc_errors/src/markdown/tests/term.rs
 --- a/compiler/rustc_errors/src/markdown/tests/term.rs
@@ -266,3 +267,15 @@ index af44dfe..e6674e5 100644
  //@ ignore-wasm different `main` convention
  
  #![feature(lang_items)]
+diff --git a/compiler/rustc/src/main.rs b/compiler/rustc/src/main.rs
+index 89c61cd..144ea0e 100644
+--- a/compiler/rustc/src/main.rs
++++ b/compiler/rustc/src/main.rs
+@@ -38,6 +38,7 @@
+ #[cfg(feature = "jemalloc")]
+ use tikv_jemalloc_sys as _;
+
++#[cfg(not(test))]
+ fn main() {
+     rustc_driver::main()
+ }
