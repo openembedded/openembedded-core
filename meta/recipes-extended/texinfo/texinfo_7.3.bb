@@ -34,7 +34,7 @@ SRC_URI = "${GNU_MIRROR}/texinfo/${BP}.tar.gz \
            ${TARGET_PATCH} \
            "
 
-SRC_URI[sha256sum] = "e86de7dfef6b352aa1bf647de3a6213d1567c70129eccbf8977706d9c91919c8"
+SRC_URI[sha256sum] = "4fc30d71e00416f0b4884994f1db9db2901f03603f8e69d92dd46fa018d998d7"
 
 tex_texinfo = "texmf/tex/texinfo"
 
@@ -42,7 +42,6 @@ inherit gettext autotools multilib_script
 
 MULTILIB_SCRIPTS = "${PN}:${bindir}/texi2any"
 
-EXTRA_AUTORECONF += "-I ${S}/gnulib/m4"
 CACHED_CONFIGUREVARS += "texinfo_cv_sys_iconv_converts_euc_cn=yes"
 
 do_configure:prepend () {
@@ -61,6 +60,7 @@ do_install:append() {
 	mkdir -p ${D}${datadir}/${tex_texinfo}
 	install -p -m644 ${S}/doc/texinfo.tex ${S}/doc/txi-??.tex ${D}${datadir}/${tex_texinfo}
 	sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${bindir}/texi2any ${D}${bindir}/pod2texi
+	sed -i -e '1s,#!.*perl,#! ${USRBINPATH}/env perl,' ${D}${datadir}/texi2any/load_txi_modules
 	sed -i -e 's,${HOSTTOOLS_DIR},,' ${D}${bindir}/texindex
 }
 
