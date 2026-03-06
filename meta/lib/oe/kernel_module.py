@@ -1,3 +1,8 @@
+#
+# Copyright OpenEmbedded Contributors
+#
+# SPDX-License-Identifier: MIT
+#
 
 # Set up the environment for building kernel modules
 def kernel_module_os_env(d, env_dict):
