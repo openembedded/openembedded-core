@@ -13,6 +13,15 @@ SRC_URI += " \
 
 SRC_URI[sha256sum] = "f36b47402ecde768dbfafc46e8e4207b4360c654f1f3bb84475f0a28628fb19c"
 
+do_install:append() {
+	# setuptools ships Windows launcher executables (cli*.exe, gui*.exe).
+	# Keep them only when building for a Windows (mingw) host.
+	case "${HOST_OS}" in
+		mingw32|mingw64) ;;
+		*) rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/setuptools/*.exe ;;
+	esac
+}
+
 DEPENDS += "python3"
 
 RDEPENDS:${PN} = "\
