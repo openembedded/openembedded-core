@@ -30,6 +30,15 @@ SRC_URI += "file://no_shebang_mangling.patch \
 
 SRC_URI[sha256sum] = "578283f006390f85bb6282dffb876454593d637f5d1be494b5202ce4877e71f2"
 
+do_install:append(){
+	# pip vendors distlib which ships Windows launcher templates (*.exe).
+	# Keep them only when building for a Windows (mingw) host.
+	case "${HOST_OS}" in
+		mingw32|mingw64) ;;
+		*) rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/pip/_vendor/distlib/*.exe ;;
+	esac
+}
+
 RDEPENDS:${PN} = "\
   python3-compile \
   python3-html \
