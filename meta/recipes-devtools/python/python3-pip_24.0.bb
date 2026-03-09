@@ -41,6 +41,15 @@ do_install:append() {
     rm -f ${D}/${bindir}/pip
 }
 
+do_install:append(){
+	# pip vendors distlib which ships Windows launcher templates (*.exe).
+	# Keep them only when building for a Windows (mingw) host.
+	case "${HOST_OS}" in
+		mingw32|mingw64) ;;
+		*) rm -f ${D}${PYTHON_SITEPACKAGES_DIR}/pip/_vendor/distlib/*.exe ;;
+	esac
+}
+
 RDEPENDS:${PN} = "\
   python3-compile \
   python3-io \
