@@ -445,10 +445,12 @@ def main():
                 is_kernel=True
         if not is_kernel:
             continue
-
+        # We remove custom versions after -
+        upstream_version = Version(pkg["version"].split("-")[0])
+        logging.info("Checking kernel %s", upstream_version)
         kernel_cves = get_kernel_cves(args.datadir,
                                       compiled_files,
-                                      Version(pkg["version"]))
+                                      upstream_version)
         logging.info("Total kernel cves from kernel CNA: %s", len(kernel_cves))
         cves = {issue["id"]: issue for issue in pkg["issue"]}
         logging.info("Total kernel before processing cves: %s", len(cves))
