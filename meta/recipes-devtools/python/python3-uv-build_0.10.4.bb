@@ -18,7 +18,6 @@ require ${BPN}-crates.inc
 inherit pypi python_maturin cargo-update-recipe-crates
 
 PYPI_PACKAGE = "uv_build"
-UPSTREAM_CHECK_PYPI_PACKAGE = "uv_build"
 
 BBCLASSEXTEND = "native"
 INSANE_SKIP:${PN} = "already-stripped"
