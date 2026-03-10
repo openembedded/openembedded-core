@@ -581,7 +581,6 @@ to your build configuration.
                 self.snapshot = True
             elif arg == 'publicvnc':
                 self.publicvnc = True
-                self.qemu_opt_script += ' -vnc :0'
             elif arg == 'guestagent':
                 self.guest_agent = True
             elif arg == "qmp":
@@ -1468,15 +1467,22 @@ to your build configuration.
         if (self.gl_es == True or self.gl == True) and (self.sdl == False and self.gtk == False):
             raise RunQemuError('Option gl/gl-es needs gtk or sdl option.')
 
+        if self.publicvnc:
+            self.qemu_opt += ' -vnc :0'
+
         # If we have no display option, we autodetect based upon what qemu supports. We
         # need our font setup and show-cusor below so we need to see what qemu --help says
         # is supported so we can pass our correct config in.
         if not self.nographic and not self.sdl and not self.gtk and not self.publicvnc and not self.egl_headless == True:
             output = subprocess.check_output([self.qemu_bin, "--help"], universal_newlines=True, env=self.qemu_environ)
-            if "-display gtk" in output:
+            if "-display gtk" in output and "DISPLAY" in os.environ:
                 self.gtk = True
-            elif "-display sdl" in output:
+            elif "-display sdl" in output and "DISPLAY" in os.environ:
                 self.sdl = True
+            elif "-display vnc" in output and self.taplock_descriptor:
+                vncaddress = "unix:%s" % self.taplock.replace(".lock", ".vnc-socket")
+                logger.info("Using VNC server at %s for graphical output" % vncaddress)
+                self.qemu_opt += " -vnc %s" % vncaddress
             else:
                 self.qemu_opt += ' -display none'
 
