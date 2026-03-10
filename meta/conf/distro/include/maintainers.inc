@@ -261,7 +261,6 @@ RECIPE_MAINTAINER:pn-gstreamer1.0-plugins-good = "Unassigned <unassigned@yoctopr
 RECIPE_MAINTAINER:pn-gstreamer1.0-plugins-ugly = "Unassigned <unassigned@yoctoproject.org>"
 RECIPE_MAINTAINER:pn-gstreamer1.0-python = "Unassigned <unassigned@yoctoproject.org>"
 RECIPE_MAINTAINER:pn-gstreamer1.0-rtsp-server = "Unassigned <unassigned@yoctoproject.org>"
-RECIPE_MAINTAINER:pn-gstreamer1.0-vaapi = "Unassigned <unassigned@yoctoproject.org>"
 RECIPE_MAINTAINER:pn-gtk+3 = "Ross Burton <ross.burton@arm.com>"
 RECIPE_MAINTAINER:pn-gtk-doc = "Unassigned <unassigned@yoctoproject.org>"
 RECIPE_MAINTAINER:pn-gtk4 = "Markus Volk <f_l_k@t-online.de>"
