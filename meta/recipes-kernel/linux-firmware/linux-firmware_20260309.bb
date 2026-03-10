@@ -314,7 +314,7 @@ LIC_FILES_CHKSUM = "file://LICENCE.Abilis;md5=b5ee3f410780e56711ad48eadc22b8bc \
                     "
 # WHENCE checksum is defined separately to ease overriding it if
 # class-devupstream is selected.
-WHENCE_CHKSUM  = "e3897ca46d046032a2b60b8554caf61d"
+WHENCE_CHKSUM  = "772c8667ff568e7de3a7794fd420f2f7"
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
 # so that the license files will be copied from fetched source
@@ -452,7 +452,7 @@ SRC_URI:class-devupstream = "git://git.kernel.org/pub/scm/linux/kernel/git/firmw
 # Pin this to the 20220509 release, override this in local.conf
 SRCREV:class-devupstream ?= "b19cbdca78ab2adfd210c91be15a22568e8b8cae"
 
-SRC_URI[sha256sum] = "bd19acc4c1a02548e09d3df67f987fe6e378df735bab138c1d9e917962056d94"
+SRC_URI[sha256sum] = "c74cc6f562b58ad5bc6b2b00a61abc29c9e49e06126e7ba34fbca9928e07a96c"
 
 inherit allarch
 
@@ -763,7 +763,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-qla2xxx ${PN}-qla2xxx-license \
              ${PN}-rockchip-license ${PN}-rockchip-dptx \
              ${PN}-amlogic-vdec-license ${PN}-amlogic-vdec \
-             ${PN}-lt9611uxc ${PN}-lontium-license \
+             ${PN}-lt8713sx ${PN}-lt9611uxc ${PN}-lontium-license \
              ${PN}-wfx-license ${PN}-wfx \
              ${PN}-whence-license \
              ${PN}-xc4000-license ${PN}-xc4000 \
@@ -1323,9 +1323,11 @@ RDEPENDS:${PN}-amdgpu-vega12 += "${PN}-amdgpu-license"
 RDEPENDS:${PN}-amdgpu-misc += "${PN}-amdgpu-license"
 
 # For lontium
+LICENSE:${PN}-lt8713sx = "Firmware-Lontium"
 LICENSE:${PN}-lt9611uxc = "Firmware-Lontium"
 
 FILES:${PN}-lontium-license = "${nonarch_base_libdir}/firmware/LICENSE.Lontium"
+FILES:${PN}-lt8713sx = "${nonarch_base_libdir}/firmware/lt8713sx_fw.bin*"
 FILES:${PN}-lt9611uxc = "${nonarch_base_libdir}/firmware/lt9611uxc_fw.bin*"
 
 # For Arm Mali
@@ -2331,7 +2333,7 @@ LICENSE:${PN}-qcom-glymur-adreno = "Firmware-qcom"
 LICENSE:${PN}-qcom-glymur-audio = "Firmware-qcom-2"
 LICENSE:${PN}-qcom-glymur-compute = "Firmware-qcom-2"
 LICENSE:${PN}-qcom-kaanapali-adreno = "Firmware-qcom"
-LICENSE:${PN}-qcom-kaanapali-audio = "Firmware-qcom-2"
+LICENSE:${PN}-qcom-kaanapali-audio = "Firmware-qcom-2 & Firmware-linaro"
 LICENSE:${PN}-qcom-kaanapali-compute = "Firmware-qcom-2"
 LICENSE:${PN}-qcom-kaanapali-soccp = "Firmware-qcom-2"
 LICENSE:${PN}-qcom-qcm2290-adreno = "Firmware-qcom"
@@ -2459,7 +2461,10 @@ FILES:${PN}-qcom-glymur-adreno = "${nonarch_base_libdir}/firmware/qcom/glymur/ge
 FILES:${PN}-qcom-glymur-audio = "${nonarch_base_libdir}/firmware/qcom/glymur/adsp*.*"
 FILES:${PN}-qcom-glymur-compute = "${nonarch_base_libdir}/firmware/qcom/glymur/cdsp*.*"
 FILES:${PN}-qcom-kaanapali-adreno = "${nonarch_base_libdir}/firmware/qcom/kaanapali/gen80200_zap.mbn*"
-FILES:${PN}-qcom-kaanapali-audio = "${nonarch_base_libdir}/firmware/qcom/kaanapali/adsp*.*"
+FILES:${PN}-qcom-kaanapali-audio = " \
+    ${nonarch_base_libdir}/firmware/qcom/kaanapali/adsp*.* \
+    ${nonarch_base_libdir}/firmware/qcom/kaanapali/Kaanapali-MTP-tplg.bin* \
+"
 FILES:${PN}-qcom-kaanapali-compute = "${nonarch_base_libdir}/firmware/qcom/kaanapali/cdsp*.*"
 FILES:${PN}-qcom-kaanapali-soccp = "${nonarch_base_libdir}/firmware/qcom/kaanapali/soccp*.*"
 FILES:${PN}-qcom-qcm2290-adreno = "${nonarch_base_libdir}/firmware/qcom/qcm2290/a702_zap.mbn*"
@@ -2629,7 +2634,7 @@ RDEPENDS:${PN}-qcom-glymur-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-glymur-audio = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-glymur-compute = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-kaanapali-adreno = "${PN}-qcom-license"
-RDEPENDS:${PN}-qcom-kaanapali-audio = "${PN}-qcom-2-license"
+RDEPENDS:${PN}-qcom-kaanapali-audio = "${PN}-qcom-2-license ${PN}-linaro-license"
 RDEPENDS:${PN}-qcom-kaanapali-compute = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-kaanapali-soccp = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-qcm2290-adreno = "${PN}-qcom-license"
@@ -2783,8 +2788,8 @@ FILES:${PN}-hp-license = "${nonarch_base_libdir}/firmware/LICENSE.HP"
 
 LICENSE:${PN}-ish-lnlm-12128606 = "Firmware-HP"
 FILES:${PN}-ish-lnlm-12128606 = " \
-    ${nonarch_base_libdir}/firmware/intel/ish/ish_lnlm_12128606.bin* \
-    ${nonarch_base_libdir}/firmware/HP/ish/ish_lnlm_12128606.bin* \
+    ${nonarch_base_libdir}/firmware/intel/ish/ish_lnlm_12128606_*.bin* \
+    ${nonarch_base_libdir}/firmware/HP/ish/ish_lnlm_12128606_*.bin* \
 "
 RDEPENDS:${PN}-ish-lnlm-12128606 = "${PN}-hp-license"
 
@@ -2794,8 +2799,9 @@ FILES:${PN}-lenovo-license = "${nonarch_base_libdir}/firmware/LICENCE.lenovo"
 
 LICENSE:${PN}-ish-lnlm-53c4ffad = "Firmware-lenovo"
 FILES:${PN}-ish-lnlm-53c4ffad = "\
-    ${nonarch_base_libdir}/firmware/LENOVO/ish/ish_lnlm_53c4ffad_*.bin* \
     ${nonarch_base_libdir}/firmware/intel/ish/ish_lnlm_53c4ffad_*.bin* \
+    ${nonarch_base_libdir}/firmware/LENOVO/ish/ish_lnlm_lenovo_X1_2025_5.8.4.7720.bin* \
+    ${nonarch_base_libdir}/firmware/LENOVO/ish/ish_lnlm_lenovo_X9-14_2025_5.8.36.09092.bin* \
 "
 RDEPENDS:${PN}-ish-lnlm-53c4ffad = "${PN}-lenovo-license"
 
