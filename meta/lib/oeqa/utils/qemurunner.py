@@ -172,8 +172,6 @@ class QemuRunner:
                 launch_cmd += ' kvm'
             else:
                 self.logger.debug('Not using kvm for runqemu')
-            if not self.display:
-                launch_cmd += ' nographic'
             if self.use_slirp:
                 launch_cmd += ' slirp'
             if self.use_ovmf:
