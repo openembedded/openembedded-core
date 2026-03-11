@@ -7,21 +7,20 @@ HOMEPAGE = "https://curl.se/"
 BUGTRACKER = "https://github.com/curl/curl/issues"
 SECTION = "console/network"
 LICENSE = "curl"
-LIC_FILES_CHKSUM = "file://COPYING;md5=72f4e9890e99e68d77b7e40703d789b8"
+LIC_FILES_CHKSUM = "file://COPYING;md5=0515352b285b9c3f66464b135c9c0fdc"
 
 SRC_URI = " \
     https://curl.se/download/${BP}.tar.xz \
     file://run-ptest \
     file://disable-tests \
     file://no-test-timeout.patch \
-    file://0001-config2setopts-fix-for-disable-aws-build-configurati.patch \
 "
 
 SRC_URI:append:class-nativesdk = " \
     file://environment.d-curl.sh \
 "
 
-SRC_URI[sha256sum] = "40df79166e74aa20149365e11ee4c798a46ad57c34e4f68fd13100e2c9a91946"
+SRC_URI[sha256sum] = "4eb41489790d19e190d7ac7e18e82857cdd68af8f4e66b292ced562d333f11df"
 
 # Curl has used many names over the years...
 CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl daniel_stenberg:curl"
