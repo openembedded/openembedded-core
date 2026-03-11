@@ -11,6 +11,7 @@ import os
 import tempfile
 import oe.lsb
 from oeqa.core.decorator.data import skipIfNotQemu, skipIfNotMachine
+from unittest import mock
 
 class TestExport(OESelftestTestCase):
 
@@ -226,8 +227,13 @@ TEST_RUNQEMUPARAMS += " slirp"
         Product: oe-core
         Author: Alexander Kanavin <alex.kanavin@gmail.com>
         """
-        if "DISPLAY" not in os.environ:
+
+        # Use OEQA_TESTDISPLAY if set, fallback to DISPLAY from os.environ
+        display = get_bb_var('OEQA_TESTDISPLAY') or os.environ.get("DISPLAY", None)
+
+        if not display:
             self.skipTest("virgl gtk test must be run inside a X session")
+
         distro = oe.lsb.distro_identifier()
         if distro and distro == 'debian-8':
             self.skipTest('virgl isn\'t working with Debian 8')
@@ -252,12 +258,14 @@ TEST_RUNQEMUPARAMS += " slirp"
         features += 'IMAGE_INSTALL:append = " kmscube"\n'
         features_gtk = features + 'TEST_RUNQEMUPARAMS += " gtk gl"\n'
         self.write_config(features_gtk)
-        bitbake('core-image-minimal')
-        bitbake('-c testimage core-image-minimal')
+        with mock.patch.dict(os.environ, {"DISPLAY": display}):
+            bitbake('core-image-minimal')
+            bitbake('-c testimage core-image-minimal')
         features_sdl = features + 'TEST_RUNQEMUPARAMS += " sdl gl"\n'
         self.write_config(features_sdl)
-        bitbake('core-image-minimal')
-        bitbake('-c testimage core-image-minimal')
+        with mock.patch.dict(os.environ, {"DISPLAY": display}):
+            bitbake('core-image-minimal')
+            bitbake('-c testimage core-image-minimal')
 
     @skipIfNotMachine("qemux86-64", "test needs qemux86-64")
     def test_testimage_virgl_headless(self):
