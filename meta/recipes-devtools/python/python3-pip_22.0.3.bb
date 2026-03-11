@@ -38,6 +38,7 @@ SRC_URI += "file://0001-change-shebang-to-python3.patch \
             file://no_shebang_mangling.patch \
             file://reproducible.patch \
             file://CVE-2023-5752.patch \
+            file://CVE-2026-1703.patch \
            "
 
 SRC_URI[sha256sum] = "f29d589df8c8ab99c060e68ad294c4a9ed896624f6368c5349d70aa581b333d0"
