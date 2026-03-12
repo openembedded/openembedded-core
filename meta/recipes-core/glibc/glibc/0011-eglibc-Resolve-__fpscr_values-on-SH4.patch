@@ -1,4 +1,4 @@
-From 41d83a92776e77bf82461d0219ad9720702b20c4 Mon Sep 17 00:00:00 2001
+From 807342e306756b73bbb47a0a68d415a204f31263 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Mar 2015 00:55:53 +0000
 Subject: [PATCH] eglibc: Resolve __fpscr_values on SH4
@@ -33,7 +33,7 @@ index 3ad702e165..931985b5d6 100644
      # a*
      alphasort64;
 diff --git a/sysdeps/unix/sysv/linux/sh/sysdep.S b/sysdeps/unix/sysv/linux/sh/sysdep.S
-index db898e9e39..6e2972e814 100644
+index fcbc30c9e0..5a9b2022b7 100644
 --- a/sysdeps/unix/sysv/linux/sh/sysdep.S
 +++ b/sysdeps/unix/sysv/linux/sh/sysdep.S
 @@ -30,3 +30,14 @@ ENTRY (__syscall_error)

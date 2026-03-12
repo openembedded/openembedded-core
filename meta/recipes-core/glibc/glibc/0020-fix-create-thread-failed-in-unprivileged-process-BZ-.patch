@@ -1,4 +1,4 @@
-From 7c5d4f1c2161c0ff4fc0057ff0f1382bd784e06a Mon Sep 17 00:00:00 2001
+From 4d57cbea64811e854196ab5874aa43ca28e575b4 Mon Sep 17 00:00:00 2001
 From: Hongxu Jia <hongxu.jia@windriver.com>
 Date: Sun, 29 Aug 2021 20:49:16 +0800
 Subject: [PATCH] fix create thread failed in unprivileged process [BZ #28287]
@@ -72,7 +72,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/sysdeps/unix/sysv/linux/clone-internal.c b/sysdeps/unix/sysv/linux/clone-internal.c
-index 9a1f27d017..9a48340055 100644
+index edb0a4b7cd..7fc9453173 100644
 --- a/sysdeps/unix/sysv/linux/clone-internal.c
 +++ b/sysdeps/unix/sysv/linux/clone-internal.c
 @@ -98,7 +98,7 @@ __clone_internal (struct clone_args *cl_args,

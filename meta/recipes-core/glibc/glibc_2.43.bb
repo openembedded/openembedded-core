@@ -27,9 +27,8 @@ NATIVESDKFIXES:class-nativesdk = "\
            file://0003-nativesdk-glibc-Look-for-host-system-ld.so.cache-as-.patch \
            file://0004-nativesdk-glibc-Fix-buffer-overrun-with-a-relocated-.patch \
            file://0005-nativesdk-glibc-Raise-the-size-of-arrays-containing-.patch \
-           file://0006-nativesdk-glibc-Allow-64-bit-atomics-for-x86.patch \
-           file://0007-nativesdk-glibc-Make-relocatable-install-for-locales.patch \
-           file://0008-nativesdk-glibc-Fall-back-to-faccessat-on-faccess2-r.patch \
+           file://0006-nativesdk-glibc-Make-relocatable-install-for-locales.patch \
+           file://0007-nativesdk-glibc-Fall-back-to-faccessat-on-faccess2-r.patch \
 "
 
 SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
@@ -38,21 +37,21 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://makedbs.sh \
            \
            ${NATIVESDKFIXES} \
-           file://0009-yes-within-the-path-sets-wrong-config-variables.patch \
-           file://0010-eglibc-Cross-building-and-testing-instructions.patch \
-           file://0011-eglibc-Help-bootstrap-cross-toolchain.patch \
-           file://0012-eglibc-Resolve-__fpscr_values-on-SH4.patch \
-           file://0013-eglibc-Forward-port-cross-locale-generation-support.patch \
-           file://0014-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
-           file://0015-powerpc-Do-not-ask-compiler-for-finding-arch.patch \
-           file://0016-wordsize.h-Unify-the-header-between-arm-and-aarch64.patch \
-           file://0017-Replace-echo-with-printf-builtin-in-nscd-init-script.patch \
-           file://0018-sysdeps-gnu-configure.ac-Set-libc_cv_rootsbindir-onl.patch \
-           file://0019-timezone-Make-shell-interpreter-overridable-in-tzsel.patch \
-           file://0020-tzselect.ksh-Use-bin-sh-default-shell-interpreter.patch \
-           file://0021-fix-create-thread-failed-in-unprivileged-process-BZ-.patch \
-           file://0023-tests-Skip-2-qemu-tests-that-can-hang-in-oe-selftest.patch \
-           file://0024-Propagate-ffile-prefix-map-from-CFLAGS-to-ASFLAGS.patch \
+           file://0008-yes-within-the-path-sets-wrong-config-variables.patch \
+           file://0009-eglibc-Cross-building-and-testing-instructions.patch \
+           file://0010-eglibc-Help-bootstrap-cross-toolchain.patch \
+           file://0011-eglibc-Resolve-__fpscr_values-on-SH4.patch \
+           file://0012-eglibc-Forward-port-cross-locale-generation-support.patch \
+           file://0013-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
+           file://0014-powerpc-Do-not-ask-compiler-for-finding-arch.patch \
+           file://0015-wordsize.h-Unify-the-header-between-arm-and-aarch64.patch \
+           file://0016-Replace-echo-with-printf-builtin-in-nscd-init-script.patch \
+           file://0017-sysdeps-gnu-configure.ac-Set-libc_cv_rootsbindir-onl.patch \
+           file://0018-timezone-Make-shell-interpreter-overridable-in-tzsel.patch \
+           file://0019-tzselect.ksh-Use-bin-sh-default-shell-interpreter.patch \
+           file://0020-fix-create-thread-failed-in-unprivileged-process-BZ-.patch \
+           file://0021-tests-Skip-2-qemu-tests-that-can-hang-in-oe-selftest.patch \
+           file://0022-Propagate-ffile-prefix-map-from-CFLAGS-to-ASFLAGS.patch \
 "
 B = "${WORKDIR}/build-${TARGET_SYS}"
 

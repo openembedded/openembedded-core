@@ -1,4 +1,4 @@
-From 14a3c302c1394781b19ff7fdb5c6f3c06aca5d51 Mon Sep 17 00:00:00 2001
+From 139b0ff379a5fc9b00a4ac3592119bcecd6bc9df Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Fri, 15 May 2020 17:05:45 -0700
 Subject: [PATCH] wordsize.h: Unify the header between arm and aarch64
@@ -17,7 +17,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  mode change 100644 => 120000 sysdeps/arm/bits/wordsize.h
 
 diff --git a/sysdeps/aarch64/bits/wordsize.h b/sysdeps/aarch64/bits/wordsize.h
-index 33d0e20566..57bbda568e 100644
+index c6a6cc7196..aa4f95c5d1 100644
 --- a/sysdeps/aarch64/bits/wordsize.h
 +++ b/sysdeps/aarch64/bits/wordsize.h
 @@ -17,5 +17,15 @@
@@ -40,11 +40,11 @@ index 33d0e20566..57bbda568e 100644
 +#endif
 diff --git a/sysdeps/arm/bits/wordsize.h b/sysdeps/arm/bits/wordsize.h
 deleted file mode 100644
-index be457d84d3..0000000000
+index 2f64147ce3..0000000000
 --- a/sysdeps/arm/bits/wordsize.h
 +++ /dev/null
 @@ -1,21 +0,0 @@
--/* Copyright (C) 1999-2025 Free Software Foundation, Inc.
+-/* Copyright (C) 1999-2026 Free Software Foundation, Inc.
 -   This file is part of the GNU C Library.
 -
 -   The GNU C Library is free software; you can redistribute it and/or
