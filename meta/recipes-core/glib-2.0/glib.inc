@@ -232,6 +232,7 @@ SRC_URI += "\
            file://0010-Do-not-hardcode-python-path-into-various-tools.patch \
            file://skip-timeout.patch \
            file://CVE-2026-0988.patch \
+           file://0001-glib-2.0-fix-gdatetime-ptest-failure-with-glibc-2.43.patch \
            "
 SRC_URI:append:class-native = " file://relocate-modules.patch \
                                 file://0001-meson.build-do-not-enable-pidfd-features-on-native-g.patch \
