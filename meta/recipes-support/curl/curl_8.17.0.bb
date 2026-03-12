@@ -23,6 +23,8 @@ SRC_URI = " \
     file://CVE-2026-1965-01.patch \
     file://CVE-2026-1965-02.patch \
     file://CVE-2026-3783.patch \
+    file://0001-build-fix-Wunused-macros-warnings-and-related-tidy-u.patch \
+    file://CVE-2026-3784-02.patch \
 "
 
 SRC_URI:append:class-nativesdk = " \

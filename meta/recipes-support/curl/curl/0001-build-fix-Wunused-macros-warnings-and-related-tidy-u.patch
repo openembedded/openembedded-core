@@ -1,0 +1,44 @@
+From 5fa5cb382560316a55f0954f1e8cebdbd6568cfb Mon Sep 17 00:00:00 2001
+From: Viktor Szakats <commit@vsz.me>
+Date: Fri, 13 Feb 2026 17:05:36 +0100
+Subject: [PATCH] build: fix `-Wunused-macros` warnings, and related tidy-ups
+
+- fix internal macro `AN_APPLE_OS` reused between sources without
+  resetting it. It may potentially have left the system sha256
+  function unused.
+- fix to define `WOLFSSL_OPTIONS_IGNORE_SYS` so that it always applies
+  to wolfSSL headers, also during feature detection.
+- md4, md5, sha256: simplify fallback logic.
+- delete 20+ unused macros.
+- scope or move macros to avoid `-Wunused-macros` warnings.
+- examples: delete unused code.
+
+The warning detects macros defined but not used within the same C
+source. It does not warn for macros defined in headers. It also works
+with unity builds, but to a lesser extent.
+
+Closes #20593
+
+<picked only part relevant for CVE-2026-3784>
+
+Upstream-Status: Backport [https://github.com/curl/curl/commit/5fa5cb382560316a55f0954f1e8cebdbd6568cfb]
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ lib/url.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/lib/url.c b/lib/url.c
+index 3c0d913432..f0b6b0d5b2 100644
+--- a/lib/url.c
++++ b/lib/url.c
+@@ -639,10 +639,6 @@ socks_proxy_info_matches(const struct proxy_info *data,
+     return FALSE;
+   return TRUE;
+ }
+-#else
+-/* disabled, will not get called */
+-#define proxy_info_matches(x,y) FALSE
+-#define socks_proxy_info_matches(x,y) FALSE
+ #endif
+ 
+ /* A connection has to have been idle for less than 'conn_max_idle_ms'
