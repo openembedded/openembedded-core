@@ -148,6 +148,7 @@ do_install_ptest() {
         mkdir -p                                        ${D}${PTEST_PATH}/tests
         mkdir -p                                        ${D}${PTEST_PATH}/src
         mkdir -p                                        ${D}${PTEST_PATH}/po
+        mkdir -p                                        ${D}${PTEST_PATH}/autotools
         mkdir -p                                        ${D}${PTEST_PATH}/misc
         mkdir -p                                        ${D}${PTEST_PATH}/its
         mkdir -p                                        ${D}${PTEST_PATH}/styles
@@ -172,6 +173,7 @@ do_install_ptest() {
         install ${B}/gettext-runtime/src/gettext        ${D}${PTEST_PATH}/src
         install ${B}/gettext-tools/src/.libs/cldr-plurals   ${D}${PTEST_PATH}/src
         install ${S}/gettext-tools/po/gettext-tools.pot ${D}${PTEST_PATH}/po
+        install ${B}/gettext-tools/autotools/*       ${D}${PTEST_PATH}/autotools
         install ${B}/gettext-tools/misc/*       ${D}${PTEST_PATH}/misc
         find ${D}${PTEST_PATH}/ -name "*.o" -exec rm {} \;
         chmod 0755 ${D}${PTEST_PATH}/tests/lang-vala ${D}${PTEST_PATH}/tests/plural-1 ${D}${PTEST_PATH}/tests/xgettext-tcl-4 \
