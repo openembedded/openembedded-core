@@ -269,6 +269,9 @@ do_kernel_metadata() {
 	KERNEL_FEATURES_FINAL=""
 	if [ -n "${KERNEL_FEATURES}" ]; then
 		for feature in ${KERNEL_FEATURES}; do
+			if [ "$feature" = "rust" ]; then
+				feature="features/kernel-rust/kernel-rust.scc"
+			fi
 			feature_as_specified="$feature"
 			feature="$(echo $feature_as_specified | cut -d: -f1)"
 			feature_specifier="$(echo $feature_as_specified | cut -d: -f2)"
