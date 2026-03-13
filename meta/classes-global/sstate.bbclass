@@ -57,9 +57,6 @@ SSTATE_EXTRAPATHWILDCARD[vardepvalue] = ""
 
 # Avoid docbook/sgml catalog warnings for now
 SSTATE_ALLOW_OVERLAP_FILES += "${STAGING_ETCDIR_NATIVE}/sgml ${STAGING_DATADIR_NATIVE}/sgml"
-# sdk-provides-dummy-nativesdk and nativesdk-buildtools-perl-dummy overlap for different SDKMACHINE
-SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_RPM}/sdk_provides_dummy_nativesdk/ ${DEPLOY_DIR_IPK}/sdk-provides-dummy-nativesdk/"
-SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_RPM}/buildtools_dummy_nativesdk/ ${DEPLOY_DIR_IPK}/buildtools-dummy-nativesdk/"
 # target-sdk-provides-dummy overlaps that allarch is disabled when multilib is used
 SSTATE_ALLOW_OVERLAP_FILES += "${COMPONENTS_DIR}/sdk-provides-dummy-target/ ${DEPLOY_DIR_RPM}/sdk_provides_dummy_target/ ${DEPLOY_DIR_IPK}/sdk-provides-dummy-target/"
 # Archive the sources for many architectures in one deploy folder
@@ -90,6 +87,9 @@ SSTATE_ARCHS = " \
     ${BUILD_ARCH}_${SDK_ARCH}_${SDK_OS} \
     ${SDK_ARCH}_${SDK_OS} \
     ${SDK_ARCH}_${SDK_ARCH}-${SDKPKGSUFFIX} \
+    buildtools-dummy-${SDKPKGSUFFIX} \
+    sdk-provides-dummy-target \
+    sdk-provides-dummy-${SDKPKGSUFFIX} \
     allarch \
     ${SSTATE_ARCHS_TUNEPKG} \
     ${PACKAGE_EXTRA_ARCHS} \
