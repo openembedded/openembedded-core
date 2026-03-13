@@ -512,13 +512,11 @@ def find_sstate_manifest(taskdata, taskdata2, taskname, d, multilibcache):
 
     if taskdata.endswith("-native"):
         pkgarchs = ["${BUILD_ARCH}", "${BUILD_ARCH}_${ORIGNATIVELSBSTRING}"]
-    elif taskdata.startswith("nativesdk-"):
-        pkgarchs = ["${SDK_ARCH}_${SDK_OS}",
+    elif taskdata.startswith("nativesdk-") or "-cross-canadian" in taskdata:
+        pkgarchs = ["${SDK_ARCH}-${SDKPKGSUFFIX}",
                     "allarch",
                     "buildtools-dummy-${SDKPKGSUFFIX}",
                     "sdk-provides-dummy-${SDKPKGSUFFIX}"]
-    elif "-cross-canadian" in taskdata:
-        pkgarchs = ["${SDK_ARCH}_${SDK_ARCH}-${SDKPKGSUFFIX}"]
     elif "-cross-" in taskdata:
         pkgarchs = ["${BUILD_ARCH}"]
     elif "-crosssdk" in taskdata:
@@ -528,7 +526,7 @@ def find_sstate_manifest(taskdata, taskdata2, taskname, d, multilibcache):
         pkgarchs = pkgarchs + list(reversed(d2.getVar("PACKAGE_EXTRA_ARCHS").split()))
         pkgarchs.append('allarch')
         pkgarchs.append('sdk-provides-dummy-target')
-        pkgarchs.append('${SDK_ARCH}_${SDK_ARCH}-${SDKPKGSUFFIX}')
+        pkgarchs.append('${SDK_ARCH}-${SDKPKGSUFFIX}')
 
     searched_manifests = []
 

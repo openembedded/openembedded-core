@@ -85,8 +85,7 @@ SSTATE_ARCHS = " \
     ${BUILD_ARCH} \
     ${BUILD_ARCH}_${ORIGNATIVELSBSTRING} \
     ${BUILD_ARCH}_${SDK_ARCH}_${SDK_OS} \
-    ${SDK_ARCH}_${SDK_OS} \
-    ${SDK_ARCH}_${SDK_ARCH}-${SDKPKGSUFFIX} \
+    ${SDK_ARCH}-${SDKPKGSUFFIX} \
     buildtools-dummy-${SDKPKGSUFFIX} \
     sdk-provides-dummy-target \
     sdk-provides-dummy-${SDKPKGSUFFIX} \
@@ -140,10 +139,6 @@ python () {
         d.setVar('SSTATE_PKGARCH', d.expand("${BUILD_ARCH}_${SDK_ARCH}_${SDK_OS}"))
     elif bb.data.inherits_class('cross', d):
         d.setVar('SSTATE_PKGARCH', d.expand("${BUILD_ARCH}"))
-    elif bb.data.inherits_class('nativesdk', d):
-        d.setVar('SSTATE_PKGARCH', d.expand("${SDK_ARCH}_${SDK_OS}"))
-    elif bb.data.inherits_class('cross-canadian', d):
-        d.setVar('SSTATE_PKGARCH', d.expand("${SDK_ARCH}_${PACKAGE_ARCH}"))
     elif bb.data.inherits_class('allarch', d) and d.getVar("PACKAGE_ARCH") == "all":
         d.setVar('SSTATE_PKGARCH', "allarch")
     # Fall back to the default of SSTATE_PKGARCH=PACKAGE_ARCH
