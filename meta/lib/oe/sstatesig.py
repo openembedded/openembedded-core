@@ -491,7 +491,7 @@ def sstate_get_manifest_filename(task, d):
     d2 = d.createCopy()
     extrainf = d.getVarFlag("do_" + task, 'stamp-extra-info')
     if extrainf:
-        d2.setVar("SSTATE_MANMACH", extrainf)
+        d2.setVar("SSTATE_PKGARCH", extrainf)
     return (d2.expand("${SSTATE_MANFILEPREFIX}.%s" % task), d2)
 
 @bb.parse.vardepsexclude("BBEXTENDCURR", "BBEXTENDVARIANT", "OVERRIDES", "PACKAGE_EXTRA_ARCHS")
