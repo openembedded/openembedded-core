@@ -9,7 +9,7 @@ SSTATE_VERSION = "14"
 SSTATE_ZSTD_CLEVEL ??= "8"
 
 SSTATE_MANIFESTS ?= "${TMPDIR}/sstate-control"
-SSTATE_MANFILEPREFIX = "${SSTATE_MANIFESTS}/manifest-${SSTATE_MANMACH}-${PN}"
+SSTATE_MANFILEPREFIX = "${SSTATE_MANIFESTS}/manifest-${SSTATE_PKGARCH}-${PN}"
 
 def generate_sstatefn(spec, hash, taskname, siginfo, d):
     if taskname is None:
@@ -96,8 +96,6 @@ SSTATE_ARCHS = " \
     ${MACHINE_ARCH}"
 SSTATE_ARCHS[vardepsexclude] = "ORIGNATIVELSBSTRING"
 
-SSTATE_MANMACH ?= "${SSTATE_PKGARCH}"
-
 SSTATECREATEFUNCS += "sstate_hardcode_path"
 SSTATECREATEFUNCS[vardeps] = "SSTATE_SCAN_FILES"
 SSTATEPOSTCREATEFUNCS = ""
@@ -148,8 +146,7 @@ python () {
         d.setVar('SSTATE_PKGARCH', d.expand("${SDK_ARCH}_${PACKAGE_ARCH}"))
     elif bb.data.inherits_class('allarch', d) and d.getVar("PACKAGE_ARCH") == "all":
         d.setVar('SSTATE_PKGARCH', "allarch")
-    else:
-        d.setVar('SSTATE_MANMACH', d.expand("${PACKAGE_ARCH}"))
+    # Fall back to the default of SSTATE_PKGARCH=PACKAGE_ARCH
 
     if bb.data.inherits_class('native', d) or bb.data.inherits_class('crosssdk', d) or bb.data.inherits_class('cross', d):
         d.setVar('SSTATE_EXTRAPATH', "${NATIVELSBSTRING}/")
@@ -320,7 +317,7 @@ def sstate_install(ss, d):
 
     # Append to the list of manifests for this PACKAGE_ARCH
 
-    i = d2.expand("${SSTATE_MANIFESTS}/index-${SSTATE_MANMACH}")
+    i = d2.expand("${SSTATE_MANIFESTS}/index-${SSTATE_PKGARCH}")
     l = bb.utils.lockfile(i + ".lock")
     filedata = d.getVar("STAMP") + " " + d2.getVar("SSTATE_MANFILEPREFIX") + " " + d.getVar("WORKDIR") + "\n"
     manifests = []
@@ -353,7 +350,7 @@ def sstate_install(ss, d):
     for lock in locks:
         bb.utils.unlockfile(lock)
 
-sstate_install[vardepsexclude] += "SSTATE_ALLOW_OVERLAP_FILES SSTATE_MANMACH SSTATE_MANFILEPREFIX STAMP"
+sstate_install[vardepsexclude] += "SSTATE_ALLOW_OVERLAP_FILES SSTATE_PKGARCH SSTATE_MANFILEPREFIX STAMP"
 
 def sstate_installpkg(ss, d):
     from oe.gpg_sign import get_signer
@@ -520,7 +517,7 @@ def sstate_clean(ss, d):
     stamp_clean = d.getVar("STAMPCLEAN")
     extrainf = d.getVarFlag("do_" + ss['task'], 'stamp-extra-info')
     if extrainf:
-        d2.setVar("SSTATE_MANMACH", extrainf)
+        d2.setVar("SSTATE_PKGARCH", extrainf)
         wildcard_stfile = "%s.do_%s*.%s" % (stamp_clean, ss['task'], extrainf)
     else:
         wildcard_stfile = "%s.do_%s*" % (stamp_clean, ss['task'])
