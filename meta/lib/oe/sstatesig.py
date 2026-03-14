@@ -494,7 +494,7 @@ def sstate_get_manifest_filename(task, d):
         d2.setVar("SSTATE_PKGARCH", extrainf)
     return (d2.expand("${SSTATE_MANFILEPREFIX}.%s" % task), d2)
 
-@bb.parse.vardepsexclude("BBEXTENDCURR", "BBEXTENDVARIANT", "OVERRIDES", "PACKAGE_EXTRA_ARCHS")
+@bb.parse.vardepsexclude("BBEXTENDCURR", "BBEXTENDVARIANT", "OVERRIDES", "PACKAGE_EXTRA_ARCHS", "DUMMY_PACKAGE_ARCHS_SDK", "DUMMY_PACKAGE_ARCHS_TARGET")
 def find_sstate_manifest(taskdata, taskdata2, taskname, d, multilibcache):
     d2 = d
     variant = ''
@@ -513,10 +513,7 @@ def find_sstate_manifest(taskdata, taskdata2, taskname, d, multilibcache):
     if taskdata.endswith("-native"):
         pkgarchs = ["${BUILD_ARCH}", "${BUILD_ARCH}_${ORIGNATIVELSBSTRING}"]
     elif taskdata.startswith("nativesdk-") or "-cross-canadian" in taskdata:
-        pkgarchs = ["${SDK_ARCH}-${SDKPKGSUFFIX}",
-                    "allarch",
-                    "buildtools-dummy-${SDKPKGSUFFIX}",
-                    "sdk-provides-dummy-${SDKPKGSUFFIX}"]
+        pkgarchs = ["${SDK_ARCH}-${SDKPKGSUFFIX}", "allarch"] + (d.getVar("DUMMY_PACKAGE_ARCHS_SDK") or "").split()
     elif "-cross-" in taskdata:
         pkgarchs = ["${BUILD_ARCH}"]
     elif "-crosssdk" in taskdata:
@@ -525,7 +522,7 @@ def find_sstate_manifest(taskdata, taskdata2, taskname, d, multilibcache):
         pkgarchs = ['${MACHINE_ARCH}']
         pkgarchs = pkgarchs + list(reversed(d2.getVar("PACKAGE_EXTRA_ARCHS").split()))
         pkgarchs.append('allarch')
-        pkgarchs.append('sdk-provides-dummy-target')
+        pkgarchs.extend((d.getVar("DUMMY_PACKAGE_ARCHS_TARGET") or "").split())
         pkgarchs.append('${SDK_ARCH}-${SDKPKGSUFFIX}')
 
     searched_manifests = []
