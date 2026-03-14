@@ -35,6 +35,8 @@ LIC_FILES_CHKSUM = " \
 
 SRC_URI[archive.sha256sum] = "2873f2903088a66c71173ea2ed85ffae266a66b972c3a4842bbb2f6f187ec153"
 
+SRC_URI += "file://0001-application8-Don-t-use-space-in-meson-generated-file.patch"
+
 S = "${UNPACKDIR}/${GNOMEBN}-${PV}"
 
 CVE_PRODUCT = "gnome:gtk"

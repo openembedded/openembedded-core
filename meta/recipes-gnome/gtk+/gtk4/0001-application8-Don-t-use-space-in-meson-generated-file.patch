@@ -1,0 +1,34 @@
+From d26453923a21de0d908af3bf83c69263aaee5705 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Zolt=C3=A1n=20B=C3=B6sz=C3=B6rm=C3=A9nyi?=
+ <zboszor@gmail.com>
+Date: Wed, 11 Mar 2026 07:02:10 +0100
+Subject: [PATCH] application8: Don't use space in meson generated filename
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+All other example apps use underscore, examples/application8
+has a build error:
+
+| /usr/bin/ld: cannot find examples/application8/exampleapp8.p/meson-generated_.._exampleapp8: No such file or directory
+| /usr/bin/ld: cannot find resources.c.o: No such file or directory
+
+Signed-off-by: Zoltán Böszörményi <zboszor@gmail.com>
+Upstream-Status: Backport [https://gitlab.gnome.org/GNOME/gtk/-/merge_requests/9627]
+---
+ examples/application8/meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/examples/application8/meson.build b/examples/application8/meson.build
+index f2e1d7cea9..77987d554a 100644
+--- a/examples/application8/meson.build
++++ b/examples/application8/meson.build
+@@ -1,4 +1,4 @@
+-app8_resources = gnome.compile_resources('exampleapp8 resources',
++app8_resources = gnome.compile_resources('exampleapp8_resources',
+   'exampleapp.gresource.xml',
+   source_dir: meson.current_source_dir())
+ 
+-- 
+2.53.0
+
