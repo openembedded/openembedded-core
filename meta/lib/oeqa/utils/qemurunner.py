@@ -77,6 +77,7 @@ class QemuRunner:
         self.boot_patterns = boot_patterns
         self.tmpfsdir = tmpfsdir
         self.native_sysroot = native_sysroot
+        self.kernel_messages_disabled = False
 
         self.runqemutime = 300
         if not workdir:
@@ -658,6 +659,11 @@ class QemuRunner:
 
     def run_serial(self, command, raw=False, timeout=60):
         # Returns (status, output) where status is 1 on success and 0 on error
+
+        # Disable kernel messages before running the first non-raw command
+        if not raw and not self.kernel_messages_disabled:
+            self.kernel_messages_disabled = True
+            self.run_serial("dmesg -n 1\n", raw=True)
 
         # We assume target system have echo to get command status
         if not raw:
