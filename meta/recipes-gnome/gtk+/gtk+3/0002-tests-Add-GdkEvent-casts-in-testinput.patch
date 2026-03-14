@@ -1,0 +1,48 @@
+From 76bc2a57136fd6cf0374fa3f86a7ba646b779803 Mon Sep 17 00:00:00 2001
+From: Yoann Congal <yoann.congal@smile.fr>
+Date: Fri, 19 Jan 2024 10:41:33 +0000
+Subject: [PATCH] tests: Add GdkEvent casts in testinput
+
+From: David King <amigadave@amigadave.com>
+
+Upstream-Status: Backport [https://gitlab.gnome.org/GNOME/gtk/-/commit/76bc2a57136fd6cf0374fa3f86a7ba646b779803]
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
+ tests/testinput.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/tests/testinput.c b/tests/testinput.c
+index b68552a4280..3d4d7f6f875 100644
+--- a/tests/testinput.c
++++ b/tests/testinput.c
+@@ -194,7 +194,7 @@ button_press_event (GtkWidget *widget, GdkEventButton *event)
+ 
+       print_axes (event->device, event->axes);
+       gdk_event_get_axis ((GdkEvent *)event, GDK_AXIS_PRESSURE, &pressure);
+-      draw_brush (widget, gdk_device_get_source (gdk_event_get_source_device (event)),
++      draw_brush (widget, gdk_device_get_source (gdk_event_get_source_device ((GdkEvent *)event)),
+                   event->x, event->y, pressure);
+ 
+       motion_time = event->time;
+@@ -239,10 +239,10 @@ motion_notify_event (GtkWidget *widget, GdkEventMotion *event)
+ 	      gdk_device_get_axis (event->device, events[i]->axes, GDK_AXIS_X, &x);
+ 	      gdk_device_get_axis (event->device, events[i]->axes, GDK_AXIS_Y, &y);
+ 	      gdk_device_get_axis (event->device, events[i]->axes, GDK_AXIS_PRESSURE, &pressure);
+-	      draw_brush (widget, gdk_device_get_source (gdk_event_get_source_device (event)),
++	      draw_brush (widget, gdk_device_get_source (gdk_event_get_source_device ((GdkEvent *)event)),
+                           x, y, pressure);
+ 
+-	      print_axes (gdk_event_get_source_device (event), events[i]->axes);
++	      print_axes (gdk_event_get_source_device ((GdkEvent *)event), events[i]->axes);
+ 	    }
+ 	  gdk_device_free_history (events, n_events);
+ 	}
+@@ -252,7 +252,7 @@ motion_notify_event (GtkWidget *widget, GdkEventMotion *event)
+ 
+ 	  gdk_event_get_axis ((GdkEvent *)event, GDK_AXIS_PRESSURE, &pressure);
+ 
+-	  draw_brush (widget, gdk_device_get_source (gdk_event_get_source_device (event)),
++	  draw_brush (widget, gdk_device_get_source (gdk_event_get_source_device ((GdkEvent *)event)),
+                       event->x, event->y, pressure);
+ 	}
+       motion_time = event->time;

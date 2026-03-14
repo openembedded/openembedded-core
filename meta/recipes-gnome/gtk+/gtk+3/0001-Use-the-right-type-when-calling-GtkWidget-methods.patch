@@ -1,0 +1,28 @@
+From a3e82f20a1a1e7d8ffbc960a8bb4aa65b0d151ee Mon Sep 17 00:00:00 2001
+From: Yoann Congal <yoann.congal@smile.fr>
+Date: Tue, 6 Dec 2022 21:49:22 +0000
+Subject: [PATCH] Use the right type when calling GtkWidget methods
+
+From: Emmanuele Bassi <ebassi@gnome.org>
+
+Let's avoid complaints from the compiler.
+
+Upstream-Status: Backport [https://gitlab.gnome.org/GNOME/gtk/-/commit/a3e82f20a1a1e7d8ffbc960a8bb4aa65b0d151ee]
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
+ gtk/gtklabel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gtk/gtklabel.c b/gtk/gtklabel.c
+index 7933ab2af73..40a569004b6 100644
+--- a/gtk/gtklabel.c
++++ b/gtk/gtklabel.c
+@@ -4232,7 +4232,7 @@ gtk_label_style_updated (GtkWidget *widget)
+   if (change == NULL || gtk_css_style_change_affects (change, GTK_CSS_AFFECTS_FONT))
+     {
+       gtk_label_clear_layout (GTK_LABEL (widget));
+-      gtk_widget_queue_resize (label);
++      gtk_widget_queue_resize (widget);
+     }
+ 
+   if (change == NULL || gtk_css_style_change_affects (change, GTK_CSS_AFFECTS_TEXT_ATTRS) ||
