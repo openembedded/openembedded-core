@@ -1,0 +1,41 @@
+From d2dd32bcdcc717a0da48d5e983c4396ccc79fc9c Mon Sep 17 00:00:00 2001
+From: Yoann Congal <yoann.congal@smile.fr>
+Date: Sun, 15 Mar 2026 23:25:16 +0100
+Subject: [PATCH] Use proper cast for PyMethodDef.ml_meth
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+PyMethodDef.ml_meth is of PyCFunction type. Using a
+PyCFunctionWithKeywords cast for its initializer trigger build failure
+with GCC >=14 [0]:
+| FAILED: src/python/CMakeFiles/_createrepo_c.dir/createrepo_cmodule.c.o
+| build/tmp-glibc/hosttools/gcc [...] python/createrepo_cmodule.c
+| python/createrepo_cmodule.c:82:41: error: initialization of ‘PyObject * (*)(PyObject *, PyObject *)’ {aka ‘struct _object * (*)(struct _object *, struct _object *)’} from incompatible pointer type ‘PyObject * (*)(PyObject *, PyObject *, PyObject *)’ {aka ‘struct _object * (*)(struct _object *, struct _object *, struct _object *)’} [-Wincompatible-pointer-types]
+|    82 |     {"xml_parse_main_metadata_together",(PyCFunctionWithKeywords)py_xml_parse_main_metadata_together,
+|       |                                         ^
+| src/python/createrepo_cmodule.c:82:41: note: (near initialization for ‘createrepo_c_methods[15].ml_meth’)
+
+Fix this by using the proper (PyCFunction) cast.
+
+[0]: https://gcc.gnu.org/gcc-14/porting_to.html#incompatible-pointer-types
+
+Upstream-Status: Inappropriate [Upstream removed the patched code in 7092ab2 (Remove python bindings for xml_parse_main_metadata_together, 2022-03-17)]
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
+ src/python/createrepo_cmodule.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/python/createrepo_cmodule.c b/src/python/createrepo_cmodule.c
+index c0b9200..94a206d 100644
+--- a/src/python/createrepo_cmodule.c
++++ b/src/python/createrepo_cmodule.c
+@@ -79,7 +79,7 @@ static struct PyMethodDef createrepo_c_methods[] = {
+         METH_VARARGS, xml_parse_repomd__doc__},
+     {"xml_parse_updateinfo",    (PyCFunction)py_xml_parse_updateinfo,
+         METH_VARARGS, xml_parse_updateinfo__doc__},
+-    {"xml_parse_main_metadata_together",(PyCFunctionWithKeywords)py_xml_parse_main_metadata_together,
++    {"xml_parse_main_metadata_together",(PyCFunction)py_xml_parse_main_metadata_together,
+         METH_VARARGS | METH_KEYWORDS, xml_parse_main_metadata_together__doc__},
+     {"checksum_name_str",       (PyCFunction)py_checksum_name_str,
+         METH_VARARGS, checksum_name_str__doc__},
