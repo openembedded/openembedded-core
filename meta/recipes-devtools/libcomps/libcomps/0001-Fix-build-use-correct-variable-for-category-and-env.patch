@@ -1,0 +1,48 @@
+From adcf4aaca08ea712af4b4e886931fd8ed59c7bf7 Mon Sep 17 00:00:00 2001
+From: Aleš Matěj <amatej@redhat.com>
+Date: Tue, 2 Jan 2024 08:32:55 +0100
+Subject: [PATCH] Fix build: use correct variable for category and env
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Fixes:
+- error: assignment to ‘COMPS_DocGroup *’ from incompatible pointer type ‘COMPS_DocCategory *’
+- error: assignment to ‘COMPS_DocGroup *’ from incompatible pointer type ‘COMPS_DocEnv *’
+
+For: https://fedoraproject.org/wiki/Changes/PortingToModernC
+(https://fedoraproject.org/wiki/Toolchain/PortingToModernC)
+(https://gitlab.com/fweimer-rh/fedora-modernc-logs/-/blob/main/logs/l/libcomps.log)
+
+Upstream-Status: Backport [https://github.com/rpm-software-management/libcomps/commit/a71bce7e62990550a57688e51b14eb82d6de196b]
+Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
+---
+ libcomps/tests/check_parse.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/libcomps/tests/check_parse.c b/libcomps/tests/check_parse.c
+index e5935e1..689cb98 100644
+--- a/libcomps/tests/check_parse.c
++++ b/libcomps/tests/check_parse.c
+@@ -585,8 +585,8 @@ START_TEST(test_arch)
+     list = comps_doc_categories(doc2);
+     ck_assert(list->len == 2);
+     for (it = list->first, x=0; it != NULL; it = it->next, x++) {
+-        g = (COMPS_DocCategory*)it->comps_obj;
+-        str = (COMPS_Str*)comps_doccategory_get_id(g);
++        c = (COMPS_DocCategory*)it->comps_obj;
++        str = (COMPS_Str*)comps_doccategory_get_id(c);
+         ck_assert_msg(strcmp(str->val, cats[0][x]) == 0, "%s != %s",
+                       str->val, cats[0][x]);
+         COMPS_OBJECT_DESTROY(str);
+@@ -605,8 +605,8 @@ START_TEST(test_arch)
+     list = comps_doc_environments(doc2);
+     ck_assert(list->len == 2);
+     for (it = list->first, x=0; it != NULL; it = it->next, x++) {
+-        g = (COMPS_DocEnv*)it->comps_obj;
+-        str = (COMPS_Str*)comps_docenv_get_id(g);
++        e = (COMPS_DocEnv*)it->comps_obj;
++        str = (COMPS_Str*)comps_docenv_get_id(e);
+         ck_assert_msg(strcmp(str->val, envs[0][x]) == 0, "%s != %s",
+                       str->val, envs[0][x]);
+         COMPS_OBJECT_DESTROY(str);
