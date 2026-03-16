@@ -30,6 +30,7 @@ SYSTEMTAP = "systemtap"
 SYSTEMTAP:libc-musl = ""
 SYSTEMTAP:nios2 = ""
 SYSTEMTAP:riscv32 = ""
+SYSTEMTAP:loongarch64 = ""
 
 LTTNGTOOLS = "lttng-tools"
 LTTNGTOOLS:arc = ""
