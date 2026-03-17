@@ -66,9 +66,9 @@ sbindir_progs = "chroot"
 # coreutils-stdbuf without getting the rest of coreutils, but make
 # coreutils itself pull in stdbuf, so IMAGE_INSTALL += "coreutils"
 # always provides all coreutils
-PACKAGE_BEFORE_PN:class-target += "${@bb.utils.contains('PACKAGECONFIG', 'single-binary', '', 'coreutils-stdbuf', d)}"
+PACKAGE_BEFORE_PN += "${@bb.utils.contains('PACKAGECONFIG', 'single-binary', '', 'coreutils-stdbuf', d)}"
 FILES:coreutils-stdbuf = "${bindir}/stdbuf ${libdir}/coreutils/libstdbuf.so"
-RDEPENDS:coreutils:class-target += "${@bb.utils.contains('PACKAGECONFIG', 'single-binary', '', 'coreutils-stdbuf', d)}"
+RDEPENDS:coreutils += "${@bb.utils.contains('PACKAGECONFIG', 'single-binary', '', 'coreutils-stdbuf', d)}"
 
 # However, when the single-binary PACKAGECONFIG is used, stdbuf
 # functionality is built into the single coreutils binary, so there's
