@@ -15,7 +15,7 @@ DEPENDS = "libevdev udev"
 SRC_URI = "git://gitlab.freedesktop.org/libinput/libinput.git;protocol=https;branch=1.30-branch;tag=${PV} \
            file://run-ptest \
            "
-SRCREV = "baf1ceca88b3a668dd263f50bfaddfd205306028"
+SRCREV = "042c5e6fd9cc910307027a1522453794b29f2c72"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
 
