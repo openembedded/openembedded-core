@@ -106,9 +106,6 @@ ALTERNATIVE:${PN} = "bootchartd"
 ALTERNATIVE_LINK_NAME[bootchartd] = "${base_sbindir}/bootchartd"
 ALTERNATIVE_PRIORITY = "100"
 
-# The only reason to build bootchart2-native is for a native pybootchartgui.
-BBCLASSEXTEND = "native"
-
 SYSTEMD_SERVICE:${PN} = "bootchart2.service bootchart2-done.service bootchart2-done.timer"
 
 UPDATERCPN = "bootchartd-stop-initscript"
@@ -150,8 +147,8 @@ do_install () {
 PACKAGES =+ "pybootchartgui"
 FILES:pybootchartgui += "${PYTHON_SITEPACKAGES_DIR}/pybootchartgui ${bindir}/pybootchartgui"
 RDEPENDS:pybootchartgui = "python3-pycairo python3-compression python3-image python3-math python3-shell python3-compression python3-codecs"
-RDEPENDS:${PN}:class-target += "${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'sysvinit-pidof', 'procps', d)}"
-RDEPENDS:${PN}:class-target += "lsb-release"
+RDEPENDS:${PN}:append:class-target = " ${@bb.utils.contains('DISTRO_FEATURES', 'sysvinit', 'sysvinit-pidof', 'procps', d)}"
+RDEPENDS:${PN}:append:class-target = " lsb-release"
 DEPENDS:append:class-native = " python3-pycairo-native"
 
 PACKAGES =+ "bootchartd-stop-initscript"
@@ -164,3 +161,6 @@ FILES:${PN} += "${libdir}"
 FILES:${PN}-doc += "${datadir}/docs"
 
 RCONFLICTS:${PN} = "bootchart"
+
+# The only reason to build bootchart2-native is for a native pybootchartgui.
+BBCLASSEXTEND = "native"
