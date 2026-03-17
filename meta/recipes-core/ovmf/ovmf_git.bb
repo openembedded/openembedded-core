@@ -247,7 +247,7 @@ FILES:ovmf-shell-efi = " \
 
 DEPLOYDEP = ""
 DEPLOYDEP:class-target = "qemu-system-native:do_populate_sysroot"
-DEPLOYDEP:class-target += " ${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'openssl-native:do_populate_sysroot', '', d)}"
+DEPLOYDEP:append:class-target = " ${@bb.utils.contains('PACKAGECONFIG', 'secureboot', 'openssl-native:do_populate_sysroot', '', d)}"
 do_deploy[depends] += "${DEPLOYDEP}"
 
 do_deploy() {
