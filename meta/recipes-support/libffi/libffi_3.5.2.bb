@@ -15,8 +15,8 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BPN}-${PV}.tar.gz \
            "
 SRC_URI[sha256sum] = "f3a3082a23b37c293a4fcd1053147b371f2ff91fa7ea1b2a52e335676bac82dc"
 
-EXTRA_OECONF = "--disable-builddir"
-EXTRA_OECONF:class-native += "--with-gcc-arch=generic"
+EXTRA_OECONF += "--disable-builddir"
+EXTRA_OECONF:class-native = "--with-gcc-arch=generic"
 EXTRA_OEMAKE:class-target = "LIBTOOLFLAGS='--tag=CC'"
 
 inherit autotools texinfo multilib_header github-releases
