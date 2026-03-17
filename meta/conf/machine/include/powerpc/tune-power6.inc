@@ -17,8 +17,7 @@ TUNE_PKGARCH:tune-ppc64p6 = "ppc64p6"
 PACKAGE_EXTRA_ARCHS:tune-ppc64p6 = "${PACKAGE_EXTRA_ARCHS:tune-powerpc64} ppc64p6"
 
 # glibc configure options to get power6 specific library
-GLIBC_EXTRA_OECONF:powerpc64 += "${@bb.utils.contains('TUNE_FEATURES', 'power6', '--with-cpu=power6', '', d)}"
-GLIBC_EXTRA_OECONF:powerpc += "${@bb.utils.contains('TUNE_FEATURES', 'power6', '--with-cpu=power6', '', d)}"
+GLIBC_EXTRA_OECONF += "${@bb.utils.contains('TUNE_FEATURES', 'power6', ' --with-cpu=power6', '', d)}"
 
 # QEMU usermode fails with invalid instruction error
 MACHINE_FEATURES_BACKFILL_CONSIDERED:append = "${@bb.utils.contains('TUNE_FEATURES', 'power6', ' qemu-usermode', '', d)}"

@@ -17,8 +17,7 @@ TUNE_PKGARCH:tune-ppc64p7 = "ppc64p7"
 PACKAGE_EXTRA_ARCHS:tune-ppc64p7 = "${PACKAGE_EXTRA_ARCHS:tune-powerpc64} ppc64p7"
 
 # glibc configure options to get power7 specific library
-GLIBC_EXTRA_OECONF:powerpc64 += "${@bb.utils.contains('TUNE_FEATURES', 'power7', '--with-cpu=power7', '', d)}"
-GLIBC_EXTRA_OECONF:powerpc += "${@bb.utils.contains('TUNE_FEATURES', 'power7', '--with-cpu=power7', '', d)}"
+GLIBC_EXTRA_OECONF += "${@bb.utils.contains('TUNE_FEATURES', 'power7', ' --with-cpu=power7', '', d)}"
 
 # QEMU usermode fails with invalid instruction error
 MACHINE_FEATURES_BACKFILL_CONSIDERED:append = "${@bb.utils.contains('TUNE_FEATURES', 'power7', ' qemu-usermode', '', d)}"
