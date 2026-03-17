@@ -55,7 +55,7 @@ RDEPENDS:${PN} += " \
 
 RDEPENDS:${PN}:class-native = ""
 
-RRECOMMENDS:${PN}:class-target += "gnupg"
+RRECOMMENDS:${PN}:append:class-target = " gnupg"
 
 # Create a symlink called 'dnf' as 'make install' does not do it, but
 # .spec file in dnf source tree does (and then Fedora and dnf documentation
