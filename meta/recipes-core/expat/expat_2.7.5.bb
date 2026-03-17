@@ -17,7 +17,7 @@ UPSTREAM_CHECK_REGEX = "releases/tag/R_(?P<pver>.+)"
 
 SRC_URI[sha256sum] = "386a423d40580f1e392e8b512b7635cac5083fe0631961e74e036b0a7a830d77"
 
-EXTRA_OECMAKE:class-native += "-DEXPAT_BUILD_DOCS=OFF"
+EXTRA_OECMAKE:class-native = "-DEXPAT_BUILD_DOCS=OFF"
 
 RDEPENDS:${PN}-ptest += "bash"
 
