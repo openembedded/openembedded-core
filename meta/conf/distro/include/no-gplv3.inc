@@ -18,9 +18,9 @@ PACKAGECONFIG:remove:pn-bluez5 = "readline"
 # dnf pulls in gpg which is gpl3; it also pulls in python3-rpm which pulls in rpm-build which pulls in bash
 # so install rpm but not dnf
 IMAGE_FEATURES:remove:pn-core-image-weston = "package-management"
-CORE_IMAGE_EXTRA_INSTALL:pn-core-image-weston += "rpm"
+CORE_IMAGE_EXTRA_INSTALL:append:pn-core-image-weston = " rpm"
 IMAGE_FEATURES:remove:pn-core-image-full-cmdline = "package-management"
-CORE_IMAGE_EXTRA_INSTALL:pn-core-image-full-cmdline += "rpm"
+CORE_IMAGE_EXTRA_INSTALL:append:pn-core-image-full-cmdline = " rpm"
 
 # matchbox-terminal depends on vte, which is gpl3
 CORE_IMAGE_BASE_INSTALL:remove:pn-core-image-weston = "matchbox-terminal"
