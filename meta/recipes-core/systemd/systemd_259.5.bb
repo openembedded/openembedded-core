@@ -222,6 +222,9 @@ EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Ddbus=disabled \
                   -Dtests=false \
                   -Dlibc=${TCLIBC} \
+                  -Drc-local='' \
+                  -Dsysvinit-path='' \
+                  -Dsysvrcnd-path='' \
                   "
 
 # Hardcode target binary paths to avoid using paths from sysroot or worse
