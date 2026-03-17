@@ -52,7 +52,7 @@ FILES:${PN}-runtime = "\
  ${bindir}/stapsh \
  ${libexecdir}/${BPN}/stapio \
 "
-RDEPENDS:${PN}:class-target += "${PN}-runtime"
+RDEPENDS:${PN}:append:class-target = " ${PN}-runtime"
 
 PACKAGES =+ "${PN}-examples"
 FILES:${PN}-examples = "${datadir}/${BPN}/examples/"
