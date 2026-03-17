@@ -16,7 +16,7 @@ FILES:${PN}-cli += " \
 
 RDEPENDS:${PN}-cli = "${PN} "
 
-RDEPENDS:${PN}:class-target += " \
+RDEPENDS:${PN}:append:class-target = " \
     python3-logging \
 "
 

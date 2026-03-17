@@ -9,7 +9,7 @@ PTEST_PYTEST_DIR = "pytz/tests"
 
 SRC_URI[sha256sum] = "10413c35476919b4c07bda6b9810c6e24d914378c430070bdb1869e18a37eee5"
 
-RDEPENDS:${PN}:class-target += "\
+RDEPENDS:${PN}:append:class-target = " \
     python3-datetime \
     python3-doctest \
     python3-io \

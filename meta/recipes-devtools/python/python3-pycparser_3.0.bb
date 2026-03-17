@@ -9,11 +9,11 @@ inherit pypi python_setuptools_build_meta
 
 BBCLASSEXTEND = "native nativesdk"
 
-RDEPENDS:${PN}:class-target += "\
+RDEPENDS:${PN}:append:class-target = " \
     python3-netclient \
 "
 
-RSUGGESTS:${PN}:class-target += "\
+RSUGGESTS:${PN}:append:class-target = " \
     cpp \
     cpp-symlinks \
     "

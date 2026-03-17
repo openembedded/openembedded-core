@@ -9,7 +9,7 @@ PYPI_PACKAGE = "PySocks"
 
 inherit pypi setuptools3
 
-RDEPENDS:${PN}:class-target += "\
+RDEPENDS:${PN}:append:class-target = " \
     python3-email \
     python3-io \
     python3-logging \
