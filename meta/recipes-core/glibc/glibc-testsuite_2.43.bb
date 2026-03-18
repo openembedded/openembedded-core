@@ -64,6 +64,7 @@ do_check:append () {
 }
 
 inherit nopackages
+inherit nospdx
 deltask do_stash_locale
 deltask do_install
 deltask do_populate_sysroot
