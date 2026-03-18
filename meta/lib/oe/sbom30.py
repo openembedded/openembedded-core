@@ -13,6 +13,7 @@ import hashlib
 import uuid
 import os
 import oe.spdx_common
+from oe.spdx30 import ClassProp
 from datetime import datetime, timezone
 from contextlib import contextmanager
 
@@ -26,7 +27,6 @@ OE_ALIAS_PREFIX = "http://spdxdocs.org/openembedded-alias/by-doc-hash/"
 OE_DOC_ALIAS_PREFIX = "http://spdxdocs.org/openembedded-alias/doc/"
 
 
-@oe.spdx30.register(OE_SPDX_BASE + "id-alias")
 class OEIdAliasExtension(oe.spdx30.extension_Extension):
     """
     This extension allows an Element to provide an internal alias for the SPDX
@@ -52,91 +52,88 @@ class OEIdAliasExtension(oe.spdx30.extension_Extension):
     SBoM
     """
 
+    TYPE = OE_SPDX_BASE + "id-alias"
     CLOSED = True
     INTERNAL = True
 
-    @classmethod
-    def _register_props(cls):
-        super()._register_props()
-        cls._add_property(
+    PROPERTIES = [
+        ClassProp(
             "alias",
-            oe.spdx30.StringProp(),
+            lambda: oe.spdx30.StringProp(),
             OE_SPDX_BASE + "alias",
             max_count=1,
-        )
-
-        cls._add_property(
+        ),
+        ClassProp(
             "link_name",
-            oe.spdx30.StringProp(),
+            lambda: oe.spdx30.StringProp(),
             OE_SPDX_BASE + "link-name",
             max_count=1,
-        )
+        ),
+    ]
 
 
-@oe.spdx30.register(OE_SPDX_BASE + "file-name-alias")
 class OEFileNameAliasExtension(oe.spdx30.extension_Extension):
+    TYPE = OE_SPDX_BASE + "file-name-alias"
     CLOSED = True
     INTERNAL = True
 
-    @classmethod
-    def _register_props(cls):
-        super()._register_props()
-        cls._add_property(
+    PROPERTIES = [
+        ClassProp(
             "aliases",
-            oe.spdx30.ListProp(oe.spdx30.StringProp()),
+            lambda: oe.spdx30.ListProp(oe.spdx30.StringProp()),
             OE_SPDX_BASE + "filename-alias",
         )
+    ]
 
 
-@oe.spdx30.register(OE_SPDX_BASE + "license-scanned")
 class OELicenseScannedExtension(oe.spdx30.extension_Extension):
     """
     The presence of this extension means the file has already been scanned for
     license information
     """
 
+    TYPE = OE_SPDX_BASE + "license-scanned"
     CLOSED = True
     INTERNAL = True
 
 
-@oe.spdx30.register(OE_SPDX_BASE + "document-extension")
 class OEDocumentExtension(oe.spdx30.extension_Extension):
     """
     This extension is added to a SpdxDocument to indicate various useful bits
     of information about its contents
     """
 
+    TYPE = OE_SPDX_BASE + "document-extension"
     CLOSED = True
 
-    @classmethod
-    def _register_props(cls):
-        super()._register_props()
-        cls._add_property(
+    PROPERTIES = [
+        ClassProp(
             "is_native",
-            oe.spdx30.BooleanProp(),
+            lambda: oe.spdx30.BooleanProp(),
             OE_SPDX_BASE + "is-native",
             max_count=1,
-        )
+        ),
+    ]
 
 
-@oe.spdx30.register(OE_SPDX_BASE + "recipe-extension")
 class OERecipeExtension(oe.spdx30.extension_Extension):
     """
     This extension is added to recipe software_Packages to indicate various
     useful bits of information about the recipe
     """
 
+    TYPE = OE_SPDX_BASE + "recipe-extension"
+
     CLOSED = True
 
-    @classmethod
-    def _register_props(cls):
-        super()._register_props()
-        cls._add_property(
+    PROPERTIES = [
+        ClassProp(
             "is_native",
-            oe.spdx30.BooleanProp(),
+            lambda: oe.spdx30.BooleanProp(),
             OE_SPDX_BASE + "is-native",
             max_count=1,
-        )
+        ),
+    ]
 
 
 def spdxid_hash(*items):

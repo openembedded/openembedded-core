@@ -159,7 +159,7 @@ oe.spdx30_tasks.collect_dep_objsets[vardepsexclude] = "SPDX_MULTILIB_SSTATE_ARCH
 # classes are explicitly added as file checksum dependencies.
 SPDX3_DEP_FILES = "\
     ${COREBASE}/meta/lib/oe/sbom30.py:True \
-    ${COREBASE}/meta/lib/oe/spdx30.py:True \
+    ${COREBASE}/meta/lib/oe/spdx30/model.py:True \
     ${SPDX_LICENSES}:True \
     "
 
