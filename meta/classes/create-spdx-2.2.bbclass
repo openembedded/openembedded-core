@@ -399,6 +399,15 @@ def get_license_list_version(license_data, d):
     return ".".join(license_data["licenseListVersion"].split(".")[:2])
 
 
+# This task is added for compatibility with tasks shared with SPDX 3, but
+# doesn't do anything
+do_create_recipe_spdx() {
+    :
+}
+do_create_recipe_spdx[noexec] = "1"
+addtask do_create_recipe_spdx after do_collect_spdx_deps
+
+
 python do_create_spdx() {
     from datetime import datetime, timezone
     import oe.sbom
@@ -594,7 +603,7 @@ python do_create_spdx() {
 }
 do_create_spdx[vardepsexclude] += "BB_NUMBER_THREADS"
 # NOTE: depending on do_unpack is a hack that is necessary to get it's dependencies for archive the source
-addtask do_create_spdx after do_package do_packagedata do_unpack do_collect_spdx_deps before do_populate_sdk do_build do_rm_work
+addtask do_create_spdx after do_create_recipe_spdx do_package do_packagedata do_unpack do_patch do_collect_spdx_deps before do_populate_sdk do_build do_rm_work
 
 SSTATETASKS += "do_create_spdx"
 do_create_spdx[sstate-inputdirs] = "${SPDXDEPLOY}"
@@ -605,6 +614,7 @@ python do_create_spdx_setscene () {
 }
 addtask do_create_spdx_setscene
 
+do_create_spdx[deptask] += "do_create_spdx"
 do_create_spdx[dirs] = "${SPDXWORK}"
 do_create_spdx[cleandirs] = "${SPDXDEPLOY} ${SPDXWORK}"
 do_create_spdx[depends] += " \

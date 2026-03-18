@@ -159,11 +159,18 @@ SPDX3_DEP_FILES = "\
     ${SPDX_LICENSES}:True \
     "
 
-python do_create_spdx() {
+python do_create_recipe_spdx() {
     import oe.spdx30_tasks
-    oe.spdx30_tasks.create_spdx(d)
+    oe.spdx30_tasks.create_recipe_spdx(d)
 }
-do_create_spdx[vardeps] += "\
+addtask do_create_recipe_spdx after do_collect_spdx_deps
+
+SSTATETASKS += "do_create_recipe_spdx"
+do_create_recipe_spdx[sstate-inputdirs] = "${SPDXRECIPEDEPLOY}"
+do_create_recipe_spdx[sstate-outputdirs] = "${DEPLOY_DIR_SPDX}"
+do_create_recipe_spdx[file-checksums] += "${SPDX3_DEP_FILES}"
+do_create_recipe_spdx[cleandirs] = "${SPDXRECIPEDEPLOY}"
+do_create_recipe_spdx[vardeps] += "\
     SPDX_INCLUDE_BITBAKE_PARENT_BUILD \
     SPDX_PACKAGE_ADDITIONAL_PURPOSE \
     SPDX_PROFILES \
@@ -171,7 +178,19 @@ do_create_spdx[vardeps] += "\
     SPDX_UUID_NAMESPACE \
     "
 
+python do_create_recipe_spdx_setscene () {
+    sstate_setscene(d)
+}
+addtask do_create_recipe_spdx_setscene
+
+python do_create_spdx() {
+    import oe.spdx30_tasks
+    oe.spdx30_tasks.create_spdx(d)
+}
 addtask do_create_spdx after \
+    do_unpack \
+    do_patch \
+    do_create_recipe_spdx \
     do_collect_spdx_deps \
     do_deploy_source_date_epoch \
     do_populate_sysroot do_package do_packagedata \
@@ -181,18 +200,25 @@ SSTATETASKS += "do_create_spdx"
 do_create_spdx[sstate-inputdirs] = "${SPDXDEPLOY}"
 do_create_spdx[sstate-outputdirs] = "${DEPLOY_DIR_SPDX}"
 do_create_spdx[file-checksums] += "${SPDX3_DEP_FILES}"
-
-python do_create_spdx_setscene () {
-    sstate_setscene(d)
-}
-addtask do_create_spdx_setscene
-
+do_create_spdx[deptask] += "do_create_spdx"
 do_create_spdx[dirs] = "${SPDXWORK}"
 do_create_spdx[cleandirs] = "${SPDXDEPLOY} ${SPDXWORK}"
 do_create_spdx[depends] += " \
     ${PATCHDEPENDENCY} \
     ${@create_spdx_source_deps(d)} \
 "
+do_create_spdx[vardeps] += "\
+    SPDX_INCLUDE_BITBAKE_PARENT_BUILD \
+    SPDX_PACKAGE_ADDITIONAL_PURPOSE \
+    SPDX_PROFILES \
+    SPDX_NAMESPACE_PREFIX \
+    SPDX_UUID_NAMESPACE \
+    "
+
+python do_create_spdx_setscene () {
+    sstate_setscene(d)
+}
+addtask do_create_spdx_setscene
 
 python do_create_package_spdx() {
     import oe.spdx30_tasks
@@ -205,15 +231,14 @@ SSTATETASKS += "do_create_package_spdx"
 do_create_package_spdx[sstate-inputdirs] = "${SPDXRUNTIMEDEPLOY}"
 do_create_package_spdx[sstate-outputdirs] = "${DEPLOY_DIR_SPDX}"
 do_create_package_spdx[file-checksums] += "${SPDX3_DEP_FILES}"
+do_create_package_spdx[dirs] = "${SPDXRUNTIMEDEPLOY}"
+do_create_package_spdx[cleandirs] = "${SPDXRUNTIMEDEPLOY}"
+do_create_package_spdx[rdeptask] = "do_create_spdx"
 
 python do_create_package_spdx_setscene () {
     sstate_setscene(d)
 }
 addtask do_create_package_spdx_setscene
-
-do_create_package_spdx[dirs] = "${SPDXRUNTIMEDEPLOY}"
-do_create_package_spdx[cleandirs] = "${SPDXRUNTIMEDEPLOY}"
-do_create_package_spdx[rdeptask] = "do_create_spdx"
 
 python spdx30_build_started_handler () {
     import oe.spdx30_tasks
