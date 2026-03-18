@@ -1178,11 +1178,10 @@ def collect_build_package_inputs(d, objset, build, packages, files_by_hash=None)
     providers = oe.spdx_common.collect_package_providers(d)
 
     build_deps = set()
-    missing_providers = set()
 
     for name in sorted(packages.keys()):
         if name not in providers:
-            missing_providers.add(name)
+            bb.note(f"Unable to find SPDX provider for '{name}'")
             continue
 
         pkg_name, pkg_hashfn = providers[name]
@@ -1200,11 +1199,6 @@ def collect_build_package_inputs(d, objset, build, packages, files_by_hash=None)
         if files_by_hash is not None:
             for h, f in pkg_objset.by_sha256_hash.items():
                 files_by_hash.setdefault(h, set()).update(f)
-
-    if missing_providers:
-        bb.fatal(
-            f"Unable to find SPDX provider(s) for: {', '.join(sorted(missing_providers))}"
-        )
 
     if build_deps:
         objset.new_scoped_relationship(

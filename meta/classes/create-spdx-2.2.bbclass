@@ -858,7 +858,8 @@ def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages, spdx
     if packages:
         for name in sorted(packages.keys()):
             if name not in providers:
-                bb.fatal("Unable to find SPDX provider for '%s'" % name)
+                bb.note("Unable to find SPDX provider for '%s'" % name)
+                continue
 
             pkg_name, pkg_hashfn = providers[name]
 
