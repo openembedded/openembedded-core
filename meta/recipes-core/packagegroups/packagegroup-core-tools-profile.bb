@@ -32,9 +32,10 @@ SYSTEMTAP:nios2 = ""
 SYSTEMTAP:riscv32 = ""
 SYSTEMTAP:loongarch64 = ""
 
-LTTNGTOOLS = "lttng-tools"
+LTTNGTOOLS = "lttng-tools lttng-modules"
 LTTNGTOOLS:arc = ""
 LTTNGTOOLS:riscv32 = ""
+LTTNGTOOLS:riscv64 = "lttng-tools"
 
 BABELTRACE2 = "babeltrace2"
 
