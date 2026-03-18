@@ -768,31 +768,6 @@ def create_spdx(d):
     debug_source_ids = set()
     source_hash_cache = {}
 
-    # Collect all VEX statements from the recipe
-    vex_statements = {}
-    vex_patches = {}
-    for rel in recipe_objset.foreach_filter(
-        oe.spdx30.Relationship,
-        relationshipType=oe.spdx30.RelationshipType.hasAssociatedVulnerability,
-    ):
-        for cve in rel.to:
-            vex_statements[cve] = []
-            vex_patches[cve] = []
-
-    for cve in vex_statements.keys():
-        for rel in recipe_objset.foreach_filter(
-            oe.spdx30.security_VexVulnAssessmentRelationship,
-            from_=cve,
-        ):
-            vex_statements[cve].append(rel)
-            if rel.relationshipType == oe.spdx30.RelationshipType.fixedIn:
-                for patch_rel in recipe_objset.foreach_filter(
-                    oe.spdx30.Relationship,
-                    relationshipType=oe.spdx30.RelationshipType.patchedBy,
-                    from_=rel,
-                ):
-                    vex_patches[cve].extend(patch_rel.to)
-
     # Write out the package SPDX data now. It is not complete as we cannot
     # write the runtime data, so write it to a staging area and a later task
     # will write out the final collection
@@ -930,53 +905,6 @@ def create_spdx(d):
                     oe.spdx30.RelationshipType.hasConcludedLicense,
                     [oe.sbom30.get_element_link_id(concluded_spdx_license)],
                 )
-
-            # Copy CVEs from recipe
-            if vex_statements:
-                pkg_objset.new_relationship(
-                    [spdx_package],
-                    oe.spdx30.RelationshipType.hasAssociatedVulnerability,
-                    sorted(
-                        oe.sbom30.get_element_link_id(cve)
-                        for cve in vex_statements.keys()
-                    ),
-                )
-
-            for cve, vexes in vex_statements.items():
-                for vex in vexes:
-                    if vex.relationshipType == oe.spdx30.RelationshipType.fixedIn:
-                        spdx_vex = pkg_objset.new_vex_patched_relationship(
-                            [oe.sbom30.get_element_link_id(cve)], [spdx_package]
-                        )
-                        if vex_patches[cve]:
-                            pkg_objset.new_scoped_relationship(
-                                spdx_vex,
-                                oe.spdx30.RelationshipType.patchedBy,
-                                oe.spdx30.LifecycleScopeType.build,
-                                [
-                                    oe.sbom30.get_element_link_id(p)
-                                    for p in vex_patches[cve]
-                                ],
-                            )
-
-                    elif vex.relationshipType == oe.spdx30.RelationshipType.affects:
-                        pkg_objset.new_vex_unpatched_relationship(
-                            [oe.sbom30.get_element_link_id(cve)], [spdx_package]
-                        )
-                    elif (
-                        vex.relationshipType == oe.spdx30.RelationshipType.doesNotAffect
-                    ):
-                        spdx_vex = pkg_objset.new_vex_ignored_relationship(
-                            [oe.sbom30.get_element_link_id(cve)],
-                            [spdx_package],
-                            impact_statement=vex.security_impactStatement,
-                        )
-
-                        if vex.security_justificationType:
-                            for v in spdx_vex:
-                                v.security_justificationType = (
-                                    vex.security_justificationType
-                                )
 
             bb.debug(1, "Adding package files to SPDX for package %s" % pkg_name)
             package_files = add_package_files(
