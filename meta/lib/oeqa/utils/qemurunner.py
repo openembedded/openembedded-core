@@ -150,7 +150,7 @@ class QemuRunner:
             # interact badly with screensavers.
             env["QEMU_DONT_GRAB"] = "1"
         if not os.path.exists(self.rootfs):
-            self.logger.error("Invalid rootfs %s" % self.rootfs)
+            self.logger.error("rootfs %s does not exist" % self.rootfs)
             return False
         if not os.path.exists(self.tmpdir):
             self.logger.error("Invalid TMPDIR path %s" % self.tmpdir)
