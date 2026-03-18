@@ -163,6 +163,14 @@ SPDX3_DEP_FILES = "\
     ${SPDX_LICENSES}:True \
     "
 
+SPDX3_VAR_DEPS = "\
+    SPDX_INCLUDE_BITBAKE_PARENT_BUILD \
+    SPDX_PACKAGE_ADDITIONAL_PURPOSE \
+    SPDX_PROFILES \
+    SPDX_NAMESPACE_PREFIX \
+    SPDX_UUID_NAMESPACE \
+    "
+
 python do_create_recipe_spdx() {
     import oe.spdx30_tasks
     oe.spdx30_tasks.create_recipe_spdx(d)
@@ -174,13 +182,7 @@ do_create_recipe_spdx[sstate-inputdirs] = "${SPDXRECIPEDEPLOY}"
 do_create_recipe_spdx[sstate-outputdirs] = "${DEPLOY_DIR_SPDX}"
 do_create_recipe_spdx[file-checksums] += "${SPDX3_DEP_FILES}"
 do_create_recipe_spdx[cleandirs] = "${SPDXRECIPEDEPLOY}"
-do_create_recipe_spdx[vardeps] += "\
-    SPDX_INCLUDE_BITBAKE_PARENT_BUILD \
-    SPDX_PACKAGE_ADDITIONAL_PURPOSE \
-    SPDX_PROFILES \
-    SPDX_NAMESPACE_PREFIX \
-    SPDX_UUID_NAMESPACE \
-    "
+do_create_recipe_spdx[vardeps] += "${SPDX3_VAR_DEPS}"
 
 python do_create_recipe_spdx_setscene () {
     sstate_setscene(d)
@@ -211,13 +213,7 @@ do_create_spdx[depends] += " \
     ${PATCHDEPENDENCY} \
     ${@create_spdx_source_deps(d)} \
 "
-do_create_spdx[vardeps] += "\
-    SPDX_INCLUDE_BITBAKE_PARENT_BUILD \
-    SPDX_PACKAGE_ADDITIONAL_PURPOSE \
-    SPDX_PROFILES \
-    SPDX_NAMESPACE_PREFIX \
-    SPDX_UUID_NAMESPACE \
-    "
+do_create_spdx[vardeps] += "${SPDX3_VAR_DEPS}"
 
 python do_create_spdx_setscene () {
     sstate_setscene(d)
@@ -238,6 +234,7 @@ do_create_package_spdx[file-checksums] += "${SPDX3_DEP_FILES}"
 do_create_package_spdx[dirs] = "${SPDXRUNTIMEDEPLOY}"
 do_create_package_spdx[cleandirs] = "${SPDXRUNTIMEDEPLOY}"
 do_create_package_spdx[rdeptask] = "do_create_spdx"
+do_create_package_spdx[vardeps] += "${SPDX3_VAR_DEPS}"
 
 python do_create_package_spdx_setscene () {
     sstate_setscene(d)
@@ -259,13 +256,7 @@ do_create_recipe_sbom[sstate-inputdirs] = "${SPDXRECIPESBOMDEPLOY}"
 do_create_recipe_sbom[sstate-outputdirs] = "${DEPLOY_DIR_IMAGE}"
 do_create_recipe_sbom[file-checksums] += "${SPDX3_DEP_FILES}"
 do_create_recipe_sbom[cleandirs] = "${SPDXRECIPESBOMDEPLOY}"
-do_create_recipe_sbom[vardeps] += "\
-    SPDX_INCLUDE_BITBAKE_PARENT_BUILD \
-    SPDX_PACKAGE_ADDITIONAL_PURPOSE \
-    SPDX_PROFILES \
-    SPDX_NAMESPACE_PREFIX \
-    SPDX_UUID_NAMESPACE \
-    "
+do_create_recipe_sbom[vardeps] += "${SPDX3_VAR_DEPS}"
 
 python do_create_recipe_sbom_setscene () {
     sstate_setscene(d)
