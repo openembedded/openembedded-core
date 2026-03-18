@@ -392,8 +392,12 @@ PACKAGE_BEFORE_PN += "\
     ${PN}-zsh-completion \
     libsystemd-shared \
     udev \
-    udev-bash-completion \
     udev-hwdb \
+"
+
+# pick the files before bash-completion.bbclass
+PACKAGE_BEFORE_PN =+ "\
+    udev-bash-completion \
 "
 
 SUMMARY:${PN}-container = "Tools for containers and VMs"
