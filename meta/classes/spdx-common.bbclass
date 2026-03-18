@@ -113,28 +113,6 @@ def create_spdx_source_deps(d):
     return " ".join(deps)
 
 
-python do_collect_spdx_deps() {
-    # This task calculates the build time dependencies of the recipe, and is
-    # required because while a task can deptask on itself, those dependencies
-    # do not show up in BB_TASKDEPDATA. To work around that, this task does the
-    # deptask on do_create_recipe_spdx and writes out the dependencies it finds, then
-    # downstream tasks read in the found dependencies when writing the actual
-    # SPDX document
-    import json
-    import oe.spdx_common
-    from pathlib import Path
-
-    spdx_deps_file = Path(d.getVar("SPDXDEPS"))
-
-    deps = oe.spdx_common.collect_direct_deps(d, "do_create_recipe_spdx")
-
-    with spdx_deps_file.open("w") as f:
-        json.dump(deps, f)
-}
-addtask do_collect_spdx_deps
-do_collect_spdx_deps[deptask] = "do_create_recipe_spdx"
-do_collect_spdx_deps[dirs] = "${SPDXDIR}"
-
 oe.spdx_common.collect_direct_deps[vardepsexclude] += "BB_TASKDEPDATA"
 oe.spdx_common.collect_direct_deps[vardeps] += "DEPENDS"
 oe.spdx_common.collect_package_providers[vardepsexclude] += "BB_TASKDEPDATA"

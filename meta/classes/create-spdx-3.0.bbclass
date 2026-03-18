@@ -175,13 +175,14 @@ python do_create_recipe_spdx() {
     import oe.spdx30_tasks
     oe.spdx30_tasks.create_recipe_spdx(d)
 }
-addtask do_create_recipe_spdx after do_collect_spdx_deps
+addtask do_create_recipe_spdx
 
 SSTATETASKS += "do_create_recipe_spdx"
 do_create_recipe_spdx[sstate-inputdirs] = "${SPDXRECIPEDEPLOY}"
 do_create_recipe_spdx[sstate-outputdirs] = "${DEPLOY_DIR_SPDX}"
 do_create_recipe_spdx[file-checksums] += "${SPDX3_DEP_FILES}"
 do_create_recipe_spdx[cleandirs] = "${SPDXRECIPEDEPLOY}"
+do_create_recipe_spdx[deptask] += "do_create_recipe_spdx"
 do_create_recipe_spdx[vardeps] += "${SPDX3_VAR_DEPS}"
 
 python do_create_recipe_spdx_setscene () {
@@ -197,7 +198,6 @@ addtask do_create_spdx after \
     do_unpack \
     do_patch \
     do_create_recipe_spdx \
-    do_collect_spdx_deps \
     do_deploy_source_date_epoch \
     do_populate_sysroot do_package do_packagedata \
     before do_populate_sdk do_populate_sdk_ext do_build do_rm_work
@@ -233,6 +233,7 @@ do_create_package_spdx[sstate-outputdirs] = "${DEPLOY_DIR_SPDX}"
 do_create_package_spdx[file-checksums] += "${SPDX3_DEP_FILES}"
 do_create_package_spdx[dirs] = "${SPDXRUNTIMEDEPLOY}"
 do_create_package_spdx[cleandirs] = "${SPDXRUNTIMEDEPLOY}"
+do_create_package_spdx[deptask] = "do_create_spdx"
 do_create_package_spdx[rdeptask] = "do_create_spdx"
 do_create_package_spdx[vardeps] += "${SPDX3_VAR_DEPS}"
 

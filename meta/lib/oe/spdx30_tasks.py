@@ -298,13 +298,11 @@ def get_package_sources_from_debug(
     return dep_source_files
 
 
-def collect_dep_objsets(d, subdir, fn_prefix, obj_type, **attr_filter):
-    deps = oe.spdx_common.get_spdx_deps(d)
-
+def collect_dep_objsets(d, direct_deps, subdir, fn_prefix, obj_type, **attr_filter):
     dep_objsets = []
     dep_objs = set()
 
-    for dep in deps:
+    for dep in direct_deps:
         bb.debug(1, "Fetching SPDX for dependency %s" % (dep.pn))
         dep_obj, dep_objset = oe.sbom30.find_root_obj_in_jsonld(
             d, subdir, fn_prefix + dep.pn, obj_type, **attr_filter
@@ -551,8 +549,10 @@ def create_recipe_spdx(d):
             )
         )
 
+    direct_deps = oe.spdx_common.collect_direct_deps(d, "do_create_recipe_spdx")
+
     dep_objsets, dep_recipes = collect_dep_objsets(
-        d, "static", "static-", oe.spdx30.software_Package
+        d, direct_deps, "static", "static-", oe.spdx30.software_Package
     )
 
     if dep_recipes:
@@ -753,8 +753,10 @@ def create_spdx(d):
         build_inputs |= files
         index_sources_by_hash(files, dep_sources)
 
+    direct_deps = oe.spdx_common.collect_direct_deps(d, "do_create_spdx")
+
     dep_objsets, dep_builds = collect_dep_objsets(
-        d, "builds", "build-", oe.spdx30.build_Build
+        d, direct_deps, "builds", "build-", oe.spdx30.build_Build
     )
 
     if dep_builds:
@@ -998,7 +1000,9 @@ def create_package_spdx(d):
     deploy_dir_spdx = Path(d.getVar("DEPLOY_DIR_SPDX"))
     deploydir = Path(d.getVar("SPDXRUNTIMEDEPLOY"))
 
-    providers = oe.spdx_common.collect_package_providers(d)
+    direct_deps = oe.spdx_common.collect_direct_deps(d, "do_create_spdx")
+
+    providers = oe.spdx_common.collect_package_providers(d, direct_deps)
     pkg_arch = d.getVar("SSTATE_PKGARCH")
 
     if get_is_native(d):
@@ -1175,7 +1179,9 @@ def write_bitbake_spdx(d):
 def collect_build_package_inputs(d, objset, build, packages, files_by_hash=None):
     import oe.sbom30
 
-    providers = oe.spdx_common.collect_package_providers(d)
+    direct_deps = oe.spdx_common.collect_direct_deps(d, "do_create_spdx")
+
+    providers = oe.spdx_common.collect_package_providers(d, direct_deps)
 
     build_deps = set()
 

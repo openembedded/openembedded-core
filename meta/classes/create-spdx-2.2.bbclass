@@ -277,7 +277,7 @@ def add_package_sources_from_debug(d, package_doc, spdx_package, package, packag
 
 add_package_sources_from_debug[vardepsexclude] += "STAGING_KERNEL_DIR"
 
-def collect_dep_recipes(d, doc, spdx_recipe):
+def collect_dep_recipes(d, doc, spdx_recipe, direct_deps):
     import json
     from pathlib import Path
     import oe.sbom
@@ -290,9 +290,7 @@ def collect_dep_recipes(d, doc, spdx_recipe):
 
     dep_recipes = []
 
-    deps = oe.spdx_common.get_spdx_deps(d)
-
-    for dep in deps:
+    for dep in direct_deps:
         # If this dependency is not calculated in the taskhash skip it.
         # Otherwise, it can result in broken links since this task won't
         # rebuild and see the new SPDX ID if the dependency changes
@@ -405,7 +403,7 @@ do_create_recipe_spdx() {
     :
 }
 do_create_recipe_spdx[noexec] = "1"
-addtask do_create_recipe_spdx after do_collect_spdx_deps
+addtask do_create_recipe_spdx
 
 
 python do_create_spdx() {
@@ -532,7 +530,8 @@ python do_create_spdx() {
             if archive is not None:
                 recipe.packageFileName = str(recipe_archive.name)
 
-    dep_recipes = collect_dep_recipes(d, doc, recipe)
+    direct_deps = oe.spdx_common.collect_direct_deps(d, "do_create_spdx")
+    dep_recipes = collect_dep_recipes(d, doc, recipe, direct_deps)
 
     doc_sha1 = oe.sbom.write_doc(d, doc, pkg_arch, "recipes", indent=get_json_indent(d))
     dep_recipes.append(oe.sbom.DepRecipe(doc, doc_sha1, recipe))
@@ -603,7 +602,7 @@ python do_create_spdx() {
 }
 do_create_spdx[vardepsexclude] += "BB_NUMBER_THREADS"
 # NOTE: depending on do_unpack is a hack that is necessary to get it's dependencies for archive the source
-addtask do_create_spdx after do_create_recipe_spdx do_package do_packagedata do_unpack do_patch do_collect_spdx_deps before do_populate_sdk do_build do_rm_work
+addtask do_create_spdx after do_create_recipe_spdx do_package do_packagedata do_unpack do_patch before do_populate_sdk do_build do_rm_work
 
 SSTATETASKS += "do_create_spdx"
 do_create_spdx[sstate-inputdirs] = "${SPDXDEPLOY}"
@@ -638,7 +637,9 @@ python do_create_runtime_spdx() {
 
     license_data = oe.spdx_common.load_spdx_license_data(d)
 
-    providers = oe.spdx_common.collect_package_providers(d)
+    direct_deps = oe.spdx_common.collect_direct_deps(d, "do_create_spdx")
+
+    providers = oe.spdx_common.collect_package_providers(d, direct_deps)
     pkg_arch = d.getVar("SSTATE_PKGARCH")
     package_archs = d.getVar("SPDX_MULTILIB_SSTATE_ARCHS").split()
     package_archs.reverse()
@@ -760,6 +761,7 @@ addtask do_create_runtime_spdx_setscene
 
 do_create_runtime_spdx[dirs] = "${SPDXRUNTIMEDEPLOY}"
 do_create_runtime_spdx[cleandirs] = "${SPDXRUNTIMEDEPLOY}"
+do_create_runtime_spdx[deptask] = "do_create_spdx"
 do_create_runtime_spdx[rdeptask] = "do_create_spdx"
 
 do_rootfs[recrdeptask] += "do_create_spdx do_create_runtime_spdx"
@@ -829,7 +831,9 @@ def combine_spdx(d, rootfs_name, rootfs_deploydir, rootfs_spdxid, packages, spdx
 
     license_data = oe.spdx_common.load_spdx_license_data(d)
 
-    providers = oe.spdx_common.collect_package_providers(d)
+    direct_deps = oe.spdx_common.collect_direct_deps(d, "do_create_spdx")
+
+    providers = oe.spdx_common.collect_package_providers(d, direct_deps)
     package_archs = d.getVar("SPDX_MULTILIB_SSTATE_ARCHS").split()
     package_archs.reverse()
 
