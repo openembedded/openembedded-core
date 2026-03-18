@@ -15,18 +15,12 @@ GNOMEBASEBUILDCLASS = "autotools"
 inherit gnomebase
 
 SRC_URI += "http://www.w3.org/XML/Test/xmlts20130923.tar;subdir=${BP};name=testtar \
-           file://CVE-2026-0990.patch \
-           file://CVE-2026-0992-01.patch \
            file://run-ptest \
            file://install-tests.patch \
            file://0001-Revert-cmake-Fix-installation-directories-in-libxml2.patch \
-           file://0001-testlimits-optionally-accept-timeout-input.patch \
-           file://CVE-2026-0989.patch \
-           file://CVE-2026-0992-02.patch \
-           file://CVE-2026-0992-03.patch \
            "
 
-SRC_URI[archive.sha256sum] = "c008bac08fd5c7b4a87f7b8a71f283fa581d80d80ff8d2efd3b26224c39bc54c"
+SRC_URI[archive.sha256sum] = "c8b9bc81f8b590c33af8cc6c336dbff2f53409973588a351c95f1c621b13d09d"
 SRC_URI[testtar.sha256sum] = "c6b2d42ee50b8b236e711a97d68e6c4b5c8d83e69a2be4722379f08702ea7273"
 
 CVE_STATUS[CVE-2025-6170] = "fixed-version: fixed in version 2.14.5"
