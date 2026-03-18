@@ -151,6 +151,15 @@ class SPDX30Check(SPDX3CheckBase, OESelftestTestCase):
             "{DEPLOY_DIR_SPDX}/{MACHINE_ARCH}/packages/package-base-files.spdx.json",
         )
 
+    def test_world_sbom(self):
+        objset = self.check_recipe_spdx(
+            "meta-world-recipe-sbom",
+            "{DEPLOY_DIR_IMAGE}/world-recipe-sbom.spdx.json",
+        )
+
+        # Document should be fully linked
+        self.check_objset_missing_ids(objset)
+
     def test_gcc_include_source(self):
         objset = self.check_recipe_spdx(
             "gcc",
