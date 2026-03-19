@@ -39,6 +39,7 @@ PTESTS_FAST = "\
     libmd \
     libnl \
     libpcre \
+    libpcre2 \
     librsvg \
     libsolv \
     libssh2 \
