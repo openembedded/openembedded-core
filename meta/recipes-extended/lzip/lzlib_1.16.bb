@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=04d943636aa1482e0a97d924d9f4f68f \
                     "
 
 SRC_URI = "${SAVANNAH_GNU_MIRROR}/lzip/lzlib/lzlib-${PV}.tar.gz"
-SRC_URI[sha256sum] = "4afab907a46d5a7d14e927a1080c3f4d7e3ca5a0f9aea81747d8fed0292377ff"
+SRC_URI[sha256sum] = "203228de911780309dad6813e51541d7ea89469784f01cb661edba080ff1b038"
 
 B = "${WORKDIR}/build"
 do_configure[cleandirs] = "${B}"
