@@ -12,7 +12,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=54c978968e565218eea36cf03ef24352"
 DEPENDS = "util-macros"
 
 SRC_URI = "${XORG_MIRROR}/individual/lib/${BP}.tar.xz"
-SRC_URI[sha256sum] = "4af43444b38adb5545d0ed1c2ce46d9608cc47b31c2387fc5181656765a6fa76"
+SRC_URI[sha256sum] = "3c55aa86c82e54a4e3109786f0463530d53b36b6d1cfd14616454f985dd2aa43"
 
 inherit pkgconfig meson
 
