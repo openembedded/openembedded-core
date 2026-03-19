@@ -63,8 +63,8 @@ PACKAGECONFIG[glib] = "--without-included-glib,--with-included-glib,glib-2.0"
 PACKAGECONFIG[libxml] = "--without-included-libxml,--with-included-libxml,libxml2"
 # Need paths here to avoid host contamination but this can cause RPATH warnings
 # or problems if $libdir isn't $prefix/lib.
-PACKAGECONFIG[libunistring] = "--with-libunistring-prefix=${STAGING_LIBDIR}/..,--with-included-libunistring,libunistring"
-PACKAGECONFIG[msgcat-curses] = "--with-libncurses-prefix=${STAGING_LIBDIR}/..,--disable-curses,ncurses,"
+PACKAGECONFIG[libunistring] = "--with-libunistring-prefix=${STAGING_DIR_HOST},--with-included-libunistring,libunistring"
+PACKAGECONFIG[msgcat-curses] = "--with-libncurses-prefix=${STAGING_DIR_HOST},--disable-curses,ncurses,"
 PACKAGECONFIG[selinux] = "--with-selinux,--without-selinux --disable-acl,attr libselinux"
 
 do_install:append:libc-musl () {
