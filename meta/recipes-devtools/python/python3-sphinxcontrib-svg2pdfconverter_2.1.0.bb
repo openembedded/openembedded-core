@@ -3,7 +3,7 @@ HOMEPAGE = "https://github.com/missinglinkelectronics/sphinxcontrib-svg2pdfconve
 LICENSE = "BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=b11cf936853a71258d4b57bb1849a3f9"
 
-SRC_URI[sha256sum] = "ab9c8f1080391e231812d20abf2657a69ee35574563b1014414f953964a95fa3"
+SRC_URI[sha256sum] = "9756e82d5f3bf11629ffcbafb1f8a1092d3bb4789e33494032cdce9a9c8459d3"
 
 inherit pypi python_setuptools_build_meta
 
