@@ -22,7 +22,7 @@ SRC_URI = "\
 "
 SRC_URI[sha256sum] = "cd05c9589b9f86ecf044c10a2269822bc9eb001eced2582cfffd658b0a50c243"
 
-inherit autotools
+inherit autotools pkgconfig
 
 do_install:append () {
     # Install a wrapper which deals, as much as possible with pkgconf vs
