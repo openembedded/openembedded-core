@@ -10,17 +10,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = "git://git.kernel.org/pub/scm/utils/mdadm/mdadm.git;protocol=https;branch=main;tag=mdadm-${PV} \
            file://run-ptest \
-           file://0001-Fix-the-path-of-corosync-and-dlm-header-files-check.patch \
            file://mdadm.init \
-           file://0001-Makefile-install-mdcheck.patch \
-           file://0001-restripe.c-Use-_FILE_OFFSET_BITS-to-enable-largefile.patch \
-           file://0002-Create.c-include-linux-falloc.h-for-FALLOC_FL_ZERO_R.patch \
-           file://xmalloc.patch \
            "
 
-SRCREV = "8e56efac9afd7080bb42bae4b77cdad5f345633a"
+SRCREV = "8b414a0d4753693d67b9a5822994e5f0c91b0b0a"
 
-inherit ptest systemd
+inherit pkgconfig ptest systemd
 
 DEPENDS = "udev"
 
