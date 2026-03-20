@@ -126,7 +126,7 @@ remove_broken_musl_sources() {
 	[ "${TCLIBC}" = "musl" ] || return 0
 
 	cd ${S}
-	echo "WARNING: remove unsupported tests (until they're fixed)"
+	bbverbnote "remove unsupported tests (until they're fixed)"
 
 	# sync with upstream
 	# https://github.com/linux-test-project/ltp/blob/master/ci/alpine.sh#L33
