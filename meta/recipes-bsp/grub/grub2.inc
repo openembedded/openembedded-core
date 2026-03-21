@@ -19,7 +19,6 @@ SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
            file://0003-grub.d-10_linux.in-add-oe-s-kernel-name.patch \
            file://0001-Revert-configure-Check-linker-for-image-base-support.patch \
            file://0002-Revert-configure-Print-a-more-helpful-error-if-autoc.patch \
-           file://0263-Use-medany-instead-of-large-model-for-RISCV.patch \
 "
 
 SRC_URI[sha256sum] = "d0415fbb3e739237064e173743a6e5f60c33a81ec02a069cc9152d80efff4967"
