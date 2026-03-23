@@ -9,11 +9,10 @@ LIC_FILES_CHKSUM = "file://LICENSE.BSD;md5=62272bd11c97396d4aaf1c41bc11f7d8"
 DEPENDS = "expat zlib zstd"
 
 SRC_URI = "git://github.com/openSUSE/libsolv.git;branch=master;protocol=https;tag=${PV} \
-           file://0001-utils-Conside-musl-when-wrapping-qsort_r.patch \
            file://run-ptest \
 "
 
-SRCREV = "fb4b4340d46108cb365113e432642d6024886c7a"
+SRCREV = "1e377699be108ec82bb798ec9c223d45d84a733c"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
