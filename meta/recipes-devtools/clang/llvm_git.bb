@@ -79,6 +79,7 @@ PACKAGECONFIG[opt-viewer] = "-DLLVM_TOOL_OPT_VIEWER_BUILD=ON,-DLLVM_TOOL_OPT_VIE
                              python3-pyyaml python3-pygments,"
 PACKAGECONFIG[lto] = "-DLLVM_ENABLE_LTO=Full -DLLVM_BINUTILS_INCDIR=${STAGING_INCDIR},,binutils,"
 PACKAGECONFIG[thin-lto] = "-DLLVM_ENABLE_LTO=Thin -DLLVM_BINUTILS_INCDIR=${STAGING_INCDIR},,binutils,"
+PACKAGECONFIG[binutils-plugin] = "-DLLVM_BINUTILS_INCDIR=${STAGING_INCDIR},,binutils,"
 
 # LLVM debug symbols are very large (several gigabytes), reduce the debug level
 # so they're just hundreds of megabytes.
@@ -125,6 +126,10 @@ llvm_sysroot_preprocess() {
         install -d ${SYSROOT_DESTDIR}${bindir_crossscripts}/
         install -m 0755 ${S}/llvm/tools/llvm-config/llvm-config ${SYSROOT_DESTDIR}${bindir_crossscripts}/
 }
+
+PACKAGES =+ "llvm-linker-tools"
+
+FILES:llvm-linker-tools = "${libdir}/LLVMgold* ${libdir}/libLTO.so.*"
 
 FILES:${PN}-dev += "${libdir}/llvm-config"
 
