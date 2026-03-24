@@ -33,9 +33,7 @@ LIC_FILES_CHKSUM = " \
     file://tests/testgtk.c;endline=25;md5=49d06770681b8322466b52ed19d29fb2 \
 "
 
-SRC_URI[archive.sha256sum] = "2873f2903088a66c71173ea2ed85ffae266a66b972c3a4842bbb2f6f187ec153"
-
-SRC_URI += "file://0001-application8-Don-t-use-space-in-meson-generated-file.patch"
+SRC_URI[archive.sha256sum] = "cd7b5a9c41127da6fb321c5a842ad73c62e6996f9ce3f1960ca509f6559d55fc"
 
 S = "${UNPACKDIR}/${GNOMEBN}-${PV}"
 
@@ -43,7 +41,7 @@ CVE_PRODUCT = "gnome:gtk"
 
 GNOMEBN = "gtk"
 
-inherit gettext gnomebase gi-docgen update-alternatives gsettings features_check gobject-introspection upstream-version-is-even
+inherit gettext gnomebase gi-docgen update-alternatives gsettings features_check gobject-introspection mime upstream-version-is-even
 
 # TBD: nativesdk
 # gobject-introspection.bbclass pins introspection off for nativesk. As long as
