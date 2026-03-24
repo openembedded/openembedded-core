@@ -1,0 +1,128 @@
+From 4a3e452a3834f3ccb7cbda522f10eadd647de0e0 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Mon, 5 Jan 2026 18:30:54 -0800
+Subject: [PATCH] [Clang] Rename OffloadArch::UNUSED to UNUSED_ to avoid macro
+ collisions
+
+OffloadArch uses an enumerator named `UNUSED`, which is a very common macro name
+in external codebases (e.g. Mesa defines UNUSED as an attribute helper). If such
+a macro is visible when including clang/Basic/OffloadArch.h, the preprocessor
+expands the token inside the enum and breaks compilation of the installed Clang
+headers.
+
+Rename the enumerator to `UNUSED_` and update all in-tree references. This is a
+spelling-only change (no behavioral impact) and mirrors the existing approach
+used for SM_32_ to avoid macro clashes.
+
+Upstream-Status: Pending
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ clang/include/clang/Basic/OffloadArch.h  | 2 +-
+ clang/lib/Basic/OffloadArch.cpp          | 2 +-
+ clang/lib/Basic/Targets/NVPTX.cpp        | 3 ++-
+ clang/lib/Basic/Targets/NVPTX.h          | 2 +-
+ clang/lib/CodeGen/CGOpenMPRuntimeGPU.cpp | 2 +-
+ clang/lib/Driver/Driver.cpp              | 6 +++---
+ 6 files changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/clang/include/clang/Basic/OffloadArch.h b/clang/include/clang/Basic/OffloadArch.h
+index ea665b1f49e0..b7d6e00f628e 100644
+--- a/clang/include/clang/Basic/OffloadArch.h
++++ b/clang/include/clang/Basic/OffloadArch.h
+@@ -16,7 +16,7 @@ class StringRef;
+ namespace clang {
+ 
+ enum class OffloadArch {
+-  UNUSED,
++  UNUSED_,
+   UNKNOWN,
+   // TODO: Deprecate and remove GPU architectures older than sm_52.
+   SM_20,
+diff --git a/clang/lib/Basic/OffloadArch.cpp b/clang/lib/Basic/OffloadArch.cpp
+index 05177f1c5803..6a743c73473e 100644
+--- a/clang/lib/Basic/OffloadArch.cpp
++++ b/clang/lib/Basic/OffloadArch.cpp
+@@ -17,7 +17,7 @@ struct OffloadArchToStringMap {
+ #define GFX(gpu) {OffloadArch::GFX##gpu, "gfx" #gpu, "compute_amdgcn"}
+ static const OffloadArchToStringMap ArchNames[] = {
+     // clang-format off
+-    {OffloadArch::UNUSED, "", ""},
++    {OffloadArch::UNUSED_, "", ""},
+     SM(20), {OffloadArch::SM_21, "sm_21", "compute_20"}, // Fermi
+     SM(30), {OffloadArch::SM_32_, "sm_32", "compute_32"}, SM(35), SM(37),  // Kepler
+     SM(50), SM(52), SM(53),          // Maxwell
+diff --git a/clang/lib/Basic/Targets/NVPTX.cpp b/clang/lib/Basic/Targets/NVPTX.cpp
+index 6526eeff3d71..cf2d4bd6f746 100644
+--- a/clang/lib/Basic/Targets/NVPTX.cpp
++++ b/clang/lib/Basic/Targets/NVPTX.cpp
+@@ -64,7 +64,7 @@ NVPTXTargetInfo::NVPTXTargetInfo(const llvm::Triple &Triple,
+   // Define available target features
+   // These must be defined in sorted order!
+   NoAsmVariants = true;
+-  GPU = OffloadArch::UNUSED;
++  GPU = OffloadArch::UNUSED_;
+ 
+   // PTX supports f16 as a fundamental type.
+   HasFastHalfType = true;
+@@ -177,6 +177,7 @@ void NVPTXTargetInfo::getTargetDefines(const LangOptions &Opts,
+ 
+   // Skip setting architecture dependent macros if undefined.
+   if (!IsNVIDIAOffloadArch(GPU))
++  if (GPU == OffloadArch::UNUSED_ && !HostTarget)
+     return;
+ 
+   if (Opts.CUDAIsDevice || Opts.OpenMPIsTargetDevice || !HostTarget) {
+diff --git a/clang/lib/Basic/Targets/NVPTX.h b/clang/lib/Basic/Targets/NVPTX.h
+index 9bd0cc36d12b..337864ac5c1a 100644
+--- a/clang/lib/Basic/Targets/NVPTX.h
++++ b/clang/lib/Basic/Targets/NVPTX.h
+@@ -87,7 +87,7 @@ public:
+   initFeatureMap(llvm::StringMap<bool> &Features, DiagnosticsEngine &Diags,
+                  StringRef CPU,
+                  const std::vector<std::string> &FeaturesVec) const override {
+-    if (GPU != OffloadArch::UNUSED)
++    if (GPU != OffloadArch::UNUSED_)
+       Features[OffloadArchToString(GPU)] = true;
+     // Only add PTX feature if explicitly requested. Otherwise, let the backend
+     // use the minimum required PTX version for the target SM.
+diff --git a/clang/lib/CodeGen/CGOpenMPRuntimeGPU.cpp b/clang/lib/CodeGen/CGOpenMPRuntimeGPU.cpp
+index db0d56d6b18c..6df0b3b3574d 100644
+--- a/clang/lib/CodeGen/CGOpenMPRuntimeGPU.cpp
++++ b/clang/lib/CodeGen/CGOpenMPRuntimeGPU.cpp
+@@ -2382,7 +2382,7 @@ void CGOpenMPRuntimeGPU::processRequiresDirective(const OMPRequiresDecl *D) {
+       case OffloadArch::Generic:
+       case OffloadArch::GRANITERAPIDS:
+       case OffloadArch::BMG_G21:
+-      case OffloadArch::UNUSED:
++      case OffloadArch::UNUSED_:
+       case OffloadArch::UNKNOWN:
+         break;
+       case OffloadArch::LAST:
+diff --git a/clang/lib/Driver/Driver.cpp b/clang/lib/Driver/Driver.cpp
+index eb3f9cbea284..f4760e80788c 100644
+--- a/clang/lib/Driver/Driver.cpp
++++ b/clang/lib/Driver/Driver.cpp
+@@ -961,12 +961,12 @@ inferOffloadToolchains(Compilation &C, Action::OffloadKind Kind) {
+       return llvm::DenseSet<llvm::StringRef>();
+     }
+     if (Kind == Action::OFK_OpenMP &&
+-        (ID == OffloadArch::UNKNOWN || ID == OffloadArch::UNUSED)) {
++        (ID == OffloadArch::UNKNOWN || ID == OffloadArch::UNUSED_)) {
+       C.getDriver().Diag(clang::diag::err_drv_failed_to_deduce_target_from_arch)
+           << Arch;
+       return llvm::DenseSet<llvm::StringRef>();
+     }
+-    if (ID == OffloadArch::UNKNOWN || ID == OffloadArch::UNUSED) {
++    if (ID == OffloadArch::UNKNOWN || ID == OffloadArch::UNUSED_) {
+       C.getDriver().Diag(clang::diag::err_drv_offload_bad_gpu_arch)
+           << "offload" << Arch;
+       return llvm::DenseSet<llvm::StringRef>();
+@@ -3407,7 +3407,7 @@ class OffloadingActionBuilder final {
+ 
+       // If we have a fat binary, add it to the list.
+       if (CudaFatBinary) {
+-        AddTopLevel(CudaFatBinary, OffloadArch::UNUSED);
++        AddTopLevel(CudaFatBinary, OffloadArch::UNUSED_);
+         CudaDeviceActions.clear();
+         CudaFatBinary = nullptr;
+         return;
