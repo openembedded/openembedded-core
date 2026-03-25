@@ -168,7 +168,8 @@
             "${libdir}/python${PYTHON_MAJMIN}/gzip.py",
             "${libdir}/python${PYTHON_MAJMIN}/tarfile.py",
             "${libdir}/python${PYTHON_MAJMIN}/zipfile/",
-            "${libdir}/python${PYTHON_MAJMIN}/compression/"
+            "${libdir}/python${PYTHON_MAJMIN}/compression/",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_zstd.*.so"
         ],
         "cached": [
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/gzip.*.pyc",
