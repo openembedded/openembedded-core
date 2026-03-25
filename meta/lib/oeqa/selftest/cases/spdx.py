@@ -4,72 +4,11 @@
 # SPDX-License-Identifier: MIT
 #
 
-import json
-import os
 import textwrap
 import hashlib
-from pathlib import Path
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import bitbake, get_bb_var, get_bb_vars, runCmd
+from oeqa.utils.commands import bitbake, get_bb_var, get_bb_vars
 import oe.spdx30
-
-
-class SPDX22Check(OESelftestTestCase):
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        bitbake("python3-spdx-tools-native")
-        bitbake("-c addto_recipe_sysroot python3-spdx-tools-native")
-
-    def check_recipe_spdx(self, high_level_dir, spdx_file, target_name):
-        config = textwrap.dedent(
-            """\
-            INHERIT:remove = "create-spdx"
-            INHERIT += "create-spdx-2.2"
-            """
-        )
-        self.write_config(config)
-
-        deploy_dir = get_bb_var("DEPLOY_DIR")
-        arch_dir = get_bb_var("PACKAGE_ARCH", target_name)
-        spdx_version = get_bb_var("SPDX_VERSION")
-        # qemux86-64 creates the directory qemux86_64
-        # arch_dir = arch_var.replace("-", "_")
-
-        full_file_path = os.path.join(
-            deploy_dir, "spdx", spdx_version, arch_dir, high_level_dir, spdx_file
-        )
-
-        try:
-            os.remove(full_file_path)
-        except FileNotFoundError:
-            pass
-
-        bitbake("%s -c create_spdx" % target_name)
-
-        def check_spdx_json(filename):
-            with open(filename) as f:
-                report = json.load(f)
-                self.assertNotEqual(report, None)
-                self.assertNotEqual(report["SPDXID"], None)
-
-            python = os.path.join(
-                get_bb_var("STAGING_BINDIR", "python3-spdx-tools-native"),
-                "nativepython3",
-            )
-            validator = os.path.join(
-                get_bb_var("STAGING_BINDIR", "python3-spdx-tools-native"), "pyspdxtools"
-            )
-            result = runCmd("{} {} -i {}".format(python, validator, filename))
-
-        self.assertExists(full_file_path)
-        result = check_spdx_json(full_file_path)
-
-    def test_spdx_base_files(self):
-        self.check_recipe_spdx("packages", "base-files.spdx.json", "base-files")
-
-    def test_spdx_tar(self):
-        self.check_recipe_spdx("packages", "tar.spdx.json", "tar")
 
 
 class SPDX3CheckBase(object):
