@@ -16,7 +16,7 @@ DEPENDS = "zstd fmt xxhash"
 
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz"
 
-SRC_URI[sha256sum] = "e822547b0344c567c6f748f75d4da056c360e2196da12d213ec0caf39d72896d"
+SRC_URI[sha256sum] = "e87efda8ae54f94b1cb0e8dbfdf26397bd7d0a9c0c4f38b18dde73f4ec9ac721"
 
 inherit cmake github-releases
 
