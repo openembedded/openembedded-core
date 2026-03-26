@@ -642,7 +642,6 @@ RDEPENDS:${PN}-ukify = " \
                         python3-pefile \
                         python3-pprint \
                         python3-pydoc \
-                        python3-pyzstd \
                         python3-shell \
                        "
 
