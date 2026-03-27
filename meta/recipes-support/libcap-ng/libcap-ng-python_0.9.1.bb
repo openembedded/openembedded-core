@@ -14,4 +14,4 @@ do_install() {
     oe_runmake 'DESTDIR=${D}' install -C ${B}/bindings/python3
 }
 
-FILES:${PN} = "${libdir}/python${PYTHON_BASEVERSION}"
+FILES:${PN} = "${libdir}/${PYTHON_DIR}"
