@@ -116,7 +116,7 @@ for item in dif:
 
     # Site-customize is a special case since we (OpenEmbedded) put it there manually
     if 'sitecustomize' in dep_path:
-        dep_path = '${libdir}/python${PYTHON_MAJMIN}/sitecustomize.py'
+        dep_path = '${libdir}/python${PYTHON_MAINVERSION}/sitecustomize.py'
         # Prints out result, which is what will be used by create_manifest
         print (dep_path)
         continue

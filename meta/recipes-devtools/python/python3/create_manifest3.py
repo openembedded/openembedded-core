@@ -50,7 +50,7 @@ if '-d' in sys.argv:
 else:
     debugFlag = ''
 
-# Get python version from ${PYTHON_MAJMIN}
+# Get python version from ${PYTHON_MAINVERSION}
 pyversion = str(sys.argv[1])
 
 # Hack to get native python search path (for folders), not fond of it but it works for now
@@ -71,7 +71,7 @@ hasfolders = []
 allfolders = []
 
 def isFolder(value):
-    value = value.replace('${PYTHON_MAJMIN}',pyversion)
+    value = value.replace('${PYTHON_MAINVERSION}',pyversion)
     if os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib')) or os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib64')) or os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib32')):
         return True
     else:
@@ -122,7 +122,7 @@ print_indent('Getting dependencies for package: core', 0)
 
 output = subprocess.check_output([sys.executable, 'get_module_deps3.py', 'python-core-package', '%s' % debugFlag]).decode('utf8')
 for coredep in output.split():
-    coredep = coredep.replace(pyversion,'${PYTHON_MAJMIN}')
+    coredep = coredep.replace(pyversion,'${PYTHON_MAINVERSION}')
     if isCached(coredep):
         if coredep not in old_manifest['core']['cached']:
             old_manifest['core']['cached'].append(coredep)
@@ -173,7 +173,7 @@ for filedep in old_manifest['core']['files']:
 
 
     for pymodule_dep in output.split():
-        pymodule_dep = pymodule_dep.replace(pyversion,'${PYTHON_MAJMIN}')
+        pymodule_dep = pymodule_dep.replace(pyversion,'${PYTHON_MAINVERSION}')
 
         if isCached(pymodule_dep):
             if pymodule_dep not in old_manifest['core']['cached']:
@@ -318,7 +318,7 @@ for pypkg in old_manifest:
             #   is folder_string inside path/folder1/folder2/filename?, 
             #   Yes, it works, but we waste a couple of milliseconds.
 
-            pymodule_dep = pymodule_dep.replace(pyversion,'${PYTHON_MAJMIN}')
+            pymodule_dep = pymodule_dep.replace(pyversion,'${PYTHON_MAINVERSION}')
             inFolders = False
             for folder in allfolders:
                 # The module could have a directory named after it, e.g. xml, if we take out the filename from the path
