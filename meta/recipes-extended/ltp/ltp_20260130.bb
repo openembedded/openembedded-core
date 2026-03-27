@@ -81,6 +81,12 @@ do_install(){
 
     # min_free_kbytes can be disruptive on constrained targets
     sed -e '/^min_free_kbytes/d' -i ${D}${prefix}/runtest/mm
+
+    # cve-2018-13405 triggers memory deadlock kernel panic on constrained targets
+    sed -e '/^cve-2018-13405/d' -i ${D}${prefix}/runtest/cve
+
+    # cve-2020-36557 triggers memory deadlock kernel panic on constrained targets
+    sed -e '/^cve-2020-36557/d' -i ${D}${prefix}/runtest/cve
 }
 
 RDEPENDS:${PN} = "\
