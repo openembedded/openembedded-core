@@ -113,7 +113,14 @@ CACHED_CONFIGUREVARS:append:libc-musl = "\
 
 # PGO currently causes builds to not be reproducible so disable by default, see YOCTO #13407
 PACKAGECONFIG ??= "editline gdbm ${@bb.utils.filter('DISTRO_FEATURES', 'lto', d)}"
+
+# Some LLVM/CLANG subprojects (e.g. lldb) and many Python modules
+# do not build when free-threading is enabled. Also, the support
+# for free-threading in many Python modules is not yet production level,
+# although they may build fine.
+# This is highly experimental. Do not enable it!
 PACKAGECONFIG[freethreading] = "--disable-gil,--enable-gil"
+
 PACKAGECONFIG[readline] = "--with-readline=readline,,readline,,,editline"
 PACKAGECONFIG[editline] = "--with-readline=editline,,libedit,,,readline"
 # Use profile guided optimisation by running PyBench inside qemu-user
