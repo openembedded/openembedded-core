@@ -21,6 +21,8 @@ LTO:pn-libbsd = ""
 LTO:pn-perf = ""
 # webkit is not linking properly with LTO, disable until next time
 LTO:pn-webkitgtk = ""
+# LTO link-time recompilation leaves TMPDIR in DW_AT_comp_dir of debug symbols
+LTO:pn-sqlite3 = ""
 LTO:pn-xserver-xorg = ""
 LTO:pn-grub = ""
 LTO:pn-grub-efi = ""
