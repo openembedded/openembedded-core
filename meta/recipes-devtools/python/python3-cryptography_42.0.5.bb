@@ -11,6 +11,7 @@ LDSHARED += "-pthread"
 SRC_URI[sha256sum] = "6fe07eec95dfd477eb9530aef5bead34fec819b3aaf6c5bd6d20565da607bfe1"
 
 SRC_URI += "file://0001-pyproject.toml-remove-benchmark-disable-option.patch \
+            file://CVE-2026-26007.patch \
             file://check-memfree.py \
             file://run-ptest \
            "
