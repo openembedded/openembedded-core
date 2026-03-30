@@ -9,6 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=0c432d3aeb935855b2ca1ad2a0542ce4"
 
 SRC_URI = "http://invisible-mirror.net/archives/${BPN}/${BP}.tgz \
            file://run-ptest \
+           file://standard-autoconf.patch \
            file://avoid-check-user-break-cc.patch \
            "
 
