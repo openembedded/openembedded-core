@@ -17,8 +17,6 @@ SRC_URI[sha256sum] = "89f9294a8ac74fcef6f1b9ac408f43ebedf8d208e3efe0b99b4acc16dc
 
 inherit autotools gettext ptest
 
-EXTRA_AUTORECONF += "--exclude=aclocal"
-
 LDFLAGS += "${TOOLCHAIN_OPTIONS}"
 
 do_install_ptest() {
