@@ -8,27 +8,22 @@ SECTION = "devel"
 DEPENDS = "m4-native autoconf-native automake-native gnu-config-native help2man-native"
 DEPENDS:remove:class-native = "autoconf-native automake-native help2man-native"
 
-LIC_FILES_CHKSUM = "file://COPYING;md5=cc3f3a7596cb558bbd9eb7fbaa3ef16c \
+LIC_FILES_CHKSUM = "file://COPYING;md5=570a9b3749dd0463a1778803b12a6dce \
 		    file://COPYINGv3;md5=1ebbd3e34237af26da5dc08a4e440464"
 
 SRC_URI = " \
            ${GNU_MIRROR}/autoconf/${BP}.tar.gz \
            file://program_prefix.patch \
-           file://autoreconf-exclude.patch \
            file://remove-usr-local-lib-from-m4.patch \
            file://preferbash.patch \
            file://autotest-automake-result-format.patch \
-           file://man-host-perl.patch \
 "
 SRC_URI:append:class-native = " file://no-man.patch"
 
-SRC_URI[sha256sum] = "afb181a76e1ee72832f6581c0eddf8df032b83e2e0239ef79ebedc4467d92d6e"
+SRC_URI[sha256sum] = "259ddfa3bddc799cfb81489cc0f17dfdf1bd6d1505dda53c0f45ff60d6a4f9a7"
 
-# Remove this when upgrading past 2.72, as package managers sort 2.72e (the
-# fifth release candidate) after 2.72.
-PKGV = "2.72e+really${PV}"
-
-RDEPENDS:${PN} = "m4 gnu-config \
+RDEPENDS:${PN} = "m4 \
+		  gnu-config \
 		  perl \
 		  perl-module-bytes \
 		  perl-module-carp \
@@ -45,13 +40,13 @@ RDEPENDS:${PN} = "m4 gnu-config \
 		  perl-module-file-spec \
 		  perl-module-file-spec-unix \
 		  perl-module-file-stat \
-                  perl-module-file-temp \
+		  perl-module-file-temp \
 		  perl-module-getopt-long \
 		  perl-module-io-file \
-                  perl-module-list-util \
+		  perl-module-list-util \
 		  perl-module-overloading \
 		  perl-module-posix \
-                  perl-module-scalar-util \
+		  perl-module-scalar-util \
 		  perl-module-symbol \
 		  perl-module-thread-queue \
 		  perl-module-threads \
