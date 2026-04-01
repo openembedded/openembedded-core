@@ -137,27 +137,6 @@ def inherits(d, *classes):
     """Return True if the metadata inherits any of the specified classes"""
     return any(bb.data.inherits_class(cls, d) for cls in classes)
 
-def features_backfill(var,d):
-    # This construct allows the addition of new features to variable specified
-    # as var
-    # Example for var = "DISTRO_FEATURES"
-    # This construct allows the addition of new features to DISTRO_FEATURES
-    # that if not present would disable existing functionality, without
-    # disturbing distributions that have already set DISTRO_FEATURES.
-    # Distributions wanting to elide a value in DISTRO_FEATURES_BACKFILL should
-    # add the feature to DISTRO_FEATURES_BACKFILL_CONSIDERED
-    features = (d.getVar(var) or "").split()
-    backfill = (d.getVar(var+"_BACKFILL") or "").split()
-    considered = (d.getVar(var+"_BACKFILL_CONSIDERED") or "").split()
-
-    addfeatures = []
-    for feature in backfill:
-        if feature not in features and feature not in considered:
-            addfeatures.append(feature)
-
-    if addfeatures:
-        d.appendVar(var, " " + " ".join(addfeatures))
-
 def filter_default_features(varname, d):
     # Process default features to exclude features which the user has opted out
     # of. The result is appended to the target variable (e.g. DISTRO_FEATURES
