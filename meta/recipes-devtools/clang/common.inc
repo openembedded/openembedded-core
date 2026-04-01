@@ -60,6 +60,7 @@ SRC_URI = "\
     file://0037-clang-Only-build-clang-tblgen-if-it-is-actually-need.patch \
     file://0038-llvm-libgcc-Fix-symlink-path-for-libcc-when-LLVM_ENA.patch \
     file://0039-Clang-Rename-OffloadArch-UNUSED-to-UNUSED_-to-avoid-.patch \
+    file://0040-libcxxabi-declare-__gnu_unwind_frame-in-cxa_personal.patch \
 "
 # Fallback to no-PIE if not set
 GCCPIE ??= ""
