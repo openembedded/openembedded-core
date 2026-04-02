@@ -40,6 +40,7 @@ EXTRA_OECONF = "--with-jbig2dec \
                 --with-fontpath=${datadir}/fonts \
                 CUPSCONFIG="${STAGING_BINDIR_CROSS}/cups-config" \
                 PKGCONFIG=pkg-config \
+                CFLAGSAUX=-std=gnu17 \
                 "
 
 EXTRA_OECONF:append:mipsarcho32 = " --with-large_color_index=0"
@@ -47,7 +48,7 @@ EXTRA_OECONF:append:mipsarcho32 = " --with-large_color_index=0"
 EXTRA_OECONF:append:armv7a = "${@bb.utils.contains('TUNE_FEATURES','neon','',' --disable-neon',d)}"
 EXTRA_OECONF:append:armv7ve = "${@bb.utils.contains('TUNE_FEATURES','neon','',' --disable-neon',d)}"
 
-TARGET_CFLAGS += "-std=gnu17 -Wno-error=declaration-after-statement -fPIC"
+TARGET_CFLAGS += "-Wno-error=declaration-after-statement -fPIC"
 
 inherit autotools pkgconfig
 
