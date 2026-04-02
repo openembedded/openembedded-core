@@ -25,6 +25,7 @@ SRC_URI = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/downlo
            file://ghostscript-9.16-Werror-return-type.patch \
            file://avoid-host-contamination.patch \
            file://0001-Fix-32-bit-build.patch \
+           file://out-of-tree.patch \
            "
 
 SRC_URI[sha256sum] = "5bd6da34794928cc7e616f288e32bd0be7f9a5ca2d3c206a0af2c19a4e3a318f"
@@ -48,8 +49,7 @@ EXTRA_OECONF:append:armv7ve = "${@bb.utils.contains('TUNE_FEATURES','neon','',' 
 
 TARGET_CFLAGS += "-std=gnu17 -Wno-error=declaration-after-statement -fPIC"
 
-# Uses autoconf but not automake, can't do out-of-tree
-inherit autotools-brokensep pkgconfig
+inherit autotools pkgconfig
 
 # Prune the source tree of libraries that we're using our packaging of, so that
 # ghostscript can't link to them. Can't prune zlib as that's needed for the
