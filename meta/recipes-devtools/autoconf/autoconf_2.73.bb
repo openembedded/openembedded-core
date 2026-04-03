@@ -17,6 +17,7 @@ SRC_URI = " \
            file://remove-usr-local-lib-from-m4.patch \
            file://preferbash.patch \
            file://autotest-automake-result-format.patch \
+           file://0001-Increase-awk-sed-command-limit-to-prevent-line-wrapp.patch \
 "
 SRC_URI:append:class-native = " file://no-man.patch"
 
