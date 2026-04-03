@@ -86,7 +86,7 @@ def set_intersect(variable1, variable2, d):
 def set_difference(variable1, variable2, d):
     """
     Expand both variables, interpret them as lists of strings, and return the
-    intersection as a flattened string.
+    difference as a flattened string.
 
     For example:
     s1 = "a b c"
