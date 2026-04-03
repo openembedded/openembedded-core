@@ -93,6 +93,13 @@ def set_difference(variable1, variable2, d):
     s2 = "b c d"
     s3 = set_difference(s1, s2)
     => s3 = "a"
+
+    If '*' is present as a separate token (not part of a larger identifier) in
+    the second operand, this is interpreted as "remove all entries":
+    s1 = "a b c"
+    s2 = "*"
+    s3 = set_difference(s1, s2)
+    => s3 = ""
     """
     val1 = d.getVar(variable1)
     if not val1:
@@ -103,6 +110,9 @@ def set_difference(variable1, variable2, d):
 
     val1 = set(val1.split())
     val2 = set(val2.split())
+
+    if "*" in val2:
+        return ""
 
     # Return a sorted string to ensure that the result is consistent between
     # parser runs.
