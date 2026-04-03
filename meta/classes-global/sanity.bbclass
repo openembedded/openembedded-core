@@ -551,6 +551,21 @@ def check_tar_version(sanity_data):
     except subprocess.CalledProcessError as e:
         return "Unable to execute tar --help, exit code %d\n%s\n" % (e.returncode, e.output)
 
+    try:
+        distro = oe.lsb.distro_identifier()
+    except Exception:
+        distro = None
+
+    if distro:
+        rhel9_alike_prefixes = ("rhel-9", "centos-9", "rocky-9", "almalinux-9")
+        rhel9_tar_minimum_version = "1.35"
+        for prefix in rhel9_alike_prefixes:
+            if distro.startswith(prefix) and bb.utils.vercmp_string_op(version, rhel9_tar_minimum_version, "<"):
+                return ("Your version of tar is older than %s and crashes when extracting read-only files with xattrs. "
+                        "Your distro is %s which triggers this bug due to the presence of selinux attributes. "
+                        "Please install a newer version of tar (you could use the project's buildtools-tarball from "
+                        "our last release or use scripts/install-buildtools).\n" % (rhel9_tar_minimum_version, distro))
+
     return None
 
 # We use git parameters and functionality only found in 1.7.8 or later
