@@ -57,10 +57,12 @@ class WicTestCase(OESelftestTestCase):
 
     image_is_ready = False
     wicenv_cache = {}
+    wic_bindir = None
 
     def setUpLocal(self):
         """This code is executed before each test method."""
         self.resultdir = os.path.join(self.builddir, "wic-tmp")
+        self._old_path = os.environ.get('PATH')
         super(WicTestCase, self).setUpLocal()
 
         # Do this here instead of in setUpClass as the base setUp does some
@@ -72,12 +74,44 @@ class WicTestCase(OESelftestTestCase):
 
             bitbake('wic-tools core-image-minimal core-image-minimal-mtdutils')
             WicTestCase.image_is_ready = True
+
+        os.environ['PATH'] = self._get_wic_path()
         rmtree(self.resultdir, ignore_errors=True)
 
     def tearDownLocal(self):
         """Remove resultdir as it may contain images."""
+        if self._old_path is None:
+            os.environ.pop('PATH', None)
+        else:
+            os.environ['PATH'] = self._old_path
         rmtree(self.resultdir, ignore_errors=True)
         super(WicTestCase, self).tearDownLocal()
+
+    def _get_wic_path(self):
+        if WicTestCase.wic_bindir is None:
+            search_paths = [
+                os.path.join(self.td['COREBASE'], 'scripts'),
+                os.path.join(get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools'), 'usr', 'bin'),
+            ]
+
+            for bindir in search_paths:
+                if os.path.exists(os.path.join(bindir, 'wic')):
+                    WicTestCase.wic_bindir = bindir
+                    break
+
+            if WicTestCase.wic_bindir is None:
+                self.fail("Unable to find the wic binary in %s" % ', '.join(search_paths))
+
+        path_entries = []
+        for path_group in (
+                [WicTestCase.wic_bindir],
+                (get_bb_var("PATH", "wic-tools") or '').split(':'),
+                (self._old_path or '').split(':')):
+            for entry in path_group:
+                if entry and entry not in path_entries:
+                    path_entries.append(entry)
+
+        return ':'.join(path_entries)
 
     def _get_image_env_path(self, image):
         """Generate and obtain the path to <image>.env"""
@@ -88,7 +122,7 @@ class WicTestCase(OESelftestTestCase):
             WicTestCase.wicenv_cache[image] = os.path.join(stdir, machine, 'imgdata')
         return WicTestCase.wicenv_cache[image]
 
-class CLITests(OESelftestTestCase):
+class CLITests(WicTestCase):
     def test_version(self):
         """Test wic --version"""
         runCmd('wic --version')
