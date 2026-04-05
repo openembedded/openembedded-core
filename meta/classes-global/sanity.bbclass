@@ -839,6 +839,13 @@ def check_sanity_version_change(status, d):
         "An error occurred during checking the C++ toolchain for '--std=gnu++20' support. "
         "Please use a g++ compiler that supports C++20 (e.g. g++ version 10 onwards)."))
 
+    # Check there aren't obsolete wic/wks directories
+    for component in d.getVar("BBPATH").split(":") + d.getVar("BBLAYERS").split():
+        for subcomponent in ['wic', 'scripts/lib/wic/canned-wks']:
+            testpath = os.path.join(component, subcomponent)
+            if os.path.exists(testpath):
+                status.addresult("wic/wks files at %s need to be moved to files/wic within the layer to be found/used\n" % testpath)
+
 def sanity_check_locale(d):
     """
     Currently bitbake switches locale to en_US.UTF-8 so check that this locale actually exists.
