@@ -27,3 +27,4 @@ python do_build_sysroot () {
     bb.build.exec_func("extend_recipe_sysroot", d)
 }
 addtask do_build_sysroot after do_prepare_recipe_sysroot before do_build
+do_build_sysroot[vardepsexclude] += "extend_recipe_sysroot"
