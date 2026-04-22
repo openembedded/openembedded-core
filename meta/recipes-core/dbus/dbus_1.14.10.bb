@@ -29,7 +29,7 @@ EXTRA_OECONF = "--disable-xml-docs \
 EXTRA_OECONF:append:class-target = " SYSTEMCTL=${base_bindir}/systemctl"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd x11', d)} \
-                   user-session \
+                   ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'user-session', '', d)} \
                   "
 PACKAGECONFIG:class-native = ""
 PACKAGECONFIG:class-nativesdk = ""
