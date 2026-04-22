@@ -24,6 +24,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/project/${BPN}/${BPN}${LIBV}/${PV}/${BP}.tar.xz
            file://CVE-2026-22695.patch \
            file://CVE-2026-22801.patch \
            file://CVE-2026-25646.patch \
+           file://CVE-2026-33636.patch \
 "
 
 SRC_URI[sha256sum] = "c919dbc11f4c03b05aba3f8884d8eb7adfe3572ad228af972bb60057bdb48450"
