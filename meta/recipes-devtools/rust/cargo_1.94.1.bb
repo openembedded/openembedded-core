@@ -83,3 +83,5 @@ RUSTLIB:append:class-nativesdk = " -L ${STAGING_DIR_HOST}/${SDKPATHNATIVE}/usr/l
 RUSTLIB_DEP:class-nativesdk = ""
 
 BBCLASSEXTEND = "native nativesdk"
+
+CVE_STATUS[CVE-2023-40030] = "fixed-version: fixed since 1.72"
