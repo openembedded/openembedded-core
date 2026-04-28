@@ -28,6 +28,7 @@ SRC_URI = "https://github.com/ArtifexSoftware/ghostpdl-downloads/releases/downlo
            file://CVE-2025-59798.patch \
            file://CVE-2025-59799.patch \
            file://CVE-2025-59800.patch \
+           file://0001-Bug-708160-Fix-compatibility-with-C23-compilers.patch \
            "
 
 SRC_URI[sha256sum] = "121861b6d29b2461dec6575c9f3cab665b810bd408d4ec02c86719fa708b0a49"
