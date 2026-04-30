@@ -46,6 +46,7 @@ SRC_URI = "http://libarchive.org/downloads/libarchive-${PV}.tar.gz \
            file://CVE-2025-60753-02.patch \
            file://CVE-2026-4111-1.patch \
            file://CVE-2026-4111-2.patch \
+           file://CVE-2026-4426.patch \
            "
 UPSTREAM_CHECK_URI = "http://libarchive.org/"
 
