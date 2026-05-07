@@ -3,13 +3,12 @@ HOMEPAGE = "https://requests.readthedocs.io"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=34400b68072d710fecd0a2940a0d1658"
 
-SRC_URI:append:class-nativesdk = " \
-           file://environment.d-python3-requests.sh \
-"
+inherit pypi python_setuptools_build_meta
 
 SRC_URI[sha256sum] = "27d0316682c8a29834d3264820024b62a36942083d52caf2f14c0591336d3422"
 
-inherit pypi python_setuptools_build_meta
+SRC_URI += "file://CVE-2026-25645.patch"
+SRC_URI:append:class-nativesdk = " file://environment.d-python3-requests.sh"
 
 do_install:append:class-nativesdk() {
 	mkdir -p ${D}${SDKPATHNATIVE}/environment-setup.d
