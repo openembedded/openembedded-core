@@ -239,8 +239,8 @@ def lookup_pkg(args):
         missing = list(set(pkgs) - set(mappings.keys()))
         for pkg in missing:
             providepkgpath = os.path.join(args.pkgdata_dir, "runtime-rprovides", pkg)
-            if os.path.exists(providepkgpath):
-                providers = os.listdir(providepkgpath)
+            providers = os.listdir(providepkgpath) if os.path.isdir(providepkgpath) else []
+            if providers:
                 for provider in providers:
                     if provider == pkg:
                         continue
