@@ -211,6 +211,18 @@ def reset_alternative_priority(d):
                 bb.debug(1, '%s: Setting ALTERNATIVE_PRIORITY[%s] to %s' % (pkg, alt_name, reset_priority))
                 d.setVarFlag('ALTERNATIVE_PRIORITY', alt_name, reset_priority)
 
+PACKAGESPLITFUNCS:append = " do_rename_package_variables"
+
+python do_rename_package_variables() {
+    variant = d.getVar("BBEXTENDVARIANT")
+    prefixes = (d.getVar("MULTILIB_VARIANTS") or "").split()
+    if variant and prefixes:
+        import oe.classextend
+        # Extend package variables for the given variant
+        clsextend = oe.classextend.ClassExtender(variant, prefixes, d)
+        clsextend.rename_package_variables((d.getVar("PACKAGEVARS") or "").split())
+}
+
 PACKAGEFUNCS:append = " do_package_qa_multilib"
 
 python do_package_qa_multilib() {
