@@ -10,7 +10,7 @@ LICENSE = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c"
 
 SECTION = "x11/utils"
-DEPENDS = "cairo gdk-pixbuf glib-2.0 libxml2 pango python3-docutils-native cargo-c-native"
+DEPENDS = "cairo gdk-pixbuf glib-2.0 libxml2 pango python3-docutils-native cargo-native cargo-c-native"
 RDEPENDS:${PN}-ptest += "rsvg liberation-fonts"
 BBCLASSEXTEND = "native nativesdk"
 
@@ -30,11 +30,6 @@ SRC_URI += "file://0001-query-rustc-append-RUSTFLAGS-to-rustc-executable.patch \
 SRC_URI[archive.sha256sum] = "a56d2c80d744ad2f2718f85df466fe71d24ff1f9bc3e5ef588bde4d7e87815f2"
 
 UPSTREAM_CHECK_REGEX = "librsvg-(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
-
-# librsvg is still autotools-based, but is calling cargo from its automake-driven makefiles
-# so we cannot use cargo class directly, but still need bits and pieces from it 
-# for cargo to be happy
-BASEDEPENDS:append = " cargo-native"
 
 export EXTRA_NATIVE_PKGCONFIG_PATH = ":${B}/meson-uninstalled"
 export RUST_BACKTRACE = "full"
