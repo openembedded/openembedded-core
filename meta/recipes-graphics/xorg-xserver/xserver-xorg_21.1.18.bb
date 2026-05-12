@@ -8,6 +8,7 @@ SRC_URI += "file://0001-xf86pciBus.c-use-Intel-ddx-only-for-pre-gen4-hardwar.pat
             file://CVE-2026-33999.patch \
             file://CVE-2026-34000.patch \
             file://CVE-2026-34001.patch \
+            file://CVE-2026-34002.patch \
             "
 SRC_URI[sha256sum] = "c878d1930d87725d4a5bf498c24f4be8130d5b2646a9fd0f2994deff90116352"
 
