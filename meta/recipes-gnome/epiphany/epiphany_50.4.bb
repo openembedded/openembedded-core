@@ -25,7 +25,8 @@ DEPENDS = " \
           "
 
 inherit gnomebase gsettings features_check gettext mime-xdg gtk-icon-cache
-REQUIRED_DISTRO_FEATURES = "x11 opengl"
+REQUIRED_DISTRO_FEATURES = "opengl"
+ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
 SRC_URI += "\
            file://0002-help-meson.build-disable-the-use-of-yelp.patch \
