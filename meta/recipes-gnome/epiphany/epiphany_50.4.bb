@@ -14,8 +14,6 @@ DEPENDS = " \
           json-glib \
           libadwaita \
           libarchive \
-          libdazzle \
-          libhandy \
           libportal \
           libsoup \
           glib-2.0-native \
