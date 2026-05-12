@@ -48,6 +48,7 @@ if test "x$UA_SYSROOT" = "x"; then
 	# Add groups and users defined only for this package
 	GROUPADD_PARAM="${GROUPADD_PARAM}"
 	USERADD_PARAM="${USERADD_PARAM}"
+	USERMOD_PARAM="${USERMOD_PARAM}"
 	GROUPMEMS_PARAM="${GROUPMEMS_PARAM}"
 fi
 
@@ -85,6 +86,22 @@ if test "x`echo $USERADD_PARAM | tr -d '[:space:]'`" != "x"; then
 	done
 fi
 
+if test "x`echo $USERMOD_PARAM | tr -d '[:space:]'`" != "x"; then
+	echo "Running usermod commands..."
+	# Invoke multiple instances of usermod for parameter lists
+	# separated by ';'
+	opts=`echo "$USERMOD_PARAM" | cut -d ';' -f 1 | sed -e 's#[ \t]*$##'`
+	remaining=`echo "$USERMOD_PARAM" | cut -d ';' -f 2- | sed -e 's#[ \t]*$##'`
+	while test "x$opts" != "x"; do
+		perform_usermod "$SYSROOT" "$OPT $opts"
+		if test "x$opts" = "x$remaining"; then
+			break
+		fi
+		opts=`echo "$remaining" | cut -d ';' -f 1 | sed -e 's#[ \t]*$##'`
+		remaining=`echo "$remaining" | cut -d ';' -f 2- | sed -e 's#[ \t]*$##'`
+	done
+fi
+
 if test "x`echo $GROUPMEMS_PARAM | tr -d '[:space:]'`" != "x"; then
 	echo "Running groupmems commands..."
 	# Invoke multiple instances of groupmems for parameter lists
@@ -103,11 +120,15 @@ fi
 }
 
 groupadd_sysroot() {
-        common_useradd_sysroot groupadd
+	common_useradd_sysroot groupadd
 }
 
 useradd_sysroot() {
 	common_useradd_sysroot useradd
+}
+
+usermod_sysroot() {
+	common_useradd_sysroot usermod
 }
 
 groupmems_sysroot() {
@@ -146,6 +167,7 @@ common_useradd_sysroot() {
 	case "$1" in
 		groupadd) GROUPADD_PARAM="${@get_all_cmd_params(d, 'groupadd')}";;
 		useradd) USERADD_PARAM="${@get_all_cmd_params(d, 'useradd')}";;
+		usermod) USERMOD_PARAM="${@get_all_cmd_params(d, 'usermod')}";;
 		groupmems) GROUPMEMS_PARAM="${@get_all_cmd_params(d, 'groupmems')}";;
 	esac
 
@@ -162,7 +184,7 @@ common_useradd_sysroot() {
 EXTRA_STAGING_FIXMES += "PSEUDO_SYSROOT PSEUDO_LOCALSTATEDIR LOGFIFO"
 
 python useradd_sysroot_sstate() {
-    for cmd, sort_prefix in [("groupadd", "01"), ("useradd", "02"), ("groupmems", "03")]:
+    for cmd, sort_prefix in [("groupadd", "01"), ("useradd", "02"), ("usermod", "03"), ("groupmems", "04")]:
         scriptfile = None
         task = d.getVar("BB_CURRENTTASK")
         if task == "package_setscene":
@@ -216,9 +238,9 @@ def update_useradd_after_parse(d):
         bb.fatal("%s inherits useradd but doesn't set USERADD_PACKAGES" % d.getVar('FILE', False))
 
     for pkg in useradd_packages.split():
-        d.appendVarFlag("do_populate_sysroot", "vardeps", " USERADD_PARAM:%s GROUPADD_PARAM:%s GROUPMEMS_PARAM:%s" % (pkg, pkg, pkg))
-        if not d.getVar('USERADD_PARAM:%s' % pkg) and not d.getVar('GROUPADD_PARAM:%s' % pkg) and not d.getVar('GROUPMEMS_PARAM:%s' % pkg):
-            bb.fatal("%s inherits useradd but doesn't set USERADD_PARAM, GROUPADD_PARAM or GROUPMEMS_PARAM for package %s" % (d.getVar('FILE', False), pkg))
+        d.appendVarFlag("do_populate_sysroot", "vardeps", f" USERADD_PARAM:{pkg} GROUPADD_PARAM:{pkg} USERMOD_PARAM:{pkg} GROUPMEMS_PARAM:{pkg}")
+        if not any(d.getVar(f"{name}_PARAM:{pkg}") for name in ["USERADD", "GROUPADD", "USERMOD", "GROUPMEMS"]):
+            bb.fatal("%s inherits useradd but doesn't set USERADD_PARAM, GROUPADD_PARAM, USERMOD_PARAM or GROUPMEMS_PARAM for package %s" % (d.getVar('FILE', False), pkg))
 
 python __anonymous() {
     if not bb.data.inherits_class('nativesdk', d) \
@@ -226,8 +248,8 @@ python __anonymous() {
         update_useradd_after_parse(d)
 }
 
-# Return a single [GROUP|USER]ADD_PARAM formatted string which includes the
-# [group|user]add parameters for all USERADD_PACKAGES in this recipe
+# Return a single (GROUPADD|USERADD|USERMOD)_PARAM formatted string which includes the
+# (groupadd|useradd|usermod) parameters for all USERADD_PACKAGES in this recipe
 def get_all_cmd_params(d, cmd_type):
     import string
     
@@ -260,10 +282,11 @@ fakeroot python populate_packages:prepend() {
         preinst += 'bbfatal () {\n\techo "ERROR: $*"\n\texit 1\n}\n'
         preinst += 'perform_groupadd () {\n%s}\n' % d.getVar('perform_groupadd')
         preinst += 'perform_useradd () {\n%s}\n' % d.getVar('perform_useradd')
+        preinst += 'perform_usermod () {\n%s}\n' % d.getVar('perform_usermod')
         preinst += 'perform_groupmems () {\n%s}\n' % d.getVar('perform_groupmems')
         preinst += d.getVar('useradd_preinst')
         # Expand out the *_PARAM variables to the package specific versions
-        for rep in ["GROUPADD_PARAM", "USERADD_PARAM", "GROUPMEMS_PARAM"]:
+        for rep in ["GROUPADD_PARAM", "USERADD_PARAM", "USERMOD_PARAM", "GROUPMEMS_PARAM"]:
             val = d.getVar(rep + ":" + pkg) or ""
             preinst = preinst.replace("${" + rep + "}", val)
         d.setVar('pkg_preinst:%s' % pkg, preinst)
