@@ -68,11 +68,6 @@ PACKAGECONFIG[gdkpixbuf] = "-Dpixbuf-loader=enabled,-Dpixbuf-loader=disabled,gdk
 PACKAGECONFIG[vala] = "-Dvala=enabled,-Dvala=disabled"
 PACKAGECONFIG[apitest] = "-Dtests=true,-Dtests=false"
 
-do_install:append() {
-	# Loadable modules don't need .a or .la on Linux
-	rm -f ${D}${libdir}/gdk-pixbuf-2.0/*/loaders/*.a ${D}${libdir}/gdk-pixbuf-2.0/*/loaders/*.la
-}
-
 do_compile_ptest_cargo:prepend() {
     # The packageconfig is for meson, but the rust tests are compiled directly with cargo,
     # so these arguments don't apply. Note that this is Python, the intendation is intentional.
