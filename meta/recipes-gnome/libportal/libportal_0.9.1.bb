@@ -14,6 +14,9 @@ GIDOCGEN_MESON_OPTION = 'docs'
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
-DEPENDS += "glib-2.0 glib-2.0-native gtk+3 ${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'gtk4', '', d)}"
+DEPENDS += "glib-2.0 glib-2.0-native gtk+3"
+
+PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'opengl', 'gtk4', '', d)}"
+PACKAGECONFIG[gtk4] = "-Dbackend-gtk4=enabled,-Dbackend-gtk4=disabled,gtk4"
 
 EXTRA_OEMESON = "${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-Dvapi=true', '-Dvapi=false', d)} -Dbackend-qt5=disabled"
