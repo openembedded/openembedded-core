@@ -478,7 +478,7 @@ def sstate_clean_manifest(manifest, d, canrace=False, prefix=None):
         entry = entry.strip()
         if prefix and not entry.startswith("/"):
             entry = prefix + "/" + entry
-        bb.debug(2, "Removing manifest: %s" % entry)
+        bb.debug(2, "Removing file: %s" % entry)
         # We can race against another package populating directories as we're removing them
         # so we ignore errors here.
         try:
