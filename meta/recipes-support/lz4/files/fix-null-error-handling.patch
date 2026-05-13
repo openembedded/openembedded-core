@@ -8,7 +8,6 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Upstream-Status: Backport [Upstream commit https://github.com/lz4/lz4/commit/f64efec011c058bd70348576438abac222fe6c82]
-CVE: CVE-2025-62813
 
 Signed-off-by: David Nyström <david.nystrom@est.tech>
 ---
