@@ -18,18 +18,17 @@ UPSTREAM_CHECK_REGEX = "gcr-(?P<pver>\d+\.\d+\.(?!9\d+)\d+(\.\d+)?)"
 
 SRC_URI[archive.sha256sum] = "0c3c341e49f9f4f2532a4884509804190a0c2663e6120360bb298c5d174a8098"
 
-PACKAGECONFIG ??= " \
-	${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)} \
-	${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'vapi', '', d)} \
-"
-PACKAGECONFIG[ssh_agent] = "-Dssh_agent=true,-Dssh_agent=false,libsecret,openssh"
-#'Use systemd socket activation for server programs'
+PACKAGECONFIG ??= "${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'vapi', '', d)}"
+PACKAGECONFIG[ssh_agent] = "-Dssh_agent=true,-Dssh_agent=false,libsecret"
+# Socket activation for the ssh-agent
 PACKAGECONFIG[systemd] = "-Dsystemd=enabled,-Dsystemd=disabled,systemd"
 PACKAGECONFIG[vapi] = "-Dvapi=true,-Dvapi=false,"
 # A tool to view certificates
 PACKAGECONFIG[viewer] = "-Dgtk4=true,-Dgtk4=false,gtk4"
 
-FILES:${PN} += "${systemd_user_unitdir}/gcr-ssh-agent.*"
+PACKAGE_BEFORE_PN += "${PN}-ssh-agent"
+FILES:${PN}-ssh-agent = "${libexecdir}/gcr-ssh-agent ${systemd_user_unitdir}/gcr-ssh-agent.*"
+RDEPENDS:${PN}-ssh-agent += "openssh"
 
 # http://errors.yoctoproject.org/Errors/Details/20229/
 ARM_INSTRUCTION_SET:armv4 = "arm"
