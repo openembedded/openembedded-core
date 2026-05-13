@@ -13,31 +13,23 @@ DEPENDS = "p11-kit glib-2.0 libgcrypt"
 CFLAGS += "-D_GNU_SOURCE"
 
 GTKDOC_MESON_OPTION = "gtk_doc"
-inherit gnomebase gtk-icon-cache gi-docgen features_check vala gobject-introspection gettext mime mime-xdg
+inherit gnomebase gi-docgen vala gobject-introspection lib_package
 UPSTREAM_CHECK_REGEX = "gcr-(?P<pver>\d+\.\d+\.(?!9\d+)\d+(\.\d+)?)"
-
-REQUIRED_DISTRO_FEATURES = "${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'opengl', '', d)}"
 
 SRC_URI[archive.sha256sum] = "0c3c341e49f9f4f2532a4884509804190a0c2663e6120360bb298c5d174a8098"
 
 PACKAGECONFIG ??= " \
 	${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)} \
-	${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'gtk', '', d)} \
-	${@bb.utils.contains('DISTRO_FEATURES', 'wayland', 'gtk', '', d)} \
 	${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'vapi', '', d)} \
 "
-PACKAGECONFIG[gtk] = "-Dgtk4=true,-Dgtk4=false,gtk4"
 PACKAGECONFIG[ssh_agent] = "-Dssh_agent=true,-Dssh_agent=false,libsecret,openssh"
 #'Use systemd socket activation for server programs'
 PACKAGECONFIG[systemd] = "-Dsystemd=enabled,-Dsystemd=disabled,systemd"
 PACKAGECONFIG[vapi] = "-Dvapi=true,-Dvapi=false,"
+# A tool to view certificates
+PACKAGECONFIG[viewer] = "-Dgtk4=true,-Dgtk4=false,gtk4"
 
-FILES:${PN} += " \
-    ${datadir}/dbus-1 \
-    ${datadir}/gcr-4 \
-    ${systemd_user_unitdir}/gcr-ssh-agent.socket \
-    ${systemd_user_unitdir}/gcr-ssh-agent.service \
-"
+FILES:${PN} += "${systemd_user_unitdir}/gcr-ssh-agent.*"
 
 # http://errors.yoctoproject.org/Errors/Details/20229/
 ARM_INSTRUCTION_SET:armv4 = "arm"
