@@ -655,10 +655,10 @@ diff --git a/src/udev/udev-builtin-net_id.c b/src/udev/udev-builtin-net_id.c
 index 91b40088f4..f528a46b8e 100644
 --- a/src/udev/udev-builtin-net_id.c
 +++ b/src/udev/udev-builtin-net_id.c
-@@ -39,6 +39,7 @@
- #include "strv.h"
+@@ -40,6 +40,7 @@
  #include "strxcpyx.h"
  #include "udev-builtin.h"
+ #include "utf8.h"
 +#include "missing_stdlib.h"
  
  #define ONBOARD_14BIT_INDEX_MAX ((1U << 14) - 1)
