@@ -655,10 +655,15 @@ def sstate_package(ss, d):
                     continue
                 bb.error("sstate found an absolute path symlink %s pointing at %s. Please replace this with a relative link." % (srcpath, link))
                 exit = True
+            for dir in dirs:
+                dir = os.path.join(walkroot, dir).removeprefix(state[1])
+                if tmpdir in dir:
+                    bb.error("sstate found a tmpdir path reference in installation directiory %s which must be removed." % dir)
+                    exit = True
         bb.debug(2, "Preparing tree %s for packaging at %s" % (state[1], sstatebuild + state[0]))
         bb.utils.rename(state[1], sstatebuild + state[0])
     if exit:
-        bb.fatal("Failing task due to absolute path symlinks")
+        bb.fatal("Failing task due to absolute path symlinks or tmpdir path reference")
 
     workdir = d.getVar('WORKDIR')
     sharedworkdir = os.path.join(d.getVar('TMPDIR'), "work-shared")
