@@ -77,7 +77,7 @@ B = "${WORKDIR}/build"
 export GOPATH = "${B}"
 export GOENV = "off"
 export GOPROXY ??= "https://proxy.golang.org,direct"
-export GOTMPDIR ?= "${WORKDIR}/build-tmp"
+export GOTMPDIR ?= "${WORKDIR}/tmp-go-build"
 GOTMPDIR[vardepvalue] = ""
 
 python go_do_unpack() {
