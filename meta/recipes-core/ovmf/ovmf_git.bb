@@ -55,6 +55,7 @@ inherit deploy
 PARALLEL_MAKE = ""
 
 DEPENDS = "nasm-native acpica-native ovmf-native util-linux-native"
+DEPENDS:append:toolchain-clang = " lld-native"
 
 EDK_TOOLS_DIR = "edk2_basetools"
 
@@ -145,38 +146,12 @@ fix_toolchain:append:class-native() {
 export NASM_PREFIX_MAP = "--debug-prefix-map=${WORKDIR}=${TARGET_DBGSRC_DIR}"
 export GCC_PREFIX_MAP = "${DEBUG_PREFIX_MAP} -Wno-stringop-overflow -Wno-maybe-uninitialized"
 
-GCC_VER = "$(${CC} -v 2>&1 | tail -n1 | awk '{print $3}')"
-
-fixup_target_tools() {
-    case ${1} in
-      4.4.*)
-        FIXED_GCCVER=GCC44
-        ;;
-      4.5.*)
-        FIXED_GCCVER=GCC45
-        ;;
-      4.6.*)
-        FIXED_GCCVER=GCC46
-        ;;
-      4.7.*)
-        FIXED_GCCVER=GCC47
-        ;;
-      4.8.*)
-        FIXED_GCCVER=GCC48
-        ;;
-      4.9.*)
-        FIXED_GCCVER=GCC49
-        ;;
-      *)
-        FIXED_GCCVER=GCC5
-        ;;
-    esac
-    echo ${FIXED_GCCVER}
-}
-
 do_compile:class-native() {
     oe_runmake -C ${S}/BaseTools
 }
+
+TARGET_TOOLS ?= "GCC"
+TARGET_TOOLS:toolchain-clang = "CLANGDWARF"
 
 do_compile:class-target() {
     export LFLAGS="${LDFLAGS}"
@@ -198,13 +173,12 @@ do_compile:class-target() {
     rm -rf ${WORKDIR}/ovmf
     mkdir ${WORKDIR}/ovmf
     OVMF_DIR_SUFFIX="X64"
-    FIXED_GCCVER=$(fixup_target_tools ${GCC_VER})
-    bbnote FIXED_GCCVER is ${FIXED_GCCVER}
-    build_dir="${S}/Build/Ovmf$OVMF_DIR_SUFFIX/${OVMF_BUILD_TYPE}_${FIXED_GCCVER}"
+    bbnote TARGET_TOOLS is ${TARGET_TOOLS}
+    build_dir="${S}/Build/Ovmf$OVMF_DIR_SUFFIX/${OVMF_BUILD_TYPE}_${TARGET_TOOLS}"
 
     bbnote "Building without Secure Boot."
     rm -rf ${S}/Build/Ovmf$OVMF_DIR_SUFFIX
-    ${S}/OvmfPkg/build.sh $PARALLEL_JOBS -a $OVMF_ARCH -b ${OVMF_BUILD_TYPE} -t ${FIXED_GCCVER} ${PACKAGECONFIG_CONFARGS}
+    ${S}/OvmfPkg/build.sh $PARALLEL_JOBS -a $OVMF_ARCH -b ${OVMF_BUILD_TYPE} -t ${TARGET_TOOLS} ${PACKAGECONFIG_CONFARGS}
     ln ${build_dir}/FV/OVMF.fd ${WORKDIR}/ovmf/ovmf.fd
     ln ${build_dir}/FV/OVMF_CODE.fd ${WORKDIR}/ovmf/ovmf.code.fd
     ln ${build_dir}/FV/OVMF_VARS.fd ${WORKDIR}/ovmf/ovmf.vars.fd
@@ -214,7 +188,7 @@ do_compile:class-target() {
         # Repeat build with the Secure Boot flags.
         bbnote "Building with Secure Boot."
         rm -rf ${S}/Build/Ovmf$OVMF_DIR_SUFFIX
-        ${S}/OvmfPkg/build.sh $PARALLEL_JOBS -a $OVMF_ARCH -b ${OVMF_BUILD_TYPE} -t ${FIXED_GCCVER} ${PACKAGECONFIG_CONFARGS} ${OVMF_SECURE_BOOT_FLAGS}
+        ${S}/OvmfPkg/build.sh $PARALLEL_JOBS -a $OVMF_ARCH -b ${OVMF_BUILD_TYPE} -t ${TARGET_TOOLS} ${PACKAGECONFIG_CONFARGS} ${OVMF_SECURE_BOOT_FLAGS}
         ln ${build_dir}/FV/OVMF.fd ${WORKDIR}/ovmf/ovmf.secboot.fd
         ln ${build_dir}/FV/OVMF_CODE.fd ${WORKDIR}/ovmf/ovmf.secboot.code.fd
         ln ${build_dir}/${OVMF_ARCH}/EnrollDefaultKeys.efi ${WORKDIR}/ovmf/
@@ -277,4 +251,3 @@ do_deploy:class-target() {
 addtask do_deploy after do_compile before do_build
 
 BBCLASSEXTEND = "native"
-TOOLCHAIN = "gcc"
