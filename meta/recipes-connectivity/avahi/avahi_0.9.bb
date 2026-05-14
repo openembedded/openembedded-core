@@ -18,35 +18,18 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=2d5025d4aa3495befef8f17206a5b0a1 \
                     file://avahi-daemon/main.c;endline=21;md5=9ee77368c5407af77caaef1b07285969 \
                     file://avahi-client/client.h;endline=23;md5=f4ac741a25c4f434039ba3e18c8674cf"
 
-SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/avahi-${PV}.tar.gz \
+SRC_URI = "git://github.com/avahi/avahi;protocol=https;branch=master;tag=v0.9-rc4 \
            file://00avahi-autoipd \
            file://99avahi-autoipd \
-           file://initscript.patch \
+           file://avahi-daemon.in \
+           file://avahi-dnsconfd.in \
            file://0001-Fix-opening-etc-resolv.conf-error.patch \
-           file://handle-hup.patch \
-           file://local-ping.patch \
-           file://invalid-service.patch \
-           file://CVE-2023-1981.patch \
-           file://CVE-2023-38469-1.patch \
-           file://CVE-2023-38469-2.patch \
-           file://CVE-2023-38470-1.patch \
-           file://CVE-2023-38470-2.patch \
-           file://CVE-2023-38471-1.patch \
-           file://CVE-2023-38471-2.patch \
-           file://CVE-2023-38472.patch \
-           file://CVE-2023-38473.patch \
-           file://CVE-2024-52616.patch \
-           file://CVE-2024-52615.patch \
-           file://CVE-2025-68276.patch \
-           file://CVE-2026-24401.patch \
-           file://CVE-2025-68468.patch \
-           file://CVE-2025-68471.patch \
-           file://CVE-2026-34933-1.patch \
-           file://CVE-2026-34933-2.patch \
            "
 
+PV = "0.9~rc4"
+SRCREV = "625ca0fac19229f6dfa3a6c6b698ae657187e50c"
+
 GITHUB_BASE_URI = "https://github.com/avahi/avahi/releases/"
-SRC_URI[sha256sum] = "060309d7a333d38d951bc27598c677af1796934dbd98e1024e7ad8de798fedda"
 
 CVE_STATUS[CVE-2021-26720] = "not-applicable-platform: Issue only affects Debian/SUSE"
 
@@ -55,17 +38,20 @@ DEPENDS = "expat libcap libdaemon glib-2.0 glib-2.0-native"
 # For gtk related PACKAGECONFIGs: gtk, gtk3
 AVAHI_GTK ?= ""
 
-PACKAGECONFIG ??= "dbus ${@bb.utils.contains_any('DISTRO_FEATURES','x11 wayland','${AVAHI_GTK}','',d)}"
+PACKAGECONFIG ??= "dbus ${@bb.utils.contains_any('DISTRO_FEATURES','x11 wayland','${AVAHI_GTK}','',d)} ${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)}"
 PACKAGECONFIG[dbus] = "--enable-dbus,--disable-dbus,dbus"
 PACKAGECONFIG[gtk] = "--enable-gtk,--disable-gtk,gtk+"
 PACKAGECONFIG[gtk3] = "--enable-gtk3,--disable-gtk3,gtk+3"
 PACKAGECONFIG[libdns_sd] = "--enable-compat-libdns_sd --enable-dbus,,dbus"
 PACKAGECONFIG[libevent] = "--enable-libevent,--disable-libevent,libevent"
+PACKAGECONFIG[systemd] = "--enable-libsystemd,--disable-libsystemd --without-systemdsystemunitdir,systemd"
 PACKAGECONFIG[qt5] = "--enable-qt5,--disable-qt5,qtbase"
 
 inherit autotools pkgconfig gettext gobject-introspection github-releases
 
-EXTRA_OECONF = "--with-avahi-priv-access-group=adm \
+EXTRA_OECONF = " \
+             --runstatedir=${runtimedir} \
+             --with-avahi-priv-access-group=adm \
              --disable-stack-protector \
              --disable-gdbm \
              --disable-dbm \
@@ -75,14 +61,12 @@ EXTRA_OECONF = "--with-avahi-priv-access-group=adm \
              --disable-qt4 \
              --disable-python \
              --disable-doxygen-doc \
-             --enable-manpages \
+             --disable-manpages \
              ${EXTRA_OECONF_SYSVINIT} \
-             ${EXTRA_OECONF_SYSTEMD} \
            "
 
 # The distro choice determines what init scripts are installed
 EXTRA_OECONF_SYSVINIT = "${@bb.utils.contains('DISTRO_FEATURES','sysvinit','--with-distro=debian','--with-distro=none',d)}"
-EXTRA_OECONF_SYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES','systemd','--with-systemdsystemunitdir=${systemd_system_unitdir}/','--without-systemdsystemunitdir',d)}"
 
 do_configure:prepend() {
     # This m4 file will get in the way of our introspection.m4 with special cross-compilation fixes
@@ -97,9 +81,9 @@ RRECOMMENDS:${PN}:append:libc-glibc = " avahi-libnss-mdns"
 
 do_install() {
 	autotools_do_install
-	rm -rf ${D}/run
+
+	rm -rf ${D}${runtimedir}
 	test -d ${D}${datadir}/dbus-1 && rmdir --ignore-fail-on-non-empty ${D}${datadir}/dbus-1
-	rm -rf ${D}${libdir}/avahi
 
 	# Move example service files out of /etc/avahi/services so we don't
 	# advertise ssh & sftp-ssh by default
@@ -147,9 +131,8 @@ FILES:avahi-daemon = "${sbindir}/avahi-daemon \
                       ${sysconfdir}/avahi/avahi-daemon.conf \
                       ${sysconfdir}/avahi/hosts \
                       ${sysconfdir}/avahi/services \
-                      ${sysconfdir}/dbus-1 \
                       ${sysconfdir}/init.d/avahi-daemon \
-                      ${datadir}/dbus-1/interfaces \
+                      ${datadir}/dbus-1 \
                       ${datadir}/avahi/avahi-service.dtd \
                       ${datadir}/avahi/service-types \
                       ${datadir}/dbus-1/system-services"
@@ -194,6 +177,11 @@ do_install:append() {
 	install -d ${D}${sysconfdir}/udhcpc.d
 	install ${UNPACKDIR}/00avahi-autoipd ${D}${sysconfdir}/udhcpc.d
 	install ${UNPACKDIR}/99avahi-autoipd ${D}${sysconfdir}/udhcpc.d
+
+	install -d ${D}${sysconfdir}/init.d
+	install ${UNPACKDIR}/avahi-daemon.in ${D}${sysconfdir}/init.d/avahi-daemon
+	install ${UNPACKDIR}/avahi-dnsconfd.in ${D}${sysconfdir}/init.d/avahi-dnsconfd
+	sed -i -e 's,@sbindir@,${sbindir},g' -e 's,@sysconfdir@,${sysconfdir},g' ${D}${sysconfdir}/init.d/avahi-*
 }
 
 # At the time the postinst runs, dbus might not be setup so only restart if running 
