@@ -49,6 +49,11 @@ export ENC2XS_NO_COMMENTS = "1"
 
 CFLAGS += "-D_GNU_SOURCE -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64"
 
+# Link Compress-Raw-Zlib to the system zlib instead of a vendored copy
+EXTRA_OEMAKE += "BUILD_ZLIB=False ZLIB_INCLUDE=${STAGING_INCDIR} ZLIB_LIB=${STAGING_LIBDIR}"
+
+CVE_STATUS[CVE-2026-4176] = "not-applicable-config: we do not use the vendorered zlib"
+
 do_configure:prepend() {
     rm -rf ${B}
     cp -rfp ${S} ${B}
