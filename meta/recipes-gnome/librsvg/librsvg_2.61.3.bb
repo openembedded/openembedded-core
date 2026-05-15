@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c"
 
 SECTION = "x11/utils"
 DEPENDS = "cairo gdk-pixbuf glib-2.0 libxml2 pango python3-docutils-native cargo-native cargo-c-native"
-RDEPENDS:${PN}-ptest += "rsvg liberation-fonts"
+RDEPENDS:${PN}-ptest += "rsvg"
 BBCLASSEXTEND = "native nativesdk"
 
 inherit cargo_common gnomebase pixbufcache gobject-introspection rust vala gi-docgen cargo-update-recipe-crates ptest-cargo
