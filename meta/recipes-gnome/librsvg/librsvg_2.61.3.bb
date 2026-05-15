@@ -10,7 +10,7 @@ LICENSE = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://COPYING.LIB;md5=4fbd65380cdd255951079008b364516c"
 
 SECTION = "x11/utils"
-DEPENDS = "cairo gdk-pixbuf glib-2.0 libxml2 pango python3-docutils-native cargo-native cargo-c-native"
+DEPENDS = "cairo glib-2.0 libxml2 pango python3-docutils-native cargo-native cargo-c-native"
 RDEPENDS:${PN}-ptest += "rsvg"
 BBCLASSEXTEND = "native nativesdk"
 
@@ -56,11 +56,14 @@ LDFLAGS += " -L${B}/rsvg"
 # needed on ubuntu 20.04/debian 11 to avoid 'undefined reference to `dlsym'' errors
 BUILD_LDFLAGS += " -ldl"
 
-PACKAGECONFIG ??= "gdkpixbuf \
+PACKAGECONFIG ??= "gdkpixbuf gdkpixbuf-loader \
                    ${@bb.utils.contains('PTEST_ENABLED', '1', 'apitest', '', d)} \
                    ${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'vala', '', d)}"
-# The gdk-pixbuf loader
-PACKAGECONFIG[gdkpixbuf] = "-Dpixbuf-loader=enabled,-Dpixbuf-loader=disabled,gdk-pixbuf-native"
+
+PACKAGECONFIG[avif] = "-Davif=enabled,-Davif=disabled,dav1d"
+PACKAGECONFIG[gdkpixbuf] = "-Dpixbuf=enabled,-Dpixbuf=disabled,gdk-pixbuf"
+# The gdk-pixbuf loader (depends on gdkpixbuf)
+PACKAGECONFIG[gdkpixbuf-loader] = "-Dpixbuf-loader=enabled,-Dpixbuf-loader=disabled,gdk-pixbuf-native"
 PACKAGECONFIG[vala] = "-Dvala=enabled,-Dvala=disabled"
 PACKAGECONFIG[apitest] = "-Dtests=true,-Dtests=false"
 
