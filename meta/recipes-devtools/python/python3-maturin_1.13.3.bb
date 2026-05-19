@@ -5,7 +5,7 @@ LICENSE = "MIT | Apache-2.0"
 LIC_FILES_CHKSUM = "file://license-apache;md5=1836efb2eb779966696f473ee8540542 \
                     file://license-mit;md5=85fd3b67069cff784d98ebfc7d5c0797"
 
-SRC_URI[sha256sum] = "9a87ff3b8e4d1c6eac33ebfe8e261e8236516d98d45c0323550621819b5a1a2f"
+SRC_URI[sha256sum] = "771e1e9e71a278e56db01552e0d1acfd1464259f9575b6e72842f893cd299079"
 
 S = "${UNPACKDIR}/maturin-${PV}"
 
