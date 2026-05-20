@@ -46,6 +46,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
            file://sys-utils-hwclock-rtc-fix-pointer-usage.patch \
            file://CVE-2025-14104-01.patch \
            file://CVE-2025-14104-02.patch \
+           file://CVE-2026-27456.patch \
            "
 
 SRC_URI[sha256sum] = "7b6605e48d1a49f43cc4b4cfc59f313d0dd5402fa40b96810bd572e167dfed0f"
