@@ -4,7 +4,6 @@ require recipes-kernel/linux/linux-yocto.inc
 
 # CVE exclusions
 include recipes-kernel/linux/cve-exclusion.inc
-include recipes-kernel/linux/cve-exclusion_6.18.inc
 
 # board specific branches
 KBRANCH:qemuarm  ?= "v6.18/standard/arm-versatile-926ejs"
