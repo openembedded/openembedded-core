@@ -30,6 +30,7 @@ PTESTS_FAST = "\
     json-glib \
     libarchive \
     libassuan \
+    libatomic-ops \
     libcheck \
     libconfig \
     libconvert-asn1-perl \
