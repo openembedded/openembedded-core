@@ -1055,13 +1055,13 @@ def save_debugsources_info(debugsrcdir, sources_raw, d):
         # we format the sources as expected by spdx by replacing /usr/src/kernel/
         # into BP/
         kernel_src = d.getVar('KERNEL_SRC_PATH')
-        pf = d.getVar('PF')
+        bp = d.getVar('BP')
         sources_dict = {}
         for file, src_files in sources_raw:
             file_clean = file.replace(f"{workdir}/package/","")
             sources_clean = [
                 src.replace(f"{debugsrcdir}/{pn}/", "")
-                if not kernel_src else src.replace(f"{kernel_src}/", f"{pf}/")
+                if not kernel_src else src.replace(f"{kernel_src}/", f"{bp}/")
                 for src in src_files
                 if not any(keyword in src for keyword in ("<internal>", "<built-in>")) and not src.endswith("/")
             ]
