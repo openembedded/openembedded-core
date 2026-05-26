@@ -308,6 +308,15 @@ fakeroot python populate_packages:prepend() {
             update_useradd_package(pkg)
 }
 
+do_recipe_qa[postfuncs] += "recipe_qa_deprecate_groupmems_param"
+python recipe_qa_deprecate_groupmems_param() {
+    useradd_packages = d.getVar('USERADD_PACKAGES') or ""
+    for pkg in useradd_packages.split():
+        if d.getVar(f"GROUPMEMS_PARAM:{pkg}"):
+            bb.warn("The GROUPMEMS_PARAM variable is deprecated. Please use USERMOD_PARAM instead.")
+            return
+}
+
 # Use the following to extend the useradd with custom functions
 USERADDEXTENSION ?= ""
 
