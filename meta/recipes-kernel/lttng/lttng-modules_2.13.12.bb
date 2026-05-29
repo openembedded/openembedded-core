@@ -15,10 +15,12 @@ SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0003-Fix-mm_compaction_migratepages-changed-in-linux-6.9-.patch \
            file://0004-Fix-dev_base_lock-removed-in-linux-6.9-rc1.patch \
            file://0001-Fix-sched_stat_runtime-changed-in-Linux-6.6.66.patch \
-        "
+           "
 
 # Use :append here so that the patch is applied also when using devupstream
-SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch"
+SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch \
+                   file://0001-fix-hrtimer-Reduce-trace-noise-in-hrtimer_start-v7.1.patch \
+                 "
 
 SRC_URI[sha256sum] = "d85fcb66c7bd31003ab8735e8c77700e5e4f417b4c22fe1f20112cf435abad79"
 
