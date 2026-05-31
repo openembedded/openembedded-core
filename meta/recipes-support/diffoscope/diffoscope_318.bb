@@ -8,11 +8,9 @@ BUGTRACKER = "https://salsa.debian.org/reproducible-builds/diffoscope/-/issues"
 LICENSE = "GPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
-PYPI_PACKAGE = "diffoscope"
-
 inherit pypi setuptools3
 
-SRC_URI[sha256sum] = "9c8741f76bcbd1faec59227da31981a524abca63e19d03f3a594c19f326de542"
+SRC_URI[sha256sum] = "313261c0da6b6c02e525a6b8a898a00aaba32cb7c5511364d5939fc0394295d9"
 
 RDEPENDS:${PN} += "\
         binutils \
