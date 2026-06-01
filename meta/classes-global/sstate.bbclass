@@ -498,7 +498,7 @@ def sstate_clean_manifest(manifest, d, canrace=False, prefix=None):
     if os.path.exists(manifest + ".postrm"):
         import subprocess
         os.chmod(postrm, 0o755)
-        subprocess.check_call(postrm, shell=True)
+        subprocess.check_call([postrm])
         oe.path.remove(postrm)
 
     oe.path.remove(manifest)
@@ -603,7 +603,7 @@ python sstate_hardcode_path () {
     sstate_filelist_cmd = "tee %s" % (fixmefn)
 
     # fixmepath file needs relative paths, drop sstate_builddir prefix
-    sstate_filelist_relative_cmd = "sed -i -e 's:^%s::g' %s" % (sstate_builddir, fixmefn)
+    sstate_filelist_relative_cmd = ['sed', '-i', '-e', 's:^%s::g' % sstate_builddir, fixmefn]
 
     xargs_no_empty_run_cmd = '--no-run-if-empty'
     if platform.system() == 'Darwin':
@@ -621,7 +621,7 @@ python sstate_hardcode_path () {
         os.remove(fixmefn)
     else:
         bb.note("Replacing absolute paths in fixmepath file: '%s'" % (sstate_filelist_relative_cmd))
-        subprocess.check_output(sstate_filelist_relative_cmd, shell=True)
+        subprocess.check_output(sstate_filelist_relative_cmd)
 }
 
 def sstate_package(ss, d):
