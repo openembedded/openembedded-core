@@ -746,8 +746,8 @@ class MakefileRecipeHandler(RecipeHandler):
             scanfile = os.path.join(srctree, 'configure.scan')
             skipscan = False
             try:
-                stdout, stderr = bb.process.run('autoscan', cwd=srctree, shell=True)
-            except bb.process.ExecutionError as e:
+                stdout, stderr = bb.process.run(['autoscan'], cwd=srctree)
+            except (bb.process.ExecutionError, bb.process.NotFoundError) as e:
                 skipscan = True
             if scanfile and os.path.exists(scanfile):
                 values = AutotoolsRecipeHandler.extract_autotools_deps(lines_before, srctree, acfile=scanfile)
@@ -771,7 +771,7 @@ class MakefileRecipeHandler(RecipeHandler):
 
             installtarget = True
             try:
-                stdout, stderr = bb.process.run('make -n install', cwd=srctree, shell=True)
+                stdout, stderr = bb.process.run(['make', '-n', 'install'], cwd=srctree)
             except bb.process.ExecutionError as e:
                 if e.exitcode != 1:
                     installtarget = False
