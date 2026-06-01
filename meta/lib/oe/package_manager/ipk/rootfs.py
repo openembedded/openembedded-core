@@ -307,7 +307,7 @@ class PkgRootfs(DpkgOpkgRootfs):
                     self._multilib_test_install(pkgs_to_install[pkg_type])
 
                 self.pm.install(pkgs_to_install[pkg_type],
-                                [False, True][pkg_type == Manifest.PKG_TYPE_ATTEMPT_ONLY])
+                                pkg_type == Manifest.PKG_TYPE_ATTEMPT_ONLY)
 
         if self.progress_reporter:
             self.progress_reporter.next_stage()
