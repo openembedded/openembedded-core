@@ -12,6 +12,7 @@ SRC_URI += " \
     file://CVE-2025-66418.patch \
     file://CVE-2025-66471.patch \
     file://CVE-2026-21441.patch \
+    file://CVE-2026-44431.patch \
 "
 
 RDEPENDS:${PN} += "\
