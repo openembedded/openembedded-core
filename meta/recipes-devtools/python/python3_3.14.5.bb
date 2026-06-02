@@ -271,13 +271,13 @@ SKIPPED_TESTS = " \
 # but not bang completion. test_bang_completion_without_do_shell() passes if
 # building with readline, but we don't want to change the default, so skip the
 # test.
-SKIPPED_TESTS:append = " \
+SKIPPED_TESTS += " \
     --ignore test_bang_completion_without_do_shell \
 "
 
 # Also fails with editline instead of readline. See:
 # https://github.com/python/cpython/issues/123018
-SKIPPED_TESTS:append = " \
+SKIPPED_TESTS += " \
     --ignore test_write_read_limited_history \
 "
 
@@ -294,22 +294,22 @@ SKIPPED_TESTS:append = " \
 # write is seeing the equivalent of:
 #
 # ANY, b"21"
-SKIPPED_TESTS:append = " \
+SKIPPED_TESTS += " \
     --ignore test_cursor_back_write \
 "
 
 # Needs IMAGE_FEATURE += \"tools-sdk\"
-SKIPPED_TESTS:append = " \
+SKIPPED_TESTS += " \
     --ignore test_find_library_with_gcc \
     --ignore test_find_library_with_ld \
 "
 
 # Fails due to differences in CFLAGS as as modified during build
-SKIPPED_TESTS:append = " \
+SKIPPED_TESTS += " \
     --ignore test_sysconfigdata_json \
 "
 
-SKIPPED_TESTS:append:class-target:libc-musl = " \
+SKIPPED_TESTS:append:libc-musl = " \
     -x test__locale \
     -x test_c_locale_coercion \
     -x test_locale \
