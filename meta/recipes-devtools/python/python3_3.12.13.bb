@@ -63,6 +63,7 @@ CVE_STATUS[CVE-2022-26488] = "not-applicable-platform: Issue only applies on Win
 # The module will be removed in the future and flaws documented.
 CVE_STATUS[CVE-2015-20107] = "upstream-wontfix: The mailcap module is insecure by design, so this can't be fixed in a meaningful way"
 CVE_STATUS[CVE-2023-36632] = "disputed: Not an issue, in fact expected behaviour"
+CVE_STATUS[CVE-2026-3087] = "not-applicable-platform: Issue only applies on Windows"
 
 PYTHON_MAJMIN = "3.12"
 
