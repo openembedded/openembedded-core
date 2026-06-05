@@ -8,6 +8,8 @@ when sigma is too small, avoiding intermittent failures.
 
 Upstream-Status: Backport [https://cgit.git.savannah.gnu.org/cgit/gawk.git/commit/?id=f2250f4bc864913437619af7a983]
 
+Signed-off-by: Aditya GS <adityags2004@gmail.com>
+
 ---
 
 diff --git a/test/randtest.sh b/test/randtest.sh
