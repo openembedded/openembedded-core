@@ -10,10 +10,8 @@ DEPENDS = "ncurses"
 
 inherit autotools
 
-SRC_URI = "http://www.thrysoee.dk/editline/${BP}.tar.gz \
-           file://stdc-predef.patch \
-          "
-SRC_URI[sha256sum] = "21362b00653bbfc1c71f71a7578da66b5b5203559d43134d2dd7719e313ce041"
+SRC_URI = "http://www.thrysoee.dk/editline/${BP}.tar.gz"
+SRC_URI[sha256sum] = "432d5e7ea8b0116dd39f2eca7bc11d0eed77faa6b77ea526ace89907c23ea4a0"
 
 # configure hardcodes /usr/bin search path bypassing HOSTTOOLS
 CACHED_CONFIGUREVARS += "ac_cv_path_NROFF=/bin/false"
