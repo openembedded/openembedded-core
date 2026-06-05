@@ -271,6 +271,7 @@ SKIPPED_TESTS = " \
 # but not bang completion. test_bang_completion_without_do_shell() passes if
 # building with readline, but we don't want to change the default, so skip the
 # test.
+# https://github.com/python/cpython/issues/150922
 SKIPPED_TESTS += " \
     --ignore test_bang_completion_without_do_shell \
 "
