@@ -261,6 +261,30 @@ class Archiver(OESelftestTestCase):
         archive_path = os.path.join(glob_result[0], target_file_name)
         self.assertFalse(os.path.exists(archive_path), 'Failed to exclude archive file %s' % (target_file_name))
 
+    def test_archiver_mode_mirror_include(self):
+        """
+        Test that `ARCHIVER_MIRROR_INCLUDE` causes a source URL to be included
+        in the mirror even when the recipe would otherwise be excluded by the
+        copyleft license filter.
+        """
+
+        target = 'selftest-ed'
+        target_file_name = 'ed-1.21.1.tar.lz'
+
+        features = 'INHERIT += "archiver"\n'
+        features += 'ARCHIVER_MODE[src] = "mirror"\n'
+        features += 'ARCHIVER_MODE[mirror] = "combined"\n'
+        features += 'BB_GENERATE_MIRROR_TARBALLS = "1"\n'
+        features += 'COPYLEFT_LICENSE_INCLUDE = "CLOSED"\n'
+        features += 'ARCHIVER_MIRROR_INCLUDE = "${GNU_MIRROR}"\n'
+        self.write_config(features)
+
+        bitbake('-c deploy_archives %s' % (target))
+
+        bb_vars = get_bb_vars(['DEPLOY_DIR_SRC'])
+        target_path = os.path.join(bb_vars['DEPLOY_DIR_SRC'], 'mirror', target_file_name)
+        self.assertTrue(os.path.exists(target_path), 'Missing archive file %s' % (target_file_name))
+
     def test_archiver_mode_mirror_combined(self):
         """
         Test that the archiver works with `ARCHIVER_MODE[src] = "mirror"`
