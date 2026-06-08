@@ -343,3 +343,41 @@ class Archiver(OESelftestTestCase):
         ]:
             target_path = os.path.join(bb_vars['DEPLOY_DIR_SRC'], 'mirror', target_file_name)
             self.assertTrue(os.path.exists(target_path))
+
+    def test_archiver_cleanup(self):
+        """
+        Test that the archiver removes no longer needed artifacts when its
+        configuration is modified.
+        """
+
+        target = 'selftest-ed-native'
+        target_file_name = 'selftest-ed-native-1.21.1-r0-showdata.dump'
+
+        def assert_dumpdata_present(expect_present):
+            bb_vars = get_bb_vars(['DEPLOY_DIR_SRC', 'BUILD_SYS'])
+            glob_str = os.path.join(bb_vars['DEPLOY_DIR_SRC'], bb_vars['BUILD_SYS'], '%s-*' % target)
+            glob_result = glob.glob(glob_str)
+            self.assertTrue(glob_result, 'Missing archiver directory for %s' % target)
+
+            archive_path = os.path.join(glob_result[0], target_file_name)
+            if expect_present:
+                self.assertTrue(os.path.exists(archive_path),
+                                'Missing archive file %s' % target_file_name)
+            else:
+                self.assertFalse(os.path.exists(archive_path),
+                                 'Unexpected archive file %s' % target_file_name)
+
+        features = 'INHERIT += "archiver"\n'
+        self.write_config(features)
+        bitbake('-c deploy_archives %s -f' % target)
+        assert_dumpdata_present(False)
+
+        features += 'ARCHIVER_MODE[dumpdata] = "1"\n'
+        self.write_config(features)
+        bitbake('-c deploy_archives %s -f' % target)
+        assert_dumpdata_present(True)
+
+        features = 'INHERIT += "archiver"\n'
+        self.write_config(features)
+        bitbake('-c deploy_archives %s -f' % target)
+        assert_dumpdata_present(False)
