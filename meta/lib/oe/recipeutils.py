@@ -1009,7 +1009,7 @@ def get_recipe_pv_with_pfx_sfx(pv, uri_type):
 
     return (pv, pfx, sfx)
 
-def get_recipe_upstream_version(rd, stable_upgrade):
+def get_recipe_upstream_version(rd, stable_upgrade=False):
     """
         Get upstream version of recipe using bb.fetch2 methods with support for
         http, https, ftp and git.
