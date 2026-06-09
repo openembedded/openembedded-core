@@ -8,6 +8,8 @@
 import os
 import re
 import subprocess
+import shutil
+import datetime
 from enum import Enum
 
 import bb.tinfoil
@@ -328,6 +330,7 @@ def get_signatures(builddir, failsafe=False, machine=None, extravars=None):
     assignment_regex = re.compile(r"^\s*(?P<var>\S+)\s*\+?=")
     lockedsigs_regex = re.compile(r"^SIGGEN_LOCKEDSIGS_t-(?P<tune>\S*)$")
     current_tune = None
+    shutil.copyfile(sigs_file, sigs_file + "-" + datetime.datetime.now().strftime("%Y%m%d%H%M%S"))
     with open(sigs_file, 'r') as f:
         for line in f.readlines():
             line = line.strip()
