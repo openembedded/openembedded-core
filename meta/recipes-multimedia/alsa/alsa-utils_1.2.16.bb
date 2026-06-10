@@ -12,11 +12,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
 DEPENDS = "alsa-lib ncurses libsamplerate0 bash"
 
 # Only needed as the dynamic packaging was altered, remove on upgrade
-PR = "r2"
 
 # alsa-utils specified in SRC_URI due to alsa-utils-scripts recipe
 SRC_URI = "https://www.alsa-project.org/files/pub/utils/alsa-utils-${PV}.tar.bz2"
-SRC_URI[sha256sum] = "7aaaafbfb01942113ec0c31e51f705910e81079205088ca2f8f137a3869e1a3a"
+SRC_URI[sha256sum] = "092399d5e8749a1d5e188e393157521cec4b75693b60ebb79bbce728cff2232c"
 
 inherit autotools gettext pkgconfig manpages
 
