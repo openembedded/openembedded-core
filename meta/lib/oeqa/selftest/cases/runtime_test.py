@@ -249,29 +249,25 @@ TEST_RUNQEMUPARAMS += " slirp"
         qemu_packageconfig = get_bb_var('PACKAGECONFIG', 'qemu-system-native')
         qemu_distrofeatures = get_bb_var('DISTRO_FEATURES', 'qemu-system-native')
         features = 'IMAGE_CLASSES += "testimage"\n'
-
-        if 'gtk+' not in qemu_packageconfig and 'sdl' not in qemu_packageconfig:
-            self.skipTest("Neither gtk+ nor sdl enabled in qemu-system-native; the test requires at least one")
-
+        if 'gtk+' not in qemu_packageconfig:
+            features += 'PACKAGECONFIG:append:pn-qemu-system-native = " gtk+"\n'
+        if 'sdl' not in qemu_packageconfig:
+            features += 'PACKAGECONFIG:append:pn-qemu-system-native = " sdl"\n'
         if 'opengl' not in qemu_distrofeatures:
             features += 'DISTRO_FEATURES:append = " opengl"\n'
         features += 'TEST_SUITES = "ping ssh virgl"\n'
         features += 'IMAGE_FEATURES:append = " ssh-server-dropbear"\n'
         features += 'IMAGE_INSTALL:append = " kmscube"\n'
-
-        if 'gtk+' in qemu_packageconfig:
-            features_gtk = features + 'TEST_RUNQEMUPARAMS += " gtk gl"\n'
-            self.write_config(features_gtk)
-            with mock.patch.dict(os.environ, {"DISPLAY": display}):
-                bitbake('core-image-minimal')
-                bitbake('-c testimage core-image-minimal')
-
-        if 'sdl' in qemu_packageconfig:
-            features_sdl = features + 'TEST_RUNQEMUPARAMS += " sdl gl"\n'
-            self.write_config(features_sdl)
-            with mock.patch.dict(os.environ, {"DISPLAY": display}):
-                bitbake('core-image-minimal')
-                bitbake('-c testimage core-image-minimal')
+        features_gtk = features + 'TEST_RUNQEMUPARAMS += " gtk gl"\n'
+        self.write_config(features_gtk)
+        with mock.patch.dict(os.environ, {"DISPLAY": display}):
+            bitbake('core-image-minimal')
+            bitbake('-c testimage core-image-minimal')
+        features_sdl = features + 'TEST_RUNQEMUPARAMS += " sdl gl"\n'
+        self.write_config(features_sdl)
+        with mock.patch.dict(os.environ, {"DISPLAY": display}):
+            bitbake('core-image-minimal')
+            bitbake('-c testimage core-image-minimal')
 
     @skipIfNotMachine("qemux86-64", "test needs qemux86-64")
     def test_testimage_virgl_headless(self):
