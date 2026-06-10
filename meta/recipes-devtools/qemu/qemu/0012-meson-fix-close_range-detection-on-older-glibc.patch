@@ -1,4 +1,6 @@
+From b072e3d025da9d5f266683b0b12796796c4208b3 Mon Sep 17 00:00:00 2001
 From: Quan Sun <Quan.Sun@windriver.com>
+Date: Fri, 5 Jun 2026 11:54:57 +0000
 Subject: [PATCH] meson: fix close_range detection on older glibc
 
 The has_function('close_range') check succeeds at link time on hosts
@@ -22,11 +24,12 @@ Signed-off-by: Quan Sun <Quan.Sun@windriver.com>
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/meson.build b/meson.build
-index cf634dfcd8..a1b2c3d4e5 100644
+index 51f5f2851..4353200db 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -2632,6 +2632,7 @@ endif
-
+@@ -2637,7 +2637,8 @@ if host_os == 'windows'
+ endif
+ 
  # has_function
 -config_host_data.set('CONFIG_CLOSE_RANGE', cc.has_function('close_range'))
 +config_host_data.set('CONFIG_CLOSE_RANGE',

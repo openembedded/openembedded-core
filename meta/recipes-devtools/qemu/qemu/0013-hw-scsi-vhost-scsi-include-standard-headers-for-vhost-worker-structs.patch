@@ -1,4 +1,6 @@
+From 6b613dae1eb1bad99fce6ee28f3c67fd0561b527 Mon Sep 17 00:00:00 2001
 From: Quan Sun <Quan.Sun@windriver.com>
+Date: Fri, 5 Jun 2026 11:54:58 +0000
 Subject: [PATCH] hw/scsi/vhost-scsi: fix build with older kernel headers
 
 On build hosts with kernel headers older than 6.0, the system's
@@ -22,12 +24,12 @@ Signed-off-by: Quan Sun <Quan.Sun@windriver.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/hw/scsi/vhost-scsi.c b/hw/scsi/vhost-scsi.c
-index 699863cc10..10e8fbe503 100644
+index 699863cc1..10e8fbe50 100644
 --- a/hw/scsi/vhost-scsi.c
 +++ b/hw/scsi/vhost-scsi.c
 @@ -15,6 +15,7 @@
   */
-
+ 
  #include "qemu/osdep.h"
 +#include "standard-headers/linux/vhost_types.h"
  #include <linux/vhost.h>

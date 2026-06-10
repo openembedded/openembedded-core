@@ -41,7 +41,7 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
 UPSTREAM_CHECK_URI = "https://www.qemu.org"
 UPSTREAM_CHECK_REGEX = "qemu-(?P<pver>\d+(\.\d+)+)\.tar"
 
-SRC_URI[sha256sum] = "c04ca36012653f32d11c674d370cf52a710e7d3f18c2d8b63e4932052a4854d6"
+SRC_URI[sha256sum] = "0d235f5820278d914a3155ec27af8e4258d697ea892895570807d69c0cb8cd64"
 
 CVE_STATUS[CVE-2007-0998] = "not-applicable-config: The VNC server can expose host files uder some circumstances. We don't enable it by default."
 
