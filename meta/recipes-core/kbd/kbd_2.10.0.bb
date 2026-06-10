@@ -23,12 +23,9 @@ RREPLACES:${PN} = "console-tools"
 RPROVIDES:${PN} = "console-tools"
 RCONFLICTS:${PN} = "console-tools"
 
-SRC_URI = "${KERNELORG_MIRROR}/linux/utils/${BPN}/${BP}.tar.xz \
-           file://0001-Preserve-only-necessary-metadata-during-install.patch \
-           file://0001-libkbdfile-Fix-problem-with-undeclared-sym_gzopen.patch \
-           "
+SRC_URI = "${KERNELORG_MIRROR}/linux/utils/${BPN}/${BP}.tar.xz"
 
-SRC_URI[sha256sum] = "fb3197f17a99eb44d22a3a1a71f755f9622dd963e66acfdea1a45120951b02ed"
+SRC_URI[sha256sum] = "6e5ca4f8d76ee9e3a8db700b667f13e12aac9933828a64e1aaad93d26be9b479"
 
 # 'gzip -n' is set due to https://github.com/legionus/kbd/issues/124
 EXTRA_OECONF = "--disable-tests --enable-compress='gzip -n'"
