@@ -51,6 +51,7 @@ SRC_URI = "${GNOME_MIRROR}/libsoup/${SHRT_VER}/libsoup-${PV}.tar.xz \
            file://CVE-2025-32049-2.patch \
            file://CVE-2025-32049-3.patch \
            file://CVE-2025-32049-4.patch \
+           file://CVE-2025-11021.patch \
 "
 SRC_URI[sha256sum] = "291c67725f36ed90ea43efff25064b69c5a2d1981488477c05c481a3b4b0c5aa"
 
