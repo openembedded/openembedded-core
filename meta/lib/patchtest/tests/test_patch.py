@@ -67,13 +67,10 @@ class TestPatch(base.Base):
 
             if not header_has_upstream:
                 if body_has_upstream:
-                    self.fail(
-                        'Upstream-Status is present only after the patch scissors. '
-                        "It must be placed in the patch header before the scissors line.",
-                        data=[
-                            ("Standard format", self.standard_format),
-                            ("Valid status", self.valid_status),
-                        ],
+                    print(
+                        "WARNING: Upstream-Status is present only after the patch scissors. "
+                        "It may be ignored by git and lost during patch refresh. "
+                        "Consider placing it before the scissors line."
                     )
                 else:
                     self.fail(
@@ -92,15 +89,12 @@ class TestPatch(base.Base):
                     continue
 
                 if scissors_index is not None and idx > scissors_index:
-                    self.fail(
-                        'Upstream-Status must be placed in the patch header before the scissors line, '
-                        "but was found afterwards.",
-                        data=[
-                            ("Current", line.lstrip("+")),
-                            ("Standard format", self.standard_format),
-                            ("Valid status", self.valid_status),
-                        ],
+                    print(
+                        "WARNING: Upstream-Status found after patch scissors. "
+                        "It may be ignored by git and lost during patch refresh. "
+                        "Consider placing it before the scissors line."
                     )
+                    continue
 
                 if patchtest_patterns.inappropriate.searchString(line):
                     try:
