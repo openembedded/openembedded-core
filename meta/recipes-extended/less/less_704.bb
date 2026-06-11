@@ -29,7 +29,7 @@ SRC_URI = "http://www.greenwoodsoftware.com/${BPN}/${BPN}-${PV}.tar.gz \
            file://run-ptest \
            "
 
-SRC_URI[sha256sum] = "61300f603798ecf1d7786570789f0ff3f5a1acf075a6fb9f756837d166e37d14"
+SRC_URI[sha256sum] = "20a0b0a2bb2525fa53c7eee9beb854b4c9cf172eabb209af7020743547bfe9fb"
 
 UPSTREAM_CHECK_URI = "http://www.greenwoodsoftware.com/less/download.html"
 
@@ -45,7 +45,7 @@ do_compile_ptest () {
 }
 
 do_install () {
-        oe_runmake 'bindir=${D}${bindir}' 'mandir=${D}${mandir}' install
+        oe_runmake 'DESTDIR=${D}' install
 }
 
 do_install_ptest () {
