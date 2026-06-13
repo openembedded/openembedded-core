@@ -37,6 +37,9 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://CVE-2026-1502.patch \
            file://CVE-2026-6100.patch \
            file://CVE-2026-3644_CVE-2026-0672.patch \
+           file://CVE-2026-4519_p1.patch \
+           file://CVE-2026-4519_p2.patch \
+           file://CVE-2026-4519_CVE-2026-4786.patch \
            "
 
 SRC_URI:append:class-native = " \
