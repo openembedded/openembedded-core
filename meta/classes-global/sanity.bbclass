@@ -568,11 +568,9 @@ def check_tar_version(sanity_data):
 
     return None
 
-# We use git parameters and functionality only found in 1.7.8 or later
-# The kernel tools assume git >= 1.8.3.1 (verified needed > 1.7.9.5) see #6162 
-# The git fetcher also had workarounds for git < 1.7.9.2 which we've dropped
+# We use git branch --show-current which was introduced in 2.22.0
 def check_git_version(sanity_data):
-    git_minimum_version = "1.8.3.1"
+    git_minimum_version = "2.22.0"
     import subprocess
     try:
         result = subprocess.check_output(["git", "--version"], stderr=subprocess.DEVNULL).decode('utf-8')
@@ -580,7 +578,7 @@ def check_git_version(sanity_data):
         return "Unable to execute git --version, exit code %d\n%s\n" % (e.returncode, e.output)
     version = result.split()[2]
     if bb.utils.vercmp_string_op(version, git_minimum_version, "<"):
-        return ("Your version of git is older than %s and has bugs which will break builds. "
+        return ("Your version of git is older than %s and is missing functionality we use. "
             "Please install a newer version of git.\n" % git_minimum_version)
     return None
 
