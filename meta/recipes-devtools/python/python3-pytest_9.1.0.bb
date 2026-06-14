@@ -5,7 +5,7 @@ DESCRIPTION = "The pytest framework makes it easy to write small tests, yet scal
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=bd27e41b6550fe0fc45356d1d81ee37c"
 
-SRC_URI[sha256sum] = "b86ada508af81d19edeb213c681b1d48246c1a91d304c6c81a427674c17eb91c"
+SRC_URI[sha256sum] = "41dd9148c08072446394cefd3d79701701335a9f4cae69ba92e39f6c7f5c061c"
 
 DEPENDS += "python3-setuptools-scm-native"
 
