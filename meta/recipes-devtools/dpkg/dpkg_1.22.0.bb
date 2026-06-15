@@ -15,6 +15,7 @@ SRC_URI = "git://salsa.debian.org/dpkg-team/dpkg.git;protocol=https;branch=main 
            file://pager.patch \
            file://0001-Add-support-for-riscv32-CPU.patch \
            file://CVE-2025-6297.patch \
+           file://CVE-2026-2219.patch \
            "
 
 SRC_URI:append:class-native = " file://0001-build.c-ignore-return-of-1-from-tar-cf.patch"
