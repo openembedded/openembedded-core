@@ -452,7 +452,7 @@ def create_tarball(d, srcdir, suffix, ar_outdir):
     bb.note('Creating %s' % tarname)
     dirname = os.path.dirname(srcdir)
     basename = os.path.basename(srcdir)
-    tar_cmd = ["tar", "--exclude=temp", "--exclude=patches", "--exclude='.pc'", '-cf', tarname, basename, '-I', compression_cmd]
+    tar_cmd = ["tar", "--exclude=temp", "--exclude=patches", "--exclude=.pc", '-cf', tarname, basename, '-I', compression_cmd]
     subprocess.check_call(tar_cmd, cwd=dirname)
 
 # creating .diff.gz between source.orig and source
