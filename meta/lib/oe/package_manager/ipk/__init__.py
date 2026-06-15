@@ -380,18 +380,18 @@ class OpkgPM(OpkgDpkgPM):
         temp_opkg_dir = os.path.join(temp_rootfs, opkg_lib_dir, 'opkg')
         bb.utils.mkdirhier(temp_opkg_dir)
 
-        opkg_args = ['-f', config_file, '-o', temp_rootfs]
+        opkg_args = ['-f', self.config_file, '-o', temp_rootfs]
         opkg_args.extend(shlex.split(self.d.getVar("OPKG_ARGS")))
 
-        cmd = "%s %s update" % (self.opkg_cmd, opkg_args)
+        cmd = [self.opkg_cmd] + opkg_args + ['update']
         try:
-            subprocess.check_output(cmd, stderr=subprocess.STDOUT, shell=True)
+            subprocess.check_output(cmd, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             bb.fatal("Unable to update. Command '%s' "
                      "returned %d:\n%s" % (cmd, e.returncode, e.output.decode("utf-8")))
 
         # Dummy installation
-        cmd = [self.opkg_cmd] + self.opkg_args + ['--noaction', 'install'] + pkgs
+        cmd = [self.opkg_cmd] + opkg_args + ['--noaction', 'install'] + pkgs
         proc = subprocess.run(cmd, capture_output=True, encoding="utf-8")
         if proc.returncode:
             bb.fatal("Unable to dummy install packages. Command '%s' "
