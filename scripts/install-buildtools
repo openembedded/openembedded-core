@@ -33,6 +33,7 @@
 #
 
 import argparse
+import glob
 import logging
 import os
 import platform
@@ -305,8 +306,17 @@ def main():
         # Setup the environment
         logger.info("Setting up the environment")
         regex = re.compile(r'^(?P<export>export )?(?P<env_var>[A-Z_]+)=(?P<env_val>.+)$')
-        with open("%s/environment-setup-%s-pokysdk-linux" %
-                  (install_dir, arch), 'rb') as f:
+        pattern = os.path.join(install_dir, "environment-setup-%s-*-linux" % arch)
+        matches = glob.glob(pattern)
+        if len(matches) == 0:
+            logger.error("No environment setup script matching %s" % pattern)
+            return 1
+        if len(matches) > 1:
+            logger.error("Multiple environment setup scripts found: %s"
+                         % " ".join(matches))
+            return 1
+        logger.debug("Using environment setup script: %s" % matches[0])
+        with open(matches[0], 'rb') as f:
             for line in f:
                 match = regex.search(line.decode('utf-8'))
                 logger.debug("export regex: %s" % match)
