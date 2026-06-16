@@ -24,13 +24,12 @@ TUNE_CCARGS:remove:x86-64 = "-mfpmath=sse"
 
 CFLAGS:append:powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS:append:mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
-SRCREV = "6a60ae592cd375f004df0694efc7d50ddae9aa5e"
+SRCREV = "3a64d78f58bdceba93ed321e91215fb969a047ed"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git;branch=master;protocol=https \
            file://0001-Remove-OOM-tests-from-runtest-mm.patch \
            file://0001-Add-__clear_cache-declaration-for-clang.patch \
            file://0001-syscalls-semctl08-Skip-semctl08-when-__USE_TIME64_RE.patch \
-           file://0001-ltp-fix-build-failure-with-glibc-2.43.patch \
           "
 
 inherit autotools-brokensep pkgconfig
