@@ -23,12 +23,9 @@ SRC_URI = "https://download.samba.org/pub/${BPN}/${BP}.tar.gz \
            file://ppp_on_boot \
            file://provider \
            file://ppp@.service \
-           file://0001-pppdump-Fixed-building-with-GCC-15-548.patch \
-           file://0001-pppd-pppdconf.h-remove-erroneous-generated-header.patch \
-           file://0001-pppd-session-Fixed-building-with-GCC-15.patch \
            "
 
-SRC_URI[sha256sum] = "47da358de54a10cb10bf6ff2cf9b1c03c0d3555518f6182e8f701b8e55733cb2"
+SRC_URI[sha256sum] = "ddda28dec8aca99a403ab6070d94ffd2b17d63e9a4c5509158e99e148f572d4f"
 
 inherit autotools pkgconfig systemd
 
@@ -60,7 +57,7 @@ do_install:append () {
 }
 
 CONFFILES:${PN} = "${sysconfdir}/ppp/pap-secrets ${sysconfdir}/ppp/chap-secrets ${sysconfdir}/ppp/options"
-PACKAGES =+ "${PN}-oa ${PN}-oe ${PN}-radius ${PN}-winbind ${PN}-minconn ${PN}-password ${PN}-l2tp ${PN}-tools"
+PACKAGES =+ "${PN}-oa ${PN}-oe ${PN}-radius ${PN}-winbind ${PN}-minconn ${PN}-password ${PN}-l2tp ${PN}-tools ${PN}-dhcpv6relay"
 FILES:${PN}        = "${sysconfdir} ${bindir} ${sbindir}/chat ${sbindir}/pppd ${systemd_system_unitdir}/ppp@.service"
 FILES:${PN}-oa       = "${libdir}/pppd/${PV}/pppoatm.so"
 FILES:${PN}-oe       = "${sbindir}/pppoe-discovery ${libdir}/pppd/${PV}/*pppoe.so"
@@ -69,6 +66,7 @@ FILES:${PN}-winbind  = "${libdir}/pppd/${PV}/winbind.so"
 FILES:${PN}-minconn  = "${libdir}/pppd/${PV}/minconn.so"
 FILES:${PN}-password = "${libdir}/pppd/${PV}/pass*.so"
 FILES:${PN}-l2tp     = "${libdir}/pppd/${PV}/*l2tp.so"
+FILES:${PN}-dhcpv6relay = "${libdir}/pppd/${PV}/dhcpv6relay.so"
 FILES:${PN}-tools    = "${sbindir}/pppstats ${sbindir}/pppdump"
 SUMMARY:${PN}-oa       = "Plugin for PPP for PPP-over-ATM support"
 SUMMARY:${PN}-oe       = "Plugin for PPP for PPP-over-Ethernet support"
@@ -77,5 +75,6 @@ SUMMARY:${PN}-winbind  = "Plugin for PPP to authenticate against Samba or Window
 SUMMARY:${PN}-minconn  = "Plugin for PPP to set a delay before the idle timeout applies"
 SUMMARY:${PN}-password = "Plugin for PPP to get passwords via a pipe"
 SUMMARY:${PN}-l2tp     = "Plugin for PPP for l2tp support"
+SUMMARY:${PN}-dhcpv6relay     = "Plugin which can be used to provide IPv6 RAs to the remote side and relay the subsequent incoming DHCPv6 requests to a DHCPv6 server"
 SUMMARY:${PN}-tools    = "Additional tools for the PPP package"
 
