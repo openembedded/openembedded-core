@@ -9,7 +9,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=20d74d74db9741697903372ad001d3b4"
 
 SRC_URI = "https://www.alsa-project.org/files/pub/lib/${BP}.tar.bz2"
 SRC_URI[sha256sum] = "cf3d1c07e089a83c4ece2c20f05dd6a8aab7fcd108768c38811386880575492b"
-# Something went wrong at upstream tarballing
 
 inherit allarch
 
