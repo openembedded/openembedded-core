@@ -7,11 +7,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 PYPI_PACKAGE = "spdx_python_model"
 SRC_URI[sha256sum] = "4bcf7c6e5e2e8f0b787ed4eb8fb519e2ed776e820cb6d9eb93e44e98eb92ca2d"
 
-SRC_URI += " \
-    https://spdx.org/rdf/3.0.1/spdx-context.jsonld;name=spdx1 \
-    https://spdx.org/rdf/3.0.1/spdx-json-serialize-annotations.ttl;name=spdx2 \
-    https://spdx.org/rdf/3.0.1/spdx-model.ttl;name=spdx3 \
-"
+SRC_URI += "https://spdx.org/rdf/3.0.1/spdx-context.jsonld;name=spdx1 \
+           https://spdx.org/rdf/3.0.1/spdx-json-serialize-annotations.ttl;name=spdx2 \
+           https://spdx.org/rdf/3.0.1/spdx-model.ttl;name=spdx3 \
+           file://0001-pyproject.toml-Update-shacl2code-to-1.1.0-and-add-ke.patch \
+           "
 
 SRC_URI[spdx1.sha256sum] = "c72b0928f094c83e5c127784edb1ebca2af74a104fcacc007c332b23cbc788bd"
 SRC_URI[spdx2.sha256sum] = "c6a54b51230eb2bf3b31302546af201f303e0b7931c1db404d7f5b72b6f863e6"
