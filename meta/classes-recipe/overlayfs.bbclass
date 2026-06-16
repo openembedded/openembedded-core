@@ -48,6 +48,21 @@
 # started after the ${PN}-overlays.service to make sure that all overlays are
 # mounted beforehand.
 #
+# If the storage directories (upperdir and workdir) of the overlayfs do not
+# exist when systemd mounts the overlayfs, systemd will create them with
+# default permissions (mode 0755, owned by root:root).
+# These permissions may be different from the actual permissions of the lower layer;
+# in some cases, it is desirable to create the upper layer with the same owner and mode
+# of the lower layer.
+# To make the directory permissions of the upper directory match those of the lower
+# directory, set OVERLAYFS_INHERIT_LOWER_PERMISSIONS to 1 for the respective overlay:
+#
+#   OVERLAYFS_WRITABLE_PATHS[data] = "/usr/share/my-custom-application"
+#   OVERLAYFS_INHERIT_LOWER_PERMISSIONS[data] = 1
+#
+# This will result in an additional helper unit that creates the upper and work
+# directories and applies the correct permissions before the overlayfs is mounted.
+#
 # Note: the class does not support /etc directory itself, because systemd depends on it
 # For /etc directory use overlayfs-etc class
 
@@ -57,6 +72,7 @@ inherit systemd features_check
 
 OVERLAYFS_CREATE_DIRS_TEMPLATE ??= "${COREBASE}/meta/files/overlayfs-create-dirs.service.in"
 OVERLAYFS_MOUNT_UNIT_TEMPLATE ??= "${COREBASE}/meta/files/overlayfs-unit.mount.in"
+OVERLAYFS_MOUNT_UNIT_TEMPLATE_WITH_CREATE_DIRS ??= "${COREBASE}/meta/files/overlayfs-unit-create-dirs.mount.in"
 OVERLAYFS_ALL_OVERLAYS_TEMPLATE ??= "${COREBASE}/meta/files/overlayfs-all-overlays.service.in"
 
 python do_create_overlayfs_units() {
@@ -66,10 +82,12 @@ python do_create_overlayfs_units() {
         CreateDirsUnitTemplate = f.read()
     with open(d.getVar("OVERLAYFS_MOUNT_UNIT_TEMPLATE"), "r") as f:
         MountUnitTemplate = f.read()
+    with open(d.getVar("OVERLAYFS_MOUNT_UNIT_TEMPLATE_WITH_CREATE_DIRS"), "r") as f:
+        MountUnitWithHelperTemplate = f.read()
     with open(d.getVar("OVERLAYFS_ALL_OVERLAYS_TEMPLATE"), "r") as f:
         AllOverlaysTemplate = f.read()
 
-    def prepareUnits(data, lower):
+    def prepareUnits(data, lower, use_helper):
         from oe.overlayfs import helperUnitName
 
         args = {
@@ -79,13 +97,18 @@ python do_create_overlayfs_units() {
             'LOWERDIR': lower,
         }
 
-        bb.debug(1, "Generate systemd unit %s" % mountUnitName(lower))
-        with open(os.path.join(d.getVar('WORKDIR'), mountUnitName(lower)), 'w') as f:
-            f.write(MountUnitTemplate.format(**args))
+        if use_helper:
+            bb.debug(1, "Generate systemd unit %s" % mountUnitName(lower))
+            with open(os.path.join(d.getVar('WORKDIR'), mountUnitName(lower)), 'w') as f:
+                f.write(MountUnitWithHelperTemplate.format(**args))
 
-        bb.debug(1, "Generate helper systemd unit %s" % helperUnitName(lower))
-        with open(os.path.join(d.getVar('WORKDIR'), helperUnitName(lower)), 'w') as f:
-            f.write(CreateDirsUnitTemplate.format(**args))
+            bb.debug(1, "Generate helper systemd unit %s" % helperUnitName(lower))
+            with open(os.path.join(d.getVar('WORKDIR'), helperUnitName(lower)), 'w') as f:
+                f.write(CreateDirsUnitTemplate.format(**args))
+        else:
+            bb.debug(1, "Generate basic systemd unit %s" % mountUnitName(lower))
+            with open(os.path.join(d.getVar('WORKDIR'), mountUnitName(lower)), 'w') as f:
+                f.write(MountUnitTemplate.format(**args))
 
     def prepareGlobalUnit(dependentUnits):
         from oe.overlayfs import allOverlaysUnitName
@@ -109,7 +132,8 @@ python do_create_overlayfs_units() {
         for lower in lowerList.split():
             bb.debug(1, "Prepare mount unit for %s with data mount point %s" %
                      (lower, d.getVarFlag('OVERLAYFS_MOUNT_POINT', mountPoint)))
-            prepareUnits(d.getVarFlag('OVERLAYFS_MOUNT_POINT', mountPoint), lower)
+            use_helper = d.getVarFlag('OVERLAYFS_INHERIT_LOWER_PERMISSIONS', mountPoint) == '1'
+            prepareUnits(d.getVarFlag('OVERLAYFS_MOUNT_POINT', mountPoint), lower, use_helper)
             mountUnitList.append(mountUnitName(lower))
 
     # set up one unit, which depends on all mount units, so users can set
@@ -138,5 +162,5 @@ do_install:append() {
     done
 }
 
-do_create_overlayfs_units[vardeps] += "OVERLAYFS_WRITABLE_PATHS"
+do_create_overlayfs_units[vardeps] += "OVERLAYFS_WRITABLE_PATHS OVERLAYFS_INHERIT_LOWER_PERMISSIONS"
 addtask create_overlayfs_units before do_install

@@ -46,7 +46,8 @@ def unitFileList(d):
             continue
         for path in mountPointList.split():
             fileList.append(mountUnitName(path))
-            fileList.append(helperUnitName(path))
+            if d.getVarFlag('OVERLAYFS_INHERIT_LOWER_PERMISSIONS', mountPoint) == '1':
+                fileList.append(helperUnitName(path))
 
     fileList.append(allOverlaysUnitName(d))
 
