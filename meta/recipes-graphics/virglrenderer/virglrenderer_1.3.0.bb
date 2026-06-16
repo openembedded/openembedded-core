@@ -9,10 +9,9 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c81c08eeefd9418fca8f88309a76db10"
 
 DEPENDS = "libdrm libepoxy python3-pyyaml-native virtual/egl virtual/libgbm"
-SRCREV = "500b41d5c8638f9b80dd558f4044f3301c7457a4"
+SRCREV = "ca50e008863837e094747a69974dde3ae148aeaa"
 SRC_URI = "git://gitlab.freedesktop.org/virgl/virglrenderer.git;branch=main;protocol=https;tag=${PV} \
            file://0001-meson.build-use-python3-directly-for-python.patch \
-           file://0001-c11-use-glibc-s-once_flag-ONCE_FLAG_INIT-when-presen.patch \
            file://986b5fc57b07c06b5e0b3a3694d06898ebc80163.patch \
            "
 
@@ -22,9 +21,7 @@ PACKAGECONFIG ?= "${@bb.utils.contains('DISTRO_FEATURES', 'vulkan', 'venus', '',
 
 PACKAGECONFIG[venus] = "-Dvenus=true,-Dvenus=false,vulkan-loader vulkan-headers"
 PACKAGECONFIG[va] = "-Dvideo=true,-Dvideo=false,libva"
-PACKAGECONFIG[render-server] = "-Drender-server=true,-Drender-server=false"
 PACKAGECONFIG[minigbm_allocation] = "-Dminigbm_allocation=true,-Dminigbm_allocation=false"
-PACKAGECONFIG[venus-validate] = "-Dvenus-validate=true,-Dvenus-validate=false"
 PACKAGECONFIG[tests] = "-Dtests=true,-Dtests=false,libcheck"
 
 BBCLASSEXTEND = "native nativesdk"
