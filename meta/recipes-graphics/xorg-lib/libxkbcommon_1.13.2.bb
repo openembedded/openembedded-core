@@ -7,9 +7,11 @@ LICENSE = "MIT & MIT-open-group & HPND & HPND-sell-variant & X11"
 
 DEPENDS = "flex-native bison-native"
 
-SRC_URI = "git://github.com/xkbcommon/libxkbcommon;protocol=https;branch=releases/v1.13;tag=xkbcommon-${PV}"
+SRC_URI = "git://github.com/xkbcommon/libxkbcommon;protocol=https;branch=releases/v1.13;tag=xkbcommon-${PV} \
+           file://0001-tools-Fix-info-on-macOS.patch \
+           "
 
-SRCREV = "6f76d19db72b5d450e927b41e1e96cbe3252aba8"
+SRCREV = "d1442aaa6b635551182e83c3b55037f4c118c962"
 
 inherit meson pkgconfig bash-completion
 
