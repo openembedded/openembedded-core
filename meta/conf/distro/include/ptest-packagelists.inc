@@ -31,6 +31,7 @@ PTESTS_FAST = "\
     libarchive \
     libassuan \
     libatomic-ops \
+    libcap \
     libcheck \
     libconfig \
     libconvert-asn1-perl \
