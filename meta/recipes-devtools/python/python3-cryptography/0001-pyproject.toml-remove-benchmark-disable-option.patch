@@ -1,4 +1,4 @@
-From f870c1b00a302999fc3a7dd9cc6bb1d340511803 Mon Sep 17 00:00:00 2001
+From c8fd85d80eb64fede8447842042977b70b3c96bc Mon Sep 17 00:00:00 2001
 From: Mingli Yu <mingli.yu@windriver.com>
 Date: Tue, 17 May 2022 17:22:48 +0800
 Subject: [PATCH] pyproject.toml: remove --benchmark-disable option
@@ -26,7 +26,7 @@ Signed-off-by: Tim Orling <tim.orling@konsulko.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/pyproject.toml b/pyproject.toml
-index f9d05bb..3aaf9fe 100644
+index cddaf7f..921badf 100644
 --- a/pyproject.toml
 +++ b/pyproject.toml
 @@ -139,7 +139,7 @@ exclude = [

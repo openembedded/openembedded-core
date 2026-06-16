@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=8c3617db4fb6fae01f1d253ab91511e4 \
 # NOTE: Make sure to keep this recipe at the same version as python3-cryptography
 #       Upgrade both recipes at the same time
 require python3-cryptography-common.inc
-SRC_URI[sha256sum] = "52bfaaf93b50e013d59a5ba070b510e4c1272f8cfabcb2e4fb58bc327c69b8f1"
+SRC_URI[sha256sum] = "9e3352b1e652d2f986755edf79228a385f6b0bd53d5b248c087ff79b24a7b516"
 
 PYPI_PACKAGE = "cryptography_vectors"
 
