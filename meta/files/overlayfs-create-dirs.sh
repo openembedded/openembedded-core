@@ -8,4 +8,5 @@ mkdir -p ${datamountpoint}/upper${lowerdir}
 mkdir -p ${datamountpoint}/workdir${lowerdir}
 if [ -d "$lowerdir" ]; then
     chown $(stat -c "%U:%G" ${lowerdir}) ${datamountpoint}/upper${lowerdir}
+    chmod $(stat -c "%a" ${lowerdir}) ${datamountpoint}/upper${lowerdir}
 fi
