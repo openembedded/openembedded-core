@@ -9,13 +9,13 @@ LICENSE = "MIT"
 
 inherit meson pkgconfig
 
-SRCREV = "2d7ec9a36c550c48af4bdd6e748f6753369ab8ff"
+SRCREV = "e6b603e4984e4ce30fe1cc2705734d0f130e0550"
 
 SRC_URI = "git://gitlab.freedesktop.org/drm/igt-gpu-tools.git;protocol=https;branch=master;tag=v${PV} \
            file://0001-lib-meson.build-do-not-hardcode-the-build-directory-.patch \
            "
 
-DEPENDS += "libdrm libpciaccess cairo udev glib-2.0 procps libunwind kmod openssl elfutils alsa-lib json-c bison-native"
+DEPENDS += "libdrm libpciaccess cairo udev glib-2.0 procps libunwind kmod openssl elfutils alsa-lib json-c bison-native pciutils jansson"
 RDEPENDS:${PN} += "bash perl"
 RDEPENDS:${PN}-tests += "bash"
 
