@@ -8,8 +8,8 @@ SECTION = "libs"
 LICENSE = "Apache-2.0 & MIT & BSL-1.0 "
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=b1a17d548e004bfbbfaa0c40988b6b31"
 
-SRC_URI = "git://github.com/KhronosGroup/Vulkan-ValidationLayers.git;branch=main;protocol=https;tag=vulkan-sdk-${PV}"
-SRCREV = "14de3c0d7b396853d81e6975aad3713984a697a6"
+SRC_URI = "git://github.com/KhronosGroup/Vulkan-ValidationLayers.git;branch=vulkan-sdk-1.4.350;protocol=https;tag=vulkan-sdk-${PV}"
+SRCREV = "b9d4f9ead8d97c1bb0d174ea07d8aed8273818a5"
 
 REQUIRED_DISTRO_FEATURES = "vulkan"
 
@@ -24,6 +24,7 @@ EXTRA_OECMAKE = "\
     -DGLSLANG_INSTALL_DIR=${STAGING_LIBDIR} \
     -DVULKAN_HEADERS_INSTALL_DIR=${STAGING_EXECPREFIXDIR} \
     -DSPIRV_HEADERS_INSTALL_DIR=${STAGING_EXECPREFIXDIR} \
+    -DUPDATE_DEPS=OFF \
     "
 
 CXXFLAGS:append = " ${@oe.utils.vartrue('DEBUG_BUILD', '-DXXH_NO_INLINE_HINTS=1', '', d)}"
