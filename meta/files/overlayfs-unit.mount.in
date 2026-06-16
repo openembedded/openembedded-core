@@ -1,6 +1,7 @@
 [Unit]
 Description=Overlayfs mount unit {LOWERDIR}
-RequiresMountsFor={DATA_MOUNT_POINT}
+Requires={CREATE_DIRS_SERVICE}
+After={CREATE_DIRS_SERVICE}
 
 [Mount]
 What=overlay

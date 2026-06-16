@@ -23,6 +23,9 @@ def allOverlaysUnitName(d):
 def mountUnitName(unit):
     return escapeSystemdUnitName(unit) + '.mount'
 
+def helperUnitName(unit):
+    return escapeSystemdUnitName(unit) + '-create-upper-dir.service'
+
 def unitFileList(d):
     fileList = []
     overlayMountPoints = d.getVarFlags("OVERLAYFS_MOUNT_POINT")
@@ -43,6 +46,7 @@ def unitFileList(d):
             continue
         for path in mountPointList.split():
             fileList.append(mountUnitName(path))
+            fileList.append(helperUnitName(path))
 
     fileList.append(allOverlaysUnitName(d))
 
