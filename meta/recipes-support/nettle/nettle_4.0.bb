@@ -7,10 +7,11 @@ context-independent set of cryptographic algorithms"
 SECTION = "libs"
 LICENSE = "LGPL-3.0-or-later | GPL-2.0-or-later"
 
-LIC_FILES_CHKSUM = "file://COPYING.LESSERv3;md5=6a6a8e020838b23406c81b19c1d46df6 \
+LIC_FILES_CHKSUM = "file://COPYING.LESSERv3;md5=3000208d539ec061b899bce1d9ce9404 \
                     file://COPYINGv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://serpent-decrypt.c;beginline=14;endline=36;md5=ca0d220bc413e1842ecc507690ce416e \
-                    file://serpent-set-key.c;beginline=14;endline=36;md5=ca0d220bc413e1842ecc507690ce416e"
+                    file://serpent-set-key.c;beginline=14;endline=36;md5=ca0d220bc413e1842ecc507690ce416e \
+                    "
 
 DEPENDS += "gmp"
 
@@ -20,7 +21,7 @@ SRC_URI = "${GNU_MIRROR}/${BPN}/${BP}.tar.gz \
            file://check-header-files-of-openssl-only-if-enable_.patch \
            "
 
-SRC_URI[sha256sum] = "fe9ff51cb1f2abb5e65a6b8c10a92da0ab5ab6eaf26e7fc2b675c45f1fb519b5"
+SRC_URI[sha256sum] = "3addbc00da01846b232fb3bc453538ea5468da43033f21bb345cb1e9073f5094"
 
 UPSTREAM_CHECK_REGEX = "nettle-(?P<pver>\d+(\.\d+)+)\.tar"
 
@@ -43,6 +44,9 @@ do_install_ptest() {
         install -d ${D}${PTEST_PATH}/testsuite/
         install ${B}/testsuite/*-test ${D}${PTEST_PATH}/testsuite/
         install ${S}/testsuite/*-test ${D}${PTEST_PATH}/testsuite/
+        install ${S}/testsuite/*.ref ${D}${PTEST_PATH}/testsuite/
+        install ${S}/testsuite/*.sig ${D}${PTEST_PATH}/testsuite/
+        install ${S}/testsuite/*.msg ${D}${PTEST_PATH}/testsuite/
         install ${S}/testsuite/gold-bug.txt ${D}${PTEST_PATH}/testsuite/
         install ${S}/testsuite/sc-valgrind.sh ${D}${PTEST_PATH}/testsuite/
 
