@@ -35,17 +35,12 @@ UPSTREAM_CHECK_URI = "http://www.greenwoodsoftware.com/less/download.html"
 
 inherit autotools ptest update-alternatives
 
-EXTRA_OEMAKE += " LESSTEST=1"
+EXTRA_OEMAKE += "LESSTEST=1"
 
 inherit autotools update-alternatives
 
 do_compile_ptest () {
-        cd ${S}/lesstest
-        oe_runmake
-}
-
-do_install () {
-        oe_runmake 'DESTDIR=${D}' install
+        oe_runmake -C ${S}/lesstest
 }
 
 do_install_ptest () {
