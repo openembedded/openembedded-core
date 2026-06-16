@@ -571,8 +571,6 @@ class AutotoolsRecipeHandler(RecipeHandler):
                 deps.append('ncurses')
             elif keyword == 'AX_PATH_BDB':
                 deps.append('db')
-            elif keyword == 'AX_PATH_LIB_PCRE':
-                deps.append('libpcre')
             elif keyword == 'AC_INIT':
                 if extravalues is not None:
                     res = ac_init_re.match(value)
@@ -640,7 +638,6 @@ class AutotoolsRecipeHandler(RecipeHandler):
                     'AM_PATH_PYTHON',
                     'AX_WITH_CURSES',
                     'AX_PATH_BDB',
-                    'AX_PATH_LIB_PCRE',
                     'AC_INIT',
                     'AM_INIT_AUTOMAKE',
                     'define(',
