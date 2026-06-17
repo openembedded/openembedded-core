@@ -14,6 +14,8 @@ DEPENDS = "libevdev udev mtdev"
 
 SRC_URI = "git://gitlab.freedesktop.org/libinput/libinput.git;protocol=https;branch=main \
            file://run-ptest \
+           file://CVE-2026-50292-01.patch \
+           file://CVE-2026-50292-02.patch \
            "
 SRCREV = "3fd38d89276b679ac3565efd7c2150fd047902cb"
 S = "${WORKDIR}/git"
