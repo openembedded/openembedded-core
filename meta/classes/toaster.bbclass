@@ -32,12 +32,12 @@ python toaster_layerinfo_dumpdata() {
     import subprocess
 
     def _get_git_branch(layer_path):
-        branch = subprocess.check_output(['git', 'symbolic-ref', 'HEAD'], cwd=layer_path, text=True).strip()
+        branch = subprocess.run(['git', 'symbolic-ref', 'HEAD'], cwd=layer_path, text=True, stdout=subprocess.PIPE).stdout.strip()
         branch = branch.replace('refs/heads/', '').rstrip()
         return branch
 
     def _get_git_revision(layer_path):
-        revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=layer_path, text=True).strip()
+        revision = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=layer_path, text=True, stdout=subprocess.PIPE).stdout.strip()
         return revision
 
     def _get_url_map_name(layer_name):
