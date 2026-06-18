@@ -123,11 +123,11 @@ def _runner(resultklass, prefix=None):
         pattern=PatchtestParser.pattern,
         top_level_dir=PatchtestParser.topdir,
     )
-    ntc = suite.countTestCases()
 
     # if there are no test cases, just quit
-    if not ntc:
+    if not suite.countTestCases():
         return 2
+
     runner = unittest.TextTestRunner(resultclass=resultklass, verbosity=0)
 
     try:
@@ -135,11 +135,8 @@ def _runner(resultklass, prefix=None):
     except:
         logger.error(traceback.print_exc())
         logger.error('patchtest: something went wrong')
-        return 1
-    if result.test_failure or result.test_error:
-        return 1 
 
-    return 0
+    return 1 if (result.test_failure or result.test_error) else 0
 
 def run(patch, logfile=None):
     """ Load, setup and run pre and post-merge tests """
