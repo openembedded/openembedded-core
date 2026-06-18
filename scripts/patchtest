@@ -30,8 +30,6 @@ loggerhandler = logging.StreamHandler()
 loggerhandler.setFormatter(logging.Formatter("%(message)s"))
 logger.addHandler(loggerhandler)
 logger.setLevel(logging.INFO)
-info = logger.info
-error = logger.error
 
 def _format_test_description(test):
     return (test.id().split('.')[-1]
@@ -56,9 +54,9 @@ def getResult(patch, mergepatch, logfile=None):
         shouldStop  = True
         longMessage = False
 
-        success     = 'PASS'
-        fail        = 'FAIL'
-        skip        = 'SKIP'
+        success = 'PASS'
+        fail    = 'FAIL'
+        skip    = 'SKIP'
 
         def startTestRun(self):
             self.repo_error   = False
@@ -84,7 +82,7 @@ def getResult(patch, mergepatch, logfile=None):
         def addError(self, test, err):
             self.test_error = True
             (ty, va, trace) = err
-            logger.error(traceback.print_exc())
+            traceback.print_exc()
 
         def addFailure(self, test, err):
             self.test_failure = True
@@ -132,8 +130,8 @@ def _runner(resultklass, prefix=None):
 
     try:
         result = runner.run(suite)
-    except:
-        logger.error(traceback.print_exc())
+    except Exception:
+        traceback.print_exc()
         logger.error('patchtest: something went wrong')
 
     return 1 if (result.test_failure or result.test_error) else 0
@@ -227,7 +225,6 @@ if __name__ == '__main__':
     try:
         ret = main()
     except Exception:
-        import traceback
         traceback.print_exc(5)
 
     sys.exit(ret)
