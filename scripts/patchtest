@@ -33,6 +33,22 @@ logger.setLevel(logging.INFO)
 info = logger.info
 error = logger.error
 
+def _format_test_description(test):
+    return (test.id().split('.')[-1]
+            .replace('_', ' ')
+            .replace("cve", "CVE")
+            .replace("signed off by", "Signed-off-by")
+            .replace("upstream status", "Upstream-Status")
+            .replace("non auh", "non-AUH")
+            .replace("presence format", "presence"))
+
+
+def _write_patchtest_result(line, logfile=None):
+    print(line)
+    if logfile:
+        with open(logfile, "a") as f:
+            f.write(line + "\n")
+
 def getResult(patch, mergepatch, logfile=None):
 
     class PatchTestResult(unittest.TextTestResult):
@@ -74,43 +90,19 @@ def getResult(patch, mergepatch, logfile=None):
             logger.error(traceback.print_exc())
 
         def addFailure(self, test, err):
-            test_description = test.id().split('.')[-1].replace('_', ' ').replace("cve", "CVE").replace("signed off by",
-            "Signed-off-by").replace("upstream status",
-            "Upstream-Status").replace("non auh",
-            "non-AUH").replace("presence format", "presence")
             self.test_failure = True
-            fail_str = '{}: {}: {} ({})'.format(self.fail,
-            test_description, json.loads(str(err[1]))["issue"],
-            test.id())
-            print(fail_str)
-            if logfile:
-                with open(logfile, "a") as f:
-                    f.write(fail_str + "\n")
+            desc = _format_test_description(test)
+            issue = json.loads(str(err[1]))["issue"]
+            _write_patchtest_result('{}: {}: {} ({})'.format(self.fail, desc, issue, test.id()), logfile)
 
         def addSuccess(self, test):
-            test_description = test.id().split('.')[-1].replace('_', ' ').replace("cve", "CVE").replace("signed off by",
-            "Signed-off-by").replace("upstream status",
-            "Upstream-Status").replace("non auh",
-            "non-AUH").replace("presence format", "presence")
-            success_str = '{}: {} ({})'.format(self.success,
-            test_description, test.id())
-            print(success_str)
-            if logfile:
-                with open(logfile, "a") as f:
-                    f.write(success_str + "\n")
+            desc = _format_test_description(test)
+            _write_patchtest_result('{}: {} ({})'.format(self.success, desc, test.id()), logfile)
 
         def addSkip(self, test, reason):
-            test_description = test.id().split('.')[-1].replace('_', ' ').replace("cve", "CVE").replace("signed off by",
-            "Signed-off-by").replace("upstream status",
-            "Upstream-Status").replace("non auh",
-            "non-AUH").replace("presence format", "presence")
-            skip_str = '{}: {}: {} ({})'.format(self.skip,
-            test_description, json.loads(str(reason))["issue"],
-            test.id())
-            print(skip_str)
-            if logfile:
-                with open(logfile, "a") as f:
-                    f.write(skip_str + "\n")
+            desc = _format_test_description(test)
+            issue = json.loads(str(reason))["issue"]
+            _write_patchtest_result('{}: {}: {} ({})'.format(self.skip, desc, issue, test.id()), logfile)
 
         def stopTestRun(self):
 
