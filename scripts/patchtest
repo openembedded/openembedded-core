@@ -141,13 +141,8 @@ def run(patch, logfile=None):
     # Get the result class and install the control-c handler
     unittest.installHandler()
 
-    # run pre-merge tests, meaning those methods with 'pretest' as prefix
-    premerge_resultklass = getResult(patch, False, logfile)
-    premerge_result = _runner(premerge_resultklass, 'pretest')
-
-    # run post-merge tests, meaning those methods with 'test' as prefix
-    postmerge_resultklass = getResult(patch, True, logfile)
-    postmerge_result = _runner(postmerge_resultklass, 'test')
+    premerge_result = _runner(getResult(patch, False, logfile), 'pretest')
+    postmerge_result = _runner(getResult(patch, True, logfile), 'test')
 
     print_result_message(premerge_result, postmerge_result)
     return premerge_result or postmerge_result
