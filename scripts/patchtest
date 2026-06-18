@@ -61,20 +61,17 @@ def getResult(patch, mergepatch, logfile=None):
         skip        = 'SKIP'
 
         def startTestRun(self):
-            # let's create the repo already, it can be used later on
-            repoargs = {
-                "repodir": PatchtestParser.repodir,
-                "commit": PatchtestParser.basecommit,
-                "branch": PatchtestParser.basebranch,
-                "patch": patch,
-            }
-
-            self.repo_error    = False
-            self.test_error    = False
-            self.test_failure  = False
+            self.repo_error   = False
+            self.test_error   = False
+            self.test_failure = False
 
             try:
-                self.repo = PatchtestParser.repo = PatchTestRepo(**repoargs)
+                self.repo = PatchtestParser.repo = PatchTestRepo(
+                    patch=patch,
+                    repodir=PatchtestParser.repodir,
+                    commit=PatchtestParser.basecommit,
+                    branch=PatchtestParser.basebranch,
+                )
             except:
                 logger.error(traceback.print_exc())
                 self.repo_error = True
