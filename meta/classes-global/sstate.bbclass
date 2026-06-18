@@ -474,6 +474,10 @@ def sstate_clean_manifest(manifest, d, canrace=False, prefix=None):
     with open(manifest) as mfile:
         entries = mfile.readlines()
 
+    # Remove binaries first, then all the other files, just in case somehow something
+    # is trying to execute something in a sysroot (e.g. python3 from PATH).
+    entries.sort(key=lambda d: '/bin/' not in d)
+
     for entry in entries:
         entry = entry.strip()
         if prefix and not entry.startswith("/"):
