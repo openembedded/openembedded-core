@@ -12,6 +12,7 @@
 import json
 import logging
 import os
+import subprocess
 import sys
 import traceback
 import unittest
@@ -162,16 +163,14 @@ def print_result_message(preresult, postresult):
     print("----------------------------------------------------------------------\n")
 
 def main():
-    ret = 0
-    tmp_patch = False
     patch_path = PatchtestParser.patch_path
-    log_results = PatchtestParser.log_results
-    log_path = None
-    patch_list = None
 
-    git_status = os.popen("(cd %s && git status)" % PatchtestParser.repodir).read()
+    git_status = subprocess.run(
+        ['git', '-C', PatchtestParser.repodir, 'status'],
+        capture_output=True, text=True,
+    ).stdout
     status_matches = ["Changes not staged for commit", "Changes to be committed"]
-    if any([match in git_status for match in status_matches]):
+    if any(match in git_status for match in status_matches):
         logger.error("patchtest: there are uncommitted changes in the target repo that would be overwritten. Please commit or restore them before running patchtest")
         return 1
 
@@ -180,6 +179,7 @@ def main():
     else:
         patch_list = [patch_path]
 
+    ret = 0
     for patch in patch_list:
         if os.path.getsize(patch) == 0:
             logger.error('patchtest: patch is empty')
@@ -187,19 +187,13 @@ def main():
 
         logger.info('Testing patch %s' % patch)
 
-        if log_results:
+        log_path = None
+        if PatchtestParser.log_results:
             log_path = patch + ".testresult"
             with open(log_path, "a") as f:
                 f.write("Patchtest results for patch '%s':\n\n" % patch)
 
-        try:
-            if log_path:
-                ret = run(patch, log_path)
-            else:
-                ret = run(patch)
-        finally:
-            if tmp_patch:
-                os.remove(patch)
+        ret = run(patch, log_path)
 
     return ret
 
