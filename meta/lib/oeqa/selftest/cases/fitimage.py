@@ -63,6 +63,181 @@ class FitImageTestCase(OESelftestTestCase):
     MKIMAGE_HASH_LENGTHS = { 'sha256': 64, 'sha384': 96, 'sha512': 128 }
     MKIMAGE_SIGNATURE_LENGTHS = { 'rsa2048': 512 }
 
+    # Machine-specific bitbake variable settings for OE-core machines.
+    # Each entry maps a MACHINE name to the bitbake config lines that tests need
+    # in order to build a kernel FIT image and/or a U-Boot FIT image on that
+    # machine. Tests call _config_add_machine_settings() which reads the
+    # current MACHINE and appends the matching block.
+    #
+    # Keys used by the kernel / KernelFitImageBase tests:
+    #   KERNEL_DEVICETREE     - at least one DTB that the kernel ships
+    #   FIT_CONF_DEFAULT_DTB  - default FIT configuration DTB (basename only)
+    #
+    # Keys used by the UBoot / UBootFitImageTests tests:
+    #   UBOOT_MACHINE    - defconfig that produces an MLO/SPL + U-Boot
+    #   UBOOT_DTB_BINARY - the DTB file embedded in the U-Boot FIT image
+    #   UBOOT_ARCH       - architecture string used by mkimage
+    #
+    # Capability sub-dicts (keys starting with '_cap_') declare optional board
+    # features. Their presence signals the capability; their contents (if any)
+    # are extra bitbake variables that tests should emit via
+    # _require_machine_capability(). Tests that require a capability call
+    # _get_machine_capability() and skip when it returns None.
+    #
+    # Defined capabilities:
+    #   _cap_spl_dtb  - board produces spl/u-boot-spl.dtb (CONFIG_SPL_OF_CONTROL=y)
+    #   _cap_atf_tee  - board supports ATF + TEE in the U-Boot FIT image
+    #
+    # A capability sub-dict may override UBOOT_MACHINE (and SPL_BINARY etc.) so
+    # that one MACHINE can use different defconfigs depending on what the test
+    # needs. Because _require_machine_capability() emits after
+    # _config_add_machine_settings(), the capability's UBOOT_MACHINE wins.
+    #
+    # Some boards (e.g. all Allwinner/sunxi arm64) require a BL31 binary at
+    # compile time regardless of whether the U-Boot FIT image exposes an ATF
+    # node. Use the top-level '_bl31_image' key for this build-time dependency
+    # so that _bitbake_fit_image() can inject BL31 for any defconfig used on
+    # that machine, not just when _cap_atf_tee is requested.
+    _MACHINE_SETTINGS = {
+        "qemuarm": {
+            "KERNEL_DEVICETREE": "arm/versatile-pb.dtb arm/versatile-ab.dtb",
+            "FIT_CONF_DEFAULT_DTB": "versatile-pb.dtb",
+            "UBOOT_MACHINE": "am57xx_evm_defconfig",
+            "UBOOT_DTB_BINARY": "u-boot.dtb",
+            "UBOOT_ARCH": "arm",
+            "SPL_BINARY": "MLO",
+            # am57xx_evm produces spl/u-boot-spl.dtb (CONFIG_SPL_OF_CONTROL=y)
+            "_cap_spl_dtb": {},
+        },
+        "qemuarm64": {
+            "KERNEL_DEVICETREE": "arm/foundation-v8.dtb",
+            "FIT_CONF_DEFAULT_DTB": "foundation-v8.dtb",
+            "UBOOT_MACHINE": "pine64_plus_defconfig",
+            "UBOOT_DTB_BINARY": "u-boot.dtb",
+            "UBOOT_ARCH": "arm64",
+            "SPL_BINARY": "spl/sunxi-spl.bin",
+            # BL31 is required at build time by binman for ALL arm64 builds on this machine,
+            # regardless of which defconfig or capability is selected.
+            "_bl31_image": "${TOPDIR}/atf-dummy.bin",
+            # Capability: produces spl/u-boot-spl.dtb (CONFIG_SPL_OF_CONTROL=y).
+            # evb-rk3399_defconfig is arm64 + CONFIG_SPL_OF_CONTROL=y, so it produces
+            # spl/u-boot-spl.dtb which is needed for SPL FIT image signing tests.
+            # Overrides UBOOT_MACHINE and SPL_BINARY from the base settings.
+            "_cap_spl_dtb": {
+                "UBOOT_MACHINE": "evb-rk3399_defconfig",
+                "SPL_BINARY": "spl/u-boot-spl.bin",
+            },
+            # Capability: ATF + TEE nodes in the U-Boot FIT image
+            "_cap_atf_tee": {
+                "UBOOT_FIT_TEE": "1",
+                "UBOOT_FIT_TEE_IMAGE": "${TOPDIR}/tee-dummy.bin",
+                "UBOOT_FIT_TEE_LOADADDRESS": "0x80180000",
+                "UBOOT_FIT_TEE_ENTRYPOINT": "0x80180000",
+                "UBOOT_FIT_ARM_TRUSTED_FIRMWARE": "1",
+                "UBOOT_FIT_ARM_TRUSTED_FIRMWARE_IMAGE": "${TOPDIR}/atf-dummy.bin",
+                "UBOOT_FIT_ARM_TRUSTED_FIRMWARE_LOADADDRESS": "0x80280000",
+                "UBOOT_FIT_ARM_TRUSTED_FIRMWARE_ENTRYPOINT": "0x80280000",
+            },
+        },
+        # x86-64 uses setup.bin instead of DTBs; KERNEL_DEVICETREE is intentionally absent.
+        "qemux86-64": {
+            "UBOOT_MACHINE": "qemu-x86_64_defconfig",
+            "UBOOT_ARCH": "x86",
+        },
+    }
+
+    @staticmethod
+    def _get_machine_settings(machine):
+        """Return machine-specific bitbake settings for the given MACHINE.
+
+        Raises KeyError when the machine is not listed in _MACHINE_SETTINGS.
+        Callers that run bitbake should call _get_machine_or_skip() first so
+        the test is skipped rather than errored for unknown machines.
+        """
+        return FitImageTestCase._MACHINE_SETTINGS[machine]
+
+    @staticmethod
+    def _config_add_machine_settings(config, machine, keys=None):
+        """Append machine-specific variable assignments to a config string.
+
+        Args:
+            config: The bitbake config string to extend.
+            machine: The MACHINE value (from get_bb_var("MACHINE")).
+            keys: Optional list of keys to include (e.g. ["KERNEL_DEVICETREE",
+                  "FIT_CONF_DEFAULT_DTB"]).  When None all non-empty settings
+                  for the machine are appended.
+
+        Returns:
+            The extended config string.
+        """
+        settings = FitImageTestCase._get_machine_settings(machine)
+        for key, value in settings.items():
+            if key.startswith('_'):
+                continue
+            if keys is not None and key not in keys:
+                continue
+            if value:
+                config += '%s = "%s"\n' % (key, value)
+        return config
+
+    @staticmethod
+    def _get_machine_capability(machine, cap_name):
+        """Return the capability sub-dict for a machine, or None if absent.
+
+        Capability sub-dicts are entries whose keys start with '_cap_' in
+        _MACHINE_SETTINGS.  Their presence indicates a board feature; their
+        contents (if non-empty) are extra bitbake variables to emit.
+
+        Returns None when the machine does not declare the capability.
+        Most callers should use _require_machine_capability() instead,
+        which skips the test automatically when the capability is absent.
+        """
+        return FitImageTestCase._MACHINE_SETTINGS.get(machine, {}).get(cap_name)
+
+    def _require_machine_capability(self, config, machine, cap_name):
+        """Append capability-specific variable assignments to a config string.
+
+        If the machine does not have the named capability sub-dict, the test is
+        skipped automatically via self.skipTest().  Callers do not need a
+        separate _get_machine_capability() guard before calling this method.
+
+        Args:
+            config:   The bitbake config string to extend.
+            machine:  The MACHINE value (from get_bb_var("MACHINE")).
+            cap_name: Capability name, e.g. '_cap_atf_tee' or '_cap_spl_dtb'.
+
+        Returns:
+            The extended config string.
+        """
+        cap = FitImageTestCase._MACHINE_SETTINGS.get(machine, {}).get(cap_name)
+        if cap is None:
+            self.skipTest(
+                "MACHINE=%s does not provide capability %s" % (machine, cap_name)
+            )
+        for key, value in cap.items():
+            if value:
+                config += '%s = "%s"\n' % (key, value)
+        return config
+
+    def _get_machine_or_skip(self):
+        """Read the current MACHINE and skip this test if it is not supported.
+
+        Tests that need machine-specific settings (KERNEL_DEVICETREE, U-Boot
+        defconfig, etc.) call this at the start instead of hard-coding
+        MACHINE = "...".  The machine name is returned so it can be passed to
+        _config_add_machine_settings().
+
+        The test is skipped rather than failed when the machine is unknown so
+        that the suite remains green on machines that simply haven't been
+        enumerated in _MACHINE_SETTINGS yet.
+        """
+        machine = get_bb_var("MACHINE")
+        if machine not in FitImageTestCase._MACHINE_SETTINGS:
+            self.skipTest(
+                "MACHINE=%s is not listed in FitImageTestCase._MACHINE_SETTINGS; "
+                "add an entry to run these tests on that machine" % machine)
+        return machine
+
     def _gen_signing_key(self, bb_vars):
         """Generate a key pair and a singing certificate
 
@@ -510,6 +685,14 @@ class KernelFitImageBase(FitImageTestCase):
             'UBOOT_SIGN_KEYDIR',
             'UBOOT_SIGN_KEYNAME',
             'UBOOT_DTB_IMAGE',
+            'UBOOT_FIT_ARM_TRUSTED_FIRMWARE',
+            'UBOOT_FIT_ARM_TRUSTED_FIRMWARE_IMAGE',
+            'UBOOT_FIT_ARM_TRUSTED_FIRMWARE_LOADADDRESS',
+            'UBOOT_FIT_ARM_TRUSTED_FIRMWARE_ENTRYPOINT',
+            'UBOOT_FIT_TEE',
+            'UBOOT_FIT_TEE_IMAGE',
+            'UBOOT_FIT_TEE_LOADADDRESS',
+            'UBOOT_FIT_TEE_ENTRYPOINT',
         }
         bb_vars = get_bb_vars(list(internal_used | set(additional_vars)), self.kernel_recipe)
         self.logger.debug("bb_vars: %s" % pprint.pformat(bb_vars, indent=4))
@@ -1439,10 +1622,12 @@ class UBootFitImageTests(FitImageTestCase):
             'SPL_MKIMAGE_SIGN_ARGS',
             'SPL_SIGN_ENABLE',
             'SPL_SIGN_KEYNAME',
+            'TOPDIR',
             'UBOOT_ARCH',
             'UBOOT_DTB_BINARY',
             'UBOOT_DTB_IMAGE',
             'UBOOT_FIT_ARM_TRUSTED_FIRMWARE_ENTRYPOINT',
+            'UBOOT_FIT_ARM_TRUSTED_FIRMWARE_IMAGE',
             'UBOOT_FIT_ARM_TRUSTED_FIRMWARE_LOADADDRESS',
             'UBOOT_FIT_ARM_TRUSTED_FIRMWARE',
             'UBOOT_FIT_CONF_USER_LOADABLES',
@@ -1450,6 +1635,7 @@ class UBootFitImageTests(FitImageTestCase):
             'UBOOT_FIT_HASH_ALG',
             'UBOOT_FIT_SIGN_ALG',
             'UBOOT_FIT_TEE_ENTRYPOINT',
+            'UBOOT_FIT_TEE_IMAGE',
             'UBOOT_FIT_TEE_LOADADDRESS',
             'UBOOT_FIT_TEE',
             'UBOOT_FIT_UBOOT_ENTRYPOINT',
@@ -1468,10 +1654,27 @@ class UBootFitImageTests(FitImageTestCase):
 
     def _bitbake_fit_image(self, bb_vars):
         """Bitbake the bootloader and return the paths to the its file and the FIT image"""
+        machine = bb_vars['MACHINE']
+        # Some boards (e.g. pine64_plus/sunxi arm64) require a BL31 binary at
+        # compile time for binman regardless of which capability the test
+        # requested. The '_bl31_image' top-level key in _MACHINE_SETTINGS marks
+        # this build-time dependency.
+        bl31_path = FitImageTestCase._MACHINE_SETTINGS.get(machine, {}).get('_bl31_image', '')
+        if bl31_path:
+            bl31_resolved = bl31_path.replace('${TOPDIR}', bb_vars['TOPDIR'])
+            # Always (re)generate the ELF dummy so that a prior call to
+            # _gen_atf_tee_dummy_images (which may write the same path) does
+            # not leave a non-ELF file. Binman on boards such as RK3399
+            # parses BL31 as ELF to extract load/entry addresses, so a plain
+            # random binary fails with "Magic number does not match". An ELF
+            # file also works for sunxi which treats BL31 as a raw binary.
+            self.logger.debug("Creating fake BL31 ELF at %s" % bl31_resolved)
+            FitImageTestCase._gen_elf64_dummy(bl31_resolved)
+            self.append_config('EXTRA_OEMAKE:append:pn-u-boot = " BL31=%s"' % bl31_resolved)
+
         bitbake(UBootFitImageTests.BOOTLOADER_RECIPE)
 
         deploy_dir_image = bb_vars['DEPLOY_DIR_IMAGE']
-        machine = bb_vars['MACHINE']
         fitimage_its_path = os.path.join(deploy_dir_image, "u-boot-its-%s" % machine)
         fitimage_path = os.path.join(deploy_dir_image, "u-boot-fitImage-%s" % machine)
         return (fitimage_its_path, fitimage_path)
