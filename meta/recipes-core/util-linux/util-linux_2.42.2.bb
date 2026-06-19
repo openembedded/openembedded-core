@@ -424,7 +424,7 @@ do_install_ptest() {
 do_install_ptest:append:libc-musl() {
     for t in tests/ts/col/multibyte \
             tests/ts/lib/timeutils \
-            tests/ts/misc/enosys \
+            tests/ts/enosys \
             tests/ts/dmesg/limit; do
         rm -rf ${D}${PTEST_PATH}/$t
     done
