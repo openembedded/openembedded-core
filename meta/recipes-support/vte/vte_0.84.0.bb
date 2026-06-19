@@ -18,10 +18,12 @@ GIDOCGEN_MESON_OPTION = "docs"
 inherit gnomebase gi-docgen features_check upstream-version-is-even gobject-introspection systemd vala
 
 SRC_URI += "file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch \
-            file://0001-support-reproducibility-for-debug-sources.patch;patchdir=./subprojects/simdutf \
 "
 
-SRC_URI[archive.sha256sum] = "e1295aafc4682b3b550f1235dc2679baa0f71570d8ed543c001c1283d530be91"
+SRC_URI[archive.sha256sum] = "0414e31583836aeb7878da25f67c515f7e8879917ecc37c92e26b83e8d8fc3e3"
+# remove the below line when updating to vte 0.84.1 (or higher) as it includes
+# https://gitlab.gnome.org/GNOME/vte/-/commit/77fe661760d2afac1e4d5a4b7eba477cbed6b430
+EXTRA_OEMESON += "-Dsimdutf:base64=true"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
