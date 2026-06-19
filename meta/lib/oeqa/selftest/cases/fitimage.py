@@ -110,9 +110,67 @@ class FitImageTestCase(OESelftestTestCase):
             ))
 
     @staticmethod
-    def _gen_random_file(file_path, num_bytes=65536):
-        with open(file_path, 'wb') as file_out:
-            file_out.write(os.urandom(num_bytes))
+    def _gen_elf64_dummy(file_path, load_addr=0x80000000):
+        """Generate a minimal valid ELF64 (ARM64, little-endian) file.
+
+        Some boards (e.g. RK3399) let binman parse BL31 as an ELF to extract
+        load/entry addresses.  A plain random binary fails ELF magic checks, so
+        we need a structurally valid ELF even for a dummy/fake binary.
+        """
+        import struct
+        payload = b'\x00' * 4
+        phoff = 64                    # program header immediately after ELF header
+        payload_off = phoff + 56      # after one ELF64 program header entry
+        elf_ident = (
+            b'\x7fELF'   # magic
+            + b'\x02'    # ELFCLASS64
+            + b'\x01'    # ELFDATA2LSB
+            + b'\x01'    # EV_CURRENT
+            + b'\x00' * 9  # OS/ABI + padding
+        )
+        elf_header = struct.pack(
+            '<HHIQQQIHHHHHH',
+            2,            # e_type  = ET_EXEC
+            0xb7,         # e_machine = EM_AARCH64
+            1,            # e_version = EV_CURRENT
+            load_addr,    # e_entry
+            phoff,        # e_phoff
+            0,            # e_shoff
+            0,            # e_flags
+            64,           # e_ehsize
+            56,           # e_phentsize
+            1,            # e_phnum
+            64,           # e_shentsize
+            0,            # e_shnum
+            0,            # e_shstrndx
+        )
+        ph = struct.pack(
+            '<IIQQQQQQ',
+            1,            # p_type  = PT_LOAD
+            5,            # p_flags = PF_R | PF_X
+            payload_off,  # p_offset
+            load_addr,    # p_vaddr
+            load_addr,    # p_paddr
+            len(payload), # p_filesz
+            len(payload), # p_memsz
+            0x1000,       # p_align
+        )
+        with open(file_path, 'wb') as f:
+            f.write(elf_ident + elf_header + ph + payload)
+
+    def _gen_atf_tee_dummy_images(self, bb_vars):
+        """Generate dummy ATF and TEE images when the corresponding variables are defined
+
+        This is needed for testing the presence of the corresponding nodes in the its file and the FIT image.
+        For arm64 this is more or less a hard dependency because the BL31 binary is needed for the build to succeed.
+        """
+        if bb_vars.get('UBOOT_FIT_ARM_TRUSTED_FIRMWARE') == "1":
+            dummy_atf = os.path.join(self.builddir, bb_vars['UBOOT_FIT_ARM_TRUSTED_FIRMWARE_IMAGE'])
+            FitImageTestCase._gen_elf64_dummy(dummy_atf)
+
+        if bb_vars.get('UBOOT_FIT_TEE') == "1":
+            dummy_tee = os.path.join(self.builddir, bb_vars['UBOOT_FIT_TEE_IMAGE'])
+            FitImageTestCase._gen_elf64_dummy(dummy_tee)
 
     @staticmethod
     def _setup_native(native_recipe):
@@ -1765,14 +1823,7 @@ UBOOT_FIT_ARM_TRUSTED_FIRMWARE_ENTRYPOINT = "0x80280000"
             'UBOOT_FIT_TEE_IMAGE',
         ])
 
-        # Create an ATF dummy image
-        dummy_atf = os.path.join(self.builddir, bb_vars['UBOOT_FIT_ARM_TRUSTED_FIRMWARE_IMAGE'])
-        FitImageTestCase._gen_random_file(dummy_atf)
-
-        # Create a TEE dummy image
-        dummy_tee = os.path.join(self.builddir, bb_vars['UBOOT_FIT_TEE_IMAGE'])
-        FitImageTestCase._gen_random_file(dummy_tee)
-
+        self._gen_atf_tee_dummy_images(bb_vars)
         self._test_fitimage(bb_vars)
 
     def test_sign_standalone_uboot_atf_tee_fit_image(self):
@@ -1837,14 +1888,7 @@ UBOOT_FIT_ARM_TRUSTED_FIRMWARE_ENTRYPOINT = "0x80280000"
             'UBOOT_FIT_TEE_IMAGE',
         ])
 
-        # Create an ATF dummy image
-        dummy_atf = os.path.join(self.builddir, bb_vars['UBOOT_FIT_ARM_TRUSTED_FIRMWARE_IMAGE'])
-        FitImageTestCase._gen_random_file(dummy_atf)
-
-        # Create a TEE dummy image
-        dummy_tee = os.path.join(self.builddir, bb_vars['UBOOT_FIT_TEE_IMAGE'])
-        FitImageTestCase._gen_random_file(dummy_tee)
-
+        self._gen_atf_tee_dummy_images(bb_vars)
         self._test_fitimage(bb_vars)
 
 
