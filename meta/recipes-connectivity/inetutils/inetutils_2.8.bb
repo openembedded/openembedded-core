@@ -11,18 +11,13 @@ LICENSE = "GPL-3.0-only"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464"
 
-SRC_URI[sha256sum] = "a156be1cde3c5c0ffefc262180d9369a60484087907aa554c62787d2f40ec086"
+SRC_URI[sha256sum] = "57b3cf4f77555992881e5ba2a09a63b05aa2c56342a60ed4305b5f45938390b5"
 SRC_URI = "${GNU_MIRROR}/inetutils/inetutils-${PV}.tar.gz \
            file://rexec.xinetd.inetutils \
            file://rlogin.xinetd.inetutils \
            file://rsh.xinetd.inetutils \
            file://telnet.xinetd.inetutils \
            file://tftpd.xinetd.inetutils \
-           file://CVE-2026-24061-01.patch \
-           file://CVE-2026-24061-02.patch \
-           file://CVE-2026-28372.patch \
-           file://CVE-2026-32746.patch \
-           file://CVE-2026-32772.patch \
            "
 
 inherit autotools gettext update-alternatives texinfo
@@ -44,6 +39,7 @@ EXTRA_OECONF = "--with-ncurses-include-dir=${STAGING_INCDIR} \
         --with-path-cp=${base_bindir}/cp \
         --with-path-uucico=${libexecdir}/uuico \
         --with-path-procnet-dev=/proc/net/dev \
+        --enable-gcc-warnings=no \
         "
 
 EXTRA_OECONF:append:libc-musl = " --with-path-utmpx=/dev/null/utmpx --with-path-wtmpx=/dev/null/wtmpx"
