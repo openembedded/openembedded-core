@@ -9,11 +9,10 @@ LIC_FILES_CHKSUM = "file://LICENSE.BSD;md5=62272bd11c97396d4aaf1c41bc11f7d8"
 DEPENDS = "expat zlib zstd"
 
 SRC_URI = "git://github.com/openSUSE/libsolv.git;branch=master;protocol=https;tag=${PV} \
-           file://0001-compress_buf-fix-musl-segfaults.patch \
            file://run-ptest \
 "
 
-SRCREV = "806c0513cd0799a37802f483710cfbdcc6d16b5f"
+SRCREV = "2f58c6f86edd978d6bdbd87dce9c85388e9b9dcc"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
