@@ -17,8 +17,6 @@
 #  - The environment data, similar to 'bitbake -e recipe':
 #     ARCHIVER_MODE[dumpdata] = "1"
 #  - The recipe (.bb and .inc): ARCHIVER_MODE[recipe] = "1"
-#  - Whether output the .src.rpm package:
-#     ARCHIVER_MODE[srpm] = "1"
 #  - Filter the license, the recipe whose license in
 #    COPYLEFT_LICENSE_INCLUDE will be included, and in
 #    COPYLEFT_LICENSE_EXCLUDE will be excluded.
@@ -48,7 +46,6 @@
 COPYLEFT_RECIPE_TYPES ?= 'target native nativesdk cross crosssdk cross-canadian'
 inherit copyleft_filter
 
-ARCHIVER_MODE[srpm] ?= "0"
 ARCHIVER_MODE[src] ?= "patched"
 ARCHIVER_MODE[diff] ?= "0"
 ARCHIVER_MODE[diff-exclude] ?= ".pc autom4te.cache patches"
@@ -61,8 +58,6 @@ DEPLOY_DIR_SRC ?= "${DEPLOY_DIR}/sources"
 ARCHIVER_TOPDIR ?= "${WORKDIR}/archiver-sources"
 ARCHIVER_ARCH = "${TARGET_SYS}"
 ARCHIVER_OUTDIR = "${ARCHIVER_TOPDIR}/${ARCHIVER_ARCH}/${PF}/"
-ARCHIVER_RPMTOPDIR ?= "${WORKDIR}/deploy-sources-rpm"
-ARCHIVER_RPMOUTDIR = "${ARCHIVER_RPMTOPDIR}/${ARCHIVER_ARCH}/${PF}/"
 ARCHIVER_WORKDIR = "${WORKDIR}/archiver-work/"
 
 # When producing a combined mirror directory, allow duplicates for the case
@@ -154,29 +149,6 @@ python () {
 
     if ar_recipe == "1":
         d.appendVarFlag('do_deploy_archives', 'depends', ' %s:do_ar_recipe' % pn)
-
-    # Output the SRPM package
-    if d.getVarFlag('ARCHIVER_MODE', 'srpm') == "1" and d.getVar('PACKAGES'):
-        if "package_rpm" not in d.getVar('PACKAGE_CLASSES'):
-            bb.fatal("ARCHIVER_MODE[srpm] needs package_rpm in PACKAGE_CLASSES")
-
-        # Some recipes do not have any packaging tasks
-        if hasTask("do_package_write_rpm"):
-            d.appendVarFlag('do_deploy_archives', 'depends', ' %s:do_package_write_rpm' % pn)
-            d.appendVarFlag('do_package_write_rpm', 'dirs', ' ${ARCHIVER_RPMTOPDIR}')
-            d.appendVarFlag('do_package_write_rpm', 'sstate-inputdirs', ' ${ARCHIVER_RPMTOPDIR}')
-            d.appendVarFlag('do_package_write_rpm', 'sstate-outputdirs', ' ${DEPLOY_DIR_SRC}')
-            d.appendVar('PSEUDO_INCLUDE_PATHS', ',${ARCHIVER_TOPDIR}')
-            if ar_dumpdata == "1":
-                d.appendVarFlag('do_package_write_rpm', 'depends', ' %s:do_dumpdata' % pn)
-            if ar_recipe == "1":
-                d.appendVarFlag('do_package_write_rpm', 'depends', ' %s:do_ar_recipe' % pn)
-            if ar_src == "original":
-                d.appendVarFlag('do_package_write_rpm', 'depends', ' %s:do_ar_original' % pn)
-            elif ar_src == "patched":
-                d.appendVarFlag('do_package_write_rpm', 'depends', ' %s:do_ar_patched' % pn)
-            elif ar_src == "configured":
-                d.appendVarFlag('do_package_write_rpm', 'depends', ' %s:do_ar_configured' % pn)
 }
 
 do_ar_prepare[vardeps] += " \
