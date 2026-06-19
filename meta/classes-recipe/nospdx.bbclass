@@ -5,6 +5,7 @@
 #
 
 deltask do_create_recipe_spdx
+deltask do_create_recipe_sbom
 deltask do_create_spdx
 deltask do_create_spdx_runtime
 deltask do_create_package_spdx
