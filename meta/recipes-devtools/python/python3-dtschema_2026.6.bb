@@ -7,7 +7,7 @@ inherit pypi python_setuptools_build_meta
 
 PYPI_PACKAGE = "dtschema"
 
-SRC_URI[sha256sum] = "10cd0ffe239f8d88913390ac5d8213fae382e87a20643b21c65714ded82a4460"
+SRC_URI[sha256sum] = "05188e3727393334b99abb74ae220ccb8158eec67d6bec793326253f9e76d57a"
 
 DEPENDS += "python3-setuptools-scm-native"
 RDEPENDS:${PN} += "\
