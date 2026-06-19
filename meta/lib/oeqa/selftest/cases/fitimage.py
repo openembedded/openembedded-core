@@ -247,7 +247,7 @@ class FitImageTestCase(OESelftestTestCase):
 
         The list should be used to check the dtb and conf nodes in the FIT image or its file.
         In addition to the entries from KERNEL_DEVICETREE, the external devicetree and the
-        external devicetree overlay added by the test recipe bbb-dtbs-as-ext are handled as well.
+        external devicetree overlay added by the test recipe test-dtbs-as-ext are handled as well.
         """
         kernel_devicetree = bb_vars.get('KERNEL_DEVICETREE')
         all_dtbs = []
@@ -256,9 +256,9 @@ class FitImageTestCase(OESelftestTestCase):
             all_dtbs += [os.path.basename(dtb) for dtb in kernel_devicetree.split()]
         # Support only the test recipe which provides 1 devicetree and 1 devicetree overlay
         pref_prov_dtb = bb_vars.get('PREFERRED_PROVIDER_virtual/dtb')
-        if pref_prov_dtb == "bbb-dtbs-as-ext":
-            all_dtbs += ["BBORG_RELAY-00A2.dtbo", "am335x-bonegreen-ext.dtb"]
-            dtb_symlinks.append("am335x-bonegreen-ext-alias.dtb")
+        if pref_prov_dtb == "test-dtbs-as-ext":
+            all_dtbs += ["test-ext.dtb", "test-overlay.dtbo"]
+            dtb_symlinks.append("test-ext-alias.dtb")
         return (all_dtbs, dtb_symlinks)
 
     @staticmethod
@@ -808,7 +808,7 @@ class KernelFitImageBase(FitImageTestCase):
             for dtb in dtb_files + dtb_symlinks:
                 conf_name = bb_vars['FIT_CONF_PREFIX'] + dtb
                 # Assume that DTBs with an "-alias" in its name are symlink DTBs created e.g. by the
-                # bbb-dtbs-as-ext test recipe. Make the configuration node pointing to the real DTB.
+                # test-dtbs-as-ext test recipe. Make the configuration node pointing to the real DTB.
                 real_dtb = dtb.replace("-alias", "")
                 # dtb overlays do not refer to a kernel (yet?)
                 if dtb.endswith('.dtbo'):
@@ -953,15 +953,15 @@ FIT_LOADABLE_TYPE[loadable2] = "firmware"
     def test_get_compatible_from_dtb(self):
         """Test the oe.fitimage.get_compatible_from_dtb function
 
-        1. bitbake bbb-dtbs-as-ext
+        1. bitbake test-dtbs-as-ext
         2. Check if symlink_points_below returns the path to the DTB
         3. Check if the expected compatible string is found by get_compatible_from_dtb()
         """
-        DTB_RECIPE = "bbb-dtbs-as-ext"
-        DTB_FILE = "am335x-bonegreen-ext.dtb"
-        DTB_SYMLINK = "am335x-bonegreen-ext-alias.dtb"
-        DTBO_FILE = "BBORG_RELAY-00A2.dtbo"
-        EXPECTED_COMP = ["ti,am335x-bone-green", "ti,am335x-bone-black", "ti,am335x-bone", "ti,am33xx"]
+        DTB_RECIPE = "test-dtbs-as-ext"
+        DTB_FILE = "test-ext.dtb"
+        DTB_SYMLINK = "test-ext-alias.dtb"
+        DTBO_FILE = "test-overlay.dtbo"
+        EXPECTED_COMP = ["oe-selftest,test-ext"]
 
         config = """
 DISTRO = "poky"
@@ -1008,7 +1008,7 @@ MACHINE:forcevariable = "beaglebone-yocto"
 # Enable creation of fitImage
 MACHINE:forcevariable = "beaglebone-yocto"
 # Add a devicetree overlay which does not need kernel sources
-PREFERRED_PROVIDER_virtual/dtb = "bbb-dtbs-as-ext"
+PREFERRED_PROVIDER_virtual/dtb = "test-dtbs-as-ext"
 """
         config = self._config_add_kernel_classes(config)
         config = self._config_add_uboot_env(config)
@@ -1278,7 +1278,7 @@ class FitImagePyTests(KernelFitImageBase):
 
         for dtb_symlink in dtb_symlinks:
             # For test purposes, assume each symlink points to a DTB with the same basename minus "-alias"
-            # In this case, "am335x-bonegreen-ext-alias.dtb" -> "am335x-bonegreen-ext.dtb"
+            # In this case, "test-ext-alias.dtb" -> "test-ext.dtb"
             dtb_target = dtb_symlink.replace("-alias", "")
             root_node.fitimage_emit_section_dtb_alias(dtb_symlink, os.path.join("a-dir", dtb_target))
 
@@ -1329,8 +1329,8 @@ class FitImagePyTests(KernelFitImageBase):
     def test_fitimage_py_conf_mappings_with_alias(self):
         """Test FIT_CONF_MAPPINGS with external DTB aliases (symlinks)"""
         bb_vars_overrides = {
-            'PREFERRED_PROVIDER_virtual/dtb': "bbb-dtbs-as-ext",
-            'FIT_CONF_MAPPINGS': "dtb-conf:am335x-bonegreen-ext-alias.dtb:green-alias-renamed dtb-extra-conf:am335x-bonegreen-ext.dtb:green-extra",
+            'PREFERRED_PROVIDER_virtual/dtb': "test-dtbs-as-ext",
+            'FIT_CONF_MAPPINGS': "dtb-conf:test-ext-alias.dtb:test-alias-renamed dtb-extra-conf:test-ext.dtb:test-extra",
         }
         self._test_fitimage_py(bb_vars_overrides)
 
