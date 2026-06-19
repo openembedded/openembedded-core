@@ -14,7 +14,6 @@ SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
 
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch \
-                   file://0001-fix-adjust-range-in-btrfs-probe-for-v6.18.14.patch \
                    file://0001-fix-hrtimer-Reduce-trace-noise-in-hrtimer_start-v7.1.patch \
                    file://0001-fix-hrtimer-Drop-unnecessary-pointer-indirection-in.patch \
                    file://0001-fix-mm-vmscan-Convert-pageout-to-take-a-folio-v5.18.patch \
@@ -24,7 +23,7 @@ SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-w
                    file://0001-fix-ext4-enhance-tracepoints-during-the-folios-writeback-v6.17.patch \
                    file://0001-fix-ext4-widen-trace-event-i_ino-fields-to-u64-v7.1.patch \
                 "
-SRC_URI[sha256sum] = "63deefbc15d9ce7c43d858187533367b01dcb6e8469d6b69ccb757d6d3dbb0ad"
+SRC_URI[sha256sum] = "4eab35edeaa84ddefa243f2f842af1482325062ee008fb511a3ff191b9aa09ac"
 
 export INSTALL_MOD_DIR = "kernel/lttng-modules"
 
