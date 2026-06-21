@@ -924,7 +924,9 @@ class KernelFitImageBase(FitImageTestCase):
         dtb_files, dtb_symlinks = FitImageTestCase._get_dtb_files(bb_vars)
         if dtb_files:
             for dtb in dtb_files:
-                its_field_check.append('kernel = "kernel-1";')
+                # DTBO overlay configs do not include a kernel property
+                if not dtb.endswith('.dtbo'):
+                    its_field_check.append('kernel = "kernel-1";')
                 its_field_check.append('fdt = "fdt-%s";' % dtb)
             for dtb in dtb_symlinks:
                 its_field_check.append('kernel = "kernel-1";')
