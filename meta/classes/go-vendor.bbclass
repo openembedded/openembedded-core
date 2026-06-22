@@ -42,10 +42,9 @@ def go_src_uri(repo, version, path=None, subdir=None, \
 
 python do_vendor_unlink() {
     go_import = d.getVar('GO_IMPORT')
-    source_dir = d.getVar('S')
-    linkname = os.path.join(source_dir, *['src', go_import, 'vendor'])
-
-    os.unlink(linkname)
+    linkname = os.path.join(d.getVar('D') + d.getVar('libdir'), 'go', 'src', go_import, 'vendor')
+    if os.path.islink(linkname):
+        os.unlink(linkname)
 }
 
 addtask vendor_unlink before do_package after do_install
@@ -209,8 +208,7 @@ python do_go_vendor() {
         os.symlink(relative_symlink_target, symlink_name)
 
     # Create a symlink to the actual directory
-    relative_vendor_dir = os.path.relpath(vendor_dir, os.path.dirname(linkname))
-    os.symlink(relative_vendor_dir, linkname)
+    oe.path.relsymlink(vendor_dir, linkname)
 }
 
 addtask go_vendor before do_patch after do_unpack
