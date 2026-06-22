@@ -1641,6 +1641,7 @@ class UBootFitImageTests(FitImageTestCase):
             'UBOOT_FIT_ARM_TRUSTED_FIRMWARE_IMAGE',
             'UBOOT_FIT_ARM_TRUSTED_FIRMWARE_LOADADDRESS',
             'UBOOT_FIT_ARM_TRUSTED_FIRMWARE',
+            'UBOOT_FIT_CONF_DESC',
             'UBOOT_FIT_CONF_USER_LOADABLES',
             'UBOOT_FIT_DESC',
             'UBOOT_FIT_HASH_ALG',
@@ -1757,7 +1758,7 @@ class UBootFitImageTests(FitImageTestCase):
             loadables.insert(0, "atf")
         its_field_check += [
             'default = "conf";',
-            'description = "Boot with signed U-Boot FIT";',
+            'description = "%s";' % bb_vars['UBOOT_FIT_CONF_DESC'],
             'loadables = "%s";' % '", "'.join(loadables),
             'fdt = "fdt";',
         ]
@@ -1915,6 +1916,9 @@ class UBootFitImageTests(FitImageTestCase):
                      Image Tree Source. Not all the fields are tested,
                      only the key fields that wont vary between
                      different architectures.
+                     3. The custom root node (UBOOT_FIT_DESC) and
+                     configuration node (UBOOT_FIT_CONF_DESC) descriptions
+                     are honoured in the Image Tree Source.
         Product:     oe-core
         Author:      Klaus Heinrich Kiwi <klaus@linux.vnet.ibm.com>
                      based on work by Usama Arif <usama.arif@arm.com>
@@ -1930,6 +1934,7 @@ UBOOT_FITIMAGE_ENABLE = "1"
 UBOOT_LOADADDRESS = "0x80080000"
 UBOOT_ENTRYPOINT = "0x80080000"
 UBOOT_FIT_DESC = "A model description"
+UBOOT_FIT_CONF_DESC = "Boot board XYZ config"
 """
         config = FitImageTestCase._config_add_machine_settings(config, machine, keys=["UBOOT_MACHINE", "SPL_BINARY"])
         self.write_config(config)
