@@ -19,7 +19,7 @@ inherit go-mod
 def go_src_uri(repo, version, path=None, subdir=None, \
                 vcs='git', replaces=None, pathmajor=None):
 
-    destsuffix = "git/src/import/vendor.fetch"
+    destsuffix = "${BP}/src/import/vendor.fetch"
     module_path = repo if not path else path
 
     src_uri = "{}://{};name={}".format(vcs, repo, module_path.replace('/', '.'))
@@ -58,7 +58,8 @@ python do_go_vendor() {
     if not src_uri:
         bb.fatal("SRC_URI is empty")
 
-    default_destsuffix = "git/src/import/vendor.fetch"
+    base_package = d.getVar('BP')
+    default_destsuffix = "{}/src/import/vendor.fetch".format(base_package)
     fetcher = bb.fetch2.Fetch(src_uri, d)
     go_import = d.getVar('GO_IMPORT')
     source_dir = d.getVar('S')
