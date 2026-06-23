@@ -82,9 +82,9 @@ python do_preconfigure() {
     subprocess.check_output(cmd, stderr=subprocess.STDOUT)
     cmd = ['sed', '-i', 's#//CLANG_EXTRA_OE_DISTRO_CHECK#%s#g' % check, source + '/clang/include/clang/Driver/Distro.h']
     subprocess.check_output(cmd, stderr=subprocess.STDOUT)
-    cmd = ['sed', '-i', 's#//CLANG_EXTRA_OE_DISTRO_TRIPLES#%s#g' % triple, source + '/clang/lib/Driver/ToolChains/Linux.cpp']
+    cmd = ['sed', '-i', 's#//CLANG_EXTRA_OE_DISTRO_TRIPLE#%s#g' % triple, source + '/clang/lib/Driver/ToolChains/Linux.cpp']
     subprocess.check_output(cmd, stderr=subprocess.STDOUT)
-    cmd = ['sed', '-i', 's#//CLANG_EXTRA_OE_DISTRO_CASES#%s#g' % case, source + '/clang/lib/Driver/Distro.cpp']
+    cmd = ['sed', '-i', 's#//CLANG_EXTRA_OE_DISTRO_CASE#%s#g' % case, source + '/clang/lib/Driver/Distro.cpp']
     subprocess.check_output(cmd, stderr=subprocess.STDOUT)
 }
 
