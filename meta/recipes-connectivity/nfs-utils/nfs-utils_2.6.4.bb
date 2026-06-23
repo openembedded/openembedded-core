@@ -33,6 +33,12 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://0001-locktest-Makefile.am-Do-not-use-build-flags.patch \
            file://0001-tools-locktest-Use-intmax_t-to-print-off_t.patch \
            file://0001-reexport.h-Include-unistd.h-to-compile-with-musl.patch \
+           file://CVE-2025-12801-dependent_p1.patch \
+           file://CVE-2025-12801-dependent_p2.patch \
+           file://CVE-2025-12801-dependent_p3.patch \
+           file://CVE-2025-12801-dependent_p4.patch \
+           file://CVE-2025-12801.patch \
+           file://CVE-2025-12801-build-fix.patch \
            "
 SRC_URI[sha256sum] = "01b3b0fb9c7d0bbabf5114c736542030748c788ec2fd9734744201e9b0a1119d"
 
