@@ -61,6 +61,37 @@ class TestRunCmd(TestCase):
         self.assertEqual(ctx.exception.status, 127)
 
 
+class TestPatchTree(TestCase):
+    def test_push_run_false_returns_argv(self):
+        with tempfile.TemporaryDirectory(prefix="oe-patchtree-run-false-") as tmpdir:
+            srcdir = os.path.join(tmpdir, "source")
+            os.mkdir(srcdir)
+            with open(os.path.join(srcdir, "file.txt"), "w") as f:
+                f.write("base\n")
+
+            patch = os.path.join(tmpdir, "patch with spaces.patch")
+            with open(patch, "w") as f:
+                f.write(
+                    "--- a/file.txt\n"
+                    "+++ b/file.txt\n"
+                    "@@ -1 +1 @@\n"
+                    "-base\n"
+                    "+changed\n"
+                )
+
+            tree = oe.patch.PatchTree(srcdir, PatchTestDataStore(tmpdir))
+            tree.Import({"file": patch, "strippath": "1"}, False)
+
+            cmd = tree.Push(False, run=False)
+
+            self.assertEqual(cmd[:5], [
+                "patch", "--no-backup-if-mismatch", "-p", "1", "-i",
+            ])
+            self.assertEqual(cmd[-1], patch)
+            self.assertIsNone(tree.current())
+            with open(os.path.join(srcdir, "file.txt")) as f:
+                self.assertEqual(f.read(), "base\n")
+
 class RecordingGitApplyTree(oe.patch.GitApplyTree):
     def __init__(self, *args, **kwargs):
         self.commitpatch_called = False
@@ -120,6 +151,8 @@ class TestGitApplyTree(TestCase):
         patch = os.path.join(tmpdir, basename)
         with open(patch, "w") as f:
             f.write(
+                "Author: Fallback Author <fallback.author@example.com>\n"
+                "Date: Fri, 01 Jan 2021 12:34:56 +0000\n"
                 "Subject: [PATCH] plain diff change\n"
                 "\n"
                 "--- a/file.txt\n"
@@ -152,6 +185,14 @@ class TestGitApplyTree(TestCase):
             with open(patches[0]) as f:
                 self.assertIn(expected, f.read())
 
+    def assert_no_note(self, repo):
+        with self.assertRaises(oe.patch.CmdError):
+            oe.patch.runcmd(
+                ["git", "notes", "--ref", oe.patch.GitApplyTree.notes_ref,
+                 "show", "HEAD"],
+                repo,
+            )
+
     def test_git_am_preserves_original_patch_name(self):
         with tempfile.TemporaryDirectory(prefix="oe-gitapply-am-") as tmpdir:
             patchname = "0001-distinct-original-name.patch"
@@ -166,6 +207,51 @@ class TestGitApplyTree(TestCase):
                 self.assertEqual(f.read(), "git am change\n")
             self.assert_note_and_extract(repo, patchname, "+git am change")
 
+    def test_push_run_false_returns_argv(self):
+        with tempfile.TemporaryDirectory(prefix="oe-gitapply-run-false-") as tmpdir:
+            patchname = "0001-distinct original name.patch"
+            patch = self.make_git_am_patch(tmpdir, patchname)
+            repo = self.make_repo(tmpdir, "target")
+            tree = RecordingGitApplyTree(repo, PatchTestDataStore(tmpdir))
+            tree._need_dirty_check = lambda: False
+            tree.Import({"file": patch, "strippath": "1"}, False)
+
+            cmd = tree.Push(False, run=False)
+
+            self.assertIsInstance(cmd, list)
+            self.assertEqual(cmd[0], "git")
+            self.assertIn("am", cmd)
+            self.assertEqual(cmd[-1], patch)
+            self.assertFalse(tree.commitpatch_called)
+            self.assertIsNone(tree.current())
+            self.assert_no_note(repo)
+            with open(os.path.join(repo, "file.txt")) as f:
+                self.assertEqual(f.read(), "base\n")
+
+    def test_dirty_push_run_false_returns_argv(self):
+        with tempfile.TemporaryDirectory(prefix="oe-gitapply-run-false-") as tmpdir:
+            patchname = "plain-diff original name.patch"
+            patch = self.make_plain_diff_patch(tmpdir, patchname)
+            repo = self.make_repo(tmpdir, "target")
+            with open(os.path.join(repo, "file.txt"), "a") as f:
+                f.write("dirty\n")
+
+            tree = RecordingGitApplyTree(repo, PatchTestDataStore(tmpdir))
+            tree._need_dirty_check = lambda: True
+            tree.Import({"file": patch, "strippath": "1"}, False)
+
+            cmd = tree.Push(False, run=False)
+
+            self.assertEqual(cmd[:5], [
+                "patch", "--no-backup-if-mismatch", "-p", "1", "-i",
+            ])
+            self.assertEqual(cmd[-1], patch)
+            self.assertFalse(tree.commitpatch_called)
+            self.assertIsNone(tree.current())
+            self.assert_no_note(repo)
+            with open(os.path.join(repo, "file.txt")) as f:
+                self.assertEqual(f.read(), "base\ndirty\n")
+
     def test_fallback_preserves_original_patch_name(self):
         with tempfile.TemporaryDirectory(prefix="oe-gitapply-fallback-") as tmpdir:
             patchname = "plain-diff-original-name.patch"
@@ -178,4 +264,19 @@ class TestGitApplyTree(TestCase):
             self.assertTrue(tree.commitpatch_called)
             with open(os.path.join(repo, "file.txt")) as f:
                 self.assertEqual(f.read(), "plain diff change\n")
+            metadata = oe.patch.runcmd([
+                "git", "show", "-s",
+                "--format=%an%n%ae%n%cn%n%ce%n%aI",
+                "HEAD",
+            ], repo).splitlines()
+            self.assertEqual(metadata[:4], [
+                "Fallback Author",
+                "fallback.author@example.com",
+                "OE Test",
+                "oe-test@example.com",
+            ])
+            self.assertIn(metadata[4], (
+                "2021-01-01T12:34:56+00:00",
+                "2021-01-01T12:34:56Z",
+            ))
             self.assert_note_and_extract(repo, patchname, "+plain diff change")
