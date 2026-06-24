@@ -4,10 +4,26 @@
 # SPDX-License-Identifier: MIT
 #
 
+import os
+import shutil
+import subprocess
 import sys
+import tempfile
 from unittest.case import TestCase
 
 import oe.patch
+
+
+class PatchTestDataStore:
+    def __init__(self, workdir):
+        self.vars = {
+            "PATCH_GIT_USER_NAME": "OE Test",
+            "PATCH_GIT_USER_EMAIL": "oe-test@example.com",
+            "WORKDIR": workdir,
+        }
+
+    def getVar(self, name):
+        return self.vars.get(name, "")
 
 
 class TestRunCmd(TestCase):
@@ -43,3 +59,123 @@ class TestRunCmd(TestCase):
             ])
 
         self.assertEqual(ctx.exception.status, 127)
+
+
+class RecordingGitApplyTree(oe.patch.GitApplyTree):
+    def __init__(self, *args, **kwargs):
+        self.commitpatch_called = False
+        super().__init__(*args, **kwargs)
+
+    def _commitpatch(self, patch, *args):
+        self.commitpatch_called = True
+        return super()._commitpatch(patch, *args)
+
+
+class TestGitApplyTree(TestCase):
+    def setUp(self):
+        if shutil.which("git") is None:
+            self.skipTest("git not found")
+        if shutil.which("patch") is None:
+            self.skipTest("patch not found")
+
+    def git(self, cwd, *args):
+        subprocess.check_call(
+            ["git"] + list(args),
+            cwd=cwd,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+
+    def make_repo(self, tmpdir, name, text="base\n"):
+        repo = os.path.join(tmpdir, name)
+        os.mkdir(repo)
+        self.git(repo, "init")
+        self.git(repo, "config", "user.name", "OE Test")
+        self.git(repo, "config", "user.email", "oe-test@example.com")
+        with open(os.path.join(repo, "file.txt"), "w") as f:
+            f.write(text)
+        self.git(repo, "add", "file.txt")
+        self.git(repo, "commit", "-m", "base")
+        return repo
+
+    def make_git_am_patch(self, tmpdir, basename):
+        repo = self.make_repo(tmpdir, "source")
+        with open(os.path.join(repo, "file.txt"), "w") as f:
+            f.write("git am change\n")
+        self.git(repo, "commit", "-am", "git am change")
+        patchdir = os.path.join(tmpdir, "patches")
+        os.mkdir(patchdir)
+        subprocess.check_call(
+            ["git", "format-patch", "-1", "HEAD", "-o", patchdir],
+            cwd=repo,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+        patch = os.path.join(patchdir, os.listdir(patchdir)[0])
+        renamed = os.path.join(patchdir, basename)
+        os.rename(patch, renamed)
+        return renamed
+
+    def make_plain_diff_patch(self, tmpdir, basename):
+        patch = os.path.join(tmpdir, basename)
+        with open(patch, "w") as f:
+            f.write(
+                "Subject: [PATCH] plain diff change\n"
+                "\n"
+                "--- a/file.txt\n"
+                "+++ b/file.txt\n"
+                "@@ -1 +1 @@\n"
+                "-base\n"
+                "+plain diff change\n"
+            )
+        return patch
+
+    def apply_patch(self, tree, patch):
+        tree._need_dirty_check = lambda: False
+        tree.Import({"file": patch, "strippath": "1"}, False)
+        tree.Push(False)
+
+    def assert_note_and_extract(self, repo, patchname, expected):
+        note = oe.patch.runcmd(
+            ["git", "notes", "--ref", oe.patch.GitApplyTree.notes_ref,
+             "show", "HEAD"],
+            repo,
+        )
+        self.assertIn("%s: %s" % (oe.patch.GitApplyTree.original_patch,
+                                  patchname), note)
+
+        with tempfile.TemporaryDirectory(prefix="oe-patch-extract-") as outdir:
+            patches = oe.patch.GitApplyTree.extractPatches(
+                repo, {"": "HEAD~1"}, outdir
+            )
+            self.assertEqual([os.path.basename(p) for p in patches], [patchname])
+            with open(patches[0]) as f:
+                self.assertIn(expected, f.read())
+
+    def test_git_am_preserves_original_patch_name(self):
+        with tempfile.TemporaryDirectory(prefix="oe-gitapply-am-") as tmpdir:
+            patchname = "0001-distinct-original-name.patch"
+            patch = self.make_git_am_patch(tmpdir, patchname)
+            repo = self.make_repo(tmpdir, "target")
+            tree = RecordingGitApplyTree(repo, PatchTestDataStore(tmpdir))
+
+            self.apply_patch(tree, patch)
+
+            self.assertFalse(tree.commitpatch_called)
+            with open(os.path.join(repo, "file.txt")) as f:
+                self.assertEqual(f.read(), "git am change\n")
+            self.assert_note_and_extract(repo, patchname, "+git am change")
+
+    def test_fallback_preserves_original_patch_name(self):
+        with tempfile.TemporaryDirectory(prefix="oe-gitapply-fallback-") as tmpdir:
+            patchname = "plain-diff-original-name.patch"
+            patch = self.make_plain_diff_patch(tmpdir, patchname)
+            repo = self.make_repo(tmpdir, "target")
+            tree = RecordingGitApplyTree(repo, PatchTestDataStore(tmpdir))
+
+            self.apply_patch(tree, patch)
+
+            self.assertTrue(tree.commitpatch_called)
+            with open(os.path.join(repo, "file.txt")) as f:
+                self.assertEqual(f.read(), "plain diff change\n")
+            self.assert_note_and_extract(repo, patchname, "+plain diff change")
