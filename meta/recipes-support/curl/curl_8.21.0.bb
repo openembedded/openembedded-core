@@ -14,15 +14,13 @@ SRC_URI = " \
     file://run-ptest \
     file://disable-tests \
     file://no-test-timeout.patch \
-    file://mbedtls.patch \
-    file://0001-event-fix-wakeup-consumption.patch \
 "
 
 SRC_URI:append:class-nativesdk = " \
     file://environment.d-curl.sh \
 "
 
-SRC_URI[sha256sum] = "63fe2dc148ba0ceae89922ef838f7e5c946272c2e78b7c59fab4b79d3ce2b896"
+SRC_URI[sha256sum] = "aa1b66a70eace83dc624508745646c08ae561de512ab403adffb93ac87fc72e6"
 
 # Curl has used many names over the years...
 CVE_PRODUCT = "haxx:curl haxx:libcurl curl:curl curl:libcurl libcurl:libcurl daniel_stenberg:curl"
