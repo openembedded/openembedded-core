@@ -61,6 +61,7 @@
 #
 
 DEPENDS += "\
+    dtc-native \
     os-release \
     systemd-boot \
     systemd-boot-native \
@@ -150,16 +151,39 @@ python do_uki() {
     if cmdline:
         ukify_cmd += " --cmdline='%s'" % (cmdline)
 
-    # dtb
+    # dtb: separate base DTBs from overlays, merge each base with its matching overlays
     uki_devicetree = d.getVar('UKI_DEVICETREE')
     if uki_devicetree:
+        base_dtbs = []
+        overlays = []
         for dtb in uki_devicetree.split():
             # DTBs are without sub-directories in deploy_dir
             dtb_name = os.path.basename(dtb)
             dtb_path = "%s/%s" % (deploy_dir_image, dtb_name)
             if not os.path.exists(dtb_path):
                 bb.fatal(f"ERROR: cannot find {dtb_path}.")
-            ukify_cmd += " --devicetree %s" % (dtb_path)
+            if dtb_name.endswith('.dtbo'):
+                overlays.append(dtb_path)
+            else:
+                base_dtbs.append(dtb_path)
+
+        fdtoverlay_bin = os.path.join(d.getVar('STAGING_BINDIR_NATIVE'), 'fdtoverlay')
+        build_dir = d.getVar('B')
+        for base_dtb in base_dtbs:
+            base_name = os.path.splitext(os.path.basename(base_dtb))[0]
+            # Overlays whose filename starts with the base DTB name
+            matching_overlays = [o for o in overlays
+                                  if os.path.basename(o).startswith(base_name)]
+            if matching_overlays:
+                merged_dtb = os.path.join(build_dir, "%s-merged.dtb" % base_name)
+                fdtoverlay_cmd = "%s -i %s %s -o %s" % (
+                    fdtoverlay_bin, base_dtb, " ".join(matching_overlays), merged_dtb)
+                bb.debug(2, "uki: merging DTBs: %s" % fdtoverlay_cmd)
+                out, err = bb.process.run(fdtoverlay_cmd, shell=True)
+                bb.debug(2, "%s\n%s" % (out, err))
+                ukify_cmd += " --devicetree %s" % merged_dtb
+            else:
+                ukify_cmd += " --devicetree %s" % base_dtb
 
     # custom config for ukify
     if os.path.exists(d.getVar('UKI_CONFIG_FILE')):
