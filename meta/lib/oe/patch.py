@@ -195,10 +195,12 @@ class PatchTree(PatchSet):
         bb.utils.mkdirhier(self.patchdir)
 
     def _appendPatchFile(self, patch, strippath):
+        import shutil
+
         with open(self.seriespath, 'a') as f:
             f.write(os.path.basename(patch) + "," + strippath + "\n")
-        shellcmd = ["cat", patch, ">" , self.patchdir + "/" + os.path.basename(patch)]
-        runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+        dest = os.path.join(self.patchdir, os.path.basename(patch))
+        shutil.copyfile(patch, dest)
 
     def _removePatch(self, p):
         patch = {}
@@ -433,8 +435,8 @@ class GitApplyTree(PatchTree):
         outlines, author, date, subject = GitApplyTree.interpretPatchHeader(lines)
         if not author or not subject or not date:
             try:
-                shellcmd = ["git", "log", "--format=email", "--follow", "--diff-filter=A", "--", patchfile]
-                out = runcmd(["sh", "-c", " ".join(shellcmd)], os.path.dirname(patchfile))
+                cmd = ["git", "log", "--format=email", "--follow", "--diff-filter=A", "--", patchfile]
+                out = runcmd(cmd, os.path.dirname(patchfile))
             except CmdError:
                 out = None
             if out:
@@ -525,11 +527,11 @@ class GitApplyTree(PatchTree):
         patches = []
         try:
             for name, rev in startcommits.items():
-                shellcmd = ["git", "format-patch", "--no-signature", "--no-numbered", rev, "-o", tempdir]
+                cmd = ["git", "format-patch", "--no-signature", "--no-numbered", rev, "-o", tempdir]
                 if paths:
-                    shellcmd.append('--')
-                    shellcmd.extend(paths)
-                out = runcmd(["sh", "-c", " ".join(shellcmd)], os.path.join(tree, name))
+                    cmd.append('--')
+                    cmd.extend(paths)
+                out = runcmd(cmd, os.path.join(tree, name))
                 if out:
                     for srcfile in out.split():
                         # This loop, which is used to remove any line that
@@ -585,11 +587,11 @@ class GitApplyTree(PatchTree):
     def _commitpatch(self, patch, patchfilevar):
         output = ""
         # Add all files
-        shellcmd = ["git", "add", "-f", "-A", "."]
-        output += runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+        cmd = ["git", "add", "-f", "-A", "."]
+        output += runcmd(cmd, self.dir)
         # Exclude the patches directory
-        shellcmd = ["git", "reset", "HEAD", self.patchdir]
-        output += runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+        cmd = ["git", "reset", "HEAD", self.patchdir]
+        output += runcmd(cmd, self.dir)
         # Commit the result
         (tmpfile, shellcmd) = self.prepareCommit(patch['file'], self.commituser, self.commitemail)
         try:
@@ -642,21 +644,21 @@ class GitApplyTree(PatchTree):
             except CmdError:
                 # Need to abort the git am, or we'll still be within it at the end
                 try:
-                    shellcmd = ["git", "--work-tree=%s" % reporoot, "am", "--abort"]
-                    runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+                    cmd = ["git", "--work-tree=%s" % reporoot, "am", "--abort"]
+                    runcmd(cmd, self.dir)
                 except CmdError:
                     pass
                 # git am won't always clean up after itself, sadly, so...
-                shellcmd = ["git", "--work-tree=%s" % reporoot, "reset", "--hard", "HEAD"]
-                runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+                cmd = ["git", "--work-tree=%s" % reporoot, "reset", "--hard", "HEAD"]
+                runcmd(cmd, self.dir)
                 # Also need to take care of any stray untracked files
-                shellcmd = ["git", "--work-tree=%s" % reporoot, "clean", "-f"]
-                runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+                cmd = ["git", "--work-tree=%s" % reporoot, "clean", "-f"]
+                runcmd(cmd, self.dir)
 
                 # Fall back to git apply
-                shellcmd = ["git", "--git-dir=%s" % reporoot, "apply", "-p%s" % patch['strippath']]
+                cmd = ["git", "--git-dir=%s" % reporoot, "apply", "-p%s" % patch['strippath']]
                 try:
-                    output = _applypatchhelper(shellcmd, patch, force, reverse, run)
+                    output = _applypatchhelper(cmd, patch, force, reverse, run)
                 except CmdError:
                     # Fall back to patch
                     output = PatchTree._applypatch(self, patch, force, reverse, run)
