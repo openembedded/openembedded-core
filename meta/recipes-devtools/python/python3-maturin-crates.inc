@@ -34,11 +34,11 @@ SRC_URI += " \
     crate://crates.io/cargo-config2/0.1.44 \
     crate://crates.io/cargo-cyclonedx/0.5.9 \
     crate://crates.io/cargo-lock/10.1.0 \
-    crate://crates.io/cargo-options/0.7.6 \
+    crate://crates.io/cargo-options/0.8.1 \
     crate://crates.io/cargo-platform/0.1.9 \
     crate://crates.io/cargo-platform/0.3.2 \
-    crate://crates.io/cargo-xwin/0.22.0 \
-    crate://crates.io/cargo-zigbuild/0.22.2 \
+    crate://crates.io/cargo-xwin/0.23.0 \
+    crate://crates.io/cargo-zigbuild/0.23.0 \
     crate://crates.io/cargo_metadata/0.18.1 \
     crate://crates.io/cargo_metadata/0.23.1 \
     crate://crates.io/cbindgen/0.29.2 \
@@ -238,7 +238,7 @@ SRC_URI += " \
     crate://crates.io/proc-macro2/1.0.106 \
     crate://crates.io/psm/0.1.30 \
     crate://crates.io/purl/0.1.6 \
-    crate://crates.io/pyo3-introspection/0.28.3 \
+    crate://crates.io/pyo3-introspection/0.29.0 \
     crate://crates.io/pyproject-toml/0.13.7 \
     crate://crates.io/python-pkginfo/0.6.8 \
     crate://crates.io/quote/1.0.45 \
@@ -509,11 +509,11 @@ SRC_URI[camino-1.2.2.sha256sum] = "e629a66d692cb9ff1a1c664e41771b3dcaf961985a977
 SRC_URI[cargo-config2-0.1.44.sha256sum] = "25ada53f7339c78084fb37d7e17f34e76537541c4fbb02fa3a2baa14b8faad37"
 SRC_URI[cargo-cyclonedx-0.5.9.sha256sum] = "5d162f67705f0f5038759d73bf546a083bf30e8677c2e944b416bca48d9d69a8"
 SRC_URI[cargo-lock-10.1.0.sha256sum] = "c06acb4f71407ba205a07cb453211e0e6a67b21904e47f6ba1f9589e38f2e454"
-SRC_URI[cargo-options-0.7.6.sha256sum] = "f89e1d6d6f65fe04d5e21be9de19d31a074e3b7e43aa39ee5b85f4cee16c3188"
+SRC_URI[cargo-options-0.8.1.sha256sum] = "b916a16b2a4b0ce91d46e42c51b7fc42e754220a4cc8bbfd1947efaafea99af7"
 SRC_URI[cargo-platform-0.1.9.sha256sum] = "e35af189006b9c0f00a064685c727031e3ed2d8020f7ba284d78cc2671bd36ea"
 SRC_URI[cargo-platform-0.3.2.sha256sum] = "87a0c0e6148f11f01f32650a2ea02d532b2ad4e81d8bd41e6e565b5adc5e6082"
-SRC_URI[cargo-xwin-0.22.0.sha256sum] = "c010a0e90e1dc09a90428c8768808bb4ad8cd7523e4df38719418e14579a9e37"
-SRC_URI[cargo-zigbuild-0.22.2.sha256sum] = "cd6351afb3f950c62e8d36f27d9089d65b91bf09eb1428eda58808557e8d15a9"
+SRC_URI[cargo-xwin-0.23.0.sha256sum] = "22a978d433c17ee532d4cb0a8ec9b7aeb121e658267ac1c637504583b12b2861"
+SRC_URI[cargo-zigbuild-0.23.0.sha256sum] = "68c7df45b9d9934aaed5987fbf422b31419f81827b13a52251a61e1e772c6ff7"
 SRC_URI[cargo_metadata-0.18.1.sha256sum] = "2d886547e41f740c616ae73108f6eb70afe6d940c7bc697cb30f13daec073037"
 SRC_URI[cargo_metadata-0.23.1.sha256sum] = "ef987d17b0a113becdd19d3d0022d04d7ef41f9efe4f3fb63ac44ba61df3ade9"
 SRC_URI[cbindgen-0.29.2.sha256sum] = "befbfd072a8e81c02f8c507aefce431fe5e7d051f83d48a23ffc9b9fe5a11799"
@@ -713,7 +713,7 @@ SRC_URI[proc-macro-crate-3.5.0.sha256sum] = "e67ba7e9b2b56446f1d419b1d807906278f
 SRC_URI[proc-macro2-1.0.106.sha256sum] = "8fd00f0bb2e90d81d1044c2b32617f68fcb9fa3bb7640c23e9c748e53fb30934"
 SRC_URI[psm-0.1.30.sha256sum] = "3852766467df634d74f0b2d7819bf8dc483a0eb2e3b0f50f756f9cfe8b0d18d8"
 SRC_URI[purl-0.1.6.sha256sum] = "60ebe4262ae91ddd28c8721111a0a6e9e58860e211fc92116c4bb85c98fd96ad"
-SRC_URI[pyo3-introspection-0.28.3.sha256sum] = "96040524552ac54e645ce08146b24023d720ceb0e788fff758c0beb9fe841736"
+SRC_URI[pyo3-introspection-0.29.0.sha256sum] = "7775fcc875acdce3872dcb91a4b7bd155ffba6e0ea8be88b8caab7d0b34539a6"
 SRC_URI[pyproject-toml-0.13.7.sha256sum] = "f6d755483ad14b49e76713b52285235461a5b4f73f17612353e11a5de36a5fd2"
 SRC_URI[python-pkginfo-0.6.8.sha256sum] = "229fe47647d6602b9b0934b21fab8aece1c5a5aeb0a934196a14355fec656623"
 SRC_URI[quote-1.0.45.sha256sum] = "41f2619966050689382d2b44f664f4bc593e129785a36d6ee376ddf37259b924"
