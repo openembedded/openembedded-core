@@ -235,24 +235,24 @@ class PatchTree(PatchSet):
         self.patches.insert(i, patch)
 
     def _applypatch(self, patch, force = False, reverse = False, run = True):
-        shellcmd = ["cat", patch['file'], "|", "patch", "--no-backup-if-mismatch", "-p", patch['strippath']]
+        cmd = ["patch", "--no-backup-if-mismatch", "-p", str(patch['strippath']), "-i", patch['file']]
         if reverse:
-            shellcmd.append('-R')
+            cmd.append('-R')
 
         if not run:
-            return "sh" + "-c" + " ".join(shellcmd)
+            return cmd
 
         if not force:
-            shellcmd.append('--dry-run')
+            cmd.append('--dry-run')
 
         try:
-            output = runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+            output = runcmd(cmd, self.dir)
 
             if force:
                 return
 
-            shellcmd.pop(len(shellcmd) - 1)
-            output = runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
+            cmd.pop(len(cmd) - 1)
+            output = runcmd(cmd, self.dir)
         except CmdError as err:
             raise bb.BBHandledException("Applying '%s' failed:\n%s" %
                                         (os.path.basename(patch['file']), err.output))
