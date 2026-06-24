@@ -277,7 +277,10 @@ class PatchTree(PatchSet):
                 next = 0
 
             bb.note("applying patch %s" % self.patches[next])
-            ret = self._applypatch(self.patches[next], force)
+            ret = self._applypatch(self.patches[next], force, run=run)
+
+            if not run:
+                return ret
 
             self._current = next
             return ret
@@ -868,7 +871,7 @@ class UserResolver(Resolver):
                 f.write("echo 'Dropping to a shell, so patch rejects can be fixed manually.'\n")
                 f.write("echo 'Run \"quilt refresh\" when patch is corrected, press CTRL+D to exit.'\n")
                 f.write("echo ''\n")
-                f.write(" ".join(patchcmd) + "\n")
+                f.write(shlex.join(patchcmd) + "\n")
             os.chmod(rcfile, 0o775)
 
             self.terminal("bash --rcfile " + rcfile, 'Patch Rejects: Please fix patch rejects manually', self.patchset.d)
