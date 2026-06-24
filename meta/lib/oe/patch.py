@@ -5,6 +5,7 @@
 #
 
 import os
+import errno
 import shlex
 import subprocess
 import oe.path
@@ -37,16 +38,19 @@ def runcmd(args, dir = None):
         # print("cwd: %s -> %s" % (olddir, dir))
 
     try:
-        args = [ shlex.quote(str(arg)) for arg in args ]
-        cmd = " ".join(args)
-        # print("cmd: %s" % cmd)
-        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+        cmd = [str(arg) for arg in args]
+        print_cmd = shlex.join(cmd)
+        try:
+            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        except OSError as exc:
+            status = 127 if exc.errno in (errno.ENOENT, errno.ENOTDIR) else 126
+            raise CmdError(print_cmd, status, "stdout: \nstderr: %s" % exc) from exc
         stdout, stderr = proc.communicate()
         stdout = stdout.decode('utf-8')
         stderr = stderr.decode('utf-8')
         exitstatus = proc.returncode
         if exitstatus != 0:
-            raise CmdError(cmd, exitstatus >> 8, "stdout: %s\nstderr: %s" % (stdout, stderr))
+            raise CmdError(print_cmd, exitstatus, "stdout: %s\nstderr: %s" % (stdout, stderr))
         if " fuzz " in stdout and "Hunk " in stdout:
             # Drop patch fuzz info with header and footer to log file so
             # insane.bbclass can handle to throw error/warning
