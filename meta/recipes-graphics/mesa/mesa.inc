@@ -347,7 +347,7 @@ FILES:${PN}-tools = "${bindir} ${datadir}"
 ALLOW_EMPTY:${PN}-tools = "1"
 
 # All DRI drivers are symlinks to libdril_dri.so
-INSANE_SKIP:${PN}-megadriver += "dev-so"
+INSANE_SKIP:${MLPREFIX}mesa-megadriver += "dev-so"
 
 # OpenCL ICDs package also ship correspondig .so files, there is no -dev package
 INSANE_SKIP:libopencl-mesa += "dev-so"
