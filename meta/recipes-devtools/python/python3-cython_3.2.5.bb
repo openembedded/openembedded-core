@@ -13,6 +13,7 @@ inherit pypi setuptools3 cython
 
 SRC_URI += " \
     file://0001-Replace-not-predictable-build-path-prefix-with-hardc.patch \
+    file://0001-3.2.x-Shared-module-Use-SharedUtilitySourceDescripto.patch \
 "
 
 # No need to depend on self
