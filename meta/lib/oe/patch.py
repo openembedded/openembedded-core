@@ -584,7 +584,7 @@ class GitApplyTree(PatchTree):
                 check_dirtyness = True
         return check_dirtyness
 
-    def _commitpatch(self, patch, patchfilevar):
+    def _commitpatch(self, patch):
         output = ""
         # Add all files
         cmd = ["git", "add", "-f", "-A", "."]
@@ -595,7 +595,6 @@ class GitApplyTree(PatchTree):
         # Commit the result
         (tmpfile, shellcmd) = self.prepareCommit(patch['file'], self.commituser, self.commitemail)
         try:
-            shellcmd.insert(0, patchfilevar)
             output += runcmd(["sh", "-c", " ".join(shellcmd)], self.dir)
         finally:
             os.remove(tmpfile)
@@ -621,7 +620,6 @@ class GitApplyTree(PatchTree):
 
         patch_applied = True
         try:
-            patchfilevar = 'PATCHFILE="%s"' % os.path.basename(patch['file'])
             if self._need_dirty_check():
                 # Check dirtyness of the tree
                 try:
@@ -633,10 +631,10 @@ class GitApplyTree(PatchTree):
                         # The tree is dirty, no need to try to apply patches with git anymore
                         # since they fail, fallback directly to patch
                         output = PatchTree._applypatch(self, patch, force, reverse, run)
-                        output += self._commitpatch(patch, patchfilevar)
+                        output += self._commitpatch(patch)
                         return output
             try:
-                shellcmd = [patchfilevar, "git", "--work-tree=%s" % reporoot]
+                shellcmd = ["git", "--work-tree=%s" % reporoot]
                 self.gitCommandUserOptions(shellcmd, self.commituser, self.commitemail)
                 shellcmd += ["am", "--committer-date-is-author-date",
                              "-3", "--keep-cr", "--no-scissors", "-p%s" % patch['strippath']]
@@ -662,7 +660,7 @@ class GitApplyTree(PatchTree):
                 except CmdError:
                     # Fall back to patch
                     output = PatchTree._applypatch(self, patch, force, reverse, run)
-                output += self._commitpatch(patch, patchfilevar)
+                output += self._commitpatch(patch)
                 return output
         except:
             patch_applied = False
