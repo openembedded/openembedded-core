@@ -176,6 +176,10 @@ def main():
         description="Buildtools installation helper",
         add_help=False,
         formatter_class=argparse.RawTextHelpFormatter)
+    parser.add_argument('--local-file',
+                        help='path to a pre-downloaded buildtools installer file.\n'
+                             'Cannot be combined with --url or --filename.',
+                        action='store')
     parser.add_argument('-u', '--url',
                         help='URL from where to fetch buildtools SDK installer, not '
                              'including filename (optional)\n'
@@ -289,21 +293,35 @@ def main():
     os.makedirs(sdk_dir, exist_ok=True)
     try:
         # Fetch installer
-        tmpbuildtools = fetch_buildtools(buildtools_url, filename, sdk_dir, args.check)
-        if tmpbuildtools is None:
-            return 1
+        if args.local_file:
+            if args.url or args.filename:
+                parser.error("--local-file cannot be combined with --url or --filename")
+            tmpbuildtools = os.path.abspath(args.local_file)
+            if not os.path.exists(tmpbuildtools):
+                logger.error("Local file not found: %s" % tmpbuildtools)
+                return 1
+            filename = os.path.basename(tmpbuildtools)
+        else:
+            tmpbuildtools = fetch_buildtools(buildtools_url, filename, sdk_dir, args.check)
+            if tmpbuildtools is None:
+                return 1
 
-        # Make installer executable
-        logger.info("Making installer executable")
-        st = os.stat(tmpbuildtools)
-        os.chmod(tmpbuildtools, st.st_mode | stat.S_IEXEC)
-        logger.debug(os.stat(tmpbuildtools))
+        # Run installer
+        if args.local_file:
+            # Avoid mutating caller-owned file; invoke via /bin/sh instead
+            cmd = ["/bin/sh", tmpbuildtools]
+        else:
+            logger.info("Making installer executable")
+            st = os.stat(tmpbuildtools)
+            os.chmod(tmpbuildtools, st.st_mode | stat.S_IEXEC)
+            logger.debug(os.stat(tmpbuildtools))
+            cmd = [tmpbuildtools]
         if args.directory:
             install_dir = os.path.abspath(args.directory)
-            ret = subprocess.call([tmpbuildtools, "-d", install_dir, "-y"])
+            ret = subprocess.call(cmd + ["-d", install_dir, "-y"])
         else:
             install_dir = "/opt/poky/%s" % args.installer_version
-            ret = subprocess.call([tmpbuildtools, "-y"])
+            ret = subprocess.call(cmd + ["-y"])
         if ret != 0:
             logger.error("Could not run buildtools installer")
             return ret
