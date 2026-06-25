@@ -35,7 +35,12 @@ def translate_virtualfns(tasks):
             (mc, fn, taskname) = bb.runqueue.split_tid(task)
             if taskname.endswith('_setscene'):
                 taskname = taskname[:-9]
-            outtasks.append('%s:%s' % (recipecaches[mc].pkg_fn[fn], taskname))
+            recipecache = recipecaches[mc]
+            if fn not in recipecache.pkg_fn and mc:
+                mcfn = 'mc:%s:%s' % (mc, fn)
+                if mcfn in recipecache.pkg_fn:
+                    fn = mcfn
+            outtasks.append('%s:%s' % (recipecache.pkg_fn[fn], taskname))
     finally:
         tinfoil.shutdown()
     return outtasks
