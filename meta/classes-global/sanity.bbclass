@@ -854,6 +854,38 @@ def sanity_check_locale(d):
     except locale.Error:
         raise_sanity_error("Your system needs to support the en_US.UTF-8 locale.", d)
 
+def check_cargo_config(d):
+    # Cargo merges .cargo/config[.toml] from every directory between CWD and
+    # the filesystem root. Warn for anything found in ancestor directories
+    # above BASE_WORKDIR that Cargo would pick up silently.
+    import os
+
+    base_workdir = d.getVar('BASE_WORKDIR')
+    ancestor = os.path.dirname(base_workdir)
+    found = []
+    last_ancestor = None
+    while True:
+        for name in ('config', 'config.toml'):
+            cfg = os.path.join(ancestor, '.cargo', name)
+            if os.path.exists(cfg):
+                found.append(cfg)
+                last_ancestor = ancestor
+                break
+        parent = os.path.dirname(ancestor)
+        if parent == ancestor:
+            break
+        ancestor = parent
+
+    if found:
+        bb.warn("Cargo config file(s) found at %s which is/are outside the build "
+                "directory. Cargo will silently apply their settings during the "
+                "rust/cargo build and can override Yocto's settings like linker, "
+                "registry or compiler settings causing build failures. You can "
+                "either remove these file(s) or move your build directory outside "
+                "of %s to fix this. "
+                "See https://bugzilla.yoctoproject.org/show_bug.cgi?id=15637 for more details."
+                % (', '.join(found), last_ancestor))
+
 def check_sanity_everybuild(status, d):
     import os, stat
     # Sanity tests which test the users environment so need to run at each build (or are so cheap
@@ -873,6 +905,7 @@ def check_sanity_everybuild(status, d):
         status.addresult('Bitbake version %s is required and version %s was found\n' % (minversion, bb.__version__))
 
     sanity_check_locale(d)
+    check_cargo_config(d)
 
     paths = d.getVar('PATH').split(":")
     if "." in paths or "./" in paths or "" in paths:
