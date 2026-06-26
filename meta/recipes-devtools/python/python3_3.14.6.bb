@@ -309,6 +309,12 @@ SKIPPED_TESTS += " \
     --ignore test_sysconfigdata_json \
 "
 
+# Fails with segfault
+# Bugzilla YP 16182 (test_tracemalloc_track_race)
+SKIPPED_TESTS += " \
+    --ignore test.test_tracemalloc.TestCAPI.test_tracemalloc_track_race \
+"
+
 SKIPPED_TESTS:append:libc-musl = " \
     -x test__locale \
     -x test_c_locale_coercion \
