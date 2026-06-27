@@ -15,10 +15,10 @@ SRC_URI = "https://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://0001-CMake-Add-a-variable-to-control-macro-__PAS_ALWAYS_I.patch \
            file://t6-not-declared.patch \
            file://sys_futex.patch \
-           file://0001-Fix-build-errors-on-RISCV-https-bugs.webkit.org-show.patch \
            file://fix-ftbfs-riscv64.patch \
+           file://0001-Source-cmake-FindGLib.cmake-do-not-set-include-dirs-.patch \
            "
-SRC_URI[sha256sum] = "2b281abf8894ffc6172152e5660b75eeeedbe1cc43d6783d09dc79f7c865bb42"
+SRC_URI[sha256sum] = "cf4076a1ca2a64788edca8c452d8ebb68d5e2965e588fe46a388a016513edce4"
 
 inherit cmake pkgconfig gobject-introspection perlnative features_check upstream-version-is-even gi-docgen
 
@@ -150,8 +150,9 @@ ARM_INSTRUCTION_SET:armv7a = "thumb"
 ARM_INSTRUCTION_SET:armv7r = "thumb"
 ARM_INSTRUCTION_SET:armv7ve = "thumb"
 
-# ANGLE requires SSE support as of webkit 2.40.x on 32 bit x86
-COMPATIBLE_HOST:x86 = "${@bb.utils.contains_any('TUNE_FEATURES', 'core2 corei7', '.*', 'null', d)}"
+# As of 2.52.4, 32 bit x86 builds are broken:
+# https://autobuilder.yoctoproject.org/valkyrie/#/builders/6/builds/4013/steps/12/logs/stdio
+COMPATIBLE_HOST:x86 = "null"
 
 # introspection inside qemu-arm hangs forever on musl/arm builds
 # therefore disable GI_DATA
