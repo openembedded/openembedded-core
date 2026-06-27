@@ -33,3 +33,5 @@ ALTERNATIVE_LINK_NAME[py.test] = "${bindir}/py.test"
 ALTERNATIVE_TARGET[py.test] = "${bindir}/py.test"
 
 BBCLASSEXTEND = "native nativesdk"
+
+OEQA_BUILDPATHS_SKIP = "/home/user"

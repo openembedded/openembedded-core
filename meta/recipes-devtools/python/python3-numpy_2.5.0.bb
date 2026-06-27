@@ -82,3 +82,5 @@ RDEPENDS:${PN}-ptest += "\
 "
 
 BBCLASSEXTEND = "native nativesdk"
+
+OEQA_BUILDPATHS_SKIP = "/home/alex"
