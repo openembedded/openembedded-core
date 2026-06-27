@@ -73,8 +73,9 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
            file://0001-gatt-client-Fix-use-after-free-caused-by-reentrant-c.patch \
            file://0001-transport-Fix-set-volume-failure-with-invalid-device.patch \
            file://0001-advertising-Fix-sending-extra-bytes-with-MGMT_OP_ADD.patch \
-           file://0001-src-device-Fix-stored-gatt-cache-DB-Hash-value-no.patch    \
+           file://0001-src-device-Fix-stored-gatt-cache-DB-Hash-value-no.patch \
            file://0001-profile-Set-L2CAP-IMTU-for-OBEX-profile-listeners.patch \
+           file://0001-build-Support-libical-4.0.patch \
            "
 S = "${UNPACKDIR}/bluez-${PV}"
 
