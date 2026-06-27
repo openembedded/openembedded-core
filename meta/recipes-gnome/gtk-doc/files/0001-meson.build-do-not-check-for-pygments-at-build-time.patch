@@ -1,0 +1,37 @@
+From 80b4f8edc4273803a89d02bb6209734f7cfcce3e Mon Sep 17 00:00:00 2001
+From: Alexander Kanavin <alex@linutronix.de>
+Date: Sun, 21 Jun 2026 11:11:04 +0200
+Subject: [PATCH] meson.build: do not check for python modules at build time
+
+pygments and parametrized are run-time dependencies, and should
+not be enforced at build time as they are never actually used then.
+
+This is especially useful in cross-compilation, as the modules
+are checked in the python installation on the build host, and that
+has no relevance to the target environment that the build outputs
+will be executed in.
+
+Upstream-Status: Submitted [https://gitlab.gnome.org/GNOME/gtk-doc/-/merge_requests/105]
+Signed-off-by: Alexander Kanavin <alex@linutronix.de>
+---
+ meson.build | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/meson.build b/meson.build
+index 30f1520..a49d734 100644
+--- a/meson.build
++++ b/meson.build
+@@ -8,12 +8,7 @@ fs = import('fs')
+ gnome = import('gnome')
+ python = import('python')
+ 
+-required_python_modules = ['pygments']
+-if get_option('tests')
+-  required_python_modules += ['parameterized']
+-endif
+-
+-python3 = python.find_installation('python3', modules: required_python_modules)
++python3 = python.find_installation('python3')
+ 
+ # Paths
+ srcdir = meson.current_source_dir()
