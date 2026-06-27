@@ -76,6 +76,12 @@ do_configure:prepend () {
     # Improve reproducibility for c++ object files
     reltivepath="${@os.path.relpath(d.getVar('STAGING_INCDIR'), d.getVar('S'))}"
     sed -i "s:@RELATIVE_STAGING_INCDIR@:$reltivepath:g" ${S}/stringtable.h
+
+    # These shouldn't be stored in git, as they can be spontaneously regenerated in
+    # non-reproducible ways in builds, if their timestamp is slightly newer than the
+    # source *.po file, depending on the order of git checkout.
+    # Use touch to avoid such re-generation.
+    touch ${S}/po/*.gmo
 }
 
 do_install:append () {
