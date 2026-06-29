@@ -35,7 +35,7 @@ def get_clang_arch(bb, d, arch_var):
     elif re.match('p(pc|owerpc)(|64)', a):             return 'PowerPC'
     elif re.match('loongarch64$', a):                  return 'LoongArch'
     else:
-        bb.fatal("Unhandled architecture %s" % arch_val)
+        bb.fatal("Unhandled architecture %s" % arch_var)
         return ""
 
 def get_clang_host_arch(bb, d):
