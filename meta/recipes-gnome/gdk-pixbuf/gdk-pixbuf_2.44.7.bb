@@ -14,7 +14,7 @@ SECTION = "libs"
 
 DEPENDS = "glib-2.0 shared-mime-info"
 
-SRC_URI[archive.sha256sum] = "140c2d0b899fcf853ee92b26373c9dc228dbcde0820a4246693f4328a27466fa"
+SRC_URI[archive.sha256sum] = "172f80e3626ec31520a970400f1a3694e04718f6c2cd2885f75250fb5a6995a4"
 
 inherit gettext gnomebase pixbufcache ptest-gnome upstream-version-is-even gobject-introspection gi-docgen lib_package manpages
 
