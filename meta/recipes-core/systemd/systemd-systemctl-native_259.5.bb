@@ -8,7 +8,7 @@ DEPENDS = "gperf-native libcap-native util-linux-native python3-jinja2-native"
 
 inherit pkgconfig meson native
 
-MESON_TARGET = "systemctl:executable"
+MESON_TARGET = "systemctl"
 MESON_INSTALL_TAGS = "systemctl"
 EXTRA_OEMESON += "-Dlink-systemctl-shared=false"
 EXTRA_OEMESON += "-Dsysvinit-path= -Dsysvrcnd-path="
