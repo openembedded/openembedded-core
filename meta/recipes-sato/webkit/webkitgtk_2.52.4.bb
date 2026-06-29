@@ -175,9 +175,6 @@ src_package_preprocess () {
             ${B}/WebKitGTK/DerivedSources/webkit/*.cpp
 }
 
-# Clang-20 issue - https://github.com/llvm/llvm-project/issues/132322
-TOOLCHAIN:arm = "gcc"
-
 # Pass -g1 to massively reduce the size of the
 # debug symbols (4.3GB to 700M at time of writing)
 # workaround error:
