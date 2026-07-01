@@ -9,7 +9,7 @@ LICENSE = "MIT"
 
 inherit meson pkgconfig
 
-SRCREV = "e6b603e4984e4ce30fe1cc2705734d0f130e0550"
+SRCREV = "a8e2cbd2854d7980a9eccecc6e0c801d0824b88f"
 
 SRC_URI = "git://gitlab.freedesktop.org/drm/igt-gpu-tools.git;protocol=https;branch=master;tag=v${PV} \
            file://0001-lib-meson.build-do-not-hardcode-the-build-directory-.patch \
