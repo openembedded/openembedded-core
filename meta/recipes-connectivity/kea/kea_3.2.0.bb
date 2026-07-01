@@ -22,7 +22,7 @@ SRC_URI = "http://ftp.isc.org/isc/kea/${PV}/${BP}.tar.xz \
            "
 SRC_URI[sha256sum] = "14bf695d37b65b9b1bf550fea5d0adaf9806c50e5419ef2a176a4b8e9aade3df"
 
-inherit meson pkgconfig systemd update-rc.d upstream-version-is-even
+inherit meson pkgconfig systemd update-rc.d upstream-version-is-even python3-dir
 
 EXTRA_OEMESON += "-Dcrypto=openssl -Drunstatedir=${runtimedir} -Dkrb5=disabled -Dnetconf=disabled"
 
@@ -96,7 +96,7 @@ CONFFILES:${PN} = "${sysconfdir}/kea/kea-ctrl-agent.conf \
                   "
 
 PACKAGES =+ "${PN}-python"
-FILES:${PN}-python = "${nonarch_libdir}/python*/site-packages/*"
+FILES:${PN}-python = "${PYTHON_SITEPACKAGES_DIR}"
 RDEPENDS:${PN}-python = "python3"
 
 FILES:${PN}-staticdev += "${libdir}/kea/hooks/*.a ${libdir}/hooks/*.a"
