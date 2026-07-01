@@ -99,5 +99,4 @@ PACKAGES =+ "${PN}-python"
 FILES:${PN}-python = "${PYTHON_SITEPACKAGES_DIR}"
 RDEPENDS:${PN}-python = "python3"
 
-FILES:${PN}-staticdev += "${libdir}/kea/hooks/*.a ${libdir}/hooks/*.a"
 FILES:${PN} += "${libdir}/hooks/*.so"
