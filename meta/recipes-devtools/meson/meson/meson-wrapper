@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# If this wrapper script is being ran in a normal build environment and not an
+# eSDK, then just call the real script directly.
 if [ -z "$OECORE_NATIVE_SYSROOT" ]; then
     exec "meson.real" "$@"
 fi
