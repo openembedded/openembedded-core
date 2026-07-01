@@ -7,14 +7,11 @@ SECTION = "devel/python"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=61c3ee8961575861fa86c7e62bc9f69c"
 
-SRC_URI[sha256sum] = "3dd42e4cf36ad15f265bdfec2337cc00c688c8eb6d374ffd13bb19437c27bba1"
+SRC_URI[sha256sum] = "f4f23a56b25221a06f91817fe8f3114ab8b48a4fac73187dbb64bc2c4a87961f"
 
 inherit pypi setuptools3 cython
 
-SRC_URI += " \
-    file://0001-Replace-not-predictable-build-path-prefix-with-hardc.patch \
-    file://0001-3.2.x-Shared-module-Use-SharedUtilitySourceDescripto.patch \
-"
+SRC_URI += "file://0001-Replace-not-predictable-build-path-prefix-with-hardc.patch"
 
 # No need to depend on self
 DEPENDS:remove = "python3-cython-native"
