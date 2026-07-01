@@ -645,7 +645,7 @@ python extend_recipe_sysroot() {
 
     bb.utils.unlockfile(lock)
 }
-extend_recipe_sysroot[vardepsexclude] += "BB_TASKDEPDATA"
+extend_recipe_sysroot[vardepsexclude] += "BB_TASKDEPDATA SSTATETASKS"
 
 do_prepare_recipe_sysroot[deptask] = "do_populate_sysroot"
 python do_prepare_recipe_sysroot () {
