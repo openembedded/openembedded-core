@@ -18,6 +18,7 @@ SRC_URI = "git://github.com/NetworkConfiguration/dhcpcd;protocol=https;branch=ma
            file://CVE-2026-56113.patch \
            file://CVE-2026-56114.patch \
            file://CVE-2026-56116.patch \
+           file://CVE-2026-56117.patch \
            "
 
 SRCREV = "243ad84ac67a87d631ff7eb83b2eed2727acebb5"
