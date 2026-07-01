@@ -6,10 +6,6 @@ if [ -z "$OECORE_NATIVE_SYSROOT" ]; then
     exec "meson.real" "$@"
 fi
 
-if [ -z "$SSL_CERT_DIR" ]; then
-    export SSL_CERT_DIR="$OECORE_NATIVE_SYSROOT/etc/ssl/certs/"
-fi
-
 case "$1" in
 setup|configure|dist|install|introspect|init|test|wrap|subprojects|rewrite|compile|devenv|env2mfile|help)
     MESON_CMD="$1"
