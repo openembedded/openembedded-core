@@ -1,11 +1,10 @@
 SUMMARY = "Tools for erofs filesystems"
-# liberofs also available under Apache 2.0
-LICENSE = "GPL-2.0-or-later"
+LICENSE = "(GPL-2.0-or-later | MIT) & MIT"
 SECTION = "base"
-LIC_FILES_CHKSUM = "file://COPYING;md5=73001d804ea1e3d84365f652242cca20"
+LIC_FILES_CHKSUM = "file://COPYING;md5=63afa010baddc7d0905f9c31ac759f51"
 HOMEPAGE = "https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/tree/README"
 
-SRCREV = "d3fbccba6e409c100843563b416c47cd82c87ca0"
+SRCREV = "30711d4b2e234fe3e8aaeb779ade4cb609b0d920"
 SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git;branch=master;protocol=https;tag=v${PV}"
 
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>(\d+(\.\d+)+))"
