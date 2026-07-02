@@ -23,7 +23,7 @@ DEPENDS = " \
 PROVIDES += "atk at-spi2-atk"
 RPROVIDES:${PN} += "atk at-spi2-atk"
 
-inherit gnomebase gi-docgen gettext systemd upstream-version-is-even gobject-introspection python3targetconfig
+inherit gnomebase gi-docgen gettext systemd upstream-version-is-even gobject-introspection python3-dir
 
 EXTRA_OEMESON = " -Dsystemd_user_dir=${systemd_user_unitdir} \
                   -Ddbus_daemon=${bindir}/dbus-daemon"
