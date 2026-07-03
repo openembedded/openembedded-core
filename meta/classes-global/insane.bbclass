@@ -1225,9 +1225,7 @@ addtask do_package_qa_setscene
 
 python do_qa_sysroot() {
     bb.note("QA checking do_populate_sysroot")
-    sysroot_destdir = d.expand('${SYSROOT_DESTDIR}')
-    for sysroot_dir in d.expand('${SYSROOT_DIRS}').split():
-        qa_check_staged(sysroot_destdir + sysroot_dir, d)
+    qa_check_staged(d.getVar("SYSROOT_DESTDIR"), d)
     oe.qa.exit_with_message_if_errors("do_populate_sysroot for this recipe installed files with QA issues", d)
 }
 do_populate_sysroot[postfuncs] += "do_qa_sysroot"
