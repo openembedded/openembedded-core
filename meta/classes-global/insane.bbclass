@@ -83,25 +83,22 @@ QAPATHTEST[shebang-size] = "package_qa_check_shebang_size"
 def package_qa_check_shebang_size(path, name, d, elf):
     global cpath
 
+    # From kernel 5.1 onwards (specifically linux 6eb3c3d0a52dc ("exec: increase
+    # BINPRM_BUF_SIZE to 256")) the shebang buffer was increased from 128 bytes
+    # to 256 bytes.
+    BINPRM_BUF_SIZE = 256
+
     if elf or cpath.islink(path) or not cpath.isfile(path):
         return
 
     try:
         with open(path, 'rb') as f:
-            stanza = f.readline(130)
+            stanza = f.readline(BINPRM_BUF_SIZE * 2)
+            if stanza.startswith(b'#!') and len(stanza) > BINPRM_BUF_SIZE:
+                oe.qa.handle_error("shebang-size", "%s: %s maximum shebang size exceeded, the maximum size is %d" % (name, package_qa_clean_path(path, d, name), BINPRM_BUF_SIZE), d)
+                return
     except IOError:
-        return
-
-    if stanza.startswith(b'#!'):
-        try:
-            stanza.decode("utf-8")
-        except UnicodeDecodeError:
-            #If it is not a text file, it is not a script
-            return
-
-        if len(stanza) > 129:
-            oe.qa.handle_error("shebang-size", "%s: %s maximum shebang size exceeded, the maximum size is 128." % (name, package_qa_clean_path(path, d, name)), d)
-            return
+        pass
 
 QAPATHTEST[libexec] = "package_qa_check_libexec"
 def package_qa_check_libexec(path,name, d, elf):
