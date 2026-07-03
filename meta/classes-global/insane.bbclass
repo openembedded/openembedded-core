@@ -732,6 +732,10 @@ def qa_check_staged(path,d):
     workdir = os.path.join(tmpdir, "work")
     recipesysroot = d.getVar("RECIPE_SYSROOT")
 
+    # package_qa_check_shebang_size needs the global cpath to be already created
+    global cpath
+    cpath = oe.cachedpath.CachedPath()
+
     if bb.data.inherits_class("native", d) or bb.data.inherits_class("cross", d):
         pkgconfigcheck = workdir
     else:
@@ -775,10 +779,7 @@ def qa_check_staged(path,d):
                         oe.qa.handle_error("pkgconfig", error_msg, d)
 
             if not skip_shebang_size:
-                global cpath
-                cpath = oe.cachedpath.CachedPath()
                 package_qa_check_shebang_size(path, "", d, None)
-                cpath = None
 
 # Walk over all files in a directory and call func
 def package_qa_walk(checkfuncs, package, d):
