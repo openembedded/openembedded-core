@@ -26,6 +26,8 @@ export NASMENV = "--reproducible --debug-prefix-map=${WORKDIR}=${TARGET_DBGSRC_D
 
 # The binaries have RUNPATH=$libdir, which is redundant
 EXTRA_OECMAKE += "-DCMAKE_SKIP_INSTALL_RPATH=ON"
+# Ensure the -fPIC options are used to avoid -native compile failures, e.g. on opensuse160
+EXTRA_OECMAKE += "-DCMAKE_POSITION_INDEPENDENT_CODE=ON"
 
 # Add nasm-native dependency consistently for all build arches is hard
 EXTRA_OECMAKE:append:class-native = " -DWITH_SIMD=False"
