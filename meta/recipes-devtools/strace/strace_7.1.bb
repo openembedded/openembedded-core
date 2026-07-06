@@ -19,7 +19,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/strace-${PV}.tar.xz \
 SRC_URI:append:libc-musl = "\
            file://0001-Ignore-pwritev-pwrite64-tests-on-musl.patch \
            "
-SRC_URI[sha256sum] = "6c92419be3f2ec560b31728a4652217c59864c8642ba7b1b3771b1b013ad074b"
+SRC_URI[sha256sum] = "81743ecf2a5b44186b2f5038afdc8beda7e5c70aed15b4fbfbcc6e9ece24490f"
 
 inherit autotools github-releases ptest
 
@@ -51,6 +51,7 @@ do_install_ptest() {
 	sed -e 's/^srcdir = .*/srcdir = ..\/..\/ptest\/tests/' \
 	    -e "/^TEST_LOG_DRIVER =/s|(top_srcdir)|(top_builddir)|" \
 	    -e '/^CC_FOR_BUILD/s/\s-std=gnu23//g' \
+            -e '/^_hide_from_automake/d' \
 	    -i ${D}/${PTEST_PATH}/${TESTDIR}/Makefile
 }
 
