@@ -15,12 +15,10 @@ PE = "1"
 SRC_URI = "http://downloads.yoctoproject.org/releases/${BPN}/${BPN}-${PV}.tar.gz \
            file://opkg.conf \
            file://0001-opkg_conf-create-opkg.lock-in-run-instead-of-var-run.patch \
-           file://0002-config.h.in-fix-typo.patch \
-           file://0003-cmake-fix-WITH_ACL-and-USE_XATTR.patch \
            file://run-ptest \
            "
 
-SRC_URI[sha256sum] = "440ef321862e01f83da4d02884a0cbb4d9d7b32f82faa81a6a85493f0c89d0f5"
+SRC_URI[sha256sum] = "4d099e010a5d262b34184fee4766bc60a8c7439741fb210aa11d51704afd04d1"
 
 # This needs to be before ptest inherit, otherwise all ptest files end packaged
 # in libopkg package if OPKGLIBDIR == libdir, because default
