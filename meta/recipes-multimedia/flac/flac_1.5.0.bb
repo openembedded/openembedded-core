@@ -34,6 +34,7 @@ PACKAGECONFIG ??= " \
     ogg \
 "
 PACKAGECONFIG[avx] = "--enable-avx,--disable-avx"
+PACKAGECONFIG[doxygen-docs] = "--enable-doxygen-docs,--disable-doxygen-docs,doxygen-native"
 PACKAGECONFIG[ogg] = "--enable-ogg --with-ogg=${STAGING_DIR_HOST},--disable-ogg,libogg"
 
 PACKAGES += "libflac libflac++"
