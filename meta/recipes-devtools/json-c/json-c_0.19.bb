@@ -9,20 +9,17 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=de54b60fbbc35123ba193fea8ee216f2"
 SRC_URI = "https://s3.amazonaws.com/json-c_releases/releases/${BP}.tar.gz \
            file://run-ptest \
            "
-SRC_URI[sha256sum] = "876ab046479166b869afc6896d288183bbc0e5843f141200c677b3e8dfb11724"
+SRC_URI[sha256sum] = "37ad0249902e301bd9052bf712e511fcc6acff4ecaad4b5900aad9ce564e26de"
 
 # NVD uses full tag name including date
-CVE_VERSION = "0.18-20240915"
+CVE_VERSION = "0.19-20260627"
 
 UPSTREAM_CHECK_URI = "https://github.com/${BPN}/${BPN}/tags"
 UPSTREAM_CHECK_REGEX = "json-c-(?P<pver>\d+(\.\d+)+)-\d+"
 
 RPROVIDES:${PN} = "libjson"
 
-# Apps aren't needed/packaged and their CMakeLists.txt is incompatible with CMake 4+.
-EXTRA_OECMAKE = "-DDISABLE_WERROR=ON \
-                 -DBUILD_APPS=OFF \
-"
+EXTRA_OECMAKE = "-DDISABLE_WERROR=ON"
 
 inherit cmake ptest
 
@@ -33,6 +30,13 @@ do_install_ptest() {
     install ${S}/tests/*.expected ${D}/${PTEST_PATH}/tests
     install ${S}/tests/test-defs.sh ${D}/${PTEST_PATH}/tests
     install ${S}/tests/*json ${D}/${PTEST_PATH}/tests
+
+    # The 'json_parse_cli' test executes the 'json_parse' app via
+    # '../apps/json_parse' so we package it accordingly.
+    #
+    # Note that the test also depends on xxd, which is provided via busybox and
+    # thus not listed as an explicit RDEPENDS.
+    install -D -t ${D}/${PTEST_PATH}/apps/ ${B}/apps/json_parse
 }
 
 BBCLASSEXTEND = "native nativesdk"
