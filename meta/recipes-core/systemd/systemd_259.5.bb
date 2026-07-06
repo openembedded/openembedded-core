@@ -330,9 +330,9 @@ do_install() {
 		echo 'f /run/systemd/resolve/resolv.conf 0644 root root' >>${D}${exec_prefix}/lib/tmpfiles.d/systemd.conf
 		ln -s ../run/systemd/resolve/resolv.conf ${D}${sysconfdir}/resolv-conf.systemd
 	else
-		resolv_conf="${@bb.utils.contains('RESOLV_CONF', 'stub-resolv', 'run/systemd/resolve/stub-resolv.conf', 'run/systemd/resolve/resolv.conf', d)}"
-		sed -i -e "s%^L! /etc/resolv.conf.*$%L! /etc/resolv.conf - - - - ../${resolv_conf}%g" ${D}${exec_prefix}/lib/tmpfiles.d/systemd-resolve.conf
-		ln -s ../${resolv_conf} ${D}${sysconfdir}/resolv-conf.systemd
+		rc="../run/systemd/resolve/${@bb.utils.contains('RESOLV_CONF', 'stub-resolv', 'stub-', '', d)}resolv.conf"
+		sed -i -e "s%^L! /etc/resolv.conf.*$%L! /etc/resolv.conf - - - - $rc%" ${D}${exec_prefix}/lib/tmpfiles.d/systemd-resolve.conf
+		ln -s $rc ${D}${sysconfdir}/resolv-conf.systemd
 	fi
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'x11', 'false', 'true', d)}; then
 		rm ${D}${exec_prefix}/lib/tmpfiles.d/x11.conf
