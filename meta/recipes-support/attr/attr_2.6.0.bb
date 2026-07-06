@@ -16,10 +16,9 @@ LIC_FILES_CHKSUM = "file://doc/COPYING;md5=2d0aa14b3fce4694e4f615e30186335f \
 
 SRC_URI = "${SAVANNAH_GNU_MIRROR}/attr/${BP}.tar.gz \
            file://run-ptest \
-           file://0001-attr.c-Include-libgen.h-for-posix-version-of-basenam.patch \
 "
 
-SRC_URI[sha256sum] = "39bf67452fa41d0948c2197601053f48b3d78a029389734332a6309a680c6c87"
+SRC_URI[sha256sum] = "d42fa374513180bb48cb11a46696f488240e5124ff1e6ad88b0abff706985612"
 
 inherit ptest update-alternatives autotools gettext
 
@@ -35,7 +34,7 @@ ALTERNATIVE_TARGET[getfattr] = "${bindir}/getfattr"
 do_install_ptest() {
     install -m755 ${S}/test/run ${S}/test/sort-getfattr-output ${D}${PTEST_PATH}/
 
-    for t in $(makefile-getvar ${S}/test/Makemodule.am TESTS); do
+    for t in $(makefile-getvar ${B}/Makefile TESTS); do
         install -m644 ${S}/$t ${D}${PTEST_PATH}/
     done
 }
@@ -44,7 +43,7 @@ do_install_ptest:append:libc-musl() {
     # With glibc strerror(ENOTSUP) is "Operation not supported" but
     # musl is "Not supported".
     # https://savannah.nongnu.org/bugs/?62370
-    sed -i -e 's|f: Operation not supported|f: Not supported|g' ${D}${PTEST_PATH}/attr.test
+    sed -i -e 's|f: Operation not supported|f: Not supported|g' ${D}${PTEST_PATH}/attr.run
 }
 
 RDEPENDS:${PN}-ptest = "attr \
