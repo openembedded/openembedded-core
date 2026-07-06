@@ -170,6 +170,6 @@ python package_prepare_pkgdata() {
 
 }
 package_prepare_pkgdata[cleandirs] = "${WORKDIR_PKGDATA}"
-package_prepare_pkgdata[vardepsexclude] += "MACHINE_ARCH PACKAGE_EXTRA_ARCHS SDK_ARCH BUILD_ARCH SDK_OS BB_TASKDEPDATA SSTATETASKS"
+package_prepare_pkgdata[vardepsexclude] += "BB_TASKDEPDATA SSTATETASKS"
 
 
