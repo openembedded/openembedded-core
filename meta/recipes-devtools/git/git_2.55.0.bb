@@ -2,14 +2,13 @@ SUMMARY = "Distributed version control system"
 HOMEPAGE = "http://git-scm.com"
 DESCRIPTION = "Git is a free and open source distributed version control system designed to handle everything from small to very large projects with speed and efficiency."
 SECTION = "console/utils"
-LICENSE = "GPL-2.0-only & GPL-2.0-or-later & BSD-3-Clause & MIT & BSL-1.0 & LGPL-2.1-or-later"
+LICENSE = "GPL-2.0-only & GPL-2.0-or-later & BSD-3-Clause & MIT & LGPL-2.1-or-later"
 DEPENDS = "openssl zlib"
 
 PROVIDES:append:class-native = " git-replacement-native"
 
 SRC_URI = "${KERNELORG_MIRROR}/software/scm/git/git-${PV}.tar.gz;name=tarball \
            file://fixsort.patch \
-           file://0001-config.mak.uname-do-not-force-RHEL-7-specific-build-.patch \
            "
 
 SRC_URI:append:class-nativesdk = " \
@@ -22,7 +21,6 @@ LIC_FILES_CHKSUM = "\
 	file://COPYING;md5=7c0d7ef03a7eb04ce795b0f60e68e7e1 \
 	file://reftable/LICENSE;md5=1a6424cafc4c9c88c689848e165af33b \
 	file://sha1dc/LICENSE.txt;md5=9bbe4c990a9e98ea4b98ef5d3bcb8a7a \
-	file://compat/nedmalloc/License.txt;md5=e4224ccaecb14d942c71d31bef20d78c \
 	file://compat/inet_ntop.c;md5=76593c6f74e8ced5b24520175688d59b;endline=16 \
 	file://compat/obstack.h;md5=08ad25fee5428cd879ceef451ce3a22e;endline=18 \
 	file://compat/poll/poll.h;md5=9fc00170a53b8e3e52157c91ac688dd1;endline=19 \
@@ -48,7 +46,7 @@ EXTRA_OECONF:append:class-native = " --with-gitconfig=/etc/gitconfig "
 # Needs brokensep as this doesn't use automake
 inherit autotools-brokensep perlnative bash-completion manpages
 
-EXTRA_OEMAKE = "NO_PYTHON=1 CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}'"
+EXTRA_OEMAKE = "NO_RUST=1 NO_PYTHON=1 CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}'"
 EXTRA_OEMAKE += "'PERL_PATH=/usr/bin/env perl'"
 EXTRA_OEMAKE += "COMPUTE_HEADER_DEPENDENCIES=no"
 EXTRA_OEMAKE:append:class-native = " NO_CROSS_DIRECTORY_HARDLINKS=1"
@@ -170,7 +168,7 @@ EXTRA_OECONF += "ac_cv_snprintf_returns_bogus=no \
                  "
 EXTRA_OEMAKE += "NO_GETTEXT=1"
 
-SRC_URI[tarball.sha256sum] = "45e8107643a44e3ce46f5665beb35af3932fb0d70017687905ab5d4e3aafa8eb"
+SRC_URI[tarball.sha256sum] = "0842dc384a23ac33ba3e570c4f3a8ded85963ee4713b1cd21153c3db41813d1e"
 
 CVE_STATUS[CVE-2024-32002] = "fixed-version: fixed since v2.46.0"
 CVE_STATUS[CVE-2024-50349] = "fixed-version: fixed since v2.49.0"
