@@ -9,7 +9,8 @@ BUGTRACKER = "https://github.com/PyO3/setuptools-rust/issues"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=011cd92e702dd9e6b1a26157b6fd53f5"
 
-SRC_URI[sha256sum] = "85ae70989d96c9cfeb5ef79cf3bac2d5200bc5564f720a06edceedbdf6664640"
+SRC_URI += "file://0001-setuptools_rust-rustc_info.py-do-not-add-unstable-op.patch"
+SRC_URI[sha256sum] = "f2afcf4baeee689910ce49cfa8aad4e08cce72f417449bcc32891b8664fdc726"
 
 PYPI_PACKAGE = "setuptools_rust"
 
