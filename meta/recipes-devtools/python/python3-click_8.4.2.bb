@@ -9,8 +9,7 @@ LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=1fa98232fd645608937a0fdc82e999b8"
 
 SRC_URI += "file://pytest-fix.patch"
-SRC_URI += "file://ffcc7494c991c9197902fdf4995e11b2da3e9762.patch"
-SRC_URI[sha256sum] = "918b5633eddf6b41c32d4f454bf0de810065c74e3f7dbf8ee5452f8be88d3e96"
+SRC_URI[sha256sum] = "9a6cea6e60b17ebe0a44c5cc636d94f09bd66142c1cd7d8b4cd731c4917a15f6"
 
 inherit pypi python_flit_core ptest-python-pytest
 
