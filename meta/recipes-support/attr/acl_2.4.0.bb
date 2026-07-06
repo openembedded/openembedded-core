@@ -16,11 +16,9 @@ LIC_FILES_CHKSUM = "file://doc/COPYING;md5=c781d70ed2b4d48995b790403217a249 \
 DEPENDS = "attr"
 
 SRC_URI = "${SAVANNAH_GNU_MIRROR}/acl/${BP}.tar.gz \
-           file://0001-libmisc-__acl_get_uid-fix-memory-wasting-loop-if-use.patch \
-           file://0001-test-misc.test-Don-t-mix-stdout-and-stderr.patch \
            file://run-ptest \
            "
-SRC_URI[sha256sum] = "5f2bdbad629707aa7d85c623f994aa8a1d2dec55a73de5205bac0bf6058a2f7c"
+SRC_URI[sha256sum] = "73c853c3d44e1f693e5a96a986f1bd19d3d0dac2c7d453e796177774bc4e5f6a"
 
 inherit autotools gettext ptest
 
