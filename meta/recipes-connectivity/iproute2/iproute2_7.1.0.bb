@@ -16,7 +16,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/net/${BPN}/${BP}.tar.xz \
            file://0002-include-color.h-add-missing-include-for-types.patch \
            "
 
-SRC_URI[sha256sum] = "e62890f7b5de63c05a3bf331dc8deb4c015c336013f341a4edf46969797f2f4e"
+SRC_URI[sha256sum] = "fd9fa1b95809417157ca83dd72957e3261bdbce896353cb936f80af0b33a4b5c"
 
 inherit update-alternatives bash-completion pkgconfig
 
