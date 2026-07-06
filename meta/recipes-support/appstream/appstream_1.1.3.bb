@@ -5,18 +5,12 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4bf661c1e3793e55c8d1051bc5e0ae21"
 
 DEPENDS = " \
     appstream-native \
-    curl-native \
     curl \
-    docbook-xml-dtd4-native \
     gperf-native \
-    glib-2.0 \
+    itstool-native \
     libfyaml \
     libxml2 \
     libxmlb \
-    libxslt-native \
-    itstool-native \
-    docbook-xsl-stylesheets-native \
-    python3-pygments-native \
 "
 
 inherit meson gobject-introspection gettext gi-docgen pkgconfig vala bash-completion
@@ -30,7 +24,7 @@ SRC_URI = " \
 	file://0002-Do-not-build-qt-tests.patch \
 	file://0003-Fix-PACKAGE_PREFIX_DIR-in-qt-cmake-AppStreamQtConfig.patch \
 "
-SRC_URI[sha256sum] = "46b4257100e25a6468ceed7b3ab82441f47b119da3398d30aea6d7b91174b586"
+SRC_URI[sha256sum] = "2624f967068427edc94f3979edae3571bb077063f5bc231f737776da527bf467"
 
 S = "${UNPACKDIR}/AppStream-${PV}"
 
@@ -44,7 +38,7 @@ PACKAGECONFIG[bash-completion] = "-Dbash-completion=true,-Dbash-completion=false
 
 FILES:${PN} += "${datadir}"
 
-EXTRA_OEMESON += "${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-Dvapi=true', '-Dvapi=false', d)}"
+EXTRA_OEMESON += "${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-Dvapi=true', '-Dvapi=false', d)} -Dman=false"
 
 BBCLASSEXTEND = "native"
 
