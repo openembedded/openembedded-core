@@ -74,5 +74,5 @@ NOINST_TOOLS_BT ?= " \
     tools/check-selftest \
     tools/gatt-service \
     profiles/iap/iapd \
-    ${@bb.utils.contains('PACKAGECONFIG', 'btpclient', 'tools/btpclient tools/btpclientctl', '', d)} \
+    ${@bb.utils.contains('PACKAGECONFIG', 'btpclient', 'client/btpclient/btpclient client/btpclient/btpclientctl', '', d)} \
 "
