@@ -266,7 +266,7 @@ do_install() {
 			sed -i -e 's#/root#${ROOT_HOME}#g' ${D}${exec_prefix}/lib/sysusers.d/basic.conf
 		fi
 	fi
-	install -d ${D}/${base_sbindir}
+	install -d ${D}${base_sbindir} ${D}${servicedir}
 
 	if ! ${@bb.utils.contains('PACKAGECONFIG', 'serial-getty-generator', 'true', 'false', d)}; then
 		# Remove the serial-getty generator and instead use explicit services
@@ -719,6 +719,7 @@ FILES:${PN} = " ${base_bindir}/* \
                 ${exec_prefix}/lib/environment.d \
                 ${exec_prefix}/lib/nvpcr \
                 ${exec_prefix}/lib/pcrlock.d \
+                ${servicedir} \
                 ${localstatedir} \
                 ${nonarch_libdir}/modprobe.d/systemd.conf \
                 ${nonarch_libdir}/modprobe.d/README \
