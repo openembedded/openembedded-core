@@ -9,7 +9,10 @@ HASHEQUIV_HASH_VERSION .= ".1"
 
 PROVIDES = "virtual/libc"
 PROVIDES += "virtual/libintl virtual/libiconv"
-inherit autotools texinfo systemd update-rc.d
+
+inherit autotools texinfo
+
+inherit_defer ${@bb.utils.contains('PACKAGECONFIG', 'nscd', 'systemd update-rc.d', '', d)}
 
 LEAD_SONAME = "libc.so"
 
