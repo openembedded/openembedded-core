@@ -9,10 +9,11 @@ LICENSE = "MIT & PD"
 LIC_FILES_CHKSUM = "file://src/xdemos/glxgears.c;beginline=1;endline=20;md5=914225785450eff644a86c871d3ae00e \
                     file://src/xdemos/glxdemo.c;beginline=1;endline=8;md5=b01d5ab1aee94d35b7efaa2ef48e1a06"
 
-SRC_URI = "https://archive.mesa3d.org/demos/${BPN}-${PV}.tar.xz \
+SRC_URI = "git://gitlab.freedesktop.org/mesa/demos.git;protocol=https;branch=main;tag=${BP} \
            file://0001-meson-fix-glx-detection-without-glvnd.patch \
            "
-SRC_URI[sha256sum] = "3046a3d26a7b051af7ebdd257a5f23bfeb160cad6ed952329cdff1e9f1ed496b"
+
+SRCREV = "661681767bfb4e8f136aac1fd7934e6b0fa46d29"
 
 inherit meson pkgconfig features_check
 # depends on virtual/egl, virtual/libgl ...
