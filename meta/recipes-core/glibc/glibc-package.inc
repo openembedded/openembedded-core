@@ -297,3 +297,6 @@ CONFFILES:nscd = "${sysconfdir}/nscd.conf"
 
 SYSTEMD_PACKAGES = "nscd"
 SYSTEMD_SERVICE:nscd = "nscd.service"
+
+INITSCRIPT_PACKAGES = "nscd"
+INITSCRIPT_NAME = "nscd"
