@@ -256,6 +256,11 @@ do_install:append:class-nativesdk () {
     create_wrapper ${D}${bindir}/python${PYTHON_MAJMIN} TERMINFO_DIRS='${sysconfdir}/terminfo:/etc/terminfo:/usr/share/terminfo:/usr/share/misc/terminfo:/lib/terminfo' PYTHONNOUSERSITE='1'
 }
 
+# Fails with segfault
+# Bugzilla YP 16182 (test_tracemalloc_track_race)
+SKIPPED_TESTS = " \
+    --ignore test.test_tracemalloc.TestCAPI.test_tracemalloc_track_race \
+"
 
 SKIPPED_TESTS:append:class-target:libc-musl = " \
     -x test__locale \
