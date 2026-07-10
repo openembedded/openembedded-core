@@ -1402,7 +1402,7 @@ def create_rootfs_spdx(d):
 def create_image_spdx(d):
     import oe.sbom30
 
-    image_deploy_dir = Path(d.getVar("IMGDEPLOYDIR"))
+    image_deploy_dir = Path(d.getVar("DEPLOY_DIR_IMAGE"))
     manifest_path = Path(d.getVar("IMAGE_OUTPUT_MANIFEST"))
     spdx_work_dir = Path(d.getVar("SPDXIMAGEWORK"))
 
