@@ -64,7 +64,10 @@ BBCLASSEXTEND = "native nativesdk"
 # https://github.com/llvm/llvm-project/issues/82541
 TOOLCHAIN = "gcc"
 
-PACKAGECONFIG ??= "archive"
+PACKAGECONFIG ??= "\
+    ${@bb.utils.filter('DISTRO_FEATURES', 'acl audit selinux', d)} \
+    archive \
+"
 
 PACKAGECONFIG[plugins] = "-DENABLE_PLUGINS=ON,-DENABLE_PLUGINS=OFF"
 PACKAGECONFIG[testsuite] = "-DENABLE_TESTSUITE=ON,-DENABLE_TESTSUITE=OFF"
