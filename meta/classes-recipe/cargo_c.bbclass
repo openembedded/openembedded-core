@@ -35,6 +35,7 @@ cargo_c_do_install() {
     "${CARGO_C_INSTALL}" cinstall ${CARGO_BUILD_FLAGS} \
         --destdir ${D} \
         --prefix ${prefix} \
+        --libdir ${libdir} \
         --library-type cdylib
 }
 
