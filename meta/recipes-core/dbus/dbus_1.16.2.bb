@@ -26,7 +26,7 @@ EXTRA_OEMESON = "-Dxml_docs=disabled \
                  -Dsession_socket_dir=/tmp \
                 "
 
-PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd x11', d)} \
+PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'audit systemd x11', d)} \
                    message-bus traditional-activation user-session \
                   ${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)} \
                   "
