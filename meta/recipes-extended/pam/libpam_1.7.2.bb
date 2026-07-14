@@ -36,7 +36,7 @@ S = "${UNPACKDIR}/Linux-PAM-${PV}"
 
 inherit meson gettext pkgconfig systemd ptest github-releases
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'audit', d)}"
 PACKAGECONFIG[audit] = "-Daudit=enabled,-Daudit=disabled,audit,"
 PACKAGECONFIG[userdb] = "-Dpam_userdb=enabled -Ddb=gdbm,-Dpam_userdb=disabled,gdbm,"
 PACKAGECONFIG[selinux] = "-Dselinux=enabled,-Dselinux=disabled,libselinux,"
