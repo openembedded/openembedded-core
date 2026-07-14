@@ -1530,7 +1530,18 @@ def _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wi
     old_srcrev = rd.getVar('SRCREV') or ''
     if old_srcrev == "INVALID":
             raise DevtoolError('Update mode srcrev is only valid for recipe fetched from an SCM repository')
-    old_srcrev = {'.': old_srcrev}
+    autorev = old_srcrev == 'AUTOINC'
+    if autorev:
+        # SRCREV is set to "${AUTOREV}" so there is no fixed revision to
+        # use as the base for exporting patches; use the initial revision(s)
+        # recorded when the source tree was set up, as patch mode does
+        append = workspace[recipename]['bbappend']
+        old_srcrev, _, _, _ = _get_patchset_revs(srctree, append)
+        if not old_srcrev:
+            raise DevtoolError('Unable to find the initial revision of the '
+                               'source tree for %s in the workspace' % recipename)
+    else:
+        old_srcrev = {'.': old_srcrev}
 
     # Get HEAD revision
     try:
@@ -1545,7 +1556,8 @@ def _update_recipe_srcrev(recipename, workspace, srctree, rd, appendlayerdir, wi
     destpath = None
     remove_files = []
     patchfields = {}
-    patchfields['SRCREV'] = srcrev
+    if not autorev:
+        patchfields['SRCREV'] = srcrev
     orig_src_uri = rd.getVar('SRC_URI', False) or ''
     srcuri = orig_src_uri.split()
     tempdir = tempfile.mkdtemp(prefix='devtool')
