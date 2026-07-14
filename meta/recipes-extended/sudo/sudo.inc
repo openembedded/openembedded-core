@@ -19,7 +19,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=2841c822e587db145364ca95e9be2ffa \
 
 inherit autotools
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'audit selinux', d)}"
 PACKAGECONFIG[zlib] = "--enable-zlib,--disable-zlib,zlib"
 PACKAGECONFIG[pam-wheel] = ",,,pam-plugin-wheel"
 PACKAGECONFIG[audit] = "--with-linux-audit,--without-linux-audit,audit"
