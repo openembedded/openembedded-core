@@ -92,4 +92,5 @@ KERNEL_LD:toolchain-clang = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld'
 KERNEL_AR:toolchain-clang = "llvm-ar ${HOST_AR_KERNEL_ARCH}"
 KERNEL_OBJCOPY:toolchain-clang = "llvm-objcopy ${HOST_OBJCOPY_KERNEL_ARCH}"
 KERNEL_STRIP:toolchain-clang = "llvm-strip"
-TOOLCHAIN = "gcc"
+KERNEL_TOOLCHAIN ?= "gcc"
+TOOLCHAIN = "${KERNEL_TOOLCHAIN}"
