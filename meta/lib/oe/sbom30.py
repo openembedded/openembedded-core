@@ -180,6 +180,9 @@ def hash_id(_id):
 
 
 def to_list(l):
+    if l is None:
+        return None
+
     if isinstance(l, set):
         l = sorted(list(l))
 
