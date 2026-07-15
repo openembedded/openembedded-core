@@ -45,7 +45,6 @@ RDEPENDS:${PN}-ptest:append:libc-glibc = " glibc-gconv-ebcdic-us \
 EXTRA_OECONF = "--without-debug --without-legacy --with-catalog --with-c14n"
 EXTRA_OECONF:class-native = "--without-legacy --with-c14n --with-zlib"
 EXTRA_OECONF:class-nativesdk = "--without-legacy --with-c14n --with-zlib"
-EXTRA_OECONF:linuxstdbase = "--with-debug --with-legacy --with-c14n --with-zlib"
 
 python populate_packages:prepend () {
     # autonamer would call this libxml2-2, but we don't want that
