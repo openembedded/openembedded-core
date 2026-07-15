@@ -13,6 +13,8 @@ import re
 import bb
 import bb.utils
 
+import oe.spdx_license
+
 logger = logging.getLogger("BitBake.OE.LicenseFinder")
 
 def _load_hash_csv(d):
@@ -180,10 +182,14 @@ def match_licenses(licfiles, srctree, d, extra_hashes={}):
             crunched_md5 = _crunch_license(resolved_licfile)
             license = md5sums.get(crunched_md5, None)
             if not license:
-                license = 'Unknown'
+                rel_fn = os.path.relpath(licfile, srctree + "/..")
+                license = oe.spdx_license.UnknownId("Unknown")
                 logger.info("Please add the following line for '%s' to a 'license-hashes.csv' " \
                     "and replace `Unknown` with the license:\n" \
-                    "%s,Unknown" % (os.path.relpath(licfile, srctree + "/.."), md5value))
+                    "%s,Unknown" % (rel_fn, md5value))
+
+        if isinstance(license, str):
+            license = oe.spdx_license.parse(license)
 
         licenses.append((license, os.path.relpath(licfile, srctree), md5value))
 

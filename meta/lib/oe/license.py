@@ -602,16 +602,3 @@ def skip_incompatible_package_licenses(d, pkgs):
             skipped_pkgs[pkg] = [lic.to_string() for lic in incompatible_lic]
 
     return skipped_pkgs
-
-def tidy_licenses(value):
-    """
-    Flat, split and sort licenses.
-    """
-    def _choose(a, b):
-        str_a, str_b  = sorted((" AND ".join(a), " AND ".join(b)), key=str.casefold)
-        return ["(%s OR %s)" % (str_a, str_b)]
-
-    if not isinstance(value, str):
-        value = " AND ".join(value)
-
-    return sorted(list(set(flattened_licenses(None, value, _choose))), key=str.casefold)

@@ -18,7 +18,8 @@ from urllib.parse import urlparse, urldefrag, urlsplit
 import hashlib
 import bb.fetch2
 logger = logging.getLogger('recipetool')
-from oe.license import tidy_licenses
+import oe.license
+import oe.spdx_license
 from oe.license_finder import find_licenses
 
 tinfoil = None
@@ -794,7 +795,7 @@ def create_recipe(args):
         if name_pv and not realpv:
             realpv = name_pv
 
-    licvalues = handle_license_vars(srctree_use, lines_before, handled, extravalues, tinfoil.config_data)
+    handle_license_vars(srctree_use, lines_before, handled, extravalues, tinfoil.config_data)
 
     if not outfile:
         if not pn:
@@ -957,36 +958,40 @@ def handle_license_vars(srctree, lines_before, handled, extravalues, d):
         # Someone else has already handled the license vars, just return their value
         return lichandled[0][1]
 
-    licvalues = find_licenses(srctree, d)
-    licenses = []
+    lines = []
     lic_files_chksum = []
     lic_unknown = []
-    lines = []
-    if licvalues:
-        for licvalue in licvalues:
-            license = licvalue[0]
-            lics = tidy_licenses(fixup_license(license))
-            lics = [lic for lic in lics if lic not in licenses]
-            if len(lics):
-                licenses.extend(lics)
-            lic_files_chksum.append('file://%s;md5=%s' % (licvalue[1], licvalue[2]))
-            if license == 'Unknown':
-                lic_unknown.append(licvalue[1])
-        if lic_unknown:
-            lines.append('#')
-            lines.append('# The following license files were not able to be identified and are')
-            lines.append('# represented as "Unknown" below, you will need to check them yourself:')
-            for licfile in lic_unknown:
-                lines.append('#   %s' % licfile)
+    lic_nodes = []
+    for node, licfile, md5 in find_licenses(srctree, d):
+        if isinstance(node, oe.spdx_license.UnknownId):
+            lic_unknown.append(licfile)
 
-    extra_license = tidy_licenses(extravalues.pop('LICENSE', ''))
-    if extra_license:
-        if licenses == ['Unknown']:
-            licenses = extra_license
-        else:
-            for item in extra_license:
-                if item not in licenses:
-                    licenses.append(item)
+        lic_files_chksum.append(f"file://{licfile};md5={md5}")
+        lic_nodes.append(node)
+
+    if lic_unknown:
+        lines.append('#')
+        lines.append('# The following license files were not able to be identified and are')
+        lines.append('# represented as "Unknown" below, you will need to check them yourself:')
+        for licfile in lic_unknown:
+            lines.append('#   %s' % licfile)
+
+    node = None
+    if lic_nodes:
+        node = oe.spdx_license.AndOp.join(lic_nodes).sort()
+
+    extra_license = None
+    new_license = False
+    if expression := extravalues.pop('LICENSE', '').strip():
+        extra_license = oe.license.parse_legacy_license(d, expression).sort()
+
+        if extra_license:
+            if not node or isinstance(node, oe.spdx_license.UnknownId):
+                node = extra_license
+            else:
+                node = oe.spdx_license.AndOp.join([node, extra_license]).sort()
+                new_license = True
+
     extra_lic_files_chksum = split_value(extravalues.pop('LIC_FILES_CHKSUM', []))
     for item in extra_lic_files_chksum:
         if item not in lic_files_chksum:
@@ -996,7 +1001,8 @@ def handle_license_vars(srctree, lines_before, handled, extravalues, d):
         # We are going to set the vars, so prepend the standard disclaimer
         lines.insert(0, '# WARNING: the following LICENSE and LIC_FILES_CHKSUM values are best guesses - it is')
         lines.insert(1, '# your responsibility to verify that the values are complete and correct.')
-    else:
+
+    if not node:
         # Without LIC_FILES_CHKSUM we set LICENSE = "CLOSED" to allow the
         # user to get started easily
         lines.append('# Unable to find any files that looked like license statements. Check the accompanying')
@@ -1006,21 +1012,20 @@ def handle_license_vars(srctree, lines_before, handled, extravalues, d):
         lines.append('# this is not accurate with respect to the licensing of the software being built (it')
         lines.append('# will not be in most cases) you must specify the correct value before using this')
         lines.append('# recipe for anything other than initial testing/development!')
-        licenses = ['CLOSED']
 
-    if extra_license and sorted(licenses) != sorted(extra_license):
-        lines.append('# NOTE: Original package / source metadata indicates license is: %s' % ' & '.join(extra_license))
+    if new_license:
+        lines.append('# NOTE: Original package / source metadata indicates license is: %s' % extra_license.to_string())
 
-    if len(licenses) > 1:
+    if not isinstance(node, oe.spdx_license.Identifier):
         lines.append('#')
-        lines.append('# NOTE: multiple licenses have been detected; they have been separated with &')
+        lines.append('# NOTE: multiple licenses have been detected; they have been separated with AND')
         lines.append('# in the LICENSE value for now since it is a reasonable assumption that all')
         lines.append('# of the licenses apply. If instead there is a choice between the multiple')
-        lines.append('# licenses then you should change the value to separate the licenses with |')
-        lines.append('# instead of &. If there is any doubt, check the accompanying documentation')
+        lines.append('# licenses then you should change the value to separate the licenses with OR')
+        lines.append('# instead of AND. If there is any doubt, check the accompanying documentation')
         lines.append('# to determine which situation is applicable.')
 
-    lines.append('LICENSE = "%s"' % ' & '.join(sorted(licenses, key=str.casefold)))
+    lines.append('LICENSE = "%s"' % (node.to_string() if node else 'CLOSED'))
     lines.append('LIC_FILES_CHKSUM = "%s"' % ' \\\n                    '.join(lic_files_chksum))
     lines.append('')
 
@@ -1034,8 +1039,8 @@ def handle_license_vars(srctree, lines_before, handled, extravalues, d):
     else:
         lines_before[pos:pos+1] = lines
 
-    handled.append(('license', licvalues))
-    return licvalues
+    handled.append(('license', node))
+    return node
 
 def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=None, pn='${PN}'):
     """
@@ -1044,33 +1049,30 @@ def split_pkg_licenses(licvalues, packages, outlines, fallback_licenses=None, pn
     package-specific LICENSE values.
     """
     pkglicenses = {pn: []}
-    for license, licpath, _ in licvalues:
-        license = fixup_license(license)
+    for node, licpath, _ in licvalues:
         for pkgname, pkgpath in packages.items():
             if licpath.startswith(pkgpath + '/'):
-                if pkgname in pkglicenses:
-                    pkglicenses[pkgname].append(license)
-                else:
-                    pkglicenses[pkgname] = [license]
+                pkglicenses.setdefault(pkgname, []).append(node)
                 break
         else:
             # Accumulate on the main package
-            pkglicenses[pn].append(license)
+            pkglicenses[pn].append(node)
+
     outlicenses = {}
     for pkgname in packages:
-        # Assume AND operator between license files
-        license = ' & '.join(list(set(pkglicenses.get(pkgname, ['Unknown'])))) or 'Unknown'
-        if license == 'Unknown' and fallback_licenses and pkgname in fallback_licenses:
-            license = fallback_licenses[pkgname]
-        licenses = tidy_licenses(license)
-        license = ' & '.join(licenses)
-        outlines.append('LICENSE:%s = "%s"' % (pkgname, license))
-        outlicenses[pkgname] = licenses
+        if pkgname in pkglicenses:
+            lic = oe.spdx_license.AndOp.join(pkglicenses[pkgname]).sort().to_string()
+        elif fallback_licenses and pkgname in fallback_licenses:
+            lic = fallback_licenses[pkgname]
+        else:
+            lic = "Unknown"
+        outlines.append(f'LICENSE:{pkgname} = "{lic}"')
+        outlicenses[pkgname] = lic
     return outlicenses
 
 def generate_common_licenses_chksums(common_licenses, d):
     lic_files_chksums = []
-    for license in tidy_licenses(common_licenses):
+    for license in common_licenses:
         licfile = '${COMMON_LICENSE_DIR}/' + license
         md5value = bb.utils.md5_file(d.expand(licfile))
         lic_files_chksums.append('file://%s;md5=%s' % (licfile, md5value))
