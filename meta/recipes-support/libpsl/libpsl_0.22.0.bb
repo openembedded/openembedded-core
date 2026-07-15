@@ -19,7 +19,7 @@ GITHUB_BASE_URI = "https://github.com/rockdaboot/libpsl/releases"
 
 inherit autotools gettext gtk-doc manpages pkgconfig lib_package github-releases
 
-PACKAGECONFIG ?= "icu"
+PACKAGECONFIG ?= "idn2"
 PACKAGECONFIG[manpages] = "--enable-man,--disable-man,libxslt-native"
 PACKAGECONFIG[icu] = "--enable-runtime=libicu --enable-builtin=libicu,,icu"
 PACKAGECONFIG[idn2] = "--enable-runtime=libidn2 --enable-builtin=libidn2,,libidn2 libunistring"
