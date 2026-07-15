@@ -54,6 +54,7 @@ PACKAGECONFIG ??= " \
     link-udev-shared \
     backlight \
     binfmt \
+    coredump \
     gshadow \
     hibernate \
     hostnamed \
