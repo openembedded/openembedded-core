@@ -58,15 +58,11 @@ PACKAGE_BEFORE_PN += "${PN}-utils"
 FILES:${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/*.a"
 FILES:${PN}-utils = "${bindir}/*"
 
-do_configure:prepend () {
-	# executables take longer to package: these should not be executable
-	find ${S}/xmlconf/ -type f -exec chmod -x {} \+
-}
-
 do_install_ptest () {
     oe_runmake DESTDIR=${D} ptestdir=${PTEST_PATH} install-test-data
 
-	cp -r ${S}/xmlconf ${D}${PTEST_PATH}
+	# executables take longer to package: these should not be executable
+	cp -r --no-preserve=mode ${S}/xmlconf ${D}${PTEST_PATH}
 }
 
 # with musl we need to enable icu support explicitly for these tests
