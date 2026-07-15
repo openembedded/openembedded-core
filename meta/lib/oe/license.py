@@ -18,6 +18,71 @@ def license_ok(license, dont_want_licenses):
             return False
     return True
 
+def check_license_list(node, lst):
+    """
+    Checks a license node against a list if license identifiers. Returns True
+    if the node is in the list, and False if not
+    """
+    result = []
+    for i in lst:
+        if lic := oe.spdx_license.get_license(i):
+            if isinstance(node, oe.spdx_license.Identifier) and node.ident == lic["licenseId"]:
+                return True
+
+            if isinstance(node, oe.spdx_license.WithOp) and node.license.ident == lic["licenseId"]:
+                return True
+
+        elif lic := oe.spdx_license.get_exception(i):
+            if isinstance(node, oe.spdx_license.WithOp) and node.exception.ident == lic["licenseExceptionId"]:
+                return True
+
+        else:
+            if not i.startswith("LicenseRef-"):
+                # For legacy license matching
+                lic = "LicenseRef-" + i
+            else:
+                lic = i
+
+            if isinstance(node, oe.spdx_license.Identifier) and node.ident == lic:
+                return True
+
+    return False
+
+def license_allowed(node, disallowed, allowed):
+    """
+    Filters an SPDX license expression abstract syntax tree based on a list of
+    allowed and disallowed licenses, search through AND and OR conjunctions to
+    check for any path that allows the license to be allowed. If an individual
+    license is in the allowed list, or not in the disallowed list, it is
+    allowed. If the expression is not allowed, returns a list of nodes from the
+    expression for the licenses that caused the license to not be
+    allowed. If the expression is allowed, an empty list is returned.
+    """
+    def walk(n):
+        if isinstance(n, oe.spdx_license.AndOp):
+            return walk(n.left) + walk(n.right)
+
+        if isinstance(n, oe.spdx_license.OrOp):
+            lst = walk(n.left)
+            if not lst:
+                return []
+            return walk(n.right)
+
+        if isinstance(n, oe.spdx_license.CompoundExpression):
+            return walk(n.child)
+
+        if isinstance(n, (oe.spdx_license.WithOp, oe.spdx_license.Identifier)):
+            if check_license_list(n, allowed):
+                return []
+            if check_license_list(n, disallowed):
+                return [n]
+            return []
+
+        raise Exception(f"Unknown node type {n.__class__.__name__}")
+
+    return walk(node)
+
+
 def obsolete_license_list():
     return ["AGPL-3", "AGPL-3+", "AGPLv3", "AGPLv3+", "AGPLv3.0", "AGPLv3.0+", "AGPL-3.0", "AGPL-3.0+", "BSD-0-Clause",
             "GPL-1", "GPL-1+", "GPLv1", "GPLv1+", "GPLv1.0", "GPLv1.0+", "GPL-1.0", "GPL-1.0+", "GPL-2", "GPL-2+", "GPLv2",
@@ -101,7 +166,7 @@ def is_included(d, licensestr, include_licenses=None, exclude_licenses=None):
     else:
         return True, included
 
-def manifest_licenses(d, licensestr, dont_want_licenses):
+def manifest_licenses(d, licensestr, disallowed, allowed):
     """Given a license string and dont_want_licenses list,
        return license string filtered and a list of licenses"""
 
@@ -111,13 +176,20 @@ def manifest_licenses(d, licensestr, dont_want_licenses):
     def walk_license(node):
         nonlocal licenses
         if isinstance(node, oe.spdx_license.Identifier):
-            if license_ok(node.ident, dont_want_licenses):
-                licenses.append(node.ident)
+            if not license_allowed(node, disallowed, allowed):
+                licenses.append(node.to_string())
                 return node
+            return None
 
+        if isinstance(node, oe.spdx_license.WithOp):
+            if not license_allowed(node, disallowed, allowed):
+                licenses.append(node.license.to_string())
+                licenses.append(node.exception.to_string())
+                return node
             return None
 
         old_children = node.children
+
         node.children = []
 
         for child in old_children:
@@ -133,12 +205,6 @@ def manifest_licenses(d, licensestr, dont_want_licenses):
                 return node.right
             if node.right is None:
                 return node.left
-
-        # The left side (the license side) of a WITH can be removed, but not
-        # the right (the exception)
-        if isinstance(node, oe.spdx_license.WithOp):
-            if node.license is None:
-                return None
 
         # If one of the above cases doesn't catch everything, raise an error
         if not all(node.children):
@@ -171,11 +237,6 @@ def list_licenses(licensestr, d):
 
     walk_license(parse_legacy_license(d, licensestr))
     return set(licenses)
-
-def apply_pkg_license_exception(pkg, bad_licenses, exceptions):
-    """Return remaining bad licenses after removing any package exceptions"""
-
-    return [lic for lic in bad_licenses if pkg + ':' + lic not in exceptions]
 
 def return_spdx(d, license):
     """
@@ -214,12 +275,6 @@ def expand_wildcard_licenses(d, wildcard_licenses):
             bb.fatal("Error, %s is an invalid license wildcard entry" % l)
 
     return list(licenses)
-
-def incompatible_license_contains(d, license, truevalue, falsevalue):
-    license = canonical_license(d, license)
-    bad_licenses = (d.getVar('INCOMPATIBLE_LICENSE') or "").split()
-    bad_licenses = expand_wildcard_licenses(d, bad_licenses)
-    return truevalue if license in bad_licenses else falsevalue
 
 def incompatible_pkg_license(d, dont_want_licenses, license):
     def walk_license(node):
@@ -486,6 +541,23 @@ def check_license_format(d):
             oe.qa.handle_error("license-format",
                             f'{pn}: {v} value has an invalid format:\n{e.format()}\n', d)
 
+def filter_pkg_license_list(pkg, lst):
+    """
+    Given a list of license IDs and a package, returns the list of license IDs
+    that apply to the package by looking for a package prefix
+    """
+    pkg_lst = []
+    for e in lst:
+        if ":" not in e:
+            pkg_lst.append(e)
+            continue
+
+        p, l = e.split(":", 1)
+        if pkg == p:
+            pkg_lst.append(l)
+
+    return pkg_lst
+
 def skip_incompatible_package_licenses(d, pkgs):
     if not pkgs:
         return {}
@@ -507,21 +579,27 @@ def skip_incompatible_package_licenses(d, pkgs):
 
     bad_licenses = expand_wildcard_licenses(d, bad_licenses)
 
-    exceptions = (d.getVar("INCOMPATIBLE_LICENSE_EXCEPTIONS") or "").split()
+    allow_licenses = (d.getVar("INCOMPATIBLE_LICENSE_EXCEPTIONS") or "").split()
 
-    for lic_exception in exceptions:
-        if ":" in lic_exception:
-            lic_exception = lic_exception.split(":")[1]
-        if lic_exception in obsolete_license_list():
-            bb.fatal("Obsolete license %s used in INCOMPATIBLE_LICENSE_EXCEPTIONS" % lic_exception)
+    for lic in allow_licenses:
+        if ":" in lic:
+            lic = lic.split(":")[1]
+        if lic in obsolete_license_list():
+            bb.fatal("Obsolete license %s used in INCOMPATIBLE_LICENSE_EXCEPTIONS" % lic)
 
     skipped_pkgs = {}
     for pkg in pkgs:
-        remaining_bad_licenses = apply_pkg_license_exception(pkg, bad_licenses, exceptions)
+        pkg_lic = d.getVar("LICENSE:%s" % pkg) if pkg else None
+        if not pkg_lic:
+            pkg_lic = d.getVar('LICENSE')
 
-        incompatible_lic = incompatible_license(d, remaining_bad_licenses, pkg)
+        node = parse_legacy_license(d, pkg_lic)
+        if not node:
+            continue
+
+        incompatible_lic = license_allowed(node, bad_licenses, filter_pkg_license_list(pkg, allow_licenses))
         if incompatible_lic:
-            skipped_pkgs[pkg] = incompatible_lic
+            skipped_pkgs[pkg] = [lic.to_string() for lic in incompatible_lic]
 
     return skipped_pkgs
 
