@@ -1,6 +1,6 @@
 SUMMARY = "Cargo, a package manager for Rust."
 HOMEPAGE = "https://crates.io"
-LICENSE = "MIT | Apache-2.0"
+LICENSE = "Apache-2.0 OR MIT"
 SECTION = "devel"
 
 DEPENDS = "openssl zlib curl ca-certificates libssh2"

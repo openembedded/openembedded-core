@@ -3,7 +3,7 @@ DESCRIPTION = "A free and open-source lexer generator for C, C++ and Go. It comp
 HOMEPAGE = "http://re2c.org/"
 BUGTRACKER = "https://github.com/skvadrik/re2c/issues"
 SECTION = "devel"
-LICENSE = "PD"
+LICENSE = "LicenseRef-PD"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=64eca4d8a3b67f9dc7656094731a2c8d"
 
 SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BPN}-${PV}.tar.xz"

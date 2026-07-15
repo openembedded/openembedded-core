@@ -1,7 +1,7 @@
 SUMMARY = "Build and publish crates with pyo3, rust-cpython, cffi bindings and rust binaries as python packages"
 HOMEPAGE = "https://github.com/pyo3/maturin"
 SECTION = "devel/python"
-LICENSE = "MIT | Apache-2.0"
+LICENSE = "Apache-2.0 OR MIT"
 LIC_FILES_CHKSUM = "file://license-apache;md5=1836efb2eb779966696f473ee8540542 \
                     file://license-mit;md5=85fd3b67069cff784d98ebfc7d5c0797"
 

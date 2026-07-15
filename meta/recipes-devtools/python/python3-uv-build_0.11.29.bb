@@ -1,7 +1,7 @@
 SUMMARY = "The build backend part of an 'An extremely fast Python package and project manager, written in Rust.'"
 HOMEPAGE = "https://pypi.org/project/uv-build/"
 
-LICENSE = "Apache-2.0 & BSD-2-Clause & MIT"
+LICENSE = "Apache-2.0 AND BSD-2-Clause AND MIT"
 LIC_FILES_CHKSUM = "file://LICENSE-APACHE;md5=86d3f3a95c324c9479bd8986968f4327 \
                     file://LICENSE-MIT;md5=45674e482567aa99fe883d3270b11184 \
                     file://crates/uv-build/LICENSE-APACHE;md5=86d3f3a95c324c9479bd8986968f4327 \

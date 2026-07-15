@@ -2,7 +2,7 @@ SUMMARY = "Libraries for producing EFI binaries"
 HOMEPAGE = "http://sourceforge.net/projects/gnu-efi/"
 DESCRIPTION = "GNU-EFI aims to Develop EFI applications for ARM-64, ARM-32, x86_64, IA-64 (IPF), IA-32 (x86), and MIPS platforms using the GNU toolchain and the EFI development environment."
 SECTION = "devel"
-LICENSE = "GPL-2.0-or-later & BSD-2-Clause"
+LICENSE = "BSD-2-Clause AND GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://gnuefi/crt0-efi-arm.S;beginline=4;endline=16;md5=8b0a86085b86eda7a3c7e8a1eb7ec753 \
                     file://gnuefi/crt0-efi-aarch64.S;beginline=4;endline=16;md5=8b0a86085b86eda7a3c7e8a1eb7ec753 \
                     file://inc/efishellintf.h;beginline=13;endline=20;md5=ee14c1530c341a7050837adead6bc9a5 \

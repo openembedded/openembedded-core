@@ -5,7 +5,7 @@ Ssh (Secure Shell) is a program for logging into a remote machine \
 and for executing commands on a remote machine."
 HOMEPAGE = "http://www.openssh.com/"
 SECTION = "console/network"
-LICENSE = "BSD-2-Clause & BSD-3-Clause & ISC & MIT"
+LICENSE = "BSD-2-Clause AND BSD-3-Clause AND ISC AND MIT"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=78ffb36e5a48c0d8c5648603a3b6c8eb"
 
 DEPENDS = "zlib openssl virtual/crypt"

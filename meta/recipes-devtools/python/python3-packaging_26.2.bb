@@ -1,6 +1,6 @@
 SUMMARY = "Core utilities for Python packages"
 HOMEPAGE = "https://github.com/pypa/packaging"
-LICENSE = "Apache-2.0 | BSD-2-Clause"
+LICENSE = "Apache-2.0 OR BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=faadaedca9251a90b205c9167578ce91"
 
 SRC_URI[sha256sum] = "ff452ff5a3e828ce110190feff1178bb1f2ea2281fa2075aadb987c2fb221661"

@@ -5,7 +5,7 @@ SECTION = "base"
 
 inherit meson pkgconfig gettext upstream-version-is-even ptest-gnome
 
-LICENSE = "AFL-2.1 | GPL-2.0-or-later"
+LICENSE = "AFL-2.1 OR GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=eb0ffc69a965797a3d6686baa153ef05 \
                     file://dbus/dbus.h;beginline=6;endline=22;md5=df4251a6c6e15e6a9e3c77b2ac30065d \
                     "

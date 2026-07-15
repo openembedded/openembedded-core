@@ -2,7 +2,7 @@ SUMMARY = "Utilities and libraries for handling compiled object files"
 HOMEPAGE = "https://sourceware.org/elfutils"
 DESCRIPTION = "elfutils is a collection of utilities and libraries to read, create and modify ELF binary files, find and handle DWARF debug data, symbols, thread state and stacktraces for processes and core files on GNU/Linux."
 SECTION = "base"
-LICENSE = "( GPL-2.0-or-later | LGPL-3.0-or-later ) & GPL-3.0-or-later"
+LICENSE = "GPL-3.0-or-later AND (GPL-2.0-or-later OR LGPL-3.0-or-later)"
 LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504 \
                     file://debuginfod/debuginfod-client.c;endline=28;md5=6b7b0a4b25197d7f2e12b2f4aa1c86b8 \
                     "
@@ -120,10 +120,10 @@ PACKAGES =+ "${PN}-binutils libelf libasm libdw libdebuginfod"
 # are GPLv3+."
 LICENSE:${PN}-binutils = "GPL-3.0-or-later"
 LICENSE:${PN} = "GPL-3.0-or-later"
-LICENSE:libelf = "GPL-2.0-or-later | LGPL-3.0-or-later"
-LICENSE:libasm = "GPL-2.0-or-later | LGPL-3.0-or-later"
-LICENSE:libdw = "GPL-2.0-or-later | LGPL-3.0-or-later"
-LICENSE:libdebuginfod = "GPL-2.0-or-later | LGPL-3.0-or-later"
+LICENSE:libelf = "GPL-2.0-or-later OR LGPL-3.0-or-later"
+LICENSE:libasm = "GPL-2.0-or-later OR LGPL-3.0-or-later"
+LICENSE:libdw = "GPL-2.0-or-later OR LGPL-3.0-or-later"
+LICENSE:libdebuginfod = "GPL-2.0-or-later OR LGPL-3.0-or-later"
 
 FILES:${PN} += "${datadir}/fish"
 FILES:${PN}-binutils = "\

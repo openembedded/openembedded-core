@@ -5,7 +5,8 @@ HOMEPAGE = "http://www.dest-unreach.org/socat/"
 
 SECTION = "console/network"
 
-LICENSE = "GPL-2.0-with-OpenSSL-exception"
+# https://github.com/spdx/license-list-XML/issues/3009
+LICENSE = "LicenseRef-GPL-2.0-with-OpenSSL-exception"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     file://README;beginline=252;endline=282;md5=338c05eadd013872abb1d6e198e10a3f"
 

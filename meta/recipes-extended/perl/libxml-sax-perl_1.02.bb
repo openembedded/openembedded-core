@@ -9,7 +9,7 @@ come from the Java JAXP specification (SAX part), only without the \
 javaness."
 
 SECTION = "libs"
-LICENSE = "Artistic-1.0 | GPL-1.0-or-later"
+LICENSE = "Artistic-1.0 OR GPL-1.0-or-later"
 DEPENDS += "libxml-namespacesupport-perl-native"
 RDEPENDS:${PN} += "libxml-namespacesupport-perl libxml-sax-base-perl perl-module-file-temp"
 

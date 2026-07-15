@@ -3,7 +3,7 @@ FILESEXTRAPATHS =. "${FILE_DIRNAME}/clang:"
 LIC_FILES_CHKSUM = "file://llvm/LICENSE.TXT;md5=${LLVMMD5SUM} \
                     file://clang/LICENSE.TXT;md5=${CLANGMD5SUM} \
 "
-LICENSE = "Apache-2.0-with-LLVM-exception"
+LICENSE = "Apache-2.0 WITH LLVM-exception"
 
 # Snapshot
 #RELEASE ?= "108df0694cc12fa496f63faa3a8762e7cc1a3b37"

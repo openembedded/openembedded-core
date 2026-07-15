@@ -3,7 +3,7 @@ DESCRIPTION = "The Ext2 Filesystem Utilities (e2fsprogs) contain all of the stan
 fixing, configuring , and debugging ext2 filesystems."
 HOMEPAGE = "http://e2fsprogs.sourceforge.net/"
 
-LICENSE = "GPL-2.0-only & LGPL-2.0-only & BSD-3-Clause & MIT"
+LICENSE = "BSD-3-Clause AND GPL-2.0-only AND LGPL-2.0-only AND MIT"
 LICENSE:e2fsprogs-dumpe2fs = "GPL-2.0-only"
 LICENSE:e2fsprogs-e2fsck = "GPL-2.0-only"
 LICENSE:e2fsprogs-mke2fs = "GPL-2.0-only"

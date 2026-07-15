@@ -10,12 +10,12 @@ HOMEPAGE = "http://cairographics.org"
 BUGTRACKER = "https://gitlab.freedesktop.org/cairo/cairo/-/issues"
 SECTION = "libs"
 
-LICENSE = "(MPL-1.1 | LGPL-2.1-only) & GPL-3.0-or-later"
-LICENSE:${PN} = "MPL-1.1 | LGPL-2.1-only"
-LICENSE:${PN}-dev = "MPL-1.1 | LGPL-2.1-only"
-LICENSE:${PN}-doc = "MPL-1.1 | LGPL-2.1-only"
-LICENSE:${PN}-gobject = "MPL-1.1 | LGPL-2.1-only"
-LICENSE:${PN}-script-interpreter = "MPL-1.1 | LGPL-2.1-only"
+LICENSE = "GPL-3.0-or-later AND (LGPL-2.1-only OR MPL-1.1)"
+LICENSE:${PN} = "LGPL-2.1-only OR MPL-1.1"
+LICENSE:${PN}-dev = "LGPL-2.1-only OR MPL-1.1"
+LICENSE:${PN}-doc = "LGPL-2.1-only OR MPL-1.1"
+LICENSE:${PN}-gobject = "LGPL-2.1-only OR MPL-1.1"
+LICENSE:${PN}-script-interpreter = "LGPL-2.1-only OR MPL-1.1"
 LICENSE:${PN}-perf-utils = "GPL-3.0-or-later"
 # Adapt the licenses for cairo-dbg and cairo-src depending on whether
 # cairo-trace is being built.

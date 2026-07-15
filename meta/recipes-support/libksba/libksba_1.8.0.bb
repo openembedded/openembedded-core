@@ -5,8 +5,8 @@ the implemented protocols and presents the data in a consistent way. The \
 library does not rely on another cryptographic library but provides \
 hooks for easy integration with Libgcrypt. "
 HOMEPAGE = "http://www.gnupg.org/related_software/libksba/"
-LICENSE = "GPL-3.0-or-later & (GPL-2.0-or-later | LGPL-3.0-or-later)"
-LICENSE:${PN} = "GPL-2.0-or-later | LGPL-3.0-or-later"
+LICENSE = "GPL-3.0-or-later AND (GPL-2.0-or-later OR LGPL-3.0-or-later)"
+LICENSE:${PN} = "GPL-2.0-or-later OR LGPL-3.0-or-later"
 LICENSE:${PN}-doc = "GPL-3.0-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=fd541d83f75d038c4e0617b672ed8bda \
                     file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \

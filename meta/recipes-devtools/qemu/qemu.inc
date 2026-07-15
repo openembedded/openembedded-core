@@ -5,7 +5,7 @@ of different hardware and device models for the machine, enabling it to run \
 a variety of guest operating systems"
 HOMEPAGE = "http://qemu.org"
 BUGTRACKER = "https://gitlab.com/qemu-project/qemu/-/issues"
-LICENSE = "GPL-2.0-only & LGPL-2.1-only"
+LICENSE = "GPL-2.0-only AND LGPL-2.1-only"
 
 DEPENDS += "bison-native meson-native ninja-native"
 

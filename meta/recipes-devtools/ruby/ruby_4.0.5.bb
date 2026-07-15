@@ -6,7 +6,7 @@ It is simple, straight-forward, and extensible. \
 "
 HOMEPAGE = "http://www.ruby-lang.org/"
 SECTION = "devel/ruby"
-LICENSE = "Ruby | BSD-2-Clause | BSD-3-Clause | GPL-2.0-only | ISC | MIT | BSL-1.0 | Apache-2.0"
+LICENSE = "Apache-2.0 OR BSD-2-Clause OR BSD-3-Clause OR BSL-1.0 OR GPL-2.0-only OR ISC OR MIT OR Ruby"
 LIC_FILES_CHKSUM = "file://COPYING;md5=7674b1080a488809841b13eb57ffb719 \
                     file://BSDL;md5=8b50bc6de8f586dc66790ba11d064d75 \
                     file://GPL;md5=b234ee4d69f5fce4486a80fdaf4a4263 \

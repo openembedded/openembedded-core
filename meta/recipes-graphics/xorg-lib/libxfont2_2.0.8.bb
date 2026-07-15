@@ -6,7 +6,7 @@ such as freetype)."
 
 require xorg-lib-common.inc
 
-LICENSE = "MIT & MIT & BSD-4-Clause-UC & BSD-2-Clause"
+LICENSE = "BSD-2-Clause AND BSD-4-Clause-UC AND MIT"
 LIC_FILES_CHKSUM = "file://COPYING;md5=a5d1388c9d40be70dbad35fa440443f7"
 
 DEPENDS += "freetype xtrans xorgproto libfontenc zlib"

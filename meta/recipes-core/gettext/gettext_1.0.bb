@@ -4,7 +4,7 @@ These tools include a set of conventions about how programs should be written to
 naming organization for the message catalogs themselves, a runtime library supporting the retrieval of translated messages, and \
 a few stand-alone programs to massage in various ways the sets of translatable and already translated strings."
 SECTION = "libs"
-LICENSE = "GPL-3.0-or-later & LGPL-2.1-or-later"
+LICENSE = "GPL-3.0-or-later AND LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=c678957b0c8e964aa6c70fd77641a71e"
 
 # without libxml in PACKAGECONFIG vendor copy of the lib will be used

@@ -1,5 +1,5 @@
 SUMMARY = "Tools for erofs filesystems"
-LICENSE = "(GPL-2.0-or-later | MIT) & MIT"
+LICENSE = "MIT AND (GPL-2.0-or-later OR MIT)"
 SECTION = "base"
 LIC_FILES_CHKSUM = "file://COPYING;md5=63afa010baddc7d0905f9c31ac759f51"
 HOMEPAGE = "https://git.kernel.org/pub/scm/linux/kernel/git/xiang/erofs-utils.git/tree/README"

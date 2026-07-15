@@ -3,7 +3,7 @@ HOMEPAGE = "http://wiki.eclipse.org/TCF"
 DESCRIPTION = "TCF is a vendor-neutral, lightweight, extensible network protocol mainly for communicating with embedded systems (targets)."
 BUGTRACKER = "https://bugs.eclipse.org/bugs/"
 
-LICENSE = "EPL-1.0 | BSD-3-Clause"
+LICENSE = "BSD-3-Clause OR EPL-1.0"
 LIC_FILES_CHKSUM = "file://edl-v10.html;md5=522a390a83dc186513f0500543ad3679"
 
 SRCREV = "3051a4806ac4b041ec7c49ffc6d07f0014b8480c"

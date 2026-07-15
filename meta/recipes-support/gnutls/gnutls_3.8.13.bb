@@ -4,7 +4,7 @@ TLS and DTLS protocols and technologies around them."
 HOMEPAGE = "https://gnutls.org/"
 BUGTRACKER = "https://savannah.gnu.org/support/?group=gnutls"
 
-LICENSE = "GPL-3.0-or-later & LGPL-2.1-or-later"
+LICENSE = "GPL-3.0-or-later AND LGPL-2.1-or-later"
 LICENSE:${PN} = "LGPL-2.1-or-later"
 LICENSE:${PN}-xx = "LGPL-2.1-or-later"
 LICENSE:${PN}-bin = "GPL-3.0-or-later"

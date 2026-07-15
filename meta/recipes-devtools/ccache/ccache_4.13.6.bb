@@ -6,7 +6,7 @@ Objective-C and Objective-C++."
 HOMEPAGE = "http://ccache.samba.org"
 SECTION = "devel"
 
-LICENSE = "GPL-3.0-or-later & MIT & BSL-1.0 & ISC"
+LICENSE = "BSL-1.0 AND GPL-3.0-or-later AND ISC AND MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.adoc;md5=e89f26e9f97d14068047871bdb2b3118 \
                     file://src/third_party/cpp-httplib/httplib.h;endline=6;md5=663aca6f84e7d67ade228aad32afc0ea \
                     file://src/third_party/win32-compat/win32/mktemp.c;endline=17;md5=d287e9c1f1cd2bb2bd164490e1cf449a \

@@ -3,7 +3,7 @@ DESCRIPTION = "An asyncio library for communicating with QEMU Monitor Protocol (
 This library was split out of the QEMU source tree to provide a reference QMP \
 implementation usable both within and outside of the QEMU source tree."
 HOMEPAGE = "https://gitlab.com/qemu-project/python-qemu-qmp"
-LICENSE = "LGPL-2.0-only & GPL-2.0-only"
+LICENSE = "GPL-2.0-only AND LGPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=4cf66a4984120007c9881cc871cf49db"
 
 inherit pypi python_setuptools_build_meta

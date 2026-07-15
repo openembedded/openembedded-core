@@ -4,7 +4,7 @@ SSL-based applications to check for the authenticity of SSL connections. \
 This derived from Debian's CA Certificates."
 HOMEPAGE = "http://packages.debian.org/sid/ca-certificates"
 SECTION = "misc"
-LICENSE = "GPL-2.0-or-later & MPL-2.0"
+LICENSE = "GPL-2.0-or-later AND MPL-2.0"
 LIC_FILES_CHKSUM = "file://debian/copyright;md5=dab7c7cea776d1a1648deb0052c72647"
 
 # This is needed to ensure we can run the postinst at image creation time
