@@ -47,13 +47,6 @@ dirs755 = "/boot /dev ${base_bindir} ${base_sbindir} ${base_libdir} \
            /home ${prefix}/src ${localstatedir}/local \
            /media"
 
-dirs755-lsb = "${servicedir} \
-               ${prefix}/local ${prefix}/local/bin ${prefix}/local/games \
-               ${prefix}/local/include ${prefix}/local/lib ${prefix}/local/sbin \
-               ${prefix}/local/share ${prefix}/local/src \
-               ${prefix}/lib/locale"
-dirs2775-lsb = "${localstatedir}/mail"
-
 volatiles = "${@bb.utils.contains('FILESYSTEM_PERMS_TABLES', 'files/fs-perms-volatile-log.txt', 'log', '', d)} \
              ${@bb.utils.contains('FILESYSTEM_PERMS_TABLES', 'files/fs-perms-volatile-tmp.txt', 'tmp', '', d)}"
 conffiles = "${sysconfdir}/debian_version ${sysconfdir}/host.conf \
@@ -144,16 +137,6 @@ do_install_basefilesissue () {
  	fi
 }
 do_install_basefilesissue[vardepsexclude] += "DATE"
-
-do_install:append:linuxstdbase() {
-	for d in ${dirs755-lsb}; do
-                install -m 0755 -d ${D}$d
-        done
-
-	for d in ${dirs2775-lsb}; do
-                install -m 2775 -d ${D}$d
-        done
-}
 
 SYSROOT_DIRS += "${sysconfdir}/skel"
 
