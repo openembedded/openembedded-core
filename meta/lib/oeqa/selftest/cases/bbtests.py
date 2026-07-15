@@ -233,6 +233,7 @@ INHERIT:remove = \"report-error\"
 
     def test_non_gplv3(self):
         self.write_config('''INCOMPATIBLE_LICENSE = "GPL-3.0-or-later"
+INCOMPATIBLE_LICENSE_EXCEPTIONS = "GCC-exception-3.1"
 OVERRIDES .= ":gplv3test"
 require conf/distro/include/no-gplv3.inc
 ''')
