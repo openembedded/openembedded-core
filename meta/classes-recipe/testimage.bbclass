@@ -28,6 +28,7 @@ TESTIMAGE_FAILED_QA_ARTIFACTS = "\
     ${sysconfdir}/version \
     ${sysconfdir}/os-release \
     ${nonarch_libdir}/os-release \
+    ${localstatedir}/lib/systemd/coredump/ \
 "
 
 # If some ptests are run and fail, retrieve corresponding directories
