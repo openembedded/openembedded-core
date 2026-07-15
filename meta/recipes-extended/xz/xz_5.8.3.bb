@@ -10,11 +10,11 @@ PROVIDES += "xz-decompress"
 # packages, and the LGPL bits are under lib/, which appears to be used for
 # libgnu, which appears to be used for DOS builds. So we're left with
 # GPL-2.0-or-later and 0BSD.
-LICENSE = "GPL-2.0-or-later & GPL-3.0-with-autoconf-exception & LGPL-2.1-or-later & 0BSD"
-LICENSE:${PN} = "0BSD & GPL-2.0-or-later"
-LICENSE:${PN}-dev = "0BSD & GPL-2.0-or-later"
+LICENSE = "GPL-2.0-or-later AND GPL-3.0-or-later WITH Autoconf-exception-macro AND LGPL-2.1-or-later AND 0BSD"
+LICENSE:${PN} = "0BSD AND GPL-2.0-or-later"
+LICENSE:${PN}-dev = "0BSD AND GPL-2.0-or-later"
 LICENSE:${PN}-staticdev = "GPL-2.0-or-later"
-LICENSE:${PN}-doc = "0BSD & GPL-2.0-or-later"
+LICENSE:${PN}-doc = "0BSD AND GPL-2.0-or-later"
 LICENSE:${PN}-dbg = "GPL-2.0-or-later"
 LICENSE:${PN}-locale = "GPL-2.0-or-later"
 LICENSE:liblzma = "0BSD"
