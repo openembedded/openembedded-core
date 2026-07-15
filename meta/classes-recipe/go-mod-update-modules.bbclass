@@ -92,7 +92,7 @@ python do_update_modules() {
         licenses_filename = os.path.join(thisdir, f"{bpn}-licenses.inc")
         with open(licenses_filename, "w") as f:
             f.write(notice)
-            f.write(f'LICENSE += "& {" & ".join(tidy_licenses(licenses))}"\n\n')
+            f.write(f'LICENSE += "AND {" AND ".join(tidy_licenses(licenses))}"\n\n')
             f.write('LIC_FILES_CHKSUM += "\\\n')
             for lic in sorted(lic_files_chksum, key=fold_uri):
                 f.write('    ' + lic + ' \\\n')
