@@ -11,7 +11,7 @@ SRC_URI:append:class-nativesdk = " \
     file://environment.d-cmake.sh \
 "
 
-LICENSE:append = " & BSD-1-Clause & MIT"
+LICENSE:append = " AND BSD-1-Clause AND MIT"
 LIC_FILES_CHKSUM:append = " \
     file://Utilities/cmjsoncpp/LICENSE;md5=5d73c165a0f9e86a1342f32d19ec5926 \
     file://Utilities/cmlibrhash/COPYING;md5=a8c2a557a5c53b1c12cddbee98c099af \

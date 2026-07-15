@@ -2,10 +2,10 @@ require util-linux.inc
 
 # Most of the applications and the libraries are linked with libcommon.la,
 # which uses these licenses
-LIBCOMMON_LICENSES = "LGPL-2.1-or-later & BSD-2-Clause & BSD-3-Clause & MIT"
+LIBCOMMON_LICENSES = "LGPL-2.1-or-later AND BSD-2-Clause AND BSD-3-Clause AND MIT"
 
 # The default license is GPL-2.0-or-later
-DEFAULT_LICENSES = "GPL-2.0-or-later & ${LIBCOMMON_LICENSES}"
+DEFAULT_LICENSES = "GPL-2.0-or-later AND ${LIBCOMMON_LICENSES}"
 
 LICENSE = "GPL-1.0-or-later & GPL-2.0-only & GPL-2.0-or-later & LGPL-2.1-or-later & BSD-2-Clause & BSD-3-Clause & BSD-4-Clause-UC & MIT & EUPL-1.2"
 LICENSE:${PN}-bash-completion = "GPL-2.0-or-later"

@@ -19,8 +19,8 @@ LICENSE:${PN}-script-interpreter = "MPL-1.1 | LGPL-2.1-only"
 LICENSE:${PN}-perf-utils = "GPL-3.0-or-later"
 # Adapt the licenses for cairo-dbg and cairo-src depending on whether
 # cairo-trace is being built.
-LICENSE:${PN}-dbg = "(MPL-1.1 | LGPL-2.1-only)${@bb.utils.contains('PACKAGECONFIG', 'trace', ' & GPL-3.0-or-later', '', d)}"
-LICENSE:${PN}-src = "(MPL-1.1 | LGPL-2.1-only)${@bb.utils.contains('PACKAGECONFIG', 'trace', ' & GPL-3.0-or-later', '', d)}"
+LICENSE:${PN}-dbg = "(MPL-1.1 OR LGPL-2.1-only)${@bb.utils.contains('PACKAGECONFIG', 'trace', ' AND GPL-3.0-or-later', '', d)}"
+LICENSE:${PN}-src = "(MPL-1.1 OR LGPL-2.1-only)${@bb.utils.contains('PACKAGECONFIG', 'trace', ' AND GPL-3.0-or-later', '', d)}"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=e73e999e0c72b5ac9012424fa157ad77 \
                     ${@bb.utils.contains('PACKAGECONFIG', 'trace', 'file://util/cairo-trace/COPYING-GPL-3;md5=d32239bcb673463ab874e80d47fae504', '', d)}"

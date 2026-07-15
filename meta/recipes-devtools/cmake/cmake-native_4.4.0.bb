@@ -7,7 +7,7 @@ SRC_URI += "file://OEToolchainConfig.cmake \
             file://environment.d-cmake.sh \
             "
 
-LICENSE:append = " & BSD-1-Clause & MIT & BSD-2-Clause & curl & Apache-2.0"
+LICENSE:append = " AND BSD-1-Clause AND MIT AND BSD-2-Clause AND curl AND Apache-2.0"
 LIC_FILES_CHKSUM:append = " \
     file://Utilities/cmjsoncpp/LICENSE;md5=5d73c165a0f9e86a1342f32d19ec5926 \
     file://Utilities/cmlibarchive/COPYING;md5=7ce08437ff7f5e24d72e666313ae4084 \
