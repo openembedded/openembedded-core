@@ -9,6 +9,7 @@ import ast
 import re
 import oe.qa
 from fnmatch import fnmatchcase as fnmatch
+import oe.spdx_license
 
 def license_ok(license, dont_want_licenses):
     """ Return False if License exist in dont_want_licenses else True """
@@ -27,89 +28,34 @@ def obsolete_license_list():
             "Artistic-1", "AFL-2", "AFL-1", "AFLv2", "AFLv1", "CDDLv1", "CDDL-1", "EPLv1.0", "FreeType", "Nauman",
             "tcl", "vim", "SGIv1"]
 
-class LicenseError(Exception):
-    pass
 
-class LicenseSyntaxError(LicenseError):
-    def __init__(self, licensestr, exc):
-        self.licensestr = licensestr
-        self.exc = exc
-        LicenseError.__init__(self)
+LicenseError = oe.spdx_license.ParseError
 
-    def __str__(self):
-        return "error in '%s': %s" % (self.licensestr, self.exc)
-
-class InvalidLicense(LicenseError):
-    def __init__(self, license):
-        self.license = license
-        LicenseError.__init__(self)
-
-    def __str__(self):
-        return "invalid characters in license '%s'" % self.license
-
-license_operator_chars = '&|() '
-license_operator = re.compile(r'([' + license_operator_chars + '])')
-license_pattern = re.compile(r'[a-zA-Z0-9.+_\-]+$')
-
-class LicenseVisitor(ast.NodeVisitor):
-    """Get elements based on OpenEmbedded license strings"""
-    def get_elements(self, licensestr):
-        new_elements = []
-        elements = list([x for x in license_operator.split(licensestr) if x.strip()])
-        for pos, element in enumerate(elements):
-            if license_pattern.match(element):
-                if pos > 0 and license_pattern.match(elements[pos-1]):
-                    new_elements.append('&')
-                element = '"' + element + '"'
-            elif not license_operator.match(element):
-                raise InvalidLicense(element)
-            new_elements.append(element)
-
-        return new_elements
-
-    """Syntax tree visitor which can accept elements previously generated with
-    OpenEmbedded license string"""
-    def visit_elements(self, elements):
-        self.visit(ast.parse(' '.join(elements)))
-
-    """Syntax tree visitor which can accept OpenEmbedded license strings"""
-    def visit_string(self, licensestr):
-        self.visit_elements(self.get_elements(licensestr))
-
-class FlattenVisitor(LicenseVisitor):
-    """Flatten a license tree (parsed from a string) by selecting one of each
-    set of OR options, in the way the user specifies"""
-    def __init__(self, choose_licenses):
-        self.choose_licenses = choose_licenses
-        self.licenses = []
-        LicenseVisitor.__init__(self)
-
-    def visit_Constant(self, node):
-        self.licenses.append(node.value)
-
-    def visit_BinOp(self, node):
-        if isinstance(node.op, ast.BitOr):
-            left = FlattenVisitor(self.choose_licenses)
-            left.visit(node.left)
-
-            right = FlattenVisitor(self.choose_licenses)
-            right.visit(node.right)
-
-            selected = self.choose_licenses(left.licenses, right.licenses)
-            self.licenses.extend(selected)
-        else:
-            self.generic_visit(node)
-
-def flattened_licenses(licensestr, choose_licenses):
+def flattened_licenses(d, licensestr, choose_licenses):
     """Given a license string and choose_licenses function, return a flat list of licenses"""
-    flatten = FlattenVisitor(choose_licenses)
-    try:
-        flatten.visit_string(licensestr)
-    except SyntaxError as exc:
-        raise LicenseSyntaxError(licensestr, exc)
-    return flatten.licenses
+    def walk_license(node):
+        if isinstance(node, oe.spdx_license.Identifier):
+            return [node.ident]
 
-def is_included(licensestr, include_licenses=None, exclude_licenses=None):
+        if isinstance(node, oe.spdx_license.OrOp):
+            left = walk_license(node.left)
+            right = walk_license(node.right)
+
+            return choose_licenses(left, right)
+
+        ret = []
+        for child in node.children:
+            ret.extend(walk_license(child))
+
+        return ret
+
+    n = parse_legacy_license(d, licensestr)
+    if n is None:
+        return []
+
+    return walk_license(n)
+
+def is_included(d, licensestr, include_licenses=None, exclude_licenses=None):
     """Given a license string, a list of licenses to include and a list of
     licenses to exclude, determine if the license string matches the include
     list and does not match the exclude list.
@@ -147,7 +93,7 @@ def is_included(licensestr, include_licenses=None, exclude_licenses=None):
     if not exclude_licenses:
         exclude_licenses = []
 
-    licenses = flattened_licenses(licensestr, choose_licenses)
+    licenses = flattened_licenses(d, licensestr, choose_licenses)
     excluded = [lic for lic in licenses if exclude_license(lic)]
     included = [lic for lic in licenses if include_license(lic)]
     if excluded:
@@ -155,100 +101,76 @@ def is_included(licensestr, include_licenses=None, exclude_licenses=None):
     else:
         return True, included
 
-class ManifestVisitor(LicenseVisitor):
-    """Walk license tree (parsed from a string) removing the incompatible
-    licenses specified"""
-    def __init__(self, dont_want_licenses, canonical_license, d):
-        self._dont_want_licenses = dont_want_licenses
-        self._canonical_license = canonical_license
-        self._d = d
-        self._operators = []
-
-        self.licenses = []
-        self.licensestr = ''
-
-        LicenseVisitor.__init__(self)
-
-    def visit(self, node):
-        if isinstance(node, ast.Constant):
-            lic = node.value
-
-            if license_ok(self._canonical_license(self._d, lic),
-                    self._dont_want_licenses) == True:
-                if self._operators:
-                    ops = []
-                    for op in self._operators:
-                        if op == '[':
-                            ops.append(op)
-                        elif op == ']':
-                            ops.append(op)
-                        else:
-                            if not ops:
-                                ops.append(op)
-                            elif ops[-1] in ['[', ']']:
-                                ops.append(op)
-                            else:
-                                ops[-1] = op 
-
-                    for op in ops:
-                        if op == '[' or op == ']':
-                            self.licensestr += op
-                        elif self.licenses:
-                            self.licensestr += ' ' + op + ' '
-
-                    self._operators = []
-
-                self.licensestr += lic
-                self.licenses.append(lic)
-        elif isinstance(node, ast.BitAnd):
-            self._operators.append("&")
-        elif isinstance(node, ast.BitOr):
-            self._operators.append("|")
-        elif isinstance(node, ast.List):
-            self._operators.append("[")
-        elif isinstance(node, ast.Load):
-            self.licensestr += "]"
-
-        self.generic_visit(node)
-
-def manifest_licenses(licensestr, dont_want_licenses, canonical_license, d):
+def manifest_licenses(d, licensestr, dont_want_licenses):
     """Given a license string and dont_want_licenses list,
        return license string filtered and a list of licenses"""
-    manifest = ManifestVisitor(dont_want_licenses, canonical_license, d)
 
-    try:
-        elements = manifest.get_elements(licensestr)
+    node = parse_legacy_license(d, licensestr)
+    licenses = []
 
-        # Replace '()' to '[]' for handle in ast as List and Load types.
-        elements = ['[' if e == '(' else e for e in elements]
-        elements = [']' if e == ')' else e for e in elements]
+    def walk_license(node):
+        nonlocal licenses
+        if isinstance(node, oe.spdx_license.Identifier):
+            if license_ok(node.ident, dont_want_licenses):
+                licenses.append(node.ident)
+                return node
 
-        manifest.visit_elements(elements)
-    except SyntaxError as exc:
-        raise LicenseSyntaxError(licensestr, exc)
+            return None
 
-    # Replace '[]' to '()' for output correct license.
-    manifest.licensestr = manifest.licensestr.replace('[', '(').replace(']', ')')
+        old_children = node.children
+        node.children = []
 
-    return (manifest.licensestr, manifest.licenses)
+        for child in old_children:
+            node.children.append(walk_license(child))
 
-class ListVisitor(LicenseVisitor):
-    """Record all different licenses found in the license string"""
-    def __init__(self):
-        self.licenses = set()
+        # If all children are removed, remove this node also
+        if not any(node.children):
+            return None
 
-    def visit_Constant(self, node):
-        self.licenses.add(node.value)
+        # Elide a binary operation if it now only has one child
+        if isinstance(node, (oe.spdx_license.AndOp, oe.spdx_license.OrOp)):
+            if node.left is None:
+                return node.right
+            if node.right is None:
+                return node.left
 
-def list_licenses(licensestr):
-    """Simply get a list of all licenses mentioned in a license string.
+        # The left side (the license side) of a WITH can be removed, but not
+        # the right (the exception)
+        if isinstance(node, oe.spdx_license.WithOp):
+            if node.license is None:
+                return None
+
+        # If one of the above cases doesn't catch everything, raise an error
+        if not all(node.children):
+            node.children = old_children
+            pn = d.getVar("PN")
+            bb.fatal(f"{pn}: Removing licenses from {node.to_string} results in an invalid license expression")
+
+        return node
+
+    if node:
+        node = walk_license(node)
+
+    if not node:
+        return ("", licenses)
+
+    return (node.to_string(), licenses)
+
+def list_licenses(licensestr, d):
+    """Simply get a set of all licenses mentioned in a license string.
        Binary operators are not applied or taken into account in any way"""
-    visitor = ListVisitor()
-    try:
-        visitor.visit_string(licensestr)
-    except SyntaxError as exc:
-        raise LicenseSyntaxError(licensestr, exc)
-    return visitor.licenses
+    licenses = []
+
+    def walk_license(node):
+        nonlocal licenses
+        if isinstance(node, oe.spdx_license.Identifier):
+            licenses.append(node.ident)
+
+        for child in node.children:
+            walk_license(child)
+
+    walk_license(parse_legacy_license(d, licensestr))
+    return set(licenses)
 
 def apply_pkg_license_exception(pkg, bad_licenses, exceptions):
     """Return remaining bad licenses after removing any package exceptions"""
@@ -293,31 +215,38 @@ def expand_wildcard_licenses(d, wildcard_licenses):
 
     return list(licenses)
 
-def incompatible_license_contains(license, truevalue, falsevalue, d):
+def incompatible_license_contains(d, license, truevalue, falsevalue):
     license = canonical_license(d, license)
     bad_licenses = (d.getVar('INCOMPATIBLE_LICENSE') or "").split()
     bad_licenses = expand_wildcard_licenses(d, bad_licenses)
     return truevalue if license in bad_licenses else falsevalue
 
 def incompatible_pkg_license(d, dont_want_licenses, license):
-    # Handles an "or" or two license sets provided by
-    # flattened_licenses(), pick one that works if possible.
-    def choose_lic_set(a, b):
-        return a if all(license_ok(canonical_license(d, lic),
-                            dont_want_licenses) for lic in a) else b
+    def walk_license(node):
+        if isinstance(node, oe.spdx_license.Identifier):
+            if license_ok(node.ident, dont_want_licenses):
+                return []
+            return [node.ident]
+
+        incompatible_lic = []
+        for child in node.children:
+            c = walk_license(child)
+            if not c and isinstance(node, oe.spdx_license.OrOp):
+                return []
+            incompatible_lic.extend(c)
+
+        return incompatible_lic
 
     try:
-        licenses = flattened_licenses(license, choose_lic_set)
-    except LicenseError as exc:
-        bb.fatal('%s: %s' % (d.getVar('P'), exc))
+        node = parse_legacy_license(d, license)
+    except oe.spdx_license.ParseError as e:
+        bb.fatal(e.format(prefix=d.getVar('P') + ":"))
+        return []
 
-    incompatible_lic = []
-    for l in licenses:
-        license = canonical_license(d, l)
-        if not license_ok(license, dont_want_licenses):
-            incompatible_lic.append(license)
+    if not node:
+        return []
 
-    return sorted(incompatible_lic)
+    return sorted(walk_license(node))
 
 def incompatible_license(d, dont_want_licenses, package=None):
     """
@@ -394,6 +323,92 @@ def check_license_flags(d):
             return unmatched_flags
     return None
 
+
+def _substitute_legacy_license(licensestr):
+    if not licensestr or licensestr == "CLOSED":
+        return None
+
+    licensestr = licensestr.replace("&", " AND ").replace("|", " OR ")
+
+    return licensestr
+
+def _parse_legacy_license(d, licensestr):
+    node = oe.spdx_license.parse(licensestr, allow_unknown=True)
+
+    unknown_found = False
+
+    def convert_unknown(node):
+        nonlocal unknown_found
+
+        if isinstance(node, oe.spdx_license.UnknownId):
+            if d is not None:
+                v = d.getVarFlag("SPDXLICENSEMAP", node.ident)
+                if v:
+                    return oe.spdx_license.parse(v)
+
+            if node.ident == "Unknown":
+                return node
+
+            ident = re.sub(r'[^a-zA-Z0-9\.\-]', '-', node.ident)
+            unknown_found = True
+            return oe.spdx_license.LicenseRef("LicenseRef-" + ident, node.ident, token=node.token)
+
+        node.children = [convert_unknown(child) for child in node.children]
+        return node
+
+    return convert_unknown(node), unknown_found
+
+def parse_legacy_license(d, licensestr):
+    """
+    Converts a legacy license string to a SPDX license string and parses it,
+    returning a SPDX license abstract syntax tree
+
+    This can be removed and replaced with oe.spdx_license.parse(licensestr)
+    once legacy licenses are not longer allowed.
+
+    Unknown license IDs in the string are automatically converted to
+    LicenseRefs, assuming that they are provided as either a common license
+    file or a NO_GENERIC_LICENSE
+    """
+    licensestr = _substitute_legacy_license(licensestr)
+    if licensestr is None:
+        return None
+
+    node, _ = _parse_legacy_license(d, licensestr)
+    return node
+
+def convert_legacy_license_to_spdx(d, licensestr):
+    """
+    Converts a legacy license string to an SPDX-compatible license string
+    """
+    s = parse_legacy_license(d, licensestr)
+    if not s:
+        return licensestr
+
+    return s.to_string()
+
+def get_license_path(d, node):
+    """
+    Given an node from an SPDX AST, return the path to the license file
+    """
+    if isinstance(node, oe.spdx_license.LicenseRef):
+        filename = d.getVarFlag("NO_GENERIC_LICENSE", node.name)
+        if filename:
+            return d.expand("${S}/" + filename), filename
+
+    for lic_dir in [d.getVar("COMMON_LICENSE_DIR")] + (d.getVar("LICENSE_PATH") or "").split():
+        p = os.path.join(lic_dir, node.name)
+        if os.path.isfile(p):
+            return p, None
+
+        # Some license expressions already contain the "LicenseRef-" prefix, so
+        # look for a matching license name
+        p = os.path.join(lic_dir, node.ident)
+        if os.path.isfile(p):
+            return p, None
+
+    return None, None
+
 def check_license_format(d):
     """
     This function checks if LICENSE is well defined,
@@ -401,22 +416,75 @@ def check_license_format(d):
         No spaces are allowed between LICENSES.
     """
     pn = d.getVar('PN')
-    licenses = d.getVar('LICENSE')
+    packages = d.getVar("PACKAGES").split()
 
-    elements = list(filter(lambda x: x.strip(), license_operator.split(licenses)))
-    for pos, element in enumerate(elements):
-        if license_pattern.match(element):
-            if pos > 0 and license_pattern.match(elements[pos - 1]):
-                oe.qa.handle_error('license-format',
-                        '%s: LICENSE value "%s" has an invalid format - license names ' \
-                        'must be separated by the following characters to indicate ' \
-                        'the license selection: %s' %
-                        (pn, licenses, license_operator_chars), d)
-        elif not license_operator.match(element):
-            oe.qa.handle_error('license-format',
-                    '%s: LICENSE value "%s" has an invalid separator "%s" that is not ' \
-                    'in the valid list of separators (%s)' %
-                    (pn, licenses, element, license_operator_chars), d)
+    for v in ["LICENSE"] + [f"LICENSE:{p}" for p in packages]:
+        licenses = d.getVar(v)
+
+        if licenses == "INVALID":
+            continue
+
+        if licenses == "CLOSED":
+            bb.warn(f'{pn}: {v} is using "CLOSED", which is deprecated. Convert to using a license ref pointing to an actual license file, e.g.\n{v} = "LicenseRef-{pn}-CLOSED"')
+            continue
+
+        if not licenses:
+            continue
+
+        try:
+            spdx_license = _substitute_legacy_license(licenses)
+
+            s, unknown_found = _parse_legacy_license(d, spdx_license)
+            if not s:
+                continue
+
+            if spdx_license != licenses or unknown_found:
+                bb.warn(f'{pn}: {v} is using an old syntax and should be upgraded to: "{s.sort().to_string()}"')
+
+            if s:
+                # Check license refs
+                missing_generic_refs = set()
+                missing_refs = set()
+                deprecated = set()
+                def walk_license(node):
+                    nonlocal missing_generic_refs
+                    nonlocal missing_refs
+
+                    if isinstance(node, oe.spdx_license.LicenseRef):
+                        p, non_generic_fn = get_license_path(d, node)
+                        if not p:
+                            if non_generic_fn:
+                                missing_refs.add(node.ident)
+                            else:
+                                missing_generic_refs.add(node.ident)
+
+                    if isinstance(node, (oe.spdx_license.LicenseId, oe.spdx_license.ExceptionId)):
+                        if node.deprecated:
+                            deprecated.add(node.ident)
+
+                    for child in node.children:
+                        walk_license(child)
+
+                walk_license(s)
+                if missing_refs:
+                    missing_refs = ', '.join(sorted(missing_refs))
+                    oe.qa.handle_error("license-format",
+                                        f'{pn}: LICENSE contains a reference to license(s) {missing_refs} which are not defined in NO_GENERIC_LICENSE',
+                                        d)
+
+                if missing_generic_refs:
+                    missing_generic_refs = ', '.join(sorted(missing_generic_refs))
+                    oe.qa.handle_error("license-format",
+                                        f'{pn}: LICENSE contains a reference to license(s) {missing_generic_refs} for which no generic license was found',
+                                        d)
+
+                if deprecated:
+                    deprecated = ", ".join(sorted(deprecated))
+                    bb.warn(f'{pn}: {v} contains deprecated licenses {deprecated}')
+
+        except oe.spdx_license.ParseError as e:
+            oe.qa.handle_error("license-format",
+                            f'{pn}: {v} value has an invalid format:\n{e.format()}\n', d)
 
 def skip_incompatible_package_licenses(d, pkgs):
     if not pkgs:
@@ -461,13 +529,11 @@ def tidy_licenses(value):
     """
     Flat, split and sort licenses.
     """
-    from oe.license import flattened_licenses
-
     def _choose(a, b):
-        str_a, str_b  = sorted((" & ".join(a), " & ".join(b)), key=str.casefold)
-        return ["(%s | %s)" % (str_a, str_b)]
+        str_a, str_b  = sorted((" AND ".join(a), " AND ".join(b)), key=str.casefold)
+        return ["(%s OR %s)" % (str_a, str_b)]
 
     if not isinstance(value, str):
-        value = " & ".join(value)
+        value = " AND ".join(value)
 
-    return sorted(list(set(flattened_licenses(value, _choose))), key=str.casefold)
+    return sorted(list(set(flattened_licenses(None, value, _choose))), key=str.casefold)

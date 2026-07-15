@@ -990,8 +990,8 @@ def package_qa_check_unlisted_pkg_lics(package, d):
     if not pkg_lics:
         return
 
-    recipe_lics_set = oe.license.list_licenses(d.getVar('LICENSE'))
-    package_lics = oe.license.list_licenses(pkg_lics)
+    recipe_lics_set = oe.license.list_licenses(d.getVar('LICENSE'), d)
+    package_lics = oe.license.list_licenses(pkg_lics, d)
     unlisted = package_lics - recipe_lics_set
     if unlisted:
         oe.qa.handle_error("unlisted-pkg-lics",
@@ -1113,7 +1113,7 @@ python do_package_qa () {
     import oe.packagedata
 
     # Check for obsolete license references in main LICENSE (packages are checked below for any changes)
-    main_licenses = oe.license.list_licenses(d.getVar('LICENSE'))
+    main_licenses = oe.license.list_licenses(d.getVar('LICENSE'), d)
     obsolete = set(oe.license.obsolete_license_list()) & main_licenses
     if obsolete:
         oe.qa.handle_error("obsolete-license", "Recipe LICENSE includes obsolete licenses %s" % ' '.join(obsolete), d)
@@ -1332,7 +1332,7 @@ python do_qa_patch() {
 
     # Detect cargo-based tests
     elif os.path.exists(os.path.join(srcdir, "Cargo.toml")) and (
-        match_line_in_files(srcdir, "**/*.rs", r'\s*#\s*\[\s*test\s*\]') or 
+        match_line_in_files(srcdir, "**/*.rs", r'\s*#\s*\[\s*test\s*\]') or
         match_line_in_files(srcdir, "**/*.rs", r'\s*#\s*\[\s*cfg\s*\(\s*test\s*\)\s*\]')
     ):
         oe.qa.handle_error("unimplemented-ptest", "%s: cargo-based tests detected" % d.getVar('PN'), d)

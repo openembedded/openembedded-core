@@ -131,10 +131,10 @@ def write_license_files(d, license_manifest, pkg_dic, rootfs):
                     oe.qa.handle_error('license-exception', "Including %s with incompatible license(s) %s into the image, because it has been allowed by exception list." %(pkg, ' '.join(incompatible_licenses)), d)
             try:
                 (pkg_dic[pkg]["LICENSE"], pkg_dic[pkg]["LICENSES"]) = \
-                    oe.license.manifest_licenses(pkg_dic[pkg]["LICENSE"],
-                    remaining_bad_licenses, oe.license.canonical_license, d)
+                    oe.license.manifest_licenses(d, pkg_dic[pkg]["LICENSE"],
+                    remaining_bad_licenses)
             except oe.license.LicenseError as exc:
-                bb.fatal('%s: %s' % (d.getVar('P'), exc))
+                bb.fatal(exc.format(prefix=d.getVar("P") + ": "))
 
             if not "IMAGE_MANIFEST" in pkg_dic[pkg]:
                 # Rootfs manifest

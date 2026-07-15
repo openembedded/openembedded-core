@@ -96,7 +96,7 @@ class IncompatibleLicenseTests(OESelftestTestCase):
     # Verify that a package with a non-SPDX license cannot be built when
     # INCOMPATIBLE_LICENSE contains this license
     def test_incompatible_nonspdx_license(self):
-        self.lic_test('incompatible-nonspdx-license', 'FooLicense', 'FooLicense')
+        self.lic_test('incompatible-nonspdx-license', 'LicenseRef-FooLicense', 'LicenseRef-FooLicense')
 
 class IncompatibleLicensePerImageTests(OESelftestTestCase):
     def default_config(self):
@@ -104,6 +104,7 @@ class IncompatibleLicensePerImageTests(OESelftestTestCase):
 IMAGE_INSTALL:append = " bash"
 INCOMPATIBLE_LICENSE:pn-core-image-minimal = "GPL-3.0* LGPL-3.0*"
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS:remove = "tar"
+NO_GENERIC_LICENSE[SomeLicense] = "COPYING"
 """
 
     def test_bash_default(self):
@@ -116,7 +117,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS:remove = "tar"
 
     def test_bash_and_license(self):
         self.disable_class("create-spdx")
-        self.write_config(self.default_config() + '\nLICENSE:append:pn-bash = " & SomeLicense"\nERROR_QA:remove:pn-bash = "license-exists"')
+        self.write_config(self.default_config() + '\nLICENSE:append:pn-bash = " AND LicenseRef-SomeLicense"\nERROR_QA:remove:pn-bash = "license-exists"')
         error_msg = "ERROR: core-image-minimal-1.0-r0 do_rootfs: Some packages cannot be installed into the image because they have incompatible licenses:\n\tbash (GPL-3.0-or-later)"
 
         result = bitbake('core-image-minimal', ignore_status=True)
@@ -125,7 +126,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS:remove = "tar"
 
     def test_bash_or_license(self):
         self.disable_class("create-spdx")
-        self.write_config(self.default_config() + '\nLICENSE:append:pn-bash = " | SomeLicense"\nERROR_QA:remove:pn-bash = "license-exists"\nERROR_QA:remove:pn-core-image-minimal = "license-file-missing"')
+        self.write_config(self.default_config() + '\nLICENSE:append:pn-bash = " OR LicenseRef-SomeLicense"\nERROR_QA:remove:pn-bash = "license-exists"\nERROR_QA:remove:pn-core-image-minimal = "license-file-missing"')
 
         bitbake('core-image-minimal')
 
