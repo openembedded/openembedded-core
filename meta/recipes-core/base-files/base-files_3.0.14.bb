@@ -102,7 +102,8 @@ do_install () {
 	install -m 0644 ${S}/host.conf ${D}${sysconfdir}/host.conf
 	install -m 0644 ${S}/motd ${D}${sysconfdir}/motd
 
-	ln -sf /proc/mounts ${D}${sysconfdir}/mtab
+	# systemd likes to have a relative link
+	ln -sf --relative ${D}/proc/self/mounts ${D}${sysconfdir}/mtab
 
 	# deal with hostname
 	if [ "${hostname}" ]; then
