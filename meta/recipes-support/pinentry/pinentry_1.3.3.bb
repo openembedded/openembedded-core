@@ -16,7 +16,7 @@ SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0001-find-gpg-error-with-pkg-config.patch \
 "
 
-SRC_URI[sha256sum] = "8e986ed88561b4da6e9efe0c54fa4ca8923035c99264df0b0464497c5fb94e9e"
+SRC_URI[sha256sum] = "c2970f16d6afb66ecddfca767d743936c86239bff936eed7fd7597a678414b63"
 
 inherit autotools pkgconfig
 
