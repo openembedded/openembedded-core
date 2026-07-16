@@ -46,3 +46,4 @@ FILES:${PN}-remote = "\
 BBCLASSEXTEND = "native nativesdk"
 
 CVE_STATUS[CVE-2026-2100] = "fixed-version: fixed since 0.26.2"
+CVE_STATUS[CVE-2026-13757] = "fixed-version: fixed since 0.26.3"
