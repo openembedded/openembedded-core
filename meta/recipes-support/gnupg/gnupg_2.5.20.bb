@@ -11,10 +11,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=189af8afca6d6075ba6c9e0aa8077626 \
 
 DEPENDS = "npth libassuan libksba zlib bzip2 readline libgcrypt"
 
-inherit autotools gettext texinfo pkgconfig upstream-version-is-even
+inherit autotools gettext texinfo pkgconfig
 
 require drop-unknown-suffix.inc
 
+# Note: when 2.6 is out, check whether upstream-version-is-even class should be re-enabled
 UPSTREAM_CHECK_URI = "https://gnupg.org/ftp/gcrypt/gnupg/"
 SRC_URI = "${GNUPG_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0002-use-pkgconfig-instead-of-npth-config.patch \
