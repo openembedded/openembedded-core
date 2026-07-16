@@ -39,6 +39,7 @@ SRC_URI += " \
            file://0001-meson-use-libfido2_cflags-dependency.patch \
            file://0018-shared-fdset-add-detailed-debug-logging-to-fdset_new.patch \
            file://0004-tpm2-util-fix-PCR-bank-guessing-without-EFI.patch \
+           file://0005-boot-downgrade-EFI_MEMORY_ATTRIBUTE_PROTOCOL-warning.patch \
            "
 
 PAM_PLUGINS = " \

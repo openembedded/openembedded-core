@@ -8,6 +8,10 @@ DEPENDS = "libcap util-linux gperf-native python3-jinja2-native python3-pyelftoo
 inherit meson pkgconfig gettext
 inherit deploy
 
+SRC_URI += " \
+           file://0005-boot-downgrade-EFI_MEMORY_ATTRIBUTE_PROTOCOL-warning.patch \
+           "
+
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 LDFLAGS =+ "${@ " ".join(d.getVar('LD').split()[1:])} "

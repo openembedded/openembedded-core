@@ -1,0 +1,47 @@
+From 829c2f0e3dffe8b4484e730a3f3058b61e2133ad Mon Sep 17 00:00:00 2001
+From: Aswin Murugan <aswin.murugan@oss.qualcomm.com>
+Date: Tue, 14 Jul 2026 11:37:14 +0530
+Subject: [PATCH] boot: downgrade EFI_MEMORY_ATTRIBUTE_PROTOCOL warning
+
+U-Boot currently does not implement EFI_MEMORY_ATTRIBUTE_PROTOCOL
+even when reporting EFI version >= 2.10. Consequently, systemd-boot
+emits a warning on every boot when running on U-Boot firmware.
+
+The absence of EFI_MEMORY_ATTRIBUTE_PROTOCOL is a current
+U-Boot limitation and not a condition users can remedy.
+Furthermore, the EFI specification does not require all
+firmware advertising EFI 2.10 or newer to implement the
+protocol. As a result, the warning provides little value on
+U-Boot systems while causing log_wait() to impose a 2.5-second
+boot delay.
+
+Downgrade the message to LOG_DEBUG, this keeps the diagnostic
+available for debugging purposes without penalizing normal
+boot time.
+
+Upstream-Status: Backport [ https://github.com/systemd/systemd/pull/43017 ]
+
+Signed-off-by: Aswin Murugan <aswin.murugan@oss.qualcomm.com>
+---
+ src/boot/linux.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/src/boot/linux.c b/src/boot/linux.c
+index 67ed859993..09fb63419d 100644
+--- a/src/boot/linux.c
++++ b/src/boot/linux.c
+@@ -267,10 +267,7 @@ EFI_STATUS linux_exec(
+                  * if required for NX_COMPAT */
+                 err = BS->LocateProtocol(MAKE_GUID_PTR(EFI_MEMORY_ATTRIBUTE_PROTOCOL), /* Registration= */ NULL, (void **) &memory_proto);
+                 if (err != EFI_SUCCESS)
+-                        /* Only warn if the UEFI should have support in the first place (version >= 2.10) */
+-                        log_full(err,
+-                                 ST->Hdr.Revision >= ((2U << 16) | 100U) ? LOG_WARNING : LOG_DEBUG,
+-                                 "No EFI_MEMORY_ATTRIBUTE_PROTOCOL found, skipping NX_COMPAT support.");
++                        log_debug_status(err, "No EFI_MEMORY_ATTRIBUTE_PROTOCOL found, skipping NX_COMPAT support.");
+         }
+ 
+         const PeSectionHeader *headers;
+-- 
+2.34.1
+
