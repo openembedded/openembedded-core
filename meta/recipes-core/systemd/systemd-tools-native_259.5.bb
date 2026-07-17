@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/systemd:"
 
-SUMMARY = "Systemctl executable from systemd"
+SUMMARY = "native tools from systemd"
 
 require systemd.inc
 
