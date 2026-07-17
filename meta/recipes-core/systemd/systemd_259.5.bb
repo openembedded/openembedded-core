@@ -22,6 +22,10 @@ REQUIRED_DISTRO_FEATURES += "systemd"
 # this and hence we can no longer support it
 CONFLICT_DISTRO_FEATURES += "sysvinit"
 
+# Ensure that the native tools are available when we're building a rootfs with systemd in,
+# so that systemctl can be used in postinst scripts
+PACKAGE_WRITE_DEPS += "systemd-systemctl-native"
+
 SRC_URI += " \
            file://touchscreen.rules \
            file://00-create-volatile.conf \
