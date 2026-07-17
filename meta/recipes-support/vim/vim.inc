@@ -28,7 +28,7 @@ UPSTREAM_VERSION_UNKNOWN = "1"
 
 VIMDIR = "vim${@d.getVar('PV').split('.')[0]}${@d.getVar('PV').split('.')[1]}"
 
-inherit autotools-brokensep update-alternatives mime-xdg pkgconfig
+inherit autotools-brokensep update-alternatives pkgconfig
 
 CLEANBROKEN = "1"
 
@@ -53,9 +53,11 @@ do_configure () {
 
 PACKAGECONFIG ??= "\
     ${@bb.utils.filter('DISTRO_FEATURES', 'acl selinux x11', d)} \
+    desktop \
     nls \
 "
 
+PACKAGECONFIG[desktop] = ""
 PACKAGECONFIG[gtkgui] = "--enable-gui=gtk3,--enable-gui=no,gtk+3"
 PACKAGECONFIG[acl] = "--enable-acl,--disable-acl,acl,"
 PACKAGECONFIG[x11] = "--with-x,--without-x,xt,"
@@ -64,6 +66,8 @@ PACKAGECONFIG[selinux] = "--enable-selinux,--disable-selinux,libselinux,"
 PACKAGECONFIG[elfutils] = "--enable-elf-check,,elfutils,"
 PACKAGECONFIG[nls] = "--enable-nls,--disable-nls,,"
 PACKAGECONFIG[sound] = "--enable-canberra,--disable-canberra,canberra,"
+
+inherit_defer ${@bb.utils.contains('PACKAGECONFIG', 'desktop', 'mime-xdg', '', d)}
 
 EXTRA_OECONF = " \
     --disable-gpm \
@@ -110,6 +114,11 @@ do_install() {
 	# drag make vim go into visual mode and there is no right click menu),
 	# delete the block.
 	sed -i '/the mouse works just fine/,+4d' ${D}/${datadir}/${BPN}/vimrc
+    fi
+
+    if ${@bb.utils.contains('PACKAGECONFIG', 'desktop', 'false', 'true', d)}; then
+        rm -f ${D}${datadir}/applications/vim.desktop
+        rm -f ${D}${datadir}/applications/gvim.desktop
     fi
 }
 
