@@ -15,7 +15,7 @@ CVE_PRODUCT = "linux_diskquota"
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/linuxquota/files/quota-tools/"
 UPSTREAM_CHECK_REGEX = "/quota-tools/(?P<pver>(\d+[\.\-_]*)+)/"
 
-DEPENDS = "gettext-native e2fsprogs libnl dbus"
+DEPENDS = "e2fsprogs libnl dbus"
 
 inherit autotools-brokensep gettext pkgconfig
 
