@@ -10,5 +10,6 @@ do_install() {
     install -D -m 0755 ${S}/src/vim ${D}/${bindir}/vim.tiny
 }
 
+ALTERNATIVE:${PN} = "vi"
 ALTERNATIVE_PRIORITY = "90"
 ALTERNATIVE_TARGET = "${bindir}/vim.tiny"
