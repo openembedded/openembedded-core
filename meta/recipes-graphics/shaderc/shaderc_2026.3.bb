@@ -9,7 +9,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=86d3f3a95c324c9479bd8986968f4327"
 SRCREV = "82757e4f72af8518fb679604d352623450cb761f"
 SRC_URI = "git://github.com/google/shaderc.git;protocol=https;branch=main;tag=v${PV} \
            file://0001-cmake-disable-building-external-dependencies.patch \
-           file://0002-libshaderc_util-fix-glslang-header-file-location.patch \
            "
 UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>\d+(\.\d+)+)$"
 
@@ -24,5 +23,7 @@ EXTRA_OECMAKE = " \
     -DSHADERC_SKIP_EXAMPLES=ON \
     -DSHADERC_SKIP_COPYRIGHT_CHECK=ON \
 "
+
+CXXFLAGS += "-I${STAGING_INCDIR}/glslang"
 
 BBCLASSEXTEND = "native nativesdk"
