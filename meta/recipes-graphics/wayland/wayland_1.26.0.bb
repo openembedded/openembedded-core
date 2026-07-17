@@ -17,7 +17,7 @@ SRC_URI = "https://gitlab.freedesktop.org/wayland/wayland/-/releases/${PV}/downl
            file://0001-build-Fix-strndup-detection-on-MinGW.patch \
            file://0001-tests-Remove-event_loop_timer-test.patch \
            "
-SRC_URI[sha256sum] = "c065f040afdff3177680600f249727e41a1afc22fccf27222f15f5306faa1f03"
+SRC_URI[sha256sum] = "64176eaa46e4969903e286f8e5ef8331affc17fdf03ac9b58381d2b23162b7a3"
 
 UPSTREAM_CHECK_URI = "https://gitlab.freedesktop.org/wayland/wayland/-/tags"
 UPSTREAM_CHECK_REGEX = "releases/(?P<pver>\d+\.\d+\.(?!9\d+)\d+)"
