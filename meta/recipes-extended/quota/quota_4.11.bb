@@ -15,16 +15,14 @@ CVE_PRODUCT = "linux_diskquota"
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/linuxquota/files/quota-tools/"
 UPSTREAM_CHECK_REGEX = "/quota-tools/(?P<pver>(\d+[\.\-_]*)+)/"
 
-DEPENDS = "libnl dbus"
-
 inherit autotools-brokensep gettext pkgconfig
 
 CFLAGS += "${@bb.utils.contains('PACKAGECONFIG', 'rpc', '-I${STAGING_INCDIR}/tirpc', '', d)}"
 LDFLAGS += "${@bb.utils.contains('PACKAGECONFIG', 'rpc', '-ltirpc', '', d)}"
 ASNEEDED = ""
 
-PACKAGECONFIG ??= "rpc bsd ext2direct"
-PACKAGECONFIG:libc-musl = "rpc ext2direct"
+PACKAGECONFIG ??= "rpc bsd ext2direct netlink"
+PACKAGECONFIG:libc-musl = "rpc ext2direct netlink"
 
 # rpcgen execs its preprocessor as a single program; OE's multi-word $CPP fails,
 # so point it at the cross cpp instead.
@@ -34,3 +32,4 @@ PACKAGECONFIG[rpc] = "--enable-rpc,--disable-rpc,libtirpc rpcsvc-proto-native"
 PACKAGECONFIG[bsd] = "--enable-bsd_behaviour=yes,--enable-bsd_behaviour=no,"
 PACKAGECONFIG[ldapmail] = "--enable-ldapmail,--disable-ldapmail,openldap"
 PACKAGECONFIG[ext2direct] = "--enable-ext2direct,--disable-ext2direct,e2fsprogs"
+PACKAGECONFIG[netlink] = "--enable-netlink,--disable-netlink,dbus libnl"
