@@ -15,7 +15,7 @@ CVE_PRODUCT = "linux_diskquota"
 UPSTREAM_CHECK_URI = "http://sourceforge.net/projects/linuxquota/files/quota-tools/"
 UPSTREAM_CHECK_REGEX = "/quota-tools/(?P<pver>(\d+[\.\-_]*)+)/"
 
-DEPENDS = "e2fsprogs libnl dbus"
+DEPENDS = "libnl dbus"
 
 inherit autotools-brokensep gettext pkgconfig
 
@@ -23,8 +23,8 @@ CFLAGS += "${@bb.utils.contains('PACKAGECONFIG', 'rpc', '-I${STAGING_INCDIR}/tir
 LDFLAGS += "${@bb.utils.contains('PACKAGECONFIG', 'rpc', '-ltirpc', '', d)}"
 ASNEEDED = ""
 
-PACKAGECONFIG ??= "rpc bsd"
-PACKAGECONFIG:libc-musl = "rpc"
+PACKAGECONFIG ??= "rpc bsd ext2direct"
+PACKAGECONFIG:libc-musl = "rpc ext2direct"
 
 # rpcgen execs its preprocessor as a single program; OE's multi-word $CPP fails,
 # so point it at the cross cpp instead.
@@ -33,3 +33,4 @@ export RPCGEN_CPP = "${TARGET_PREFIX}cpp"
 PACKAGECONFIG[rpc] = "--enable-rpc,--disable-rpc,libtirpc rpcsvc-proto-native"
 PACKAGECONFIG[bsd] = "--enable-bsd_behaviour=yes,--enable-bsd_behaviour=no,"
 PACKAGECONFIG[ldapmail] = "--enable-ldapmail,--disable-ldapmail,openldap"
+PACKAGECONFIG[ext2direct] = "--enable-ext2direct,--disable-ext2direct,e2fsprogs"
