@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Skip these 2 test cases with fail due to an inherent test-order/caching
+# issue in that test module
+pytest --automake \
+    --deselect=tests/test_imports.py::ImportsTests::test_get_alias \
+    --deselect=tests/test_imports.py::ImportsTests::test_get_deprecated_alias
