@@ -530,7 +530,7 @@ class GitApplyTree(PatchTree):
         patches = []
         try:
             for name, rev in startcommits.items():
-                cmd = ["git", "format-patch", "--no-signature", "--no-numbered", rev, "-o", tempdir]
+                cmd = ["git", "format-patch", "--no-from", "--no-signature", "--no-numbered", rev, "-o", tempdir]
                 if paths:
                     cmd.append('--')
                     cmd.extend(paths)
