@@ -1108,9 +1108,13 @@ def create_spdx(d):
 
 def create_package_spdx(d):
     deploydir = Path(d.getVar("SPDXRUNTIMEDEPLOY"))
+    pkgdatadir = Path(d.getVar('PKGDATA_DIR'))
 
     direct_deps = oe.spdx_common.collect_direct_deps(d, "do_create_spdx")
 
+    # providers[package_name] = pkg_name, where:
+    # - package_name is the name in the recipe in PACKAGES/RDEPENDS, and
+    # - pkg_name is the final name given by the package manager.
     providers = oe.spdx_common.collect_package_providers(d, direct_deps)
     pkg_arch = d.getVar("SSTATE_PKGARCH")
 
@@ -1164,26 +1168,24 @@ def create_package_spdx(d):
             if dep not in providers:
                 continue
 
-            dep, _ = providers[dep]
+            dep_pkg_name, _ = providers[dep]
 
-            if not oe.packagedata.packaged(dep, localdata):
+            if not os.path.exists(pkgdatadir / "runtime-reverse" / dep_pkg_name):
+                bb.debug(1, f"pkg_name {dep_pkg_name}, package {dep} missing for {package}")
                 continue
 
-            dep_pkg_data = oe.packagedata.read_subpkgdata_dict(dep, d)
-            dep_pkg = dep_pkg_data["PKG"]
-
-            if dep in dep_package_cache:
-                dep_spdx_package = dep_package_cache[dep]
+            if dep_pkg_name in dep_package_cache:
+                dep_spdx_package = dep_package_cache[dep_pkg_name]
             else:
-                bb.debug(1, "Searching for %s" % dep_pkg)
+                bb.debug(1, "Searching for %s" % dep_pkg_name)
                 dep_spdx_package, _ = oe.sbom30.find_root_obj_in_jsonld(
                     d,
                     "packages-staging",
-                    "package-" + dep_pkg,
+                    "package-" + dep_pkg_name,
                     oe.spdx30.software_Package,
                     software_primaryPurpose=oe.spdx30.software_SoftwarePurpose.install,
                 )
-                dep_package_cache[dep] = dep_spdx_package
+                dep_package_cache[dep_pkg_name] = dep_spdx_package
 
             runtime_spdx_deps.add(dep_spdx_package)
             seen_deps.add(dep)
