@@ -308,6 +308,7 @@ do_check[depends] += "virtual/libc:do_populate_sysroot"
 do_check[depends] += "${@'qemu-native:do_populate_sysroot' if "user" in d.getVar('TOOLCHAIN_TEST_TARGET') else ''}"
 # extend the recipe sysroot to include the built libraries (for qemu usermode)
 do_check[prefuncs] += "extend_recipe_sysroot"
+do_check[vardepsexclude] += "extend_recipe_sysroot"
 do_check[prefuncs] += "check_prepare"
 do_check[dirs] = "${WORKDIR}/dejagnu ${B}"
 do_check[nostamp] = "1"
