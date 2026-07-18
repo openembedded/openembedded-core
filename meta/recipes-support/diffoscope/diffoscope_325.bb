@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 inherit pypi setuptools3
 
-SRC_URI[sha256sum] = "daf539d33140ecd4c5dcf18c894bbc09aeab5307b44de28b12ca34434d47c5ba"
+SRC_URI[sha256sum] = "d74a2edb0555a9ee306d5362b921f80c144bb941c0a6d61794473d1540d729ad"
 
 RDEPENDS:${PN} += "\
         binutils \
