@@ -32,6 +32,8 @@ SRC_URI = "https://www.gnupg.org/ftp/gcrypt/gnutls/v${SHRT_VER}/gnutls-${PV}.tar
            file://0006-buffers-match-DTLS-datagrams-by-sequence-number.patch \
            file://0007-tests-mini-dtls-fragments-1839-mismatching-message_s.patch \
            file://0008-tests-mini-dtls-framents-link-to-gnulib.patch \
+           file://CVE-2026-3832_p1.patch \
+           file://CVE-2026-3832_p2.patch \
            "
 
 SRC_URI[sha256sum] = "a7b341421bfd459acf7a374ca4af3b9e06608dcd7bd792b2bf470bea012b8e51"
