@@ -42,6 +42,7 @@ SRC_URI = "http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-${PV}.tar
            file://CVE-2026-59996.patch \
            file://CVE-2026-59995.patch \
            file://CVE-2026-60001.patch \
+           file://CVE-2026-60002.patch \
            "
 SRC_URI[sha256sum] = "910211c07255a8c5ad654391b40ee59800710dd8119dd5362de09385aa7a777c"
 
