@@ -73,7 +73,7 @@ LICENSE = "\
     AND LicenseRef-Firmware-ice-enhanced \
     AND LicenseRef-Firmware-inside-secure \
     AND LicenseRef-Firmware-intel \
-    AND LicenseRef-Firwmare-intel-vpu \
+    AND LicenseRef-Firmware-intel-vpu \
     AND LicenseRef-Firmware-ipu3-firmware \
     AND LicenseRef-Firmware-it913x \
     AND LicenseRef-Firmware-ivsc \
@@ -335,7 +335,7 @@ NO_GENERIC_LICENSE[Firmware-ice-enhanced] = "LICENSES/LICENSE.ice_enhanced"
 NO_GENERIC_LICENSE[Firmware-inside-secure] = "LICENSES/LICENCE.inside-secure"
 NO_GENERIC_LICENSE[Firmware-IntcSST2] = "LICENSES/LICENCE.IntcSST2"
 NO_GENERIC_LICENSE[Firmware-intel] = "LICENSES/LICENSE.intel"
-NO_GENERIC_LICENSE[Firwmare-intel-vpu] = "LICENSES/LICENSE.intel_vpu"
+NO_GENERIC_LICENSE[Firmware-intel-vpu] = "LICENSES/LICENSE.intel_vpu"
 NO_GENERIC_LICENSE[Firmware-ipu3-firmware] = "LICENSES/LICENSE.ipu3_firmware"
 NO_GENERIC_LICENSE[Firmware-it913x] = "LICENSES/LICENCE.it913x"
 NO_GENERIC_LICENSE[Firmware-ivsc] = "LICENSES/LICENSE.ivsc"
@@ -3304,10 +3304,10 @@ FILES:${PN}-intel-ipu7-isys = "${firmwaredir}/intel/ipu/ipu7*"
 RDEPENDS:${PN}-intel-ipu7-isys = "${PN}-intel-license"
 
 # For intel_vpu - Intel NPU driver
-LICENSE:${PN}-intel-vpu-license = "LicenseRef-Firwmare-intel-vpu"
+LICENSE:${PN}-intel-vpu-license = "LicenseRef-Firmware-intel-vpu"
 FILES:${PN}-intel-vpu-license = "${firmwaredir}/LICENSE.intel_vpu"
 
-LICENSE:${PN}-intel-vpu = "LicenseRef-Firwmare-intel-vpu"
+LICENSE:${PN}-intel-vpu = "LicenseRef-Firmware-intel-vpu"
 FILES:${PN}-intel-vpu = "${firmwaredir}/intel/vpu/*"
 RDEPENDS:${PN}-intel-vpu = "${PN}-intel-vpu-license"
 
@@ -3580,7 +3580,7 @@ LICENSE:${PN} = "\
     AND LicenseRef-Firmware-ibt-firmware \
     AND LicenseRef-Firmware-inside-secure \
     AND LicenseRef-Firmware-intel \
-    AND LicenseRef-Firwmare-intel-vpu \
+    AND LicenseRef-Firmware-intel-vpu \
     AND LicenseRef-Firmware-ipu3-firmware \
     AND LicenseRef-Firmware-it913x \
     AND LicenseRef-Firmware-ivsc \
