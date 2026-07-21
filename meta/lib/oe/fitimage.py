@@ -153,7 +153,7 @@ class ItsNodeRootKernel(ItsNode):
     If a device tree included in the FIT image, the default configuration is the
     firt DTB. If there is no dtb present than the default configuation the kernel.
     """
-    def __init__(self, description, address_cells, host_prefix, arch, conf_prefix,
+    def __init__(self, description, address_cells, host_prefix, arch, fit_os, conf_prefix,
                  sign_enable=False, sign_keydir=None,
                  mkimage=None, mkimage_dtcopts=None,
                  mkimage_extra_opts=None,
@@ -171,6 +171,7 @@ class ItsNodeRootKernel(ItsNode):
 
         self._host_prefix = host_prefix
         self._arch = arch
+        self._os = fit_os
         self._conf_prefix = conf_prefix
 
         # Signature related properties
@@ -279,7 +280,7 @@ class ItsNodeRootKernel(ItsNode):
         opt_props = {
             "data": '/incbin/("' + kernel_path + '")',
             "arch": self._arch,
-            "os": "linux",
+            "os": self._os,
         }
         if load:
             opt_props["load"] = f"<{load}>"
@@ -370,7 +371,7 @@ class ItsNodeRootKernel(ItsNode):
             {
                 "data": '/incbin/("' + setup_path + '")',
                 "arch": self._arch,
-                "os": "linux",
+                "os": self._os,
                 "load": load,
                 "entry": entry
             }
@@ -385,7 +386,7 @@ class ItsNodeRootKernel(ItsNode):
             "data": '/incbin/("' + ramdisk_path + '")',
             "type": "ramdisk",
             "arch": self._arch,
-            "os": "linux"
+            "os": self._os,
         }
         if load:
             opt_props["load"] = f"<{load}>"
@@ -406,7 +407,7 @@ class ItsNodeRootKernel(ItsNode):
         opt_props = {
             "data": '/incbin/("' + filepath + '")',
             "arch": arch if arch is not None else self._arch,
-            "os": fit_os if fit_os is not None else "linux",
+            "os": fit_os if fit_os is not None else self._os,
         }
 
         if load:

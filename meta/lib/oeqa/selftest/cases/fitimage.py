@@ -680,6 +680,7 @@ class KernelFitImageBase(FitImageTestCase):
             'FIT_LOADABLES',
             'FIT_LOADABLE_ENTRYPOINT',
             'FIT_LOADABLE_LOADADDRESS',
+            'FIT_OS',
             'FIT_SIGN_ALG',
             'FIT_SIGN_INDIVIDUAL',
             'FIT_UBOOT_ENV',
@@ -915,7 +916,7 @@ class KernelFitImageBase(FitImageTestCase):
             # 'compression = "' + str(bb_vars['FIT_KERNEL_COMP_ALG']) + '";', defined based on files in TMPDIR, not ideal...
             'data = /incbin/("linux.bin");',
             'arch = "' + str(bb_vars['UBOOT_ARCH']) + '";',
-            'os = "linux";',
+            'os = "%s";' % bb_vars['FIT_OS'],
             'load = <' + str(bb_vars['UBOOT_LOADADDRESS']) + '>;',
             'entry = <' + str(bb_vars['UBOOT_ENTRYPOINT']) + '>;',
         ]
@@ -1510,6 +1511,7 @@ class FitImagePyTests(KernelFitImageBase):
             'FIT_KEY_SIGN_PKCS': "-x509",
             'FIT_LOADABLES': "",
             'FIT_LINUX_BIN': "linux.bin",
+            'FIT_OS': "linux",
             'FIT_PAD_ALG': "pkcs-1.5",
             'FIT_SIGN_ALG': "rsa2048",
             'FIT_SIGN_INDIVIDUAL': "0",
@@ -1550,7 +1552,8 @@ class FitImagePyTests(KernelFitImageBase):
 
         root_node = oe.fitimage.ItsNodeRootKernel(
             bb_vars["FIT_DESC"], bb_vars["FIT_ADDRESS_CELLS"],
-            bb_vars['HOST_PREFIX'], bb_vars['UBOOT_ARCH'],  bb_vars["FIT_CONF_PREFIX"],
+            bb_vars['HOST_PREFIX'], bb_vars['UBOOT_ARCH'], bb_vars['FIT_OS'],
+            bb_vars["FIT_CONF_PREFIX"],
             oe.types.boolean(bb_vars['UBOOT_SIGN_ENABLE']), bb_vars["UBOOT_SIGN_KEYDIR"],
             bb_vars["UBOOT_MKIMAGE"], bb_vars["UBOOT_MKIMAGE_DTCOPTS"],
             bb_vars["UBOOT_MKIMAGE_SIGN"], bb_vars["UBOOT_MKIMAGE_SIGN_ARGS"],
@@ -1656,6 +1659,12 @@ class FitImagePyTests(KernelFitImageBase):
         }
         self._test_fitimage_py(bb_vars_overrides)
 
+    def test_fitimage_py_conf_os(self):
+        """Test FIT_OS functionality"""
+        bb_vars_overrides = {
+            'FIT_OS': "efi",
+        }
+        self._test_fitimage_py(bb_vars_overrides)
 
 class UBootFitImageTests(FitImageTestCase):
     """Test cases for the uboot-sign bbclass"""
