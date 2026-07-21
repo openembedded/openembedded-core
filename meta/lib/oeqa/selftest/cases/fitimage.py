@@ -1525,7 +1525,6 @@ class FitImagePyTests(KernelFitImageBase):
             'INITRAMFS_IMAGE_BUNDLE': "",
             # kernel-uboot.bbclass
             'FIT_KERNEL_COMP_ALG': "gzip",
-            'FIT_KERNEL_COMP_ALG_EXTENSION': ".gz",
             'UBOOT_MKIMAGE_KERNEL_TYPE': "kernel",
             # uboot-config.bbclass
             'UBOOT_MKIMAGE_DTCOPTS': "",
