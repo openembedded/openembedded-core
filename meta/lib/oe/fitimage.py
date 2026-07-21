@@ -401,12 +401,12 @@ class ItsNodeRootKernel(ItsNode):
         )
         self._ramdisk = ramdisk_node
 
-    def fitimage_emit_section_loadable(self, name, filepath, type=None, description=None, compression=None, arch=None, os=None, load=None, entry=None):
+    def fitimage_emit_section_loadable(self, name, filepath, type=None, description=None, compression=None, arch=None, fit_os=None, load=None, entry=None):
         """Emit one fitImage ITS loadable section"""
         opt_props = {
             "data": '/incbin/("' + filepath + '")',
             "arch": arch if arch is not None else self._arch,
-            "os": os if os is not None else "linux",
+            "os": fit_os if fit_os is not None else "linux",
         }
 
         if load:
