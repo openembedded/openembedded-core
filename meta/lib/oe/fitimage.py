@@ -276,18 +276,22 @@ class ItsNodeRootKernel(ItsNode):
                 if len(parts) == 3 and parts[2] == entrysymbol:
                     entrypoint = "<0x%s>" % parts[0]
                     break
+        opt_props = {
+            "data": '/incbin/("' + kernel_path + '")',
+            "arch": self._arch,
+            "os": "linux",
+        }
+        if load:
+            opt_props["load"] = f"<{load}>"
+        if entrypoint:
+            opt_props["entry"] = f"<{entrypoint}>"
+
         kernel_node = self.its_add_node_image(
             kernel_id,
             "Linux kernel",
             mkimage_kernel_type,
             compression,
-            {
-                "data": '/incbin/("' + kernel_path + '")',
-                "arch": self._arch,
-                "os": "linux",
-                "load": f"<{load}>",
-                "entry": f"<{entrypoint}>"
-            }
+            opt_props,
         )
         self._kernel = kernel_node
 
