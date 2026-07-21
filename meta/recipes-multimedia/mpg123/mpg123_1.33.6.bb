@@ -42,6 +42,7 @@ EXTRA_OECONF = " \
     --enable-largefile \
     --with-audio='${AUDIOMODS}' \
     ${@bb.utils.contains('TUNE_FEATURES', 'neon', '--with-cpu=neon', '', d)} \
+    ${@bb.utils.contains('TUNE_FEATURES', 'aarch64', '--with-cpu=neon64', '', d)} \
     ${@bb.utils.contains('TUNE_FEATURES', 'altivec', '--with-cpu=altivec', '', d)} \
     ${@bb.utils.contains('TARGET_FPU', 'soft', '--with-cpu=generic_nofpu', '', d)} \
 "
