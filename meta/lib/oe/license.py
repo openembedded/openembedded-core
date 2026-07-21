@@ -235,7 +235,9 @@ def list_licenses(licensestr, d):
         for child in node.children:
             walk_license(child)
 
-    walk_license(parse_legacy_license(d, licensestr))
+    node = parse_legacy_license(d, licensestr)
+    if node:
+        walk_license(node)
     return set(licenses)
 
 def return_spdx(d, license):
