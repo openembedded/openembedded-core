@@ -4,7 +4,7 @@ HOMEPAGE = "https://gitlab.gnome.org/GNOME/glib-networking/"
 BUGTRACKER = "http://bugzilla.gnome.org"
 
 LICENSE = "LGPL-2.1-or-later"
-LICENSE:append = "${@bb.utils.contains('PACKAGECONFIG', 'openssl', ' & Glib-Networking-OpenSSL-Exception', '', d)}"
+LICENSE:append = "${@bb.utils.contains('PACKAGECONFIG', 'openssl', ' AND LicenseRef-Glib-Networking-OpenSSL-Exception', '', d)}"
 NO_GENERIC_LICENSE[Glib-Networking-OpenSSL-Exception] = "LICENSE_EXCEPTION"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
