@@ -4,6 +4,8 @@ require systemd.inc
 
 SUMMARY = "native tools from systemd"
 
+SRC_URI += "file://0001-hwdb-strip-the-root-from-filenames-when-generating-h.patch"
+
 # We don't actually need jinja to generate code, but it's checked for at configure time
 DEPENDS = "gperf-native python3-jinja2-native"
 
@@ -12,16 +14,26 @@ inherit pkgconfig meson native
 # Disable everything that is auto-detected by default
 EXTRA_OEMESON += "--auto-features disabled"
 
-# Link systemctl statically
-EXTRA_OEMESON += "-Dlink-systemctl-shared=false"
+# Link the binaries statically as we don't install libsystemd-shared.so
+EXTRA_OEMESON += "-Dlink-systemctl-shared=false -Dlink-udev-shared=false"
 
 # Ensure unused build paths are not in the binary
 EXTRA_OEMESON += "-Dsysvinit-path= -Dsysvrcnd-path="
 
-# Systemctl is supposed to operate on target, but the target sysroot is not
-# determined at run-time, but rather set during configure
-# More details are here https://github.com/systemd/systemd/issues/35897#issuecomment-2665405887
-EXTRA_OEMESON += "--sysconfdir ${sysconfdir_native}"
+# Target-absolute paths that satisfy both tools from one meson configure:
+#  - systemd-hwdb needs prefix=/usr so the compiled-in UDEVLIBEXECDIR
+#    (/usr/lib/udev) matches the target rootfs layout, letting
+#    "update --root $D --usr" find hwdb.d sources and write hwdb.bin there.
+#  - systemctl needs sysconfdir=/etc; it operates on the target rootfs but the
+#    sysroot is fixed at configure time rather than run time.
+#    See https://github.com/systemd/systemd/issues/35897#issuecomment-2665405887
+EXTRA_OEMESON += "--prefix /usr --sysconfdir /etc"
 
-MESON_TARGET = "systemctl"
+MESON_TARGET = "systemctl systemd-hwdb"
 MESON_INSTALL_TAGS = "systemctl"
+
+do_install:append() {
+    # Can't install this with a tag "hwdb" also tries to install the hwdb
+    # itself, and there's no separate tag for systemd-hwdb.
+    install ${B}/systemd-hwdb ${D}${bindir}/systemd-hwdb
+}

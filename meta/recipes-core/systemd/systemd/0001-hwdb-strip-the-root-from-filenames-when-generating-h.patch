@@ -1,0 +1,40 @@
+From 0031715c560e8138cc320f017a0a2c7160b1f7fe Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@arm.com>
+Date: Fri, 17 Jul 2026 17:25:31 +0100
+Subject: [PATCH] hwdb: strip the root from filenames when generating hwdb.bin
+
+The modern hwdb.bin format contains the filenames of the input data that
+makes up the database.  This is useful but in offline builds where
+--root is used, the filenames are the full build paths including the
+specified root.  This introduces build paths and thus information
+leakage and non-reproducible data.
+
+Solve this by stripping the root prefix off the original path when
+passing to import_file.
+
+Upstream-Status: Backport [https://github.com/systemd/systemd/pull/43062]
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ src/shared/hwdb-util.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/shared/hwdb-util.c b/src/shared/hwdb-util.c
+index b42681a289..5386b4e9f4 100644
+--- a/src/shared/hwdb-util.c
++++ b/src/shared/hwdb-util.c
+@@ -632,9 +632,11 @@ int hwdb_update(const char *root, const char *hwdb_bin_dir, bool strict, bool co
+ 
+         FOREACH_ARRAY(i, files, n_files) {
+                 ConfFile *c = *i;
++                char *path_in_root;
+ 
+                 log_debug("Reading file \"%s\" -> \"%s\"", c->original_path, c->resolved_path);
+-                RET_GATHER(ret, import_file(trie, c->fd, c->original_path, file_priority++, compat));
++                path_in_root = path_startswith_full(c->original_path, empty_to_root(root), PATH_STARTSWITH_RETURN_LEADING_SLASH);
++                RET_GATHER(ret, import_file(trie, c->fd, path_in_root, file_priority++, compat));
+         }
+ 
+         strbuf_complete(trie->strings);
+-- 
+2.43.0
+
