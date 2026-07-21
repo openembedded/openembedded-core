@@ -16,4 +16,6 @@ RDEPENDS:${PN}:class-target += "\
 
 CVE_PRODUCT = "dabeaz:ply"
 
+CVE_STATUS[CVE-2025-56005] = "disputed: This CVE was disputed"
+
 BBCLASSEXTEND = "native nativesdk"
