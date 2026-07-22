@@ -40,13 +40,14 @@ def go_src_uri(repo, version, path=None, subdir=None, \
 
     return src_uri
 
-python do_vendor_unlink() {
+fakeroot python do_vendor_unlink() {
     go_import = d.getVar('GO_IMPORT')
     linkname = os.path.join(d.getVar('D') + d.getVar('libdir'), 'go', 'src', go_import, 'vendor')
     if os.path.islink(linkname):
         os.unlink(linkname)
 }
 
+do_vendor_unlink[depends] += "virtual/fakeroot-native:do_populate_sysroot"
 addtask vendor_unlink before do_package after do_install
 
 python do_go_vendor() {
