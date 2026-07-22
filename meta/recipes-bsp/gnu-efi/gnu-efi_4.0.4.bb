@@ -15,7 +15,7 @@ LIC_FILES_CHKSUM = "file://gnuefi/crt0-efi-arm.S;beginline=4;endline=16;md5=8b0a
 COMPATIBLE_HOST = "(x86_64.*|i.86.*|aarch64.*|arm.*|riscv64.*)-linux"
 COMPATIBLE_HOST:armv4 = 'null'
 
-SRC_URI = "git://github.com/ncroxon/gnu-efi;protocol=https;branch=master \
+SRC_URI = "git://github.com/ncroxon/gnu-efi;protocol=https;branch=master;tag=${PV} \
            file://0001-Do-not-treat-warnings-as-errors.patch \
            "
 SRCREV = "37cd8f069bde6715eebdc5e38a8f15ee6de5edcf"

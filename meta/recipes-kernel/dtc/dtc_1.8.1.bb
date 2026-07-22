@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://GPL;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     "
 
 SRC_URI = " \
-    git://git.kernel.org/pub/scm/utils/dtc/dtc.git;branch=main;protocol=https \
+    git://git.kernel.org/pub/scm/utils/dtc/dtc.git;branch=main;protocol=https;tag=v${PV} \
 "
 SRCREV = "8f48565e5cfedc74d3f7512f1e0188e9d85dc1de"
 

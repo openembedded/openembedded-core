@@ -26,7 +26,7 @@ CFLAGS:append:powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS:append:mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
 SRCREV = "3a64d78f58bdceba93ed321e91215fb969a047ed"
 
-SRC_URI = "git://github.com/linux-test-project/ltp.git;branch=master;protocol=https \
+SRC_URI = "git://github.com/linux-test-project/ltp.git;branch=master;protocol=https;tag=${PV} \
            file://0001-Remove-OOM-tests-from-runtest-mm.patch \
            file://0001-Add-__clear_cache-declaration-for-clang.patch \
            file://0001-syscalls-semctl08-Skip-semctl08-when-__USE_TIME64_RE.patch \

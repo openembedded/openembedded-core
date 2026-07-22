@@ -6,7 +6,7 @@ DEPENDS = "ncurses libnl pciutils autoconf-archive-native"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e"
 
-SRC_URI = "git://github.com/fenrus75/powertop;protocol=https;branch=master \
+SRC_URI = "git://github.com/fenrus75/powertop;protocol=https;branch=master;tag=v${PV} \
            file://0001-wakeup_xxx.h-include-limits.h.patch \
            "
 SRCREV = "d51ad395436d4d1dcc3ca46e1519ffeb475bf651"

@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=13be6b481ff5616f77dda971191bb29b \
                     file://cli/COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     "
 
-SRC_URI = "git://github.com/Cyan4973/xxHash.git;branch=release;protocol=https"
+SRC_URI = "git://github.com/Cyan4973/xxHash.git;branch=release;protocol=https;tag=v${PV}"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
 SRCREV = "e626a72bc2321cd320e953a0ccf1584cad60f363"

@@ -4,7 +4,7 @@ HOMEPAGE = "https://github.com/NixOS/patchelf"
 
 LICENSE = "GPL-3.0-only"
 
-SRC_URI = "git://github.com/NixOS/patchelf;protocol=https;branch=master"
+SRC_URI = "git://github.com/NixOS/patchelf;protocol=https;branch=master;tag=${PV}"
 SRCREV = "7688b17c18d16f67fa8d5a82a2404c2e3a18648d"
 
 PV = "0.19.1"

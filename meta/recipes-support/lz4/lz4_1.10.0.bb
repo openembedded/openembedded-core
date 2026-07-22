@@ -12,7 +12,7 @@ PE = "1"
 
 SRCREV = "ebb370ca83af193212df4dcbadcc5d87bc0de2f0"
 
-SRC_URI = "git://github.com/lz4/lz4.git;branch=release;protocol=https \
+SRC_URI = "git://github.com/lz4/lz4.git;branch=release;protocol=https;tag=v${PV} \
            file://reproducibility.patch \
            file://run-ptest \
            file://fix-null-error-handling.patch \
