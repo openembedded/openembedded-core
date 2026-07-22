@@ -43,6 +43,7 @@ logger = logging.getLogger('devtool')
 # history.rst - python3-idna, python3-docutils
 # releases.md - rust, cargo (includes CVEs)
 # whatsnew.txt - libsdl2
+# perldelta.pod - perl
 _CHANGELOG_BASENAMES = {
     'changelog', 'changelog.md', 'changelog.rst', 'changelog.txt',
     'changes', 'changes.md', 'changes.rst', 'changes.txt',
@@ -51,6 +52,7 @@ _CHANGELOG_BASENAMES = {
     'releasenotes.md', 'releasenotes.rst',
     'releases.md',
     'whatsnew.txt',
+    'perldelta.pod',
 }
 
 def _run(cmd, cwd=''):
