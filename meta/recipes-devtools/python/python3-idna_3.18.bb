@@ -10,4 +10,6 @@ inherit pypi python_flit_core ptest-python-pytest
 RDEPENDS:${PN} += "python3-codecs"
 RDEPENDS:${PN}-ptest += "python3-unittest-automake-output"
 
+CVE_PRODUCT = "kjd:idna kjd:internationalized_domain_names_in_applications"
+
 BBCLASSEXTEND = "native nativesdk"
