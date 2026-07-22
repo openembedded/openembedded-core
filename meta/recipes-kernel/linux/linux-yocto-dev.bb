@@ -16,6 +16,7 @@ include recipes-kernel/linux/linux-yocto-dev-revisions.inc
 
 KBRANCH = "v7.2/standard/base"
 KMETA = "kernel-meta"
+KCONF_BSP_AUDIT_LEVEL = "1"
 
 SRC_URI = "git://git.yoctoproject.org/linux-yocto-dev.git;branch=${KBRANCH};name=machine;protocol=https \
            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=master;destsuffix=${KMETA};protocol=https"
