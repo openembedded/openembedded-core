@@ -22,6 +22,7 @@ PACKAGES =+ "sxpm cxpm"
 FILES:cxpm = "${bindir}/cxpm"
 FILES:sxpm = "${bindir}/sxpm"
 
+SRC_URI += " file://0001-Fix-CVE-2026-4367-Out-of-bounds-read-in-xpmNextWord.patch"
 SRC_URI[sha256sum] = "64b31f81019e7d388c822b0b28af8d51c4622b83f1f0cb6fa3fc95e271226e43"
 
 BBCLASSEXTEND = "native"
