@@ -36,9 +36,6 @@ SRC_URI += " \
            file://systemd-pager.sh \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0003-Do-not-create-var-log-README.patch \
-           file://0001-meson-use-libfido2_cflags-dependency.patch \
-           file://0018-shared-fdset-add-detailed-debug-logging-to-fdset_new.patch \
-           file://0004-tpm2-util-fix-PCR-bank-guessing-without-EFI.patch \
            file://0005-boot-downgrade-EFI_MEMORY_ATTRIBUTE_PROTOCOL-warning.patch \
            "
 
@@ -231,9 +228,6 @@ EXTRA_OEMESON += "-Dnobody-user=nobody \
                   -Ddbus=disabled \
                   -Dtests=false \
                   -Dlibc=${TCLIBC} \
-                  -Drc-local='' \
-                  -Dsysvinit-path='' \
-                  -Dsysvrcnd-path='' \
                   "
 
 # Hardcode target binary paths to avoid using paths from sysroot or worse
@@ -587,6 +581,8 @@ FILES:${PN}-extra-utils = "\
                         ${bindir}/systemd-cgtop \
                         ${bindir}/systemd-stdio-bridge \
                         ${base_sbindir}/mount.ddi \
+                        ${base_sbindir}/mount.mstack \
+                        ${base_sbindir}/mount.storage \
                         ${systemd_system_unitdir}/initrd.target.wants/systemd-pcrphase-initrd.path \
                         ${systemd_system_unitdir}/sysinit.target.wants/systemd-pcrphase.path \
                         ${systemd_system_unitdir}/sysinit.target.wants/systemd-pcrphase-sysinit.path \
@@ -683,6 +679,7 @@ FILES:${PN} = " ${base_bindir}/* \
                 ${datadir}/polkit-1 \
                 ${datadir}/${BPN} \
                 ${datadir}/factory \
+                ${datadir}/user-tmpfiles.d \
                 ${sysconfdir}/credstore/ \
                 ${sysconfdir}/credstore.encrypted/ \
                 ${sysconfdir}/dbus-1/ \
@@ -692,6 +689,7 @@ FILES:${PN} = " ${base_bindir}/* \
                 ${sysconfdir}/sysctl.d/ \
                 ${sysconfdir}/systemd/ \
                 ${sysconfdir}/tmpfiles.d/ \
+                ${sysconfdir}/user-tmpfiles.d/ \
                 ${sysconfdir}/xdg/ \
                 ${sysconfdir}/init.d/README \
                 ${sysconfdir}/resolv-conf.systemd \
@@ -803,11 +801,13 @@ FILES:udev += "${base_sbindir}/udevd \
                ${nonarch_libdir}/udev/rules.d/60-persistent-storage.rules \
                ${nonarch_libdir}/udev/rules.d/60-persistent-storage-mtd.rules \
                ${nonarch_libdir}/udev/rules.d/60-persistent-storage-tape.rules \
+               ${nonarch_libdir}/udev/rules.d/60-tpm2-id.rules \
                ${nonarch_libdir}/udev/rules.d/60-persistent-v4l.rules \
                ${nonarch_libdir}/udev/rules.d/60-sensor.rules \
                ${nonarch_libdir}/udev/rules.d/60-serial.rules \
                ${nonarch_libdir}/udev/rules.d/61-autosuspend-manual.rules \
                ${nonarch_libdir}/udev/rules.d/64-btrfs.rules \
+               ${nonarch_libdir}/udev/rules.d/65-integration.rules \
                ${nonarch_libdir}/udev/rules.d/70-camera.rules \
                ${nonarch_libdir}/udev/rules.d/70-joystick.rules \
                ${nonarch_libdir}/udev/rules.d/70-memory.rules \
