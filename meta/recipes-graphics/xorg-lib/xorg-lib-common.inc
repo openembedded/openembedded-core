@@ -12,10 +12,12 @@ SRC_URI = "${XORG_MIRROR}/individual/lib/${XORG_PN}-${PV}.${XORG_EXT}"
 
 S = "${UNPACKDIR}/${XORG_PN}-${PV}"
 
-inherit autotools features_check pkgconfig
+XORGBUILDCLASS ??= "autotools"
+inherit_defer ${XORGBUILDCLASS}
+
+inherit features_check pkgconfig
 
 EXTRA_OECONF = "--disable-docs --disable-specs"
-
 UNKNOWN_CONFIGURE_OPT_IGNORE += "--disable-docs --disable-specs"
 
 REQUIRED_DISTRO_FEATURES ?= "x11"
