@@ -14,13 +14,8 @@ S = "${UNPACKDIR}/${XORG_PN}-${PV}"
 
 inherit autotools features_check pkgconfig
 
-EXTRA_OECONF = "--disable-specs --without-groff --without-ps2pdf --without-fop"
+EXTRA_OECONF = "--disable-docs --disable-specs"
 
-PACKAGECONFIG ??= ""
-PACKAGECONFIG[xmlto] = "--with-xmlto, --without-xmlto, xmlto-native docbook-xml-dtd4-native docbook-xsl-stylesheets-native"
-
-UNKNOWN_CONFIGURE_OPT_IGNORE += "--disable-specs --without-groff --without-ps2pdf --without-fop \
-                                --without-xmlto --with-xmlto \
-"
+UNKNOWN_CONFIGURE_OPT_IGNORE += "--disable-docs --disable-specs"
 
 REQUIRED_DISTRO_FEATURES ?= "x11"
