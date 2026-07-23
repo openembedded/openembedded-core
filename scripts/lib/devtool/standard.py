@@ -1816,7 +1816,7 @@ def _guess_recipe_update_mode(srctree, rdata):
     """Guess the recipe update mode to use"""
     import bb.process
     src_uri = (rdata.getVar('SRC_URI') or '').split()
-    git_uris = [uri for uri in src_uri if uri.startswith('git://')]
+    git_uris = [uri for uri in src_uri if uri.startswith(('git://', 'gitsm://'))]
     if not git_uris:
         return 'patch'
     # Just use the first URI for now
@@ -1831,7 +1831,14 @@ def _guess_recipe_update_mode(srctree, rdata):
                                cwd=srctree)
     remote_brs = [branch.strip() for branch in stdout.splitlines()]
     if 'origin/' + upstr_branch in remote_brs:
-        return 'srcrev'
+        # Local commits in a submodule need exporting as patches, but do not
+        # move the parent HEAD off the upstream branch, so only guess srcrev
+        # if every submodule checkout matches the revision its parent records
+        # ('+') and none has merge conflicts ('U')
+        stdout, _ = bb.process.run('git submodule status --recursive',
+                                   cwd=srctree)
+        if not any(line.startswith(('+', 'U')) for line in stdout.splitlines()):
+            return 'srcrev'
 
     return 'patch'
 
