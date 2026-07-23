@@ -7,10 +7,9 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=7c13b3376cea0ce68d2d2da0a1b3a72c"
 
 DEPENDS += "gperf-native"
 
-SRCREV = "c7c0caed1d04292500ed4b9bb386566053eb9775"
+SRCREV = "a81cc2de8ee7a33633defc88bb8a2d986b421613"
 
 SRC_URI = "git://github.com/seccomp/libseccomp.git;branch=release-2.6;protocol=https;tag=v${PV} \
-           file://0001-api-fix-seccomp_export_bpf_mem-out-of-bounds-read.patch \
            file://run-ptest \
            "
 
