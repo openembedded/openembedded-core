@@ -159,6 +159,7 @@ def get_testimage_configuration(d, test_type, machine):
                     'IMAGE_BASENAME': d.getVar("IMAGE_BASENAME"),
                     'IMAGE_PKGTYPE': d.getVar("IMAGE_PKGTYPE"),
                     'STARTTIME': d.getVar("DATETIME"),
+                    'TCLIBC': d.getVar("TCLIBC"),
                     'HOST_DISTRO': oe.lsb.distro_identifier().replace(' ', '-'),
                     'LAYERS': get_layers(d.getVar("BBLAYERS"))}
     return configuration
