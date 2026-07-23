@@ -5,7 +5,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=8eacfdc17c8f4d219e131a073973b97d"
 
 DEPENDS = "curl openssl zlib libssh2 libgcrypt libpcre2"
 
-SRC_URI = "git://github.com/libgit2/libgit2.git;branch=maint/v1.9;protocol=https;tag=v${PV}"
+SRC_URI = "git://github.com/libgit2/libgit2.git;branch=maint/v1.9;protocol=https;tag=v${PV} \
+           file://0001-cmake-mark-system-libraries-are-private-link-librari.patch"
+
 SRCREV = "f7164261c9bc0a7e0ebf767c584e5192810a8b24"
 
 inherit cmake
@@ -17,7 +19,3 @@ EXTRA_OECMAKE = "\
 "
 
 BBCLASSEXTEND = "native"
-
-do_install:append() {
-    sed -i -e 's,${RECIPE_SYSROOT},,g' ${D}${libdir}/cmake/libgit2/libgit2Targets.cmake
-}
