@@ -258,6 +258,7 @@ RECIPE_MAINTAINER:pn-gstreamer1.0-meta-base = "Unassigned <unassigned@yoctoproje
 RECIPE_MAINTAINER:pn-gstreamer1.0-plugins-bad = "Unassigned <unassigned@yoctoproject.org>"
 RECIPE_MAINTAINER:pn-gstreamer1.0-plugins-base = "Unassigned <unassigned@yoctoproject.org>"
 RECIPE_MAINTAINER:pn-gstreamer1.0-plugins-good = "Unassigned <unassigned@yoctoproject.org>"
+RECIPE_MAINTAINER:pn-gstreamer1.0-plugins-rs = "Jan Schmidt <jan@centricular.com>"
 RECIPE_MAINTAINER:pn-gstreamer1.0-plugins-ugly = "Unassigned <unassigned@yoctoproject.org>"
 RECIPE_MAINTAINER:pn-gstreamer1.0-python = "Unassigned <unassigned@yoctoproject.org>"
 RECIPE_MAINTAINER:pn-gstreamer1.0-rtsp-server = "Unassigned <unassigned@yoctoproject.org>"
