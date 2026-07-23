@@ -76,6 +76,7 @@ toolchain_create_sdk_env_script () {
 	echo 'export OECORE_MESON_HOST_CPU_FAMILY="${@meson_cpu_family('TARGET_ARCH', d)}"' >>$script
 	echo 'export OECORE_MESON_HOST_CPU="${TARGET_ARCH}"' >>$script
 	echo 'export OECORE_MESON_HOST_ENDIAN="${@meson_endian('TARGET', d)}"' >>$script
+	echo 'export OECORE_TARGET_SYS="${TARGET_SYS}"' >> $script
 
 	echo 'unset command_not_found_handle' >> $script
 
@@ -110,6 +111,7 @@ toolchain_create_tree_env_script () {
 	echo 'export OECORE_MESON_HOST_CPU_FAMILY="${@meson_cpu_family('TARGET_ARCH', d)}"' >>$script
 	echo 'export OECORE_MESON_HOST_CPU="${TARGET_ARCH}"' >>$script
 	echo 'export OECORE_MESON_HOST_ENDIAN="${@meson_endian('TARGET', d)}"' >>$script
+        echo 'export OECORE_TARGET_SYS="${TARGET_SYS}"' >> $script
 
 	toolchain_shared_env_script
 
@@ -172,6 +174,12 @@ if [ -d "\$OECORE_NATIVE_SYSROOT/environment-setup.d" ]; then
 	    . \$envfile
     done
 fi
+if [ -d "\$OECORE_NATIVE_SYSROOT/environment-setup.d/\$OECORE_TARGET_SYS" ]; then
+    for envfile in \$OECORE_NATIVE_SYSROOT/environment-setup.d/\$OECORE_TARGET_SYS/*.sh; do
+            . \$envfile
+    done
+fi
+
 EOF
 }
 
