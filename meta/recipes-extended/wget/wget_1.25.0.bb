@@ -25,7 +25,7 @@ EXTRA_OECONF = "--without-libgnutls-prefix --without-libssl-prefix \
 EXTRA_OEMAKE += 'TOOLCHAIN_OPTIONS="${TOOLCHAIN_OPTIONS}" \
                  DEBUG_PREFIX_MAP="${DEBUG_PREFIX_MAP}"'
 
-PACKAGECONFIG ??= "gnutls pcre2 zlib \
+PACKAGECONFIG ??= "gnutls pcre2 zlib libpsl \
                    ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)}"
 PACKAGECONFIG[ares] = "--with-cares,--without-cares,c-ares"
 PACKAGECONFIG[gnutls] = "--with-ssl=gnutls,,gnutls"
