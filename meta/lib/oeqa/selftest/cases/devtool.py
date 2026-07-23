@@ -1378,6 +1378,44 @@ class DevtoolUpdateTests(DevtoolBase):
                            ('??', '%s/0002-Add-a-new-file.patch' % relpatchpath)]
         self._check_repo_status(os.path.dirname(recipefile), expected_status)
 
+    def test_devtool_update_recipe_gitsm(self):
+        # Check that auto mode guesses srcrev update mode for a gitsm:// recipe
+        # when HEAD is on the upstream branch, same as it does for git://
+        testrecipe = 'git-submodule-test'
+        bb_vars = get_bb_vars(['FILE', 'SRC_URI', 'SRCREV'], testrecipe)
+        recipefile = bb_vars['FILE']
+        src_uri = bb_vars['SRC_URI']
+        self.assertIn('gitsm://', src_uri, 'This test expects the %s recipe to be a gitsm recipe' % testrecipe)
+        self._check_repo_status(os.path.dirname(recipefile), [])
+        # First, modify a recipe
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
+        # Check git repo
+        self._check_src_repo(tempdir)
+        # Move the source tree to the parent of the pinned revision, staying
+        # on the devtool branch: a revision reachable from the upstream branch
+        # with no local commits, i.e. the "check out another upstream revision
+        # to move the recipe" workflow the srcrev guess exists to detect
+        result = runCmd('git rev-parse HEAD~1', cwd=tempdir)
+        prevrev = result.output.strip()
+        runCmd('git reset --hard %s' % prevrev, cwd=tempdir)
+        # Sync the submodules to the newly checked out revision: with any
+        # submodule checkout not matching the revision the parent records,
+        # there is potential submodule content to export and the guesser
+        # legitimately stays in patch mode
+        runCmd('git submodule update --recursive', cwd=tempdir)
+        self.add_command_to_tearDown('cd %s; git checkout %s' % (os.path.dirname(recipefile), os.path.basename(recipefile)))
+        result = runCmd('devtool update-recipe %s' % testrecipe)
+        expected_status = [(' M', '.*/%s$' % os.path.basename(recipefile))]
+        self._check_repo_status(os.path.dirname(recipefile), expected_status)
+        result = runCmd('git diff %s' % os.path.basename(recipefile), cwd=os.path.dirname(recipefile))
+        addlines = ['SRCREV = "%s"' % prevrev]
+        removelines = ['SRCREV = "%s"' % bb_vars['SRCREV']]
+        self._check_diff(result.output, addlines, removelines)
+
     def test_devtool_update_recipe_append(self):
         # Check preconditions
         testrecipe = 'minicom'
