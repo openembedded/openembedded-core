@@ -55,6 +55,7 @@ PACKAGECONFIG[ldap] = "--enable-ldap,--disable-ldap,openldap"
 PACKAGECONFIG[ldaps] = "--enable-ldaps,--disable-ldaps,openldap"
 PACKAGECONFIG[libgsasl] = "--with-libgsasl,--without-libgsasl,libgsasl"
 PACKAGECONFIG[libidn] = "--with-libidn2,--without-libidn2,libidn2"
+PACKAGECONFIG[libpsl] = "--with-libpsl,--without-libpsl,libpsl"
 PACKAGECONFIG[libssh] = "--with-libssh,--without-libssh,libssh"
 PACKAGECONFIG[libssh2] = "--with-libssh2,--without-libssh2,libssh2"
 PACKAGECONFIG[mbedtls] = "--with-mbedtls,--without-mbedtls,mbedtls"
@@ -85,7 +86,6 @@ CURL_CA_BUNDLE_BASE_DIR:class-target = "${sysconfdir}"
 
 EXTRA_OECONF = " \
     --disable-libcurl-option \
-    --without-libpsl \
     --enable-optimize \
     --with-ca-bundle=${CURL_CA_BUNDLE_BASE_DIR}/ssl/certs/ca-certificates.crt \
     ${@'--without-ssl' if (bb.utils.filter('PACKAGECONFIG', 'gnutls mbedtls openssl schannel', d) == '') else ''} \
