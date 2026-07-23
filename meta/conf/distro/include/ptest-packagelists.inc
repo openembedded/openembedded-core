@@ -72,6 +72,7 @@ PTESTS_FAST = "\
     python3-attrs \
     python3-bcrypt \
     python3-calver \
+    python3-certifi \
     python3-hypothesis \
     python3-idna \
     python3-jinja2 \
