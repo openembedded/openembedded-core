@@ -1,0 +1,38 @@
+From 3e02f2cd038209e873c970709a9eeeead4d70afa Mon Sep 17 00:00:00 2001
+From: Tim Rühsen <tim.ruehsen@gmx.de>
+Date: Mon, 22 Jul 2026 09:00:00 +0200
+Subject: [PATCH] meson: also rename cdata to _cdata in docs/libpsl/meson.build
+
+The 0.23.0 release ships docs/libpsl/meson.build referencing a
+configuration data object named "cdata", but the top-level meson.build
+(and include/meson.build, which sets LIBPSL_VERSION on it) only defines
+"_cdata". Meson shares the interpreter scope across subdir(), so once the
+docs are enabled (get_option('docs'), which OE turns on via gtk-doc) the
+configure step fails with:
+
+  docs/libpsl/meson.build:7:20: ERROR: Unknown variable "cdata".
+
+Reference the existing "_cdata", which already carries LIBPSL_VERSION as
+needed by version.xml.in.
+
+Upstream-Status: Backport [https://github.com/rockdaboot/libpsl/commit/3e02f2cd038209e873c970709a9eeeead4d70afa]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ docs/libpsl/meson.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/docs/libpsl/meson.build b/docs/libpsl/meson.build
+index 1111111..2222222 100644
+--- a/docs/libpsl/meson.build
++++ b/docs/libpsl/meson.build
+@@ -4,7 +4,7 @@ if get_option('docs')
+   configure_file(
+     input : 'version.xml.in',
+     output : 'version.xml',
+-    configuration : cdata)
++    configuration : _cdata)
+
+   docs = gnome.gtkdoc('libpsl',
+     main_sgml: 'libpsl-docs.sgml',
+--
+2.51.0
