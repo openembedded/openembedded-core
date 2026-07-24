@@ -1,0 +1,50 @@
+From deaa74f9dea55d4dbf1ef98879049c02d23749e8 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Tim=20R=C3=BChsen?= <tim.ruehsen@gmx.de>
+Date: Thu, 16 Jul 2026 13:20:21 +0200
+Subject: [PATCH] Support reproducible builds
+
+Co-authored-by: Chris Lamb <lamby@debian.org>
+Upstream-Status: Backport [https://github.com/rockdaboot/libpsl/commit/1d28619bde704d5b5037e0680e72c1c326663234]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ configure.ac |  4 ++--
+ meson.build  | 11 ++++++++++-
+ 2 files changed, 12 insertions(+), 3 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 8b7ccc8..3f8158d 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -42,8 +42,8 @@ AC_SUBST([LIBPSL_VERSION_MAJOR], [$(echo $VERSION | cut -d'.' -f1)])
+ AC_SUBST([LIBPSL_VERSION_MINOR], [$(echo $VERSION | cut -d'.' -f2)])
+ AC_SUBST([LIBPSL_VERSION_PATCH], [$(echo $VERSION | cut -d'.' -f3)])
+ AC_SUBST([LIBPSL_VERSION_NUMBER], [$(printf '0x%02x%02x%02x' $LIBPSL_VERSION_MAJOR $LIBPSL_VERSION_MINOR $LIBPSL_VERSION_PATCH)])
+-AC_SUBST([COPYRIGHT_MONTH], [$(date +%B)])
+-AC_SUBST([COPYRIGHT_YEAR], [$(date +%Y)])
++AC_SUBST([COPYRIGHT_MONTH], [m4_esyscmd([LC_ALL=C date -u -d "@$SOURCE_DATE_EPOCH" +%B 2>/dev/null || LC_ALL=C date -u -r "$SOURCE_DATE_EPOCH" +%B 2>/dev/null || LC_ALL=C date -u +%B])])
++AC_SUBST([COPYRIGHT_YEAR], [m4_esyscmd([LC_ALL=Cdate -u -d "@$SOURCE_DATE_EPOCH" +%Y 2>/dev/null || LC_ALL=C date -u -r "$SOURCE_DATE_EPOCH" +%Y 2>/dev/null || LC_ALL=C date -u +%Y])])
+ AC_CONFIG_FILES([include/libpsl.h tools/psl.1])
+
+ dnl
+diff --git a/meson.build b/meson.build
+index 1e46d06..06c36c6 100644
+--- a/meson.build
++++ b/meson.build
+@@ -157,7 +157,16 @@ endif
+ # Shared configuration data for copyright date and version
+ _cdata = configuration_data()
+ _cdata.set('PACKAGE_VERSION', meson.project_version())
+-copyright_date = run_command(['date', '+%B %Y'], check: true).stdout().strip()
++date_exe = find_program('date')
++epoch_cmd = run_command('sh', '-c', 'LC_ALL=C echo "${SOURCE_DATE_EPOCH:-$(date +%s)}"', check: true)
++source_date_epoch = epoch_cmd.stdout().strip()
++copyright_cmd = run_command('sh', '-c',
++  'date -u -d "@' + source_date_epoch + '" "+%B %Y" 2>/dev/null || ' +
++  'date -u -r "' + source_date_epoch + '" "+%B %Y" 2>/dev/null || ' +
++  'date -u "+%B %Y"',
++  check: true
++)
++copyright_date = copyright_cmd.stdout().strip()
+ _cdata.set('COPYRIGHT_MONTH', copyright_date.split()[0])
+ _cdata.set('COPYRIGHT_YEAR', copyright_date.split()[1])
+
