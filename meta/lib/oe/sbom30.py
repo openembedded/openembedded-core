@@ -977,6 +977,9 @@ def load_jsonld(d, path, required=False):
         if required:
             bb.fatal("No SPDX document named %s found" % path)
         return None
+    except Exception as e:
+        bb.error(f"Unable to parse SPDX document {path}: {e}")
+        raise e
 
     if not objset.doc:
         bb.fatal("SPDX Document %s has no SPDXDocument element" % path)
