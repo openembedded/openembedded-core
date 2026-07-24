@@ -1,0 +1,46 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Mon, 20 Jul 2026 09:00:00 -0700
+Subject: [PATCH] psl-make-dafsa: embed only the basename of the input file
+
+The generated suffixes_dafsa.h records the path of the public suffix
+list it was built from in _psl_filename[]. meson passes this input as an
+absolute path (meson.current_source_dir()/list/public_suffix_list.dat),
+so the full build directory ends up baked into the header and, through
+it, into the compiled library and its -src/-dbg packages. This is not
+reproducible and trips the OE buildpaths QA check (references to TMPDIR
+and to the build host HOME directory) when the build tree lives under
+those prefixes on an autobuilder.
+
+The absolute path is useless on the target anyway: it is only consumed
+by psl_builtin_outdated(), which stat()s _psl_filename and compares its
+mtime; the build-host path never exists on the running system so the
+stat always fails. psl_builtin_filename() is documented to return "the
+file name of the Public Suffix List file", so a basename is in fact the
+more faithful value.
+
+Embed only os.path.basename() of the input. The unmodified path is still
+used to open, stat and checksum the file, so only the leaked string
+changes.
+
+Upstream-Status: Backport [https://github.com/rockdaboot/libpsl/commit/b16a2c4d66e94acc3388088c7a13ae62dbacb71d]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ src/psl-make-dafsa | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/psl-make-dafsa b/src/psl-make-dafsa
+index 1111111..2222222 100755
+--- a/src/psl-make-dafsa
++++ b/src/psl-make-dafsa
+@@ -518,7 +518,7 @@ def to_cxx_plus(data, codecs):
+   text += b'static int _psl_nexceptions = %d;\n' % psl_nexceptions
+   text += b'static int _psl_nwildcards = %d;\n' % psl_nwildcards
+   text += b'static const char _psl_sha1_checksum[] = "%s";\n' % bytes(sha1_file(psl_input_file), **codecs)
+-  text += b'static const char _psl_filename[] = "%s";\n' % bytes(psl_input_file, **codecs)
++  text += b'static const char _psl_filename[] = "%s";\n' % bytes(os.path.basename(psl_input_file), **codecs)
+   return text
+
+ def words_to_whatever(words, converter, utf_mode, codecs):
+--
+2.51.0
