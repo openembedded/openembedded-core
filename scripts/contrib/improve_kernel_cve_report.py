@@ -82,7 +82,7 @@ def get_kernel_cves(datadir, compiled_files, version):
                 "description": f"Rejected by CNA"
             }
             continue
-        if any(elem in cve_file for elem in ["review", "reverved", "testing"]):
+        if any(elem in cve_file for elem in ["review", "reserved", "testing"]):
             continue
 
         is_vulnerable, first_affected, last_affected, better_match_first, better_match_last, affected_versions = get_cpe_applicability(cve_info, version)
