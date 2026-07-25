@@ -24,17 +24,18 @@ SRC_URI = " \
 	file://0002-Do-not-build-qt-tests.patch \
 	file://0003-Fix-PACKAGE_PREFIX_DIR-in-qt-cmake-AppStreamQtConfig.patch \
 "
-SRC_URI[sha256sum] = "2624f967068427edc94f3979edae3571bb077063f5bc231f737776da527bf467"
+SRC_URI[sha256sum] = "fc57337e250b0d27e75ac4216cc69a76d03c54011a5da5c7a2c57711a3d0cdf9"
 
 S = "${UNPACKDIR}/AppStream-${PV}"
 
-PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)}"
+PACKAGECONFIG ?= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd wayland', d)}"
 PACKAGECONFIG:append:class-target = " bash-completion"
 
 PACKAGECONFIG[systemd] = "-Dsystemd=true,-Dsystemd=false,systemd"
 PACKAGECONFIG[stemming] = "-Dstemming=true,-Dstemming=false,libstemmer"
 PACKAGECONFIG[qt6] = "-Dqt=true,-Dqt=false,qtbase"
 PACKAGECONFIG[bash-completion] = "-Dbash-completion=true,-Dbash-completion=false"
+PACKAGECONFIG[wayland] = "-Ddisplay-detection=wayland,-Ddisplay-detection=none,wayland"
 
 FILES:${PN} += "${datadir}"
 
