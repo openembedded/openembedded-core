@@ -14,11 +14,10 @@ LIC_FILES_CHKSUM = " \
 "
 SECTION = "base"
 DEPENDS = "util-linux zlib"
-
 SRC_URI = "git://github.com/kdave/btrfs-progs.git;branch=master;protocol=https;tag=v${PV} \
            file://0001-Add-a-possibility-to-specify-where-python-modules-ar.patch \
            "
-SRCREV = "9c5987432906daebde23f9703c0f6f90c35fa9da"
+SRCREV = "4ab0e80be9e3bb1db2e6038e6d4316d35fb7ba8b"
 
 PACKAGECONFIG ??= " \
     programs \
