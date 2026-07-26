@@ -13,7 +13,7 @@ SECTION = "libs"
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz \
            file://flags.patch \
            "
-SRC_URI[sha256sum] = "86f29029d0ec9fa30c9001de16c0859a3816ae154ff5b097392b014e21a3d254"
+SRC_URI[sha256sum] = "c851cdb46da5e6397881dafaa592c5516fb49da05dd1bb095f711a6d20eac422"
 
 inherit cmake pkgconfig gobject-introspection vala github-releases
 
