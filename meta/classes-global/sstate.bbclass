@@ -978,6 +978,9 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
 
         if os.path.exists(sstatefile):
             oe.utils.touch(sstatefile)
+            for ext in ['.sig', '.siginfo']:
+                if os.path.exists(sstatefile + ext):
+                    oe.utils.touch(sstatefile + ext)
             found.add(tid)
             bb.debug(2, "SState: Found valid sstate file %s" % sstatefile)
         else:
