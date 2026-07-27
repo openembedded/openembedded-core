@@ -932,12 +932,13 @@ sstate_unpack_package () {
 	fi
 
 	tar -I "$ZSTD" -xvpf ${SSTATE_PKG}
-	# update .siginfo atime on local/NFS mirror if it is a symbolic link
-	[ ! -h ${SSTATE_PKG}.siginfo ] || [ ! -e ${SSTATE_PKG}.siginfo ] || touch -a ${SSTATE_PKG}.siginfo 2>/dev/null || true
-	# update each symbolic link instead of any referenced file
-	touch --no-dereference ${SSTATE_PKG} 2>/dev/null || true
-	[ ! -e ${SSTATE_PKG}.sig ] || touch --no-dereference ${SSTATE_PKG}.sig 2>/dev/null || true
-	[ ! -e ${SSTATE_PKG}.siginfo ] || touch --no-dereference ${SSTATE_PKG}.siginfo 2>/dev/null || true
+
+	# Update both any file and any symlink pointing to the file for sigs as well as the file
+	for file in ${SSTATE_PKG} ${SSTATE_PKG}.sig ${SSTATE_PKG}.siginfo
+	do
+		[ ! -e $file ] || touch $file 2>/dev/null || true
+		[ ! -e $file ] || touch --no-dereference $file 2>/dev/null || true
+	done
 }
 
 BB_HASHCHECK_FUNCTION = "sstate_checkhashes"
