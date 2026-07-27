@@ -187,6 +187,14 @@ def get_patched_src(d):
                 bb.build.exec_func("do_convert_crlf_to_lf", localdata)
             bb.build.exec_func("do_patch", localdata)
 
+        if bb.data.inherits_class("kernel", localdata):
+            # For kernel source, rename suffix dir to ${BP} (${BPN}-${PV})
+            dir_name = localdata.getVar("BP")
+            kernel_dst_path = f"{spdx_workdir}/{dir_name}"
+            kernel_src_path = localdata.getVar("S")
+            if not os.path.exists(kernel_dst_path):
+                shutil.move(kernel_src_path, kernel_dst_path)
+
     # Copy source from work-shared to spdx_workdir
     else:
         share_src = d.getVar("S")
