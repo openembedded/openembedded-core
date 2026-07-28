@@ -56,7 +56,7 @@ CFLAGS:append:loongarch64 = " ${LCL_STOP_SERVICES}"
 RANLIB:append = " $@"
 
 do_install() {
-	oe_runmake install INSTALLROOT=${D}
+	oe_runmake install INSTALLROOT=${D} SBIN=${sbindir}
 	install -d ${D}${sysconfdir}/init.d/
 	install -m 0755 ${UNPACKDIR}/tcf-agent.init ${D}${sysconfdir}/init.d/tcf-agent
 	install -d ${D}${systemd_system_unitdir}
