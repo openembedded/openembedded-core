@@ -136,6 +136,13 @@ do_install () {
     install -d ${D}${sysconfdir}/init.d
     install -m 0755 ${UNPACKDIR}/bootchartd_stop.sh ${D}${sysconfdir}/init.d
 
+    if test "${bindir}" = "${sbindir}"
+    then
+        install -d ${D}${bindir}
+        mv ${D}${EARLY_PREFIX}/sbin/* ${D}${bindir}
+        rmdir ${D}${EARLY_PREFIX}/sbin
+    fi
+
     if ${@bb.utils.contains('DISTRO_FEATURES', 'usrmerge', 'true', 'false', d)}; then
         mv ${D}${EARLY_PREFIX}${sysconfdir}/bootchartd.conf ${D}${sysconfdir}/bootchartd.conf
         rmdir ${D}${EARLY_PREFIX}${sysconfdir}
