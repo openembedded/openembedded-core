@@ -3,10 +3,6 @@ require glibc-ld.inc
 
 DEPENDS = "virtual/cross-cc virtual/cross-binutils libgcc-initial linux-libc-headers gawk-replacement-native"
 
-# remove at next version upgrade or when output changes
-PR = "r1"
-HASHEQUIV_HASH_VERSION .= ".1"
-
 PROVIDES = "virtual/libc"
 PROVIDES += "virtual/libintl virtual/libiconv"
 

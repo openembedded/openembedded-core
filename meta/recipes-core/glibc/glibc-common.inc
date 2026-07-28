@@ -22,6 +22,6 @@ ARM_INSTRUCTION_SET:armv6 = "arm"
 #
 COMPATIBLE_HOST:libc-musl:class-target = "null"
 
-PV = "2.43+git"
+PV = "2.44+git"
 
 TOOLCHAIN = "gcc"
