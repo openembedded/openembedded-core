@@ -11,6 +11,8 @@ SRC_URI[sha256sum] = "e887ab5cee78ea814d3472169153c2d12cd43b14bd03329a39a9c6e2e8
 
 inherit pypi python_setuptools_build_meta
 
+CVE_PRODUCT = "certifi:certifi"
+
 BBCLASSEXTEND = "native nativesdk"
 
 RDEPENDS:${PN} += "python3-io"
