@@ -5,11 +5,11 @@ HOMEPAGE = "https://www.khronos.org/vulkan/"
 BUGTRACKER = "https://github.com/KhronosGroup/Vulkan-ValidationLayers"
 SECTION = "libs"
 
-LICENSE = "Apache-2.0 AND BSL-1.0 AND MIT"
-LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=b1a17d548e004bfbbfaa0c40988b6b31"
+LICENSE = "Apache-2.0 AND BSL-1.0 AND MIT AND BSD-2-Clause AND (Apache-2.0 WITH LLVM-exception)"
+LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=15158583155fe4efc33ea65c1370a177"
 
-SRC_URI = "git://github.com/KhronosGroup/Vulkan-ValidationLayers.git;branch=vulkan-sdk-1.4.350;protocol=https;tag=vulkan-sdk-${PV}"
-SRCREV = "b9d4f9ead8d97c1bb0d174ea07d8aed8273818a5"
+SRC_URI = "git://github.com/KhronosGroup/Vulkan-ValidationLayers.git;branch=vulkan-sdk-1.4.357;protocol=https;tag=vulkan-sdk-${PV}"
+SRCREV = "f4874eee15c78d7bdb2b7e60659d539f14741500"
 
 REQUIRED_DISTRO_FEATURES = "vulkan"
 
