@@ -31,6 +31,7 @@ EXTRA_OECONF += "--enable-largefile --without-iconv"
 
 SRC_URI = "https://libarchive.org/downloads/libarchive-${PV}.tar.gz \
            file://run-ptest \
+           file://0001-test-skip-ppmd8-aes256-streaming-test-when-no-crypto.patch \
           "
 UPSTREAM_CHECK_URI = "https://www.libarchive.org/"
 
