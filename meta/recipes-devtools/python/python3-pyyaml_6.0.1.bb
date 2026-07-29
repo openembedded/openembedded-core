@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=6d8242660a8371add5fe547adf083079"
 
 PYPI_PACKAGE = "PyYAML"
 
+CVE_PRODUCT = "pyyaml"
+
 inherit pypi python_setuptools_build_meta
 
 SRC_URI += "file://0001-Fix-builds-with-Cython-3.patch"
