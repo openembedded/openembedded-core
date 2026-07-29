@@ -12,6 +12,8 @@ SRC_URI += "file://CVE-2024-39689.patch \
 
 SRC_URI[sha256sum] = "0569859f95fc761b18b45ef421b1290a0f65f147e92a1e5eb3e635f9a5e4e66f"
 
+CVE_PRODUCT = "certifi:certifi"
+
 inherit pypi setuptools3
 
 BBCLASSEXTEND = "native nativesdk"
