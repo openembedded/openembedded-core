@@ -12,18 +12,13 @@ LIC_FILES_CHKSUM = "\
 
 # When upgrading to next major release, ensure that there is no trailing .0, so
 # that upstream version check can work correctly.
-PV = "2.46.1"
-CVE_VERSION = "2.46.1"
-SRCBRANCH ?= "binutils-2_46-branch"
+PV = "2.47"
+CVE_VERSION = "2.47"
+SRCBRANCH ?= "binutils-2_47-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
-CVE_STATUS[CVE-2025-69650] = "disputed: observed behavior only in pre-release code, does not affect any tagged version"
-CVE_STATUS[CVE-2025-69651] = "disputed: observed behavior only in pre-release code, does not affect any tagged version"
-CVE_STATUS[CVE-2025-69649] = "fixed-version: Fixed from version 2.46"
-CVE_STATUS[CVE-2025-69652] = "fixed-version: Fixed from version 2.46"
-
-SRCREV ?= "5e56594815854de5eca35c7c04b11705d0f19c02"
+SRCREV ?= "6ce87bbc521cf46eaee9a1f7ef61cee2cdfb3e32"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${SRCBRANCH};protocol=https"
 SRC_URI = "\
      ${BINUTILS_GIT_URI} \
@@ -38,6 +33,4 @@ SRC_URI = "\
      file://0012-Only-generate-an-RPATH-entry-if-LD_RUN_PATH-is-not-e.patch \
      file://0013-Define-alignof-using-_Alignof-when-using-C11-or-newe.patch \
      file://0014-Remove-duplicate-pe-dll.o-entry-deom-targ_extra_ofil.patch \
-     file://CVE-2026-4647.patch \
-     file://CVE-2026-6846.patch \
 "
