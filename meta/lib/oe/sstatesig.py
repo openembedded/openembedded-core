@@ -19,7 +19,7 @@ def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCaches):
         return x.startswith("nativesdk-")
     def isKernel(mc, fn):
         inherits = " ".join(dataCaches[mc].inherits[fn])
-        return inherits.find("/module-base.bbclass") != -1 or inherits.find("/linux-kernel-base.bbclass") != -1
+        return inherits.find("/module-base.bbclass") != -1 or inherits.find("/kernel.bbclass") != -1
     def isPackageGroup(mc, fn):
         inherits = " ".join(dataCaches[mc].inherits[fn])
         return "/packagegroup.bbclass" in inherits
