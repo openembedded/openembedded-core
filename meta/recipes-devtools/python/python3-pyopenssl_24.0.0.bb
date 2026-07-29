@@ -8,6 +8,7 @@ DEPENDS += "openssl python3-cryptography"
 SRC_URI[sha256sum] = "6aa33039a93fffa4563e655b61d11364d01264be8ccb49906101e02a334530bf"
 
 PYPI_PACKAGE = "pyOpenSSL"
+CVE_PRODUCT = "jean-paul_calderone:pyopenssl pyca:pyopenssl pyopenssl:pyopenssl pyopenssl_project:pyopenssl"
 inherit pypi setuptools3
 
 SRC_URI += " \
