@@ -5,6 +5,7 @@ LICENSE = "Unicode-3.0 AND (Apache-2.0 OR MIT)"
 LIC_FILES_CHKSUM = "file://../../COPYRIGHT;md5=11a3899825f4376896e438c8c753f8dc"
 
 require rust-source.inc
+require common-source.inc
 
 # The dummy crate named `sysroot` represents the standard library target.
 #
@@ -29,6 +30,9 @@ RUSTFLAGS += "-L ${STAGING_LIBDIR} -C link-arg=-Wl,-soname,libstd.so"
 CARGO_FEATURES ?= "panic-unwind backtrace"
 CARGO_BUILD_FLAGS += "--features '${CARGO_FEATURES}'"
 CARGO_VENDORING_DIRECTORY = "${RUSTSRC}/vendor"
+
+# Explicit CARGO_HOME avoids cargo caching in the shared source tree
+CARGO_HOME = "${WORKDIR}/cargo_home"
 
 do_compile:prepend () {
     # For Rust 1.13.0 and newer

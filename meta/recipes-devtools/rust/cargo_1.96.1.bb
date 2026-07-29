@@ -13,6 +13,8 @@ LIC_FILES_CHKSUM = " \
 
 require rust-source.inc
 require rust-snapshot.inc
+# Use shared source tree from rust-source.bb; disables local fetch/unpack/patch
+require common-source.inc
 
 S = "${RUSTSRC}/src/tools/cargo"
 CARGO_VENDORING_DIRECTORY = "${RUSTSRC}/vendor"
@@ -20,6 +22,9 @@ CARGO_VENDORING_DIRECTORY = "${RUSTSRC}/vendor"
 CVE_PRODUCT = "rust-lang:cargo"
 
 inherit cargo pkgconfig
+
+# Explicit CARGO_HOME avoids cargo caching in the shared source tree
+CARGO_HOME = "${WORKDIR}/cargo_home"
 
 DEBUG_PREFIX_MAP += "-ffile-prefix-map=${RUSTSRC}/vendor=${TARGET_DBGSRC_DIR}"
 
@@ -32,9 +37,10 @@ do_cargo_setup_snapshot () {
 	fi
 }
 
-addtask cargo_setup_snapshot after do_unpack before do_configure
+addtask cargo_setup_snapshot before do_configure
 do_cargo_setup_snapshot[dirs] += "${WORKDIR}/${CARGO_SNAPSHOT}"
 do_cargo_setup_snapshot[vardepsexclude] += "UNINATIVE_LOADER"
+do_cargo_setup_snapshot[depends] += "rust-source-${PV}:do_unpack"
 
 do_compile:prepend () {
 	export RUSTC_BOOTSTRAP="1"
