@@ -513,7 +513,7 @@ do_kernel_configme() {
 	fi
 }
 
-addtask kernel_configme before do_configure after do_patch
+addtask kernel_configme before do_configure after do_patch do_unpack
 addtask config_analysis
 
 do_config_analysis[depends] = "virtual/kernel:do_configure"
@@ -770,14 +770,8 @@ KBUILD_OUTPUT = "${B}"
 
 python () {
     # If diffconfig is available, ensure it runs after kernel_configme
-    if 'do_diffconfig' in d:
+    if d.getVar('do_diffconfig', False):
         bb.build.addtask('do_diffconfig', None, 'do_kernel_configme', d)
-
-    externalsrc = d.getVar('EXTERNALSRC')
-    if externalsrc:
-        # If we deltask do_patch, do_kernel_configme is left without
-        # dependencies and runs too early
-        d.setVarFlag('do_kernel_configme', 'deps', (d.getVarFlag('do_kernel_configme', 'deps', False) or []) + ['do_unpack'])
 }
 
 # extra tasks
