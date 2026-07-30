@@ -15,11 +15,12 @@ DEPENDS += "\
     python3-setuptools-rust-native \
     python3-semantic-version-native \
     python3-setuptools-rust \
+    zstd \
 "
 
 require ${BPN}-crates.inc
 
-inherit pypi cargo-update-recipe-crates python_pyo3 python_setuptools_build_meta
+inherit pypi cargo-update-recipe-crates python_pyo3 python_setuptools_build_meta pkgconfig
 
 do_configure() {
     python_pyo3_do_configure
