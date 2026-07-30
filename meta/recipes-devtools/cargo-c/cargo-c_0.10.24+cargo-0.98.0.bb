@@ -15,7 +15,7 @@ DEBUG_PREFIX_MAP += "-ffile-prefix-map=${CARGO_HOME}=${TARGET_DBGSRC_DIR}"
 
 inherit cargo cargo-update-recipe-crates pkgconfig
 
-DEPENDS = "openssl curl"
+DEPENDS = "openssl curl sqlite3 libgit2"
 
 require ${BPN}-crates.inc
 
