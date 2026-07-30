@@ -26,9 +26,9 @@ inherit core-image features_check
 
 REQUIRED_DISTRO_FEATURES += "xattr"
 
-SRCREV_bitbake ?= "acfe02fa38b5da9e6a36c6cedcf91d4fcbefbfbd"
-SRCREV_oe-core ?= "b737508e63832278980172691d507a686f8b8f48"
-SRCREV_yocto ?= "24c24cef5d1523fefe43a3e3d34667b37ae551f3"
+SRCREV_bitbake ?= "fae9db3168dbff1b8c76fe9c6726a9687ff97514"
+SRCREV_oe-core ?= "243aa188889c765564c75247b7314e3f6168520a"
+SRCREV_yocto ?= "1b132647002eea43a2c7a7f857f63f42dacbc26c"
 SRCREV_FORMAT = "bitbake_oe-core_yocto"
 
 SRC_URI = "git://git.openembedded.org/bitbake;name=bitbake;branch=2.18;destsuffix=bitbake;protocol=https \
