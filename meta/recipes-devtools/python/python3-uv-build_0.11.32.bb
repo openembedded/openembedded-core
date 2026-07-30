@@ -15,7 +15,9 @@ SRC_URI[sha256sum] = "906542262cf0e1f507d3e9bcf0a73afa9c9269daf261fbd5357a541b53
 
 require ${BPN}-crates.inc
 
-inherit pypi python_maturin cargo-update-recipe-crates
+inherit pypi python_maturin cargo-update-recipe-crates pkgconfig
+
+DEPENDS += "zstd"
 
 PYPI_PACKAGE = "uv_build"
 
