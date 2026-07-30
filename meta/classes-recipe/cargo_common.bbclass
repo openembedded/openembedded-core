@@ -226,6 +226,29 @@ oe_cargo_fix_env () {
 	export HOST_CFLAGS="${BUILD_CFLAGS}"
 	export HOST_CXXFLAGS="${BUILD_CXXFLAGS}"
 	export HOST_AR="${BUILD_AR}"
+
+	# Tell crates to use system libraries instead of vendoring C code
+
+	# git2-rs
+	export LIBGIT2_NO_VENDOR="1"
+
+	# libssh2-sys
+	export LIBSSH2_SYS_USE_PKG_CONFIG="1"
+
+	# libsqlite3-sys
+	export LIBSQLITE3_SYS_USE_PKG_CONFIG="1"
+
+	# openssl-sys
+	export OPENSSL_NO_VENDOR="1"
+
+	# pkg-config-rs. Crates can still override the dynamic linking
+	# but try to dynamically link to system libraries.
+	# https://docs.rs/pkg-config/latest/pkg_config/
+	export SYSTEM_DEPS_BUILD_INTERNAL="never"
+	export PKG_CONFIG_ALL_DYNAMIC="1"
+
+	# zstd-sys
+	export ZSTD_SYS_USE_PKG_CONFIG="1"
 }
 
 EXTRA_OECARGO_PATHS ??= ""
