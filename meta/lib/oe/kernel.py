@@ -38,6 +38,8 @@ def map_kernel_arch(d):
             return a
         bb.error("cannot map '%s' to a linux kernel architecture" % a)
 
+# Return a value for the -A parameter to u-boot's mkimage
+# This would be the value from the table in boot/image.c:uimage_arch
 def map_uboot_arch(d):
     a = map_kernel_arch(d)
 
