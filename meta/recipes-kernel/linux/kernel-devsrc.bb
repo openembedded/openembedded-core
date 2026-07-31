@@ -176,6 +176,18 @@ do_install() {
             cp -a --parents $(find tools/arch/${ARCH}/ -type f) $kerneldir/build/
         fi
 
+        # For v5.2+ when BTF is enabled, scripts prepare may rebuild the
+        # resolve_btfids host tool. Copy the minimal sources it needs instead
+        # of coupling this recipe to a specific kernel CONFIG_ symbol.
+        cp -a --parents tools/bpf/resolve_btfids/* $kerneldir/build/ 2>/dev/null || :
+        cp -a --parents tools/lib/bpf/* $kerneldir/build/ 2>/dev/null || :
+        cp -a --parents tools/lib/subcmd/* $kerneldir/build/ 2>/dev/null || :
+        cp -a --parents tools/lib/ctype.c tools/lib/rbtree.c tools/lib/str_error_r.c \
+            tools/lib/string.c tools/lib/zalloc.c $kerneldir/build/ 2>/dev/null || :
+        cp -a --parents tools/build/Build.include tools/build/Build tools/build/fixdep.c \
+            tools/scripts/Makefile.arch tools/scripts/Makefile.include \
+            tools/scripts/utilities.mak $kerneldir/build/ 2>/dev/null || :
+
         if [ "${ARCH}" = "arm64" ]; then
             # arch/arm64/include/asm/xen references arch/arm
             cp -a --parents arch/arm/include/asm/xen $kerneldir/build/
