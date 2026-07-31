@@ -34,6 +34,10 @@ SRC_URI[sha256sum] = "3d3a1b973af218114f4f889bbaa2f4c037deaae0c8e815eec381c3d546
 UPSTREAM_CHECK_REGEX = "releases/tag/v(?P<pver>\d+(\.\d+)+)"
 UPSTREAM_CHECK_URI = "https://github.com/tukaani-project/xz/releases/"
 
+# XZ Utils publishes bugfix/security-only micro releases on its stable
+# (even-minor) branches.
+inherit upstream-stable-release-point
+
 CACHED_CONFIGUREVARS += "gl_cv_posix_shell=/bin/sh"
 
 inherit autotools gettext ptest
