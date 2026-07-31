@@ -21,4 +21,9 @@ SRC_URI = "git://github.com/systemd/systemd.git;protocol=https;branch=${SRCBRANC
 
 CVE_PRODUCT = "systemd"
 
+# systemd publishes bugfix/security-only releases on its stable/v<major>-stable
+# branches (e.g. 261 -> 261.1). The major is a single version part.
+STABLE_VERSION_PARTS = "1"
+inherit upstream-stable-release-point
+
 CVE_STATUS[CVE-2019-3815] = "not-applicable-platform: only applied to RHEL"
