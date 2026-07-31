@@ -8,7 +8,7 @@ inherit python3native
 inherit rust-target-config
 
 # Common variables used by all Rust builds
-export rustlibdir = "${libdir}/rustlib/${RUST_HOST_SYS}/lib"
+rustlibdir = "${libdir}/rustlib/${RUST_HOST_SYS}/lib"
 FILES:${PN} += "${rustlibdir}/*.so"
 FILES:${PN}-dev += "${rustlibdir}/*.rlib ${rustlibdir}/*.rmeta"
 FILES:${PN}-dbg += "${rustlibdir}/.debug"
