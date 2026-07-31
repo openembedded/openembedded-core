@@ -41,11 +41,7 @@ def map_kernel_arch(d):
 # Return a value for the -A parameter to u-boot's mkimage
 # This would be the value from the table in boot/image.c:uimage_arch
 def map_uboot_arch(d):
-    a = map_kernel_arch(d)
-
-    if   re.match('p(pc|owerpc)(|64)', a): return 'ppc'
-    elif re.match('i.86$', a): return 'x86'
-    return a
+    return map_kernel_arch(d)
 
 # parse kernel ABI version out of <linux/version.h>
 def get_version_headers(p):
