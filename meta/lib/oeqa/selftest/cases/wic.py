@@ -89,18 +89,11 @@ class WicTestCase(OESelftestTestCase):
 
     def _get_wic_path(self):
         if WicTestCase.wic_bindir is None:
-            search_paths = [
-                os.path.join(self.td['COREBASE'], 'scripts'),
-                os.path.join(get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools'), 'usr', 'bin'),
-            ]
-
-            for bindir in search_paths:
-                if os.path.exists(os.path.join(bindir, 'wic')):
-                    WicTestCase.wic_bindir = bindir
-                    break
-
-            if WicTestCase.wic_bindir is None:
-                self.fail("Unable to find the wic binary in %s" % ', '.join(search_paths))
+            bindir = os.path.join(get_bb_var('RECIPE_SYSROOT_NATIVE', 'wic-tools'),
+                                  'usr', 'bin')
+            if not os.path.exists(os.path.join(bindir, 'wic')):
+                self.fail("Unable to find the wic binary in %s" % bindir)
+            WicTestCase.wic_bindir = bindir
 
         path_entries = []
         for path_group in (
