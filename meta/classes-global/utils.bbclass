@@ -271,9 +271,6 @@ def check_app_exists(app, d):
     path = d.getVar('PATH')
     return bool(bb.utils.which(path, app))
 
-def explode_deps(s):
-    return bb.utils.explode_deps(s)
-
 def base_set_filespath(path, d):
     filespath = []
     extrapaths = (d.getVar("FILESEXTRAPATHS") or "")
