@@ -32,7 +32,7 @@ python multilib_virtclass_handler () {
             d.setVar(name + "_MULTILIB_ORIGINAL", val)
 
     # We nearly don't need this but dependencies on NON_MULTILIB_RECIPES don't work without it
-    d.setVar("SSTATE_ARCHS_TUNEPKG", "${@all_multilib_tune_values(d, 'TUNE_PKGARCH')}")
+    d.setVar("SSTATE_ARCHS_TUNEPKG", "${@oe.utils.all_multilib_tune_values(d, 'TUNE_PKGARCH')}")
 
     overrides = e.data.getVar("OVERRIDES", False)
     pn = e.data.getVar("PN", False)

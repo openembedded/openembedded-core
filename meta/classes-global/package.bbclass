@@ -54,7 +54,7 @@ PKGDEST = "${WORKDIR}/packages-split"
 
 LOCALE_SECTION ?= ''
 
-ALL_MULTILIB_PACKAGE_ARCHS = "${@all_multilib_tune_values(d, 'PACKAGE_ARCHS')}"
+ALL_MULTILIB_PACKAGE_ARCHS = "${@oe.utils.all_multilib_tune_values(d, 'PACKAGE_ARCHS')}"
 
 # rpm is used for the per-file dependency identification
 # dwarfsrcfiles is used to determine the list of debug source files

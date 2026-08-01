@@ -11,9 +11,9 @@ GCC = "gcc-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 GDB = "gdb-cross-canadian-${TRANSLATED_TARGET_ARCH}"
 
 RDEPENDS:${PN} = "\
-    ${@all_multilib_tune_values(d, 'BINUTILS')} \
-    ${@all_multilib_tune_values(d, 'GCC')} \
-    ${@all_multilib_tune_values(d, 'GDB')} \
+    ${@oe.utils.all_multilib_tune_values(d, 'BINUTILS')} \
+    ${@oe.utils.all_multilib_tune_values(d, 'GCC')} \
+    ${@oe.utils.all_multilib_tune_values(d, 'GDB')} \
     meta-environment-${MACHINE} \
     "
 

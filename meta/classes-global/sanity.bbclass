@@ -720,13 +720,13 @@ def check_sanity_version_change(status, d):
 
     missing = ""
 
-    if not check_app_exists("${MAKE}", d):
+    if not oe.utils.check_app_exists("${MAKE}", d):
         missing = missing + "GNU make,"
 
-    if not check_app_exists('gcc', d):
+    if not oe.utils.check_app_exists('gcc', d):
         missing = missing + "C Compiler (gcc),"
 
-    if not check_app_exists('g++', d):
+    if not oe.utils.check_app_exists('g++', d):
         missing = missing + "C++ Compiler (g++),"
 
     # installing emacs on Ubuntu 24.04 pulls in emacs-gtk -> libgcc-14-dev despite gcc being 13
@@ -737,7 +737,7 @@ def check_sanity_version_change(status, d):
     required_utilities = d.getVar('SANITY_REQUIRED_UTILITIES')
 
     for util in required_utilities.split():
-        if not check_app_exists(util, d):
+        if not oe.utils.check_app_exists(util, d):
             missing = missing + "%s," % util
 
     if missing:

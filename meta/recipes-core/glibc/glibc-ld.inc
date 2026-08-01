@@ -5,7 +5,7 @@ GLIBC_GETLOADER = "${@get_linuxloader(d)}"
 def glibc_dl_info(d):
     infos = {'ldconfig':set(), 'lddrewrite':set()}
 
-    loaders = all_multilib_tune_values(d, "GLIBC_GETLOADER").split()
+    loaders = oe.utils.all_multilib_tune_values(d, "GLIBC_GETLOADER").split()
     for loader in loaders:
         infos['ldconfig'].add('{"' + loader + '",' + "FLAG_ELF_LIBC6" + ' }')
         infos['lddrewrite'].add(loader)
