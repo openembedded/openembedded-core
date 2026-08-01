@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
-inherit toolchain-scripts-base siteinfo kernel-arch meson-routines
+inherit toolchain-scripts-base siteinfo meson-routines
 
 # We want to be able to change the value of MULTIMACH_TARGET_SYS, because it
 # doesn't always match our expectations... but we default to the stock value
@@ -155,7 +155,7 @@ toolchain_shared_env_script () {
 	echo 'export KCFLAGS="--sysroot=$SDKTARGETSYSROOT"' >> $script
 	echo 'export OECORE_DISTRO_VERSION="${DISTRO_VERSION}"' >> $script
 	echo 'export OECORE_SDK_VERSION="${SDK_VERSION}"' >> $script
-	echo 'export ARCH=${ARCH}' >> $script
+	echo 'export ARCH=${@oe.kernel.map_kernel_arch(d)}' >> $script
 	echo 'export CROSS_COMPILE=${TARGET_PREFIX}' >> $script
 	echo 'export OECORE_TUNE_CCARGS="${TUNE_CCARGS}"' >> $script
 
