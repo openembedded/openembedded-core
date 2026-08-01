@@ -8,6 +8,8 @@ LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0-with-L
 
 inherit linux-kernel-base kernel-fit-image
 
+UBOOT_ARCH = "${@oe.kernel.map_uboot_arch(d)}"
+
 # Set the version of this recipe to the version of the included kernel
 # (without taking the long way around via PV)
 PKGV = "${@oe.kernel.get_version_file("${STAGING_KERNEL_BUILDDIR}")}"
