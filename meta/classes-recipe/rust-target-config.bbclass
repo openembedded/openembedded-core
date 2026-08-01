@@ -438,6 +438,13 @@ def rust_gen_target(d, thing, wd, arch):
         elif fpu == "hard":
             tspec['abi'] = "eabihf"
             tspec['llvm-floatabi'] = "hard"
+    if arch in ["mips", "mipsel"]:
+        tspec['abi'] = "o32"
+        tspec['llvm-abiname'] = "o32"
+    elif arch in ["mips64", "mips64el"]:
+        mips_abi = "n32" if abi == "n32" else "n64"
+        tspec['abi'] = mips_abi
+        tspec['llvm-abiname'] = mips_abi
     tspec['default-uwtable'] = True
     tspec['dynamic-linking'] = True
     tspec['executables'] = True
