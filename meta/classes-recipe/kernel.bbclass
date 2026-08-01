@@ -4,7 +4,8 @@
 # SPDX-License-Identifier: MIT
 #
 
-inherit linux-kernel-base kernel-module-split features_check
+inherit kernel-arch kernel-module-split kernel-devicetree kernel-artifact-names
+inherit features_check  deploy cml1 pkgconfig
 
 ARCH = "${@oe.kernel.map_kernel_arch(d)}"
 
@@ -214,8 +215,6 @@ python do_symlink_kernsrc () {
 # externalsrc.bbclass deletes do_patch, breaking the dependency of
 # do_configure on do_symlink_kernsrc.
 addtask symlink_kernsrc before do_patch do_configure after do_unpack
-
-inherit kernel-arch deploy
 
 PACKAGES_DYNAMIC += "^${KERNEL_PACKAGE_NAME}-module-.*"
 PACKAGES_DYNAMIC += "^${KERNEL_PACKAGE_NAME}-image-.*"
@@ -675,8 +674,6 @@ kernel_do_configure() {
 	${KERNEL_CONFIG_COMMAND}
 }
 
-inherit cml1 pkgconfig
-
 EXPORT_FUNCTIONS do_compile do_transform_kernel do_transform_bundled_initramfs do_install do_configure
 
 # kernel-base becomes kernel-${KERNEL_VERSION}
@@ -788,8 +785,6 @@ do_sizecheck() {
 do_sizecheck[dirs] = "${B}"
 
 addtask sizecheck before do_install after do_strip
-
-inherit kernel-artifact-names
 
 kernel_do_deploy() {
 	deployDir="${DEPLOYDIR}"
@@ -915,5 +910,4 @@ do_create_spdx:append() {
 }
 do_create_spdx[depends] += "virtual/kernel:do_configure"
 
-# Add using Device Tree support
-inherit kernel-devicetree
+

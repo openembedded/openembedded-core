@@ -56,7 +56,7 @@ do_configure[depends] += "virtual/kernel:do_shared_workdir"
 
 PROVIDES = "virtual/perf"
 
-inherit linux-kernel-base kernel-arch manpages pkgconfig
+inherit kernel-arch manpages pkgconfig
 
 ARCH = "${@oe.kernel.map_kernel_arch(d)}"
 

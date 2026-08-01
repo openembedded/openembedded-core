@@ -34,3 +34,7 @@ KERNEL_OBJCOPY:toolchain-clang = "llvm-objcopy ${TARGET_OBJCOPY_KERNEL_ARCH}"
 KERNEL_STRIP:toolchain-clang = "llvm-strip"
 KERNEL_TOOLCHAIN ?= "gcc"
 TOOLCHAIN = "${KERNEL_TOOLCHAIN}"
+
+export KBUILD_BUILD_VERSION = "1"
+export KBUILD_BUILD_USER ?= "oe-user"
+export KBUILD_BUILD_HOST ?= "oe-host"

@@ -13,8 +13,6 @@ do_package[depends] += "virtual/kernel:do_populate_sysroot"
 KERNEL_VERSION = "${@oe.kernel.get_version_file("${STAGING_KERNEL_BUILDDIR}")}"
 LOCAL_VERSION = "${@oe.kernel.get_localversion_file("${STAGING_KERNEL_BUILDDIR}")}"
 
-inherit linux-kernel-base
-
 # The final packages get the kernel version instead of the default 1.0
 python do_package:prepend() {
     d.setVar('PKGV', d.getVar("KERNEL_VERSION").split("-")[0])
