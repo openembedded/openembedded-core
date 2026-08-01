@@ -270,7 +270,7 @@ IMAGE_CMD:f2fs () {
 
 EXTRA_IMAGECMD = ""
 
-inherit siteinfo kernel-arch image-artifact-names
+inherit siteinfo image-artifact-names
 
 JFFS2_ENDIANNESS ?= "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '-l', '-b', d)}"
 JFFS2_ERASEBLOCK ?= "0x40000"
@@ -355,7 +355,7 @@ CONVERSION_CMD:sha256sum = "sha256sum ${IMAGE_NAME}.${type} > ${IMAGE_NAME}.${ty
 CONVERSION_CMD:sha384sum = "sha384sum ${IMAGE_NAME}.${type} > ${IMAGE_NAME}.${type}.sha384sum"
 CONVERSION_CMD:sha512sum = "sha512sum ${IMAGE_NAME}.${type} > ${IMAGE_NAME}.${type}.sha512sum"
 CONVERSION_CMD:bmap = "bmaptool create ${IMAGE_NAME}.${type} -o ${IMAGE_NAME}.${type}.bmap"
-CONVERSION_CMD:u-boot = "mkimage -A ${UBOOT_ARCH} -O linux -T ramdisk -C none -n ${IMAGE_NAME} -d ${IMAGE_NAME}.${type} ${IMAGE_NAME}.${type}.u-boot"
+CONVERSION_CMD:u-boot = "mkimage -A ${@oe.kernel.map_uboot_arch(d)} -O linux -T ramdisk -C none -n ${IMAGE_NAME} -d ${IMAGE_NAME}.${type} ${IMAGE_NAME}.${type}.u-boot"
 CONVERSION_CMD:vmdk = "qemu-img convert -O vmdk ${IMAGE_NAME}.${type} ${IMAGE_NAME}.${type}.vmdk"
 CONVERSION_CMD:vhdx = "qemu-img convert -O vhdx -o subformat=dynamic ${IMAGE_NAME}.${type} ${IMAGE_NAME}.${type}.vhdx"
 CONVERSION_CMD:vhd = "qemu-img convert -O vpc -o subformat=fixed ${IMAGE_NAME}.${type} ${IMAGE_NAME}.${type}.vhd"
