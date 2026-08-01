@@ -53,7 +53,7 @@ python __anonymous () {
 MAJ_VER = "${@oe.utils.trim_version("${PV}", 2).split('.')[0]}"
 MIN_VER = "${@oe.utils.trim_version("${PV}", 2).split('.')[1]}"
 
-inherit kernel-arch pkgconfig multilib_header
+inherit pkgconfig multilib_header
 
 KORG_ARCHIVE_COMPRESSION ?= "xz"
 
@@ -62,7 +62,7 @@ UPSTREAM_CHECK_URI = "https://www.kernel.org/"
 
 S = "${UNPACKDIR}/linux-${PV}"
 
-EXTRA_OEMAKE = " HOSTCC="${BUILD_CC}" HOSTCPP="${BUILD_CPP}""
+EXTRA_OEMAKE = " ARCH="${@oe.kernel.map_kernel_arch(d)}" HOSTCC="${BUILD_CC}" HOSTCPP="${BUILD_CPP}""
 
 do_configure[noexec] = "1"
 
