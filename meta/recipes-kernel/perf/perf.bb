@@ -58,6 +58,8 @@ PROVIDES = "virtual/perf"
 
 inherit linux-kernel-base kernel-arch manpages pkgconfig
 
+ARCH = "${@oe.kernel.map_kernel_arch(d)}"
+
 # needed for building the tools/perf Python bindings
 inherit_defer ${@bb.utils.contains('PACKAGECONFIG', 'python', 'python3targetconfig', '', d)}
 inherit python3-dir

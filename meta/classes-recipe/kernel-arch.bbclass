@@ -4,11 +4,6 @@
 # SPDX-License-Identifier: MIT
 #
 
-# set the ARCH environment variable for kernel compilation (including
-# modules). return value must match one of the architecture directories
-# in the kernel source "arch" directory
-export ARCH = "${@oe.kernel.map_kernel_arch(d)}"
-
 # Set TARGET_??_KERNEL_ARCH in the machine .conf to set architecture
 # specific options necessary for building the kernel and modules.
 TARGET_CC_KERNEL_ARCH ?= ""

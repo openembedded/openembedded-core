@@ -6,6 +6,8 @@
 
 inherit linux-kernel-base kernel-module-split features_check
 
+ARCH = "${@oe.kernel.map_kernel_arch(d)}"
+
 COMPATIBLE_HOST = ".*-linux"
 
 # Linux has a minimum ISA requires on riscv, see arch/riscv/Makefile
@@ -245,6 +247,7 @@ UBOOT_LOADADDRESS ?= "${UBOOT_ENTRYPOINT}"
 # Some Linux kernel configurations need additional parameters on the command line
 KERNEL_EXTRA_ARGS ?= ""
 
+EXTRA_OEMAKE += ' ARCH="${@oe.kernel.map_kernel_arch(d)}"'
 EXTRA_OEMAKE += ' CC="${KERNEL_CC}" LD="${KERNEL_LD}" OBJCOPY="${KERNEL_OBJCOPY}" STRIP="${KERNEL_STRIP}"'
 EXTRA_OEMAKE += ' HOSTCC="${BUILD_CC}" HOSTCFLAGS="${BUILD_CFLAGS}" HOSTLDFLAGS="${BUILD_LDFLAGS}" HOSTCPP="${BUILD_CPP}"'
 EXTRA_OEMAKE += ' HOSTCXX="${BUILD_CXX}" HOSTCXXFLAGS="${BUILD_CXXFLAGS}"'
