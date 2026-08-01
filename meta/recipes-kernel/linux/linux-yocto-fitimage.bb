@@ -6,7 +6,7 @@ SECTION = "kernel"
 LICENSE = "GPL-2.0-only WITH Linux-syscall-note"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/files/common-licenses/GPL-2.0-with-Linux-syscall-note;md5=0bad96c422c41c3a94009dcfe1bff992"
 
-inherit linux-kernel-base kernel-fit-image
+inherit kernel-fit-image
 
 UBOOT_ARCH = "${@oe.kernel.map_uboot_arch(d)}"
 
