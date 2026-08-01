@@ -33,6 +33,7 @@ SRC_URI = "git://github.com/vim/vim.git;branch=master;protocol=https;tag=v${PV} 
            file://CVE-2026-55895.patch \
            file://CVE-2026-57451.patch \
            file://CVE-2026-57453.patch \
+           file://CVE-2026-57454.patch \
            "
 
 PV .= ".0340"
