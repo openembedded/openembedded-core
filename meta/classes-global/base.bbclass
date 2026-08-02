@@ -35,16 +35,6 @@ TOOLCHAIN_NATIVE ??= "${PREFERRED_TOOLCHAIN_NATIVE}"
 inherit_defer toolchain/${TOOLCHAIN_NATIVE}-native
 inherit_defer toolchain/${TOOLCHAIN}
 
-def lsb_distro_identifier(d):
-    adjust = d.getVar('LSB_DISTRO_ADJUST')
-    adjust_func = None
-    if adjust:
-        try:
-            adjust_func = globals()[adjust]
-        except KeyError:
-            pass
-    return oe.lsb.distro_identifier(adjust_func)
-
 die() {
 	bbfatal_log "$*"
 }
@@ -313,7 +303,7 @@ python base_eventhandler() {
 
     if isinstance(e, bb.event.ConfigParsed):
         if not d.getVar("NATIVELSBSTRING", False):
-            d.setVar("NATIVELSBSTRING", lsb_distro_identifier(d))
+            d.setVar("NATIVELSBSTRING", oe.lsb.distro_identifier(d))
         d.setVar("ORIGNATIVELSBSTRING", d.getVar("NATIVELSBSTRING", False))
         d.setVar('BB_VERSION', bb.__version__)
 

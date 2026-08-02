@@ -18,7 +18,7 @@ def get_os_release():
                 data[key.strip()] = val.strip('"\'')
     return data
 
-def distro_identifier(adjust_hook=None):
+def distro_identifier(d=None):
     """Return a distro identifier string based upon /etc/os-release
        with optional adjustment via a hook"""
 
@@ -28,6 +28,14 @@ def distro_identifier(adjust_hook=None):
 
     distro_id = distro_data.get('ID')
     release = distro_data.get('VERSION_ID')
+    adjust_hook = None
+    if d:
+        adjust = d.getVar('LSB_DISTRO_ADJUST')
+        if adjust:
+            try:
+               adjust_hook = bb.utils.get_context()[adjust]
+            except KeyError:
+                pass
 
     if adjust_hook:
         distro_id, release = adjust_hook(distro_id, release)

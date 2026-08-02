@@ -382,7 +382,7 @@ def check_supported_distro(sanity_data):
         return
 
     try:
-        distro = oe.lsb.distro_identifier()
+        distro = oe.lsb.distro_identifier(sanity_data)
     except Exception:
         distro = None
 
@@ -463,7 +463,7 @@ def check_make_version(sanity_data):
         return "Please install a make version of %s or later.\n" % make_minimum_version
 
     if bb.utils.vercmp_string_op(version, "4.2.1", "=="):
-        distro = oe.lsb.distro_identifier()
+        distro = oe.lsb.distro_identifier(sanity_data)
         if "ubuntu" in distro or "debian" in distro or "linuxmint" in distro:
             return None
         return "make version 4.2.1 is known to have issues on Centos/OpenSUSE and other non-Ubuntu systems. Please use a buildtools-make-tarball or a newer version of make.\n"
@@ -552,7 +552,7 @@ def check_tar_version(sanity_data):
         return "Unable to execute tar --help, exit code %d\n%s\n" % (e.returncode, e.output)
 
     try:
-        distro = oe.lsb.distro_identifier()
+        distro = oe.lsb.distro_identifier(sanity_data)
     except Exception:
         distro = None
 
@@ -1161,7 +1161,7 @@ def check_sanity(sanity_data):
     network_error = False
     # NATIVELSBSTRING var may have been overridden with "universal", so
     # get actual host distribution id and version
-    nativelsbstr = lsb_distro_identifier(sanity_data)
+    nativelsbstr = oe.lsb.distro_identifier(sanity_data)
     if last_sanity_version < sanity_version or last_nativelsbstr != nativelsbstr: 
         check_sanity_version_change(status, sanity_data)
         status.addresult(check_sanity_sstate_dir_change(sstate_dir, sanity_data))
