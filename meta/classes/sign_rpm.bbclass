@@ -43,16 +43,16 @@ RPM_GPG_SIGN_CHUNK ?= "${BB_NUMBER_THREADS}"
 
 python () {
     if d.getVar('RPM_GPG_PASSPHRASE_FILE'):
-        raise_sanity_error('RPM_GPG_PASSPHRASE_FILE is replaced by RPM_GPG_PASSPHRASE', d)
+        oe.sanity.raise_sanity_error('RPM_GPG_PASSPHRASE_FILE is replaced by RPM_GPG_PASSPHRASE', d)
     # Check configuration
     for var in ('RPM_GPG_NAME', 'RPM_GPG_PASSPHRASE'):
         if not d.getVar(var):
-            raise_sanity_error("You need to define %s in the config" % var, d)
+            oe.sanity.raise_sanity_error("You need to define %s in the config" % var, d)
 
     if d.getVar('RPM_SIGN_FILES') == '1':
         for var in ('RPM_FSK_PATH', 'RPM_FSK_PASSWORD'):
             if not d.getVar(var):
-                raise_sanity_error("You need to define %s in the config" % var, d)
+                oe.sanity.raise_sanity_error("You need to define %s in the config" % var, d)
 }
 
 python sign_rpm () {
