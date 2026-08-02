@@ -11,12 +11,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=49296c1806ef92c28297fb264163d81e \
                     file://COPYING;md5=49296c1806ef92c28297fb264163d81e \
                     "
 
-SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BP}.tar.gz \
-           file://0001-Support-reproducible-builds.patch \
-           file://0002-psl-make-dafsa-embed-only-the-basename-of-the-input-.patch \
-           file://0003-meson-rename-cdata-to-_cdata-in-docs-libpsl-meson.bu.patch \
-           "
-SRC_URI[sha256sum] = "f39b9631b3d369a21259ea4654f8875c0ec6995ce9551c0eb5d423e4c011f911"
+SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BP}.tar.gz"
+SRC_URI[sha256sum] = "8fbb03054556498ba9c4cc48fcaa36a4483748c6504a65bdb9ba348f555b0e56"
 
 GITHUB_BASE_URI = "https://github.com/rockdaboot/libpsl/releases"
 
