@@ -55,7 +55,7 @@ class TargetDevice:
         self.ssh_sshexec = 'ssh'
         if args.ssh_exec:
             self.ssh_sshexec = args.ssh_exec
-        self.ssh_port = ''
+        self.ssh_port = []
         if args.port:
             self.ssh_port = ['-p', args.port]
         if args.key:

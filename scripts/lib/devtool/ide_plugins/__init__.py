@@ -142,7 +142,7 @@ class GdbCrossConfig:
     def _target_ssh_gdbserver_args(self):
         ssh_args = []
         if self.gdb_cross.target_device.ssh_port:
-            ssh_args += ["-p", self.gdb_cross.target_device.ssh_port]
+            ssh_args += self.gdb_cross.target_device.ssh_port
         if self.gdb_cross.target_device.extraoptions:
             ssh_args.extend(self.gdb_cross.target_device.extraoptions)
         if self.gdb_cross.target_device.target:

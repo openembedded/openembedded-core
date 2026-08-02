@@ -404,10 +404,7 @@ class IdeVSCode(IdeBase):
                     "label": install_task_name,
                     "type": "shell",
                     "command": run_install_deploy,
-                    "args": [
-                        "--target",
-                        args.target
-                    ],
+                    "args": ["--target", args.target] + (["--port", args.port] if args.port else []),
                     "problemMatcher": []
                 }
             ]
@@ -515,10 +512,7 @@ class IdeVSCode(IdeBase):
                     "label": install_task_name,
                     "type": "shell",
                     "command": run_install_deploy,
-                    "args": [
-                        "--target",
-                        args.target
-                    ],
+                    "args": ["--target", args.target] + (["--port", args.port] if args.port else []),
                     "problemMatcher": []
                 },
                 {
