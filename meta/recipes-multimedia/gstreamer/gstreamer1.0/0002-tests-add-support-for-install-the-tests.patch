@@ -22,7 +22,7 @@ diff --git a/meson.build b/meson.build
 index abd0ad6..93cd692 100644
 --- a/meson.build
 +++ b/meson.build
-@@ -661,6 +661,10 @@ if bashcomp_dep.found()
+@@ -662,6 +662,10 @@ if bashcomp_dep.found()
    endif
  endif
  
