@@ -118,8 +118,10 @@ do_image_wic[depends] += "wic-native:do_populate_sysroot"
 do_image_wic[recrdeptask] += "do_deploy"
 do_image_wic[deptask] += "do_image_complete"
 
-WKS_FILE_DEPENDS_DEFAULT = '${@bb.utils.contains_any("BUILD_ARCH", [ 'x86_64', 'i686' ], "syslinux-native", "",d)}'
-WKS_FILE_DEPENDS_DEFAULT += "cdrtools-native"
+WKS_FILE_DEPENDS_DEFAULT = "cdrtools-native"
+WKS_FILE_DEPENDS_DEFAULT:append:x86 = " syslinux-native"
+WKS_FILE_DEPENDS_DEFAULT:append:x86-64 = " syslinux-native"
+WKS_FILE_DEPENDS_DEFAULT:append:x86-x32 = " syslinux-native"
 WKS_FILE_DEPENDS_BOOTLOADERS = ""
 WKS_FILE_DEPENDS_BOOTLOADERS:aarch64 = "grub-efi systemd-boot"
 WKS_FILE_DEPENDS_BOOTLOADERS:arm = "systemd-boot"
