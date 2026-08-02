@@ -121,8 +121,6 @@ is a good way to visualise the changes."""
         bb.note("Your conf/bblayers.conf has been automatically updated.")
         return
 
-        status.addresult()
-
     elif current_lconf == 6 and lconf_version > 6:
         # Handle rename of meta-yocto -> meta-poky
         # This marks the start of separate version numbers but code is needed in OE-Core
