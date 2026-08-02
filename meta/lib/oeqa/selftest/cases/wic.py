@@ -72,11 +72,22 @@ class WicTestCase(OESelftestTestCase):
             if self.td['USE_NLS'] != 'yes':
                 self.skipTest('wic-tools needs USE_NLS=yes')
 
-            bitbake('wic-tools core-image-minimal core-image-minimal-mtdutils')
+            targets = 'wic-tools core-image-minimal core-image-minimal-mtdutils'
+            targets += ' ' + ' '.join(self._firmware_recipes())
+            bitbake(targets)
             WicTestCase.image_is_ready = True
 
         os.environ['PATH'] = self._get_wic_path()
         rmtree(self.resultdir, ignore_errors=True)
+
+    def _firmware_recipes(self):
+        arch = self.td['HOST_ARCH']
+        recipes = []
+        if arch in ('i586', 'i686', 'x86_64', 'x86-64'):
+            recipes += ['syslinux', 'grub-efi', 'systemd-boot']
+        elif arch == 'aarch64':
+            recipes += ['grub-efi', 'systemd-boot']
+        return recipes
 
     def tearDownLocal(self):
         """Remove resultdir as it may contain images."""
@@ -384,9 +395,13 @@ class Wic(WicTestCase):
     @skipIfNotArch(['i586', 'i686', 'x86_64'])
     def test_build_artifacts(self):
         """Test wic create directdisk providing all artifacts."""
-        bb_vars = get_bb_vars(['STAGING_DATADIR', 'RECIPE_SYSROOT_NATIVE'],
-                              'wic-tools')
-        bb_vars.update(get_bb_vars(['DEPLOY_DIR_IMAGE', 'IMAGE_ROOTFS'],
+        # wic expects syslinux in core-image-minimal's recipe sysroot.
+        config = 'DEPENDS:pn-core-image-minimal += "syslinux"\n'
+        self.append_config(config)
+        bitbake('core-image-minimal')
+        self.remove_config(config)
+        bb_vars = get_bb_vars(['RECIPE_SYSROOT_NATIVE'], 'wic-tools')
+        bb_vars.update(get_bb_vars(['STAGING_DATADIR', 'DEPLOY_DIR_IMAGE', 'IMAGE_ROOTFS'],
                                    'core-image-minimal'))
         bbvars = {key.lower(): value for key, value in bb_vars.items()}
         bbvars['resultdir'] = self.resultdir
@@ -487,9 +502,13 @@ class Wic(WicTestCase):
     @skipIfNotArch(['i586', 'i686', 'x86_64'])
     def test_rootfs_artifacts(self):
         """Test usage of rootfs plugin with rootfs paths"""
-        bb_vars = get_bb_vars(['STAGING_DATADIR', 'RECIPE_SYSROOT_NATIVE'],
-                              'wic-tools')
-        bb_vars.update(get_bb_vars(['DEPLOY_DIR_IMAGE', 'IMAGE_ROOTFS'],
+        # wic expects syslinux in core-image-minimal's recipe sysroot.
+        config = 'DEPENDS:pn-core-image-minimal += "syslinux"\n'
+        self.append_config(config)
+        bitbake('core-image-minimal')
+        self.remove_config(config)
+        bb_vars = get_bb_vars(['RECIPE_SYSROOT_NATIVE'], 'wic-tools')
+        bb_vars.update(get_bb_vars(['STAGING_DATADIR', 'DEPLOY_DIR_IMAGE', 'IMAGE_ROOTFS'],
                                    'core-image-minimal'))
         bbvars = {key.lower(): value for key, value in bb_vars.items()}
         bbvars['wks'] = "directdisk-multi-rootfs"

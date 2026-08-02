@@ -10,10 +10,9 @@ DEPENDS = "\
            e2fsprogs-native util-linux-native tar-native erofs-utils-native \
            virtual/cross-binutils \
            "
-DEPENDS:append:x86 = " syslinux-native syslinux grub-efi systemd-boot"
-DEPENDS:append:x86-64 = " syslinux-native syslinux grub-efi systemd-boot"
-DEPENDS:append:x86-x32 = " syslinux-native syslinux grub-efi"
-DEPENDS:append:aarch64 = " grub-efi systemd-boot"
+DEPENDS:append:x86 = " syslinux-native"
+DEPENDS:append:x86-64 = " syslinux-native"
+DEPENDS:append:x86-x32 = " syslinux-native"
 
 INHIBIT_DEFAULT_DEPS = "1"
 
