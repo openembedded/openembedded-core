@@ -3118,11 +3118,14 @@ class DevtoolIdeSdkTests(DevtoolBase):
 
     def _verify_conf_file(self, qemu, conf_file, owner, group):
         """Helper to verify a configuration file is owned by the proper user and group"""
-        ls_cmd = "ls -l %s" % conf_file
-        status, output = qemu.run(ls_cmd)
-        self.assertEqual(status, 0, msg="Failed to ls %s: %s" % (conf_file, output))
-        self.assertRegex(output, rf"^-.+ {owner} {group} .+ {re.escape(conf_file)}$",
-                         msg="%s not owned by %s:%s: %s" % (conf_file, owner, group, output))
+        stat_cmd = "stat -c '%%U %%G' %s" % conf_file
+        status, output = qemu.run(stat_cmd)
+        self.assertEqual(status, 0, msg="Failed to stat %s: %s" % (conf_file, output))
+        actual_owner, actual_group = output.strip().split()
+        self.assertEqual(actual_owner, owner,
+                         msg="%s not owned by user %s: got %s" % (conf_file, owner, actual_owner))
+        self.assertEqual(actual_group, group,
+                         msg="%s not owned by group %s: got %s" % (conf_file, group, actual_group))
 
     @OETestTag("runqemu")
     def test_devtool_ide_sdk_none_qemu(self):
