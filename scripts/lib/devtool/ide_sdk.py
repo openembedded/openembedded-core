@@ -478,6 +478,7 @@ class RecipeModified:
         self.bblayers = recipe_d.getVar('BBLAYERS').split()
         self.bitbakepath = recipe_d.getVar('BITBAKEPATH')
         self.bpn = recipe_d.getVar('BPN')
+        self.cc = recipe_d.getVar('CC')
         self.cxx = recipe_d.getVar('CXX')
         self.d = recipe_d.getVar('D')
         self.debug_build = recipe_d.getVar('DEBUG_BUILD')
