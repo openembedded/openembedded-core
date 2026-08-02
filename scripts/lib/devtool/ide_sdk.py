@@ -988,9 +988,16 @@ class RecipeModified:
         cmd_lines.append('        for key in my_dict:')
         cmd_lines.append('            setattr(self, key, my_dict[key])')
         cmd_lines.append('filtered_args = Dict2Class(filtered_args_dict)')
-        cmd_lines.append('if len(sys.argv) > 2:')
-        cmd_lines.append('    if sys.argv[1] == "-t" or sys.argv[1] == "--target":')
-        cmd_lines.append('        setattr(filtered_args, "target", sys.argv[2])')
+        cmd_lines.append('i = 1')
+        cmd_lines.append('while i < len(sys.argv) - 1:')
+        cmd_lines.append('    if sys.argv[i] in ("-t", "--target"):')
+        cmd_lines.append('        setattr(filtered_args, "target", sys.argv[i + 1])')
+        cmd_lines.append('        i += 2')
+        cmd_lines.append('    elif sys.argv[i] in ("-P", "--port"):')
+        cmd_lines.append('        setattr(filtered_args, "port", sys.argv[i + 1])')
+        cmd_lines.append('        i += 2')
+        cmd_lines.append('    else:')
+        cmd_lines.append('        i += 1')
         cmd_lines.append(
             'setattr(filtered_args, "recipename", "%s")' % self.bpn)
         cmd_lines.append('deploy_no_d("%s", "%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", filtered_args)' %
@@ -1003,6 +1010,8 @@ class RecipeModified:
         """Generate a script which does install and deploy"""
         cmd_lines = ['#!/bin/sh']
 
+        # Save the original command-line args before 'set' overwrites $@
+        cmd_lines.append('_args="$@"')
         # . oe-init-build-env $BUILDDIR $BITBAKEDIR
         # Using 'set' to pass the build directory to oe-init-build-env in sh syntax
         cmd_lines.append('cd "%s" || { echo "cd %s failed"; exit 1; }' % (
@@ -1015,8 +1024,8 @@ class RecipeModified:
         cmd_lines.append(
             'bitbake %s -c install --force || { echo "bitbake %s -c install --force failed"; exit 1; }' % (self.bpn, self.bpn))
 
-        # Self contained devtool deploy-target
-        cmd_lines.append(self.gen_deploy_target_script(args) + ' "$@"')
+        # Self contained devtool deploy-target - use saved args, not $@ (overwritten by 'set')
+        cmd_lines.append(self.gen_deploy_target_script(args) + ' $_args')
 
         return self.write_script(cmd_lines, 'install_and_deploy')
 
