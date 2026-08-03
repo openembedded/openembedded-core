@@ -41,6 +41,8 @@ do_install:append() {
     rm -f ${D}/${bindir}/pip
 }
 
+CVE_PRODUCT = "pypa:pip"
+
 do_install:append(){
 	# pip vendors distlib which ships Windows launcher templates (*.exe).
 	# Keep them only when building for a Windows (mingw) host.
