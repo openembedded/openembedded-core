@@ -14,19 +14,17 @@ GITHUB_BASE_URI = "https://github.com/shadow-maint/shadow/releases"
 SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BP}.tar.gz \
            ${@bb.utils.contains('PACKAGECONFIG', 'pam', '${PAM_SRC_URI}', '', d)} \
            file://useradd \
-		   file://prototypes.patch \
+           file://0001-subid-Add-stdint.h-for-uintmax_t.patch \
            "
 
 SRC_URI:append:class-target = " \
            file://login_defs_pam.sed \
-           file://shadow-update-pam-conf.patch \
            "
 
 SRC_URI:append:class-native = " \
-           file://disable_syslog.patch \
            file://notallylog.patch \
            "
-SRC_URI[sha256sum] = "ba7e9aed1c5420203ac549583d6e6f485a819ac7505af9c7cd8c13b2013210b8"
+SRC_URI[sha256sum] = "5e1eee2709a540ac07e4e5bb0d30f7b97d6ee1e3714ef527047fe2ffb5fdaa5c"
 UPSTREAM_CHECK_REGEX = "releases/tag/v?(?P<pver>\d+(\.\d+)+)$"
 
 # Additional Policy files for PAM
@@ -54,7 +52,7 @@ CACHED_CONFIGUREVARS += "ac_cv_lib_econf_econf_readDirs=no"
 CFLAGS:append:libc-musl = " -DLIBBSD_OVERLAY"
 
 NSCDOPT = ""
-NSCDOPT:class-native = "--without-nscd"
+NSCDOPT:class-native = "--without-nscd --disable-syslog"
 NSCDOPT:class-nativesdk = "--without-nscd"
 NSCDOPT:libc-glibc = "--with-nscd"
 
