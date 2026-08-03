@@ -131,10 +131,6 @@ usermod_sysroot() {
 	common_useradd_sysroot usermod
 }
 
-groupmems_sysroot() {
-	common_useradd_sysroot groupmems
-}
-
 common_useradd_sysroot() {
 	# Pseudo may (do_prepare_recipe_sysroot) or may not (do_populate_sysroot_setscene) be running 
 	# at this point so we're explicit about the environment so pseudo can load if 
@@ -168,7 +164,6 @@ common_useradd_sysroot() {
 		groupadd) GROUPADD_PARAM="${@get_all_cmd_params(d, 'groupadd')}";;
 		useradd) USERADD_PARAM="${@get_all_cmd_params(d, 'useradd')}";;
 		usermod) USERMOD_PARAM="${@get_all_cmd_params(d, 'usermod')}";;
-		groupmems) GROUPMEMS_PARAM="${@get_all_cmd_params(d, 'groupmems')}";;
 	esac
 
 	# Tell the system to use the environment vars
@@ -184,7 +179,7 @@ common_useradd_sysroot() {
 EXTRA_STAGING_FIXMES += "PSEUDO_SYSROOT PSEUDO_LOCALSTATEDIR LOGFIFO"
 
 python useradd_sysroot_sstate() {
-    for cmd, sort_prefix in [("groupadd", "01"), ("useradd", "02"), ("usermod", "03"), ("groupmems", "04")]:
+    for cmd, sort_prefix in [("groupadd", "01"), ("useradd", "02"), ("usermod", "03")]:
         scriptfile = None
         task = d.getVar("BB_CURRENTTASK")
         if task == "package_setscene":
