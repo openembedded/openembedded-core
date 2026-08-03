@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://src/xdemos/glxgears.c;beginline=1;endline=5;md5=2c456
 
 SRC_URI = "git://gitlab.freedesktop.org/mesa/demos.git;protocol=https;branch=main"
 
-SRCREV = "c508611faf6f2fc30248940cdcb795b564cd6699"
+SRCREV = "10418e7636cdd9595dda18c3d78a562d7248f734"
 
 # This recipe doesn't plan to make more releases, so track upstream git commits
 PV .= "+git"
