@@ -11,10 +11,6 @@
 
 inherit cargo_common pkgconfig
 
-# the binaries we will use
-CARGO_C_BUILD = "cargo-cbuild"
-CARGO_C_INSTALL = "cargo-cinstall"
-
 # We need cargo-c to compile for the target
 BASEDEPENDS:append = " cargo-c-native"
 
@@ -25,16 +21,13 @@ cargo_c_do_compile() {
     oe_cargo_fix_env
     export RUSTFLAGS="${RUSTFLAGS}"
     bbnote "Using rust targets from ${RUST_TARGET_PATH}"
-    bbnote "cargo-cbuild = $(which ${CARGO_C_BUILD})"
-    bbnote "${CARGO_C_BUILD} cbuild ${CARGO_BUILD_FLAGS}"
-    "${CARGO_C_BUILD}" cbuild ${CARGO_BUILD_FLAGS}
+    cargo-cbuild cbuild ${CARGO_BUILD_FLAGS}
 }
 
 cargo_c_do_install() {
     oe_cargo_fix_env
     export RUSTFLAGS="${RUSTFLAGS}"
-    bbnote "cargo-cinstall = $(which ${CARGO_C_INSTALL})"
-    "${CARGO_C_INSTALL}" cinstall ${CARGO_BUILD_FLAGS} \
+    cargo-cinstall cinstall ${CARGO_BUILD_FLAGS} \
         --destdir ${D} \
         --prefix ${prefix} \
         --libdir ${libdir} \
