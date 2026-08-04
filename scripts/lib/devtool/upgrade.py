@@ -55,6 +55,13 @@ _CHANGELOG_BASENAMES = {
     'perldelta.pod',
 }
 
+# Path components indicating a bundled/vendored dependency rather than the
+# recipe's own source, so its changelog-like files should not be mistaken
+# for the recipe's own changes (e.g. third-party/mruby/NEWS.md in nghttp2).
+_VENDORED_PATH_RE = re.compile(
+    r'(^|/)(third[-_]party|vendor|vendored|external|extern|deps|3rdparty)(/|$)',
+    re.IGNORECASE)
+
 def _run(cmd, cwd=''):
     logger.debug("Running command %s> %s" % (cwd,cmd))
     return bb.process.run('%s' % cmd, cwd=cwd)
@@ -591,6 +598,9 @@ def _extract_changelog(srctree, pn, old_ver, new_ver, old_tag, new_tag, workspac
     try:
         stdout, _ = _run('git diff --name-only %s %s' % (old_tag, new_tag), srctree)
         changed_files = [f.strip() for f in stdout.splitlines() if f.strip()]
+        # Exclude bundled/vendored dependencies; their changelogs are not
+        # relevant to this recipe's own version bump.
+        changed_files = [f for f in changed_files if not _VENDORED_PATH_RE.search(f)]
 
         # First pass: collect per-version release notes that changed
         # Matches files with a version number whose path suggests release notes
