@@ -250,6 +250,12 @@ class LldbServerConfig(DebuggerCrossConfig):
                % {'pf': pid_file, 'td': tmp_dir})
         return "\"/bin/sh -c '" + cmd + "'\""
 
+    def server_script_file(self, mode):
+        return 'lldb_server_' + self.id_pretty_mode(mode)
+
+    def server_script(self, mode):
+        return os.path.join(self.script_dir, self.server_script_file(mode))
+
     def server_modes(self):
         """ATTACH mode is not applicable for lldb-server platform."""
         return [self.default_mode]

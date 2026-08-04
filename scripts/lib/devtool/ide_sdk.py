@@ -151,7 +151,7 @@ class RecipeLldbNative(RecipeNative):
     def __init__(self, args, target_device):
         super().__init__('lldb-native')
         self.target_device = target_device
-        self._lldb = None
+        self.lldb = None
         self._lldb_server_path = None
 
     def __find_lldb_server(self, config, tinfoil):
@@ -164,7 +164,7 @@ class RecipeLldbNative(RecipeNative):
 
     def initialize(self, config, workspace, tinfoil):
         super()._initialize(config, workspace, tinfoil)
-        self._lldb = os.path.join(self.staging_bindir_native, 'lldb')
+        self.lldb = os.path.join(self.staging_bindir_native, 'lldb')
         self._lldb_server_path = self.__find_lldb_server(config, tinfoil)
 
     @property
