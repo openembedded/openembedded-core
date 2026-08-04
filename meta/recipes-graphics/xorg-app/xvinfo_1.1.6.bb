@@ -12,3 +12,5 @@ PE = "1"
 
 SRC_URI_EXT = "xz"
 SRC_URI[sha256sum] = "a436945e6a4ab70590358eec2b85d26970f7de480d27e8a25af8fe8421e88ae2"
+
+XORGBUILDCLASS = "meson"
