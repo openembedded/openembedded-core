@@ -17,17 +17,13 @@ CARGO = "cargo"
 # Enable build separation
 B = "${WORKDIR}/build"
 
-oe_cargo_build () {
+do_compile[progress] = "outof:\s+(\d+)/(\d+)"
+cargo_do_compile () {
 	export RUSTFLAGS="${RUSTFLAGS}"
 	bbnote "Using rust targets from ${RUST_TARGET_PATH}"
 	bbnote "cargo = $(which ${CARGO})"
 	bbnote "${CARGO} build ${CARGO_BUILD_FLAGS} ${PACKAGECONFIG_CONFARGS} $@"
 	"${CARGO}" build ${CARGO_BUILD_FLAGS} ${PACKAGECONFIG_CONFARGS} "$@"
-}
-
-do_compile[progress] = "outof:\s+(\d+)/(\d+)"
-cargo_do_compile () {
-	oe_cargo_build
 }
 
 cargo_do_install () {
