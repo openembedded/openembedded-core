@@ -16,6 +16,13 @@ BASEDEPENDS:append = " cargo-c-native"
 
 B = "${WORKDIR}/build"
 
+CARGO_BUILD_FLAGS += "\
+    --destdir ${D} \
+    --prefix ${prefix} \
+    --libdir ${libdir} \
+    --library-type cdylib \
+    "
+
 do_compile[progress] = "outof:\s+(\d+)/(\d+)"
 cargo_c_do_compile() {
     oe_cargo_fix_env
@@ -27,11 +34,7 @@ cargo_c_do_compile() {
 cargo_c_do_install() {
     oe_cargo_fix_env
     export RUSTFLAGS="${RUSTFLAGS}"
-    cargo-cinstall cinstall ${CARGO_BUILD_FLAGS} \
-        --destdir ${D} \
-        --prefix ${prefix} \
-        --libdir ${libdir} \
-        --library-type cdylib
+    cargo-cinstall cinstall ${CARGO_BUILD_FLAGS}
 }
 
 EXPORT_FUNCTIONS do_compile do_install
