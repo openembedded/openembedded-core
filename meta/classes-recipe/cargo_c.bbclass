@@ -9,7 +9,7 @@
 ## This class is used by any recipes that want to compile a C ABI compatible
 ## library with header and pkg config file
 
-inherit cargo pkgconfig
+inherit cargo_common pkgconfig
 
 # the binaries we will use
 CARGO_C_BUILD = "cargo-cbuild"
@@ -17,6 +17,8 @@ CARGO_C_INSTALL = "cargo-cinstall"
 
 # We need cargo-c to compile for the target
 BASEDEPENDS:append = " cargo-c-native"
+
+B = "${WORKDIR}/build"
 
 do_compile[progress] = "outof:\s+(\d+)/(\d+)"
 cargo_c_do_compile() {
