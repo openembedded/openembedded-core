@@ -17,6 +17,35 @@
 # add crate fetch support
 inherit rust-common
 
+# In case something fails in the build process, give a bit more feedback on
+# where the issue occured
+export RUST_BACKTRACE = "1"
+
+# Flags passed to all invocations of rustc
+# https://doc.rust-lang.org/cargo/reference/config.html#buildrustflags
+RUSTFLAGS ??= ""
+
+# The cargo profile to use. Defaults to release or dev based on DEBUG_BUILD, but
+# can be set to any valid profile.
+# https://doc.rust-lang.org/cargo/reference/profiles.html
+CARGO_PROFILE ?= "${@oe.utils.vartrue('DEBUG_BUILD', 'dev', 'release', d)}"
+
+# --frozen flag will prevent network access (which is required since only
+# the do_fetch step is authorized to access network)
+# and will require an up to date Cargo.lock file.
+# This force the package being built to already ship a Cargo.lock, in the end
+# this is what we want, at least, for reproducibility of the build.
+CARGO_BUILD_FLAGS = "-v --frozen --target ${RUST_HOST_SYS} --profile=${CARGO_PROFILE} --manifest-path=${CARGO_MANIFEST_PATH}"
+
+# The build directory is named after the profile, apart from the dev profile
+# which uses 'debug'.
+def cargo_build_directory(d):
+    profile = d.getVar("CARGO_PROFILE")
+    return "debug" if profile == "dev" else profile
+BUILD_DIR = "${@cargo_build_directory(d)}"
+
+CARGO_TARGET_SUBDIR = "${RUST_HOST_SYS}/${BUILD_DIR}"
+
 # Where we download our registry and dependencies to
 export CARGO_HOME = "${UNPACKDIR}/cargo_home"
 
