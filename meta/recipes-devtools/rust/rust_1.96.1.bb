@@ -12,20 +12,18 @@ inherit rust
 inherit cargo_common
 
 DEPENDS += "llvm"
+
 # native rust uses cargo/rustc from binary snapshots to bootstrap
 # but everything else should use our native builds
-DEPENDS:append:class-target = " cargo-native rust-native"
-DEPENDS:append:class-nativesdk = " cargo-native rust-native"
+DEPENDS:remove:class-native = "cargo-native"
+INHIBIT_DEFAULT_RUST_DEPS:class-native = "1"
+
+PROVIDES:class-native = "virtual/${TARGET_PREFIX}rust"
 
 RDEPENDS:${PN}:append:class-target = " gcc g++ binutils"
 
 PACKAGECONFIG ??= "llvm-shared"
 PACKAGECONFIG[llvm-shared] = ",,,"
-
-# Otherwise we'll depend on what we provide
-INHIBIT_DEFAULT_RUST_DEPS:class-native = "1"
-# We don't need to depend on gcc-native because yocto assumes it exists
-PROVIDES:class-native = "virtual/${TARGET_PREFIX}rust"
 
 S = "${RUSTSRC}"
 # Separate build directory from the shared source tree so that multiple
