@@ -10,18 +10,9 @@
 ## Cargo.
 
 inherit cargo_common
-inherit rust-target-config
 
 # the binary we will use
 CARGO = "cargo"
-
-# We need cargo to compile for the target
-BASEDEPENDS:append = " cargo-native"
-
-# Ensure we get the right rust variant
-DEPENDS:append:class-target = " rust-native ${RUSTLIB_DEP}"
-DEPENDS:append:class-nativesdk = " rust-native ${RUSTLIB_DEP}"
-DEPENDS:append:class-native = " rust-native"
 
 # Enable build separation
 B = "${WORKDIR}/build"

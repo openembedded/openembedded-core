@@ -15,7 +15,9 @@
 ##
 
 # add crate fetch support
-inherit rust-common
+inherit rust
+
+BASEDEPENDS:append = " cargo-native"
 
 # In case something fails in the build process, give a bit more feedback on
 # where the issue occured
