@@ -25,6 +25,7 @@ SRC_URI[archive.sha256sum] = "78262a6e7ac170d6528ebfe2efccdf220191a5af6a6cd61ea4
 SRC_URI[testtar.sha256sum] = "c6b2d42ee50b8b236e711a97d68e6c4b5c8d83e69a2be4722379f08702ea7273"
 
 CVE_STATUS[CVE-2025-6170] = "fixed-version: fixed in version 2.14.5"
+CVE_STATUS[CVE-2026-6732] = "fixed-version: fixed in version 2.15.3"
 
 BINCONFIG = "${bindir}/xml2-config"
 
