@@ -3395,7 +3395,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertEqual(len(once_configs), 2, f"Should have two once configuration, found: {once_configs}")
         self.assertEqual(len(attach_configs), 1, f"Should have one attach configuration, found: {attach_configs}")
 
-    def _verify_launch_json_debugging(self, tempdir, qemu, recipe_name, example_exe):
+    def _verify_launch_json_debugging(self, tempdir, qemu, example_exe):
         """Verify remote debugging and deployment works using launch.json configurations
 
         This method tests the VSCode debug configurations by:
@@ -3434,15 +3434,19 @@ class DevtoolIdeSdkTests(DevtoolBase):
         tasks = tasks_d["tasks"]
 
         # Test one configuration for remote debugging
+        # The config name is derived from the binary's install path
+        # (e.g. "usr-bin-<example_exe>"), which is not necessarily the same
+        # as the recipe name (e.g. meson-example installs a binary named
+        # "mesonex").
         once_config_count = 0
         for config in configurations:
-            if f"usr-bin-{recipe_name}_once" in config["name"]:
+            if f"usr-bin-{example_exe}_once" in config["name"]:
                 once_config_count += 1
                 self._verify_launch_config(tempdir, config, tasks, qemu, example_exe,
                                            self._gdb_debug_cpp_example, self._gdb_debug_cpp_example_check)
             # It works but is not 100% reliable in VSCode
             # This one: https://github.com/microsoft/vscode-cpptools/issues/4243 ?
-            # elif f"usr-bin-{recipe_name}_attach" in config["name"]
+            # elif f"usr-bin-{example_exe}_attach" in config["name"]
             #     self._verify_launch_config(tempdir, config, tasks, qemu, example_exe)
             else:
                 continue
@@ -3569,51 +3573,64 @@ class DevtoolIdeSdkTests(DevtoolBase):
             self._verify_launch_json(tempdir)
 
             # Verify deployment and remote debugging works
-            self._verify_launch_json_debugging(tempdir, qemu, recipe_name, example_exe)
+            self._verify_launch_json_debugging(tempdir, qemu, example_exe)
 
+    @OETestTag("runqemu")
     def test_devtool_ide_sdk_code_meson(self):
         """Verify a meson recipe works with ide=code mode"""
         recipe_name = "meson-example"
+        example_exe = "mesonex"
         build_file = "meson.build"
         testimage = "oe-selftest-image"
 
         self._check_workspace()
         self._write_bb_config([recipe_name])
-        tempdir = self._devtool_ide_sdk_recipe(
-            recipe_name, build_file, testimage)
-        bitbake_sdk_cmd = 'devtool ide-sdk %s %s -t root@192.168.17.17 -c --ide=code' % (
-            recipe_name, testimage)
-        runCmd(bitbake_sdk_cmd, output_log=self._cmd_logger)
 
-        with open(os.path.join(tempdir, '.vscode', 'settings.json')) as settings_j:
-            settings_d = json.load(settings_j)
-        meson_exe = settings_d["mesonbuild.mesonPath"]
-        meson_build_folder = settings_d["mesonbuild.buildFolder"]
+        # Verify deployment to Qemu (system mode) works
+        self._check_runqemu_prerequisites()
+        bitbake(testimage)
+        with runqemu(testimage, runqemuparams="nographic") as qemu:
+            tempdir = self._devtool_ide_sdk_recipe(
+                recipe_name, build_file, testimage)
+            bitbake_sdk_cmd = 'devtool ide-sdk %s %s -t root@%s -c --ide=code' % (
+                recipe_name, testimage, qemu.ip)
+            runCmd(bitbake_sdk_cmd, output_log=self._cmd_logger)
 
-        # Verify the wrapper for meson native is available
-        self.assertExists(meson_exe)
+            with open(os.path.join(tempdir, '.vscode', 'settings.json')) as settings_j:
+                settings_d = json.load(settings_j)
+            meson_exe = settings_d["mesonbuild.mesonPath"]
+            meson_build_folder = settings_d["mesonbuild.buildFolder"]
 
-        # Verify meson re-uses the o files compiled by bitbake
-        result = runCmd('%s compile -C  %s' %
-                        (meson_exe, meson_build_folder), cwd=tempdir, output_log=self._cmd_logger)
-        self.assertIn("ninja: no work to do.", result.output)
+            # Verify the wrapper for meson native is available
+            self.assertExists(meson_exe)
 
-        # Verify the unit tests work (in Qemu)
-        runCmd('%s test -C %s' % (meson_exe, meson_build_folder), cwd=tempdir,
-               output_log=self._cmd_logger)
+            # Verify meson re-uses the o files compiled by bitbake
+            result = runCmd('%s compile -C  %s' %
+                            (meson_exe, meson_build_folder), cwd=tempdir, output_log=self._cmd_logger)
+            self.assertIn("ninja: no work to do.", result.output)
 
-        # Verify re-building and testing works again
-        result = runCmd('%s compile -C  %s --clean' %
-                        (meson_exe, meson_build_folder), cwd=tempdir, output_log=self._cmd_logger)
-        self.assertIn("Cleaning...", result.output)
-        result = runCmd('%s compile -C  %s' %
-                        (meson_exe, meson_build_folder), cwd=tempdir, output_log=self._cmd_logger)
-        self.assertIn("Linking target", result.output)
-        runCmd('%s test -C %s' % (meson_exe, meson_build_folder), cwd=tempdir,
-               output_log=self._cmd_logger)
+            # Verify the unit tests work (in Qemu user mode)
+            runCmd('%s test -C %s' % (meson_exe, meson_build_folder), cwd=tempdir,
+                   output_log=self._cmd_logger)
 
-        self._verify_install_script_code(tempdir,  recipe_name)
-        self._gdb_cross()
+            # Verify re-building and testing works again
+            result = runCmd('%s compile -C  %s --clean' %
+                            (meson_exe, meson_build_folder), cwd=tempdir, output_log=self._cmd_logger)
+            self.assertIn("Cleaning...", result.output)
+            result = runCmd('%s compile -C  %s' %
+                            (meson_exe, meson_build_folder), cwd=tempdir, output_log=self._cmd_logger)
+            self.assertIn("Linking target", result.output)
+            runCmd('%s test -C %s' % (meson_exe, meson_build_folder), cwd=tempdir,
+                   output_log=self._cmd_logger)
+
+            self._verify_install_script_code(tempdir,  recipe_name)
+            self._gdb_cross()
+
+            # Verify the launch.json file created is valid
+            self._verify_launch_json(tempdir)
+
+            # Verify deployment and remote debugging works
+            self._verify_launch_json_debugging(tempdir, qemu, example_exe)
 
     @OETestTag("runqemu")
     def test_devtool_ide_sdk_code_kernel_module(self):
