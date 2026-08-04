@@ -456,30 +456,45 @@ class IdeVSCode(IdeBase):
             if cross_debug_config.modified_recipe is not modified_recipe:
                 continue
             for server_mode in cross_debug_config.server_modes():
-                new_task = {
-                    "label": cross_debug_config.id_pretty_mode(server_mode),
-                    "type": "shell",
-                    "isBackground": True,
-                    "command": cross_debug_config.debugger_cross.target_device.ssh_sshexec,
-                    "args": cross_debug_config.target_ssh_gdbserver_start_args(server_mode),
-                    "problemMatcher": [
-                        {
-                            "pattern": [
-                                {
-                                    "regexp": ".",
-                                    "file": 1,
-                                    "location": 2,
-                                    "message": 3
+                if server_mode == DebuggerServerModes.MULTI:
+                    # MULTI mode: the SSH command blocks until the port is ready
+                    # (wait loop in _target_start_cmd), so VSCode treats this as
+                    # a regular non-background task.
+                    new_task = {
+                        "label": cross_debug_config.id_pretty_mode(server_mode),
+                        "type": "shell",
+                        "command": cross_debug_config.debugger_cross.target_device.ssh_sshexec,
+                        "args": cross_debug_config.target_ssh_gdbserver_start_args(server_mode),
+                        "problemMatcher": []
+                    }
+                else:
+                    # ONCE / ATTACH: gdbserver runs in the foreground for the
+                    # whole session, so VSCode needs isBackground + a pattern
+                    # matcher to avoid waiting for the task to exit.
+                    new_task = {
+                        "label": cross_debug_config.id_pretty_mode(server_mode),
+                        "type": "shell",
+                        "isBackground": True,
+                        "command": cross_debug_config.debugger_cross.target_device.ssh_sshexec,
+                        "args": cross_debug_config.target_ssh_gdbserver_start_args(server_mode),
+                        "problemMatcher": [
+                            {
+                                "pattern": [
+                                    {
+                                        "regexp": ".",
+                                        "file": 1,
+                                        "location": 2,
+                                        "message": 3
+                                    }
+                                ],
+                                "background": {
+                                    "activeOnStart": True,
+                                    "beginsPattern": ".",
+                                    "endsPattern": ".",
                                 }
-                            ],
-                            "background": {
-                                "activeOnStart": True,
-                                "beginsPattern": ".",
-                                "endsPattern": ".",
                             }
-                        }
-                    ]
-                }
+                        ]
+                    }
                 # Deploy the artifacts to the target before starting gdbserver if not already running
                 if server_mode != DebuggerServerModes.ATTACH:
                     new_task['dependsOn'] = [
