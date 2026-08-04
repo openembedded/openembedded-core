@@ -9,7 +9,9 @@
 import logging
 import os
 import shutil
+import shlex
 import subprocess
+import sys
 import tempfile
 
 import bb.utils
@@ -189,10 +191,21 @@ def deploy_no_d(srcdir, workdir, path, strip_cmd, libdir, base_libdir, max_proce
             exec_fakeroot_no_d(fakerootcmd, fakerootenv, path, "rm -rf %s" % recipe_outdir, shell=True)
         exec_fakeroot_no_d(fakerootcmd, fakerootenv, path, "cp -af %s %s" % (os.path.join(srcdir, '.'), recipe_outdir), shell=True)
 
-        oldpath = os.environ['PATH']
-        os.environ['PATH'] = ':'.join([os.environ['PATH'], path or ''])
-        oe.package.strip_execs(args.recipename, recipe_outdir, strip_cmd, libdir, base_libdir, max_process)
-        os.environ['PATH'] = oldpath
+        # Strip under pseudo so that it records any inode replacements made by
+        # the strip tool before the deployment tar reads this directory.
+        strip_script = (
+            'import sys\n'
+            'sys.path[:] = %r\n'
+            'import oe.package\n'
+            'oe.package.strip_execs(%r, %r, %r, %r, %r, %r)\n'
+        ) % (sys.path, args.recipename, recipe_outdir, strip_cmd, libdir,
+             base_libdir, max_process)
+        ret = exec_fakeroot_no_d(
+            fakerootcmd, fakerootenv, path,
+            '%s -c %s' % (shlex.quote(sys.executable), shlex.quote(strip_script)),
+            shell=True)
+        if ret != 0:
+            raise DevtoolError('Failed to strip files for deployment')
 
     filelist = []
     inodes = set({})
