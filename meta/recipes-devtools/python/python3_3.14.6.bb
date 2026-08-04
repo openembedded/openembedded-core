@@ -35,6 +35,10 @@ SRC_URI[sha256sum] = "143b1dddefaec3bd2e21e3b839b34a2b7fb9842272883c576420d605e9
 # exclude pre-releases for both python 2.x and 3.x
 UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
 
+# Python publishes bugfix/security-only releases on its per-minor
+# maintenance branches.
+inherit upstream-stable-release-point
+
 CVE_PRODUCT = "python:python python_software_foundation:python cpython"
 
 PYTHON_MAJMIN = "3.14"
