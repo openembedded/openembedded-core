@@ -137,6 +137,45 @@ class RecipeGdbCross(RecipeNative):
         return self.target_device.host
 
 
+class RecipeLldbNative(RecipeNative):
+    """Handle lldb on the host and lldb-server on the target device.
+
+    Unlike GDB which requires a per-architecture gdb-cross-<arch> binary, LLDB
+    is architecture-agnostic: a single lldb-native installation can debug any
+    target architecture via the LLDB platform protocol.
+
+    On the target side, lldb-server (the ${PN}-server sub-package from the lldb
+    recipe) provides the platform server that CodeLLDB connects to.
+    """
+
+    def __init__(self, args, target_device):
+        super().__init__('lldb-native')
+        self.target_device = target_device
+        self._lldb = None
+        self._lldb_server_path = None
+
+    def __find_lldb_server(self, config, tinfoil):
+        """Absolute path of lldb-server on the target (from the lldb recipe)."""
+        recipe_d_lldb = parse_recipe(
+            config, tinfoil, 'lldb', appends=True, filter_workspace=False)
+        if not recipe_d_lldb:
+            raise DevtoolError("Parsing lldb recipe failed")
+        return os.path.join(recipe_d_lldb.getVar('bindir'), 'lldb-server')
+
+    def initialize(self, config, workspace, tinfoil):
+        super()._initialize(config, workspace, tinfoil)
+        self._lldb = os.path.join(self.staging_bindir_native, 'lldb')
+        self._lldb_server_path = self.__find_lldb_server(config, tinfoil)
+
+    @property
+    def debug_server_path(self):
+        return self._lldb_server_path
+
+    @property
+    def host(self):
+        return self.target_device.host
+
+
 class RecipeImage:
     """Handle some image recipe related properties
 
@@ -169,8 +208,9 @@ class RecipeImage:
         if image_d.getVar('IMAGE_GEN_DEBUGFS') == "1":
             self.__rootfs_dbg = os.path.join(workdir, 'rootfs-dbg')
 
-        self.gdbserver_missing = 'gdbserver' not in image_d.getVar(
-            'IMAGE_INSTALL') and 'tools-debug' not in image_d.getVar('IMAGE_FEATURES')
+        package_install = image_d.getVar('PACKAGE_INSTALL').split()
+        self.gdbserver_missing = 'gdbserver' not in package_install
+        self.lldb_server_missing = 'lldb-server' not in package_install
 
     @property
     def debug_support(self):
@@ -396,6 +436,7 @@ class RecipeModified:
         self.b = None
         self.base_libdir = None
         self.bblayers = None
+        self.bindir = None
         self.bitbakepath = None
         self.bpn = None
         self.d = None
@@ -476,6 +517,7 @@ class RecipeModified:
         self.b = recipe_d.getVar('B')
         self.base_libdir = recipe_d.getVar('base_libdir')
         self.bblayers = recipe_d.getVar('BBLAYERS').split()
+        self.bindir = recipe_d.getVar('bindir')
         self.bitbakepath = recipe_d.getVar('BITBAKEPATH')
         self.bpn = recipe_d.getVar('BPN')
         self.cc = recipe_d.getVar('CC')
@@ -669,7 +711,105 @@ class RecipeModified:
         if unused_host_paths:
             logger.info("Some source directories mapped by -fdebug-prefix-map are not included in the debugger search paths. Ignored host paths: %s", unused_host_paths)
 
+        self._add_broken_srctree_prefix_map(mappings)
+
         return mappings
+
+    def _add_broken_srctree_prefix_map(self, mappings):
+        """Work around a -f*-prefix-map / DWARF path resolution issue affecting
+        out-of-tree devtool workspaces (e.g. meson recipes built via 'devtool modify'
+        with the clang toolchain).
+
+        meson/ninja may invoke the compiler with a *relative* source file path
+        when the build directory B (under WORKDIR) and the source directory S
+        (relocated outside WORKDIR by 'devtool modify') only share a distant
+        common ancestor. -fdebug-prefix-map/-ffile-prefix-map only rewrite
+        paths that literally start with the mapped host prefix, so a relative
+        path argument is never rewritten: only DW_AT_comp_dir (which is
+        absolute) gets rewritten, DW_AT_name stays relative and unrewritten.
+
+        This has only been observed to actually happen with the clang
+        toolchain: clang's meson/ninja invocation embeds a relative DW_AT_name
+        for out-of-tree sources, while gcc, even via meson/ninja, embeds an
+        absolute (and correctly -fdebug-prefix-map-rewritten) DW_AT_name, so
+        no underflow can happen there - confirmed empirically:
+        oe-selftest's test_devtool_ide_sdk_none_qemu (gcc toolchain, covering
+        both cmake-example and meson-example) fails when this workaround is
+        applied unconditionally to meson, while the dedicated clang tests
+        (test_devtool_ide_sdk_{code,none}_meson_clang) require it. cmake
+        (with the Ninja or Makefiles generators used here) always passes
+        absolute source paths to the compiler regardless of toolchain, so it
+        never needs this workaround either. Applying this workaround outside
+        of the meson+clang combination would incorrectly discard the correct
+        (and, for gcc/cmake, already working) comp_dir-based mapping - see the
+        'del mappings[target_path]' below - falling back to the generic
+        '/usr/src/debug' mapping to the image's (stale, whole-image-build-time)
+        rootfs-dbg instead of the live source tree.
+
+        Debuggers resolve the compile unit path by joining DW_AT_comp_dir with
+        the relative DW_AT_name, popping one path component per leading "..".
+        If DW_AT_name contains more ".." components than DW_AT_comp_dir has
+        path components, the extra ".." are no-ops once the root is reached
+        (they can't go above "/"), so the final resolved path becomes "/"
+        followed by the leftover (non-"..") components of DW_AT_name - i.e. a
+        suffix of the real, absolute source directory rather than the
+        "/usr/src/debug/<pn>/<pv>" prefix that DEBUG_PREFIX_MAP and the
+        generated sourceMap/sourceFileMap assume.
+
+        This computes that resolved suffix for the recipe's own source
+        directory (S) and replaces the (now dead, since every file under S is
+        affected the same way) comp_dir-based mapping with it, so debuggers
+        relying on prefix matching (e.g. CodeLLDB, GDB) can still locate the
+        sources.
+
+        Note: the original comp_dir-based target_path is removed rather than
+        kept alongside the new one. Keeping both would mean two different
+        target paths map to the same host path (S), which is ambiguous when a
+        debugger needs to go the other way round: translating a local file
+        (opened from the host/workspace) back into a debug-info path in order
+        to resolve a source breakpoint. CodeLLDB in particular appears to
+        pick the first-registered ("normal", comp_dir-based) mapping in that
+        case, which never matches any real compile unit here, leaving the
+        breakpoint pending with 0 locations.
+        """
+        if self.build_tool is not BuildTool.MESON or self.toolchain != "clang":
+            return
+        if not self.real_srctree or not self.b:
+            return
+
+        b_real = os.path.realpath(self.b)
+        srctree_real = os.path.realpath(self.real_srctree)
+        common = os.path.commonpath([b_real, srctree_real])
+        if common in (b_real, srctree_real):
+            # B is srctree (or a parent of it), or B is nested inside srctree:
+            # either way the compiler is never invoked with a source path that
+            # climbs above the common ancestor, so no underflow can happen.
+            return
+
+        # Number of ".." path components needed to get from the compiler's
+        # working directory (the build directory B) up to the common ancestor
+        # with the source tree. This is how many leading ".." components
+        # DW_AT_name would contain for sources directly under S.
+        overshoot_components = len(os.path.relpath(b_real, common).split(os.sep))
+
+        for target_path, host_path in list(mappings.items()):
+            if host_path != srctree_real:
+                # Only the recipe's own source directory (S) is relocated by
+                # devtool modify, other mapped directories are unaffected.
+                continue
+            comp_dir_components = len([c for c in target_path.split('/') if c])
+            if overshoot_components <= comp_dir_components:
+                # The rewritten DW_AT_comp_dir has enough components to
+                # absorb all the ".." in DW_AT_name, no underflow happens.
+                continue
+            broken_target = '/' + os.path.relpath(srctree_real, common)
+            if broken_target not in mappings:
+                mappings[broken_target] = host_path
+            # The comp_dir-based target_path never actually occurs in the
+            # debug info for files under S (all of them hit the same
+            # overshoot), so keeping it around only creates an ambiguous
+            # reverse mapping (see docstring above). Drop it.
+            del mappings[target_path]
 
     @property
     def gdb_pretty_print_scripts(self):
@@ -1182,8 +1322,11 @@ def ide_setup(args, config, basepath, workspace):
                                 recipe_modified.toolchain or '')
                 if debugger_key not in debuggers:
                     target_device = TargetDevice(args)
-                    debugger = RecipeGdbCross(
-                        args, recipe_modified.target_arch, target_device)
+                    if recipe_modified.toolchain == 'clang':
+                        debugger = RecipeLldbNative(args, target_device)
+                    else:
+                        debugger = RecipeGdbCross(
+                            args, recipe_modified.target_arch, target_device)
                     debugger.initialize(config, workspace, tinfoil)
                     bootstrap_tasks += debugger.bootstrap_tasks
                     debuggers[debugger_key] = debugger
@@ -1207,12 +1350,20 @@ def ide_setup(args, config, basepath, workspace):
     wants_gdbserver = any(
         r.wants_gdbserver and r.toolchain == 'gcc'
         for r in recipes_modified)
+    wants_lldb_server = any(
+        r.wants_gdbserver and r.toolchain == 'clang'
+        for r in recipes_modified)
     for recipe_image in recipes_images:
         if wants_gdbserver and recipe_image.gdbserver_missing:
             logger.warning(
                 "gdbserver not installed in image %s. Remote debugging will not be available" % recipe_image)
+        if wants_lldb_server and recipe_image.lldb_server_missing:
+            logger.warning(
+                "lldb-server not installed in image %s. "
+                "Remote debugging with LLDB (CodeLLDB) will not be available. "
+                "Add 'lldb-server' to IMAGE_INSTALL." % recipe_image)
 
-        if wants_gdbserver and recipe_image.combine_dbg_image is False:
+        if (wants_gdbserver or wants_lldb_server) and recipe_image.combine_dbg_image is False:
             logger.warning(
                 'IMAGE_CLASSES += "image-combined-dbg" is missing for image %s. Remote debugging will not find debug symbols from rootfs-dbg.' % recipe_image)
 

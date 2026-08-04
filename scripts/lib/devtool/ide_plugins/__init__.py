@@ -187,6 +187,72 @@ class GdbCrossConfig(DebuggerCrossConfig):
         return "\"kill \\$(pgrep -o -f 'gdbserver --attach :%s') 2>/dev/null || true\"" % self.debug_server_port
 
 
+class LldbServerConfig(DebuggerCrossConfig):
+    """Configure lldb-server (platform mode) on the target for CodeLLDB remote debugging.
+
+    Unlike gdbserver, lldb-server platform mode is architecture-agnostic on the host
+    side: a single lldb-native binary handles all target architectures via the
+    LLDB platform protocol that CodeLLDB speaks natively.
+
+    The ATTACH mode is not supported because lldb-server platform does not take a
+    PID argument; attaching is done client-side via 'process attach'.
+    """
+
+    def __init__(self, image_recipe, modified_recipe, binary,
+                 default_mode=DebuggerServerModes.MULTI):
+        super().__init__(image_recipe, modified_recipe, binary,
+                         default_mode)
+
+    def _lldb_server_tmp_dir(self, mode):
+        return os.path.join('/tmp', 'lldb_server_%s' % self.id_pretty_mode(mode))
+
+    def _lldb_server_pid_file(self, mode):
+        return os.path.join(self._lldb_server_tmp_dir(mode), 'lldb_server.pid')
+
+    def _lldb_server_log_file(self, mode):
+        return os.path.join(self._lldb_server_tmp_dir(mode), 'lldb_server.log')
+
+    def _target_start_cmd(self, mode):
+        """SSH command to start lldb-server in platform mode on the target."""
+        lldb_server = self.debugger_cross.debug_server_path
+        # Use '*:<port>' so lldb-server binds on all interfaces (0.0.0.0), not
+        # just loopback.  The bare ':<port>' form only binds to 127.0.0.1 in
+        # lldb-server 21.x and the remote lldb client connects from the host.
+        # Start from /tmp because lldb-server creates temp files in its cwd and
+        # the SSH default cwd (/home/root) may not exist on a minimal image.
+        if mode == DebuggerServerModes.ONCE:
+            cmd = "cd /tmp && %s platform --one-shot --server --listen *:%s" % (
+                lldb_server, self.debug_server_port)
+        elif mode == DebuggerServerModes.MULTI:
+            hex_port = "%04X" % self.debug_server_port
+            pid_file = self._lldb_server_pid_file(mode)
+            tmp_dir = self._lldb_server_tmp_dir(mode)
+            log_file = self._lldb_server_log_file(mode)
+            cmd = "grep -q :%s /proc/net/tcp /proc/net/tcp6 2>/dev/null && exit 0; " % hex_port
+            cmd += "mkdir -p %s; " % tmp_dir
+            cmd += "cd %s; " % tmp_dir
+            cmd += "%s platform --server --listen *:%s > %s 2>&1 & " % (
+                lldb_server, self.debug_server_port, log_file)
+            cmd += "echo \\$! > %s; " % pid_file
+            cmd += "_w=0; while ! grep -q :%s /proc/net/tcp /proc/net/tcp6 2>/dev/null; " % hex_port
+            cmd += "do _w=\\$((_w+1)); [ \\$_w -lt 100 ] || { echo lldb-server did not start on port %s >&2; exit 1; }; sleep 0.1; done;" % self.debug_server_port
+        else:
+            raise DevtoolError(
+                "lldb-server does not support mode %s "
+                "(ATTACH is handled client-side with 'process attach')" % mode)
+        return "\"/bin/sh -c '" + cmd + "'\""
+
+    def _target_kill_cmd(self):
+        """SSH command to stop a MULTI-mode lldb-server on the target."""
+        pid_file = self._lldb_server_pid_file(DebuggerServerModes.MULTI)
+        tmp_dir = self._lldb_server_tmp_dir(DebuggerServerModes.MULTI)
+        cmd = ("test -f %(pf)s && kill \\$(cat %(pf)s) 2>/dev/null; rm -rf %(td)s"
+               % {'pf': pid_file, 'td': tmp_dir})
+        return "\"/bin/sh -c '" + cmd + "'\""
+
+    def server_modes(self):
+        """ATTACH mode is not applicable for lldb-server platform."""
+        return [self.default_mode]
 
 class IdeBase:
     """Base class defining the interface for IDE plugins"""

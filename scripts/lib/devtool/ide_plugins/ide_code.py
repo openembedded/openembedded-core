@@ -9,7 +9,7 @@ import json
 import logging
 import os
 import shutil
-from devtool.ide_plugins import BuildTool, IdeBase, GdbCrossConfig, DebuggerServerModes, get_devtool_deploy_opts
+from devtool.ide_plugins import BuildTool, IdeBase, GdbCrossConfig, DebuggerServerModes, LldbServerConfig, get_devtool_deploy_opts
 
 logger = logging.getLogger('devtool')
 
@@ -42,6 +42,28 @@ class GdbCrossConfigVSCode(GdbCrossConfig):
             self._target_kill_cmd()
         ]
 
+
+class LldbServerConfigVSCode(LldbServerConfig):
+    """VSCode-specific lldb-server configuration for CodeLLDB remote debugging."""
+
+    def __init__(self, image_recipe, modified_recipe, binary,
+                 default_mode=DebuggerServerModes.MULTI):
+        super().__init__(image_recipe, modified_recipe, binary,
+                         default_mode)
+
+    def target_ssh_gdbserver_start_args(self, mode=None):
+        """SSH argument list to start lldb-server on the target"""
+        if mode is None:
+            mode = self.default_mode
+        return self._target_ssh_args() + [
+            self._target_start_cmd(mode)
+        ]
+
+    def target_ssh_gdbserver_kill_args(self):
+        """SSH argument list to stop a running MULTI-mode lldb-server"""
+        return self._target_ssh_args() + [
+            self._target_kill_cmd()
+        ]
 
 class IdeVSCode(IdeBase):
     """Manage IDE configurations for VSCode
@@ -284,6 +306,10 @@ class IdeVSCode(IdeBase):
                 "ms-vscode.cpptools-extension-pack",
                 "ms-vscode.cpptools-themes"
             ]
+        # For clang toolchain, CodeLLDB provides native LLDB debugging in VSCode
+        if (modified_recipe.toolchain == 'clang'
+                and modified_recipe.build_tool.is_c_cpp):
+            recommendations.append("vadimcn.vscode-lldb")
         if modified_recipe.build_tool is BuildTool.CMAKE:
             recommendations.append("ms-vscode.cmake-tools")
         if modified_recipe.build_tool is BuildTool.MESON:
@@ -327,7 +353,9 @@ class IdeVSCode(IdeBase):
             self.dot_code_dir(modified_recipe), prop_file, properties_dicts)
 
     def vscode_launch_bin_dbg(self, cross_debug_config, server_mode):
-        """Dispatch to the GDB launch config generator."""
+        """Dispatch to the GDB or LLDB launch config generator."""
+        if isinstance(cross_debug_config, LldbServerConfig):
+            return self._vscode_launch_bin_dbg_lldb(cross_debug_config, server_mode)
         return self._vscode_launch_bin_dbg_gdb(cross_debug_config, server_mode)
 
     def _vscode_launch_bin_dbg_gdb(self, cross_debug_config, server_mode):
@@ -411,6 +439,116 @@ class IdeVSCode(IdeBase):
         if server_mode == DebuggerServerModes.ATTACH:
             kill_task_label = "kill_gdbserver_" + cross_debug_config.id_pretty_mode(server_mode)
             launch_config["postDebugTask"] = kill_task_label
+
+        return launch_config
+
+    def _vscode_launch_bin_dbg_lldb(self, lldb_config, server_mode):
+        """Generate a CodeLLDB (type: lldb) launch configuration entry for launch.json.
+
+        CodeLLDB connects to lldb-server via the LLDB platform protocol.  The
+        initCommands select the remote platform and open the connection before
+        the process is launched, so CodeLLDB can inspect and control it.
+
+        Using targetCreateCommands instead of "program" so we can pass both the
+        local host binary (for debug symbols) and the remote target path (where
+        devtool deploy-target has already installed the binary) to
+        "target create --remote-file".  This prevents LLDB from uploading the
+        binary from its module cache to a temporary directory and ensures the
+        process starts from its installed location where the dynamic linker can
+        find shared libraries via the standard search paths.
+        """
+        modified_recipe = lldb_config.modified_recipe
+        debugger_cross = modified_recipe.debugger_cross
+
+        init_commands = [
+            "platform select remote-linux",
+            "platform connect connect://%s:%d" % (debugger_cross.host, lldb_config.debug_server_port),
+            # Clear the default step-avoid-regexp so std:: and other library
+            # namespaces are not silently skipped on step-in. (default is "std::" in LLDB 15+)
+            "settings set target.process.thread.step-avoid-regexp \"\"",
+        ]
+        # Search for header files in recipe-sysroot (same as GDB sourceFileMap).
+        source_map = {
+            "/usr/include": os.path.join(modified_recipe.recipe_sysroot, "usr", "include")
+        }
+        if lldb_config.image_recipe.rootfs_dbg:
+            # Map build-time paths back to the workspace source tree.
+            for target_path, host_path in modified_recipe.reverse_debug_prefix_map.items():
+                if host_path.startswith(modified_recipe.real_srctree):
+                    source_map[target_path] = (
+                        "${workspaceFolder}"
+                        + host_path[len(modified_recipe.real_srctree):])
+                else:
+                    source_map[target_path] = host_path
+            if "/usr/src/debug" in source_map:
+                logger.error(
+                    'Key "/usr/src/debug" already exists in source_map. '
+                    'Something with DEBUG_PREFIX_MAP looks unexpected and finding '
+                    'sources in the rootfs-dbg will not work as expected.')
+            else:
+                source_map["/usr/src/debug"] = os.path.join(
+                    lldb_config.image_recipe.rootfs_dbg, "usr", "src", "debug")
+
+            # Point LLDB at the .debug directories in rootfs-dbg.
+            debug_search_paths = " ".join(
+                modified_recipe.solib_search_path(lldb_config.image_recipe))
+            init_commands.append(
+                "settings set target.debug-file-search-paths %s" % debug_search_paths)
+
+            # Point LLDB at the unstripped binaries and shared libraries in ${D}
+            # so it can load debug symbols for the recipe's own shared libraries.
+            # These are the files deployed by devtool deploy-target.
+            exec_search_paths = " ".join([
+                os.path.join(modified_recipe.d, modified_recipe.libdir.lstrip('/')),
+                os.path.join(modified_recipe.d, modified_recipe.base_libdir.lstrip('/')),
+                os.path.join(modified_recipe.d, modified_recipe.bindir.lstrip('/')),
+            ])
+            # Deduplicate in case base_libdir == libdir or paths coincide
+            exec_search_paths = " ".join(dict.fromkeys(exec_search_paths.split()))
+            init_commands.append(
+                "settings set target.exec-search-paths %s" % exec_search_paths)
+        else:
+            logger.warning(
+                "Cannot setup debug symbols configuration for LLDB. "
+                "IMAGE_GEN_DEBUGFS is not enabled.")
+
+        # "target create --remote-file <target_path> <host_debug_binary>":
+        # --remote-file tells LLDB which path to execute on the target.
+        # The positional argument is the local host binary, loaded for symbols.
+        # This keeps devtool deploy-target as the sole deployment mechanism and
+        # avoids LLDB uploading the binary to a temporary directory via its
+        # module cache.  Running from the installed path ensures the dynamic
+        # linker on the target can find shared libraries at their standard
+        # locations.
+        target_create_cmd = "target create --remote-file %s %s" % (
+            lldb_config.binary.binary_path,
+            lldb_config.binary.binary_host_path)
+
+        launch_config = {
+            "name": lldb_config.id_pretty_mode(server_mode),
+            "type": "lldb",
+            "request": "launch",
+            # Use targetCreateCommands instead of "program" to control both
+            # the local binary (for debug symbols) and the remote path.
+            "targetCreateCommands": [target_create_cmd],
+            "stopOnEntry": False,
+            "cwd": "/tmp",
+            "preLaunchTask": lldb_config.id_pretty_mode(server_mode),
+            "initCommands": init_commands,
+        }
+        if source_map:
+            launch_config["sourceMap"] = source_map
+        if modified_recipe.b:
+            # CodeLLDB resolves any source path that is still relative (as
+            # opposed to being rewritten to an absolute path by sourceMap /
+            # target.source-map) against "relativePathBase", defaulting to
+            # ${workspaceFolder}. Compilers are invoked with the build
+            # directory B as their working directory, so relative DW_AT_name
+            # entries (e.g. from meson/ninja) are relative to B. Pointing
+            # relativePathBase at B lets CodeLLDB resolve these directly,
+            # which matters in particular for devtool workspaces where S
+            # (and thus ${workspaceFolder}) is relocated outside of WORKDIR.
+            launch_config["relativePathBase"] = modified_recipe.b
 
         return launch_config
 
@@ -745,8 +883,12 @@ class IdeVSCode(IdeBase):
         self.vscode_extensions(modified_recipe)
         self.vscode_c_cpp_properties(modified_recipe)
         if args.target:
-            self.initialize_cross_debug_configs(
-                image_recipe, modified_recipe, GdbCrossConfigVSCode)
+            if modified_recipe.toolchain == 'clang':
+                self.initialize_cross_debug_configs(
+                    image_recipe, modified_recipe, LldbServerConfigVSCode)
+            else:
+                self.initialize_cross_debug_configs(
+                    image_recipe, modified_recipe, GdbCrossConfigVSCode)
             self.vscode_launch(args, modified_recipe)
             self.vscode_tasks(args, modified_recipe)
 
