@@ -20,11 +20,6 @@ inherit rust-common
 # Where we download our registry and dependencies to
 export CARGO_HOME = "${UNPACKDIR}/cargo_home"
 
-# The pkg-config-rs library used by cargo build scripts disables itself when
-# cross compiling unless this is defined. We set up pkg-config appropriately
-# for cross compilation, so tell it we know better than it.
-export PKG_CONFIG_ALLOW_CROSS = "1"
-
 # Don't instruct cargo to use crates downloaded by bitbake. Some rust packages,
 # for example the rust compiler itself, come with their own vendored sources.
 # Specifying two [source.crates-io] will not work.
@@ -241,11 +236,15 @@ oe_cargo_fix_env () {
 	# openssl-sys
 	export OPENSSL_NO_VENDOR="1"
 
-	# pkg-config-rs. Crates can still override the dynamic linking
-	# but try to dynamically link to system libraries.
+	# pkg-config-rs.
 	# https://docs.rs/pkg-config/latest/pkg_config/
-	export SYSTEM_DEPS_BUILD_INTERNAL="never"
+	# In cross pkg-config-rs disables itself unless this is defined to tell it
+	# we have set up sysroots appropriately.
+	export PKG_CONFIG_ALLOW_CROSS="1"
+	# Crates can still override the dynamic linking but try to dynamically link
+	# to system libraries.
 	export PKG_CONFIG_ALL_DYNAMIC="1"
+	export SYSTEM_DEPS_BUILD_INTERNAL="never"
 
 	# zstd-sys
 	export ZSTD_SYS_USE_PKG_CONFIG="1"
