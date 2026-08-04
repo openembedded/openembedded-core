@@ -56,7 +56,7 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
 
 SRC_URI[sha256sum] = "8b6d4ba7ae2c036f7dafbb4e29717677411078f9a9d961b2dc7c1ba16273e9e9"
 
-inherit autotools ptest pkgconfig useradd python3-dir manpages systemd
+inherit autotools ptest pkgconfig useradd python3-dir manpages systemd upstream-stable-release-point
 
 CACHED_CONFIGUREVARS = "PGREP=/usr/bin/pgrep"
 
