@@ -31,6 +31,10 @@ BINCONFIG = "${bindir}/xml2-config"
 
 inherit autotools pkgconfig binconfig-disabled ptest
 
+# libxml2 publishes bugfix/security-only micro releases on its per-minor
+# release branches.
+inherit upstream-stable-release-point
+
 LDFLAGS:append:riscv64 = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld ptest', ' -fuse-ld=bfd', '', d)}"
 
 RDEPENDS:${PN}-ptest += "locale-base-en-us"
