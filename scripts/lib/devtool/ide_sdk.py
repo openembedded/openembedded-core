@@ -130,7 +130,7 @@ class RecipeGdbCross(RecipeNative):
         gdb_path = os.path.join(
             self.staging_bindir_native, self.target_sys, gdb_bin)
         self.gdb = gdb_path
-        self.gdbserver_path = self.__find_gdbserver(config, tinfoil)
+        self.debug_server_path = self.__find_gdbserver(config, tinfoil)
 
     @property
     def host(self):
@@ -385,7 +385,7 @@ class RecipeModified:
     def __init__(self, name):
         self.name = name
         self.bootstrap_tasks = [name + ':do_install']
-        self.gdb_cross = None
+        self.debugger_cross = None
         # workspace
         self.real_srctree = None
         self.srctree = None
@@ -1169,21 +1169,25 @@ def ide_setup(args, config, basepath, workspace):
         if args.mode == DevtoolIdeMode.modified:
             logger.info("Setting up workspaces for modified recipe: %s" %
                         str(recipes_modified_names))
-            gdbs_cross = {}
+            debuggers = {}
             for recipe_name in recipes_modified_names:
                 recipe_modified = RecipeModified(recipe_name)
                 recipe_modified.initialize(config, workspace, tinfoil)
                 bootstrap_tasks += recipe_modified.bootstrap_tasks
                 recipes_modified.append(recipe_modified)
 
-                if recipe_modified.target_arch not in gdbs_cross:
+                # Key by (arch, toolchain) so recipes with different toolchains
+                # targeting the same arch each get the right debugger.
+                debugger_key = (recipe_modified.target_arch,
+                                recipe_modified.toolchain or '')
+                if debugger_key not in debuggers:
                     target_device = TargetDevice(args)
-                    gdb_cross = RecipeGdbCross(
+                    debugger = RecipeGdbCross(
                         args, recipe_modified.target_arch, target_device)
-                    gdb_cross.initialize(config, workspace, tinfoil)
-                    bootstrap_tasks += gdb_cross.bootstrap_tasks
-                    gdbs_cross[recipe_modified.target_arch] = gdb_cross
-                recipe_modified.gdb_cross = gdbs_cross[recipe_modified.target_arch]
+                    debugger.initialize(config, workspace, tinfoil)
+                    bootstrap_tasks += debugger.bootstrap_tasks
+                    debuggers[debugger_key] = debugger
+                recipe_modified.debugger_cross = debuggers[debugger_key]
 
     finally:
         tinfoil.shutdown()
@@ -1201,7 +1205,8 @@ def ide_setup(args, config, basepath, workspace):
                 config.init_path, basepath, bb_cmd_late, watch=True)
 
     wants_gdbserver = any(
-        r.wants_gdbserver for r in recipes_modified)
+        r.wants_gdbserver and r.toolchain == 'gcc'
+        for r in recipes_modified)
     for recipe_image in recipes_images:
         if wants_gdbserver and recipe_image.gdbserver_missing:
             logger.warning(

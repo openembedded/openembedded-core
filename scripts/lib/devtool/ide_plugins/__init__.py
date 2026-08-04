@@ -22,7 +22,7 @@ class BuildTool(Enum):
     KERNEL_MODULE = auto()
 
     @property
-    def is_c_ccp(self):
+    def is_c_cpp(self):
         if self is BuildTool.CMAKE:
             return True
         if self is BuildTool.MESON:
@@ -31,134 +31,157 @@ class BuildTool(Enum):
 
     @property
     def is_c_cpp_kernel(self):
-        if self.is_c_ccp or self is BuildTool.KERNEL_MODULE:
+        if self.is_c_cpp or self is BuildTool.KERNEL_MODULE:
             return True
         return False
 
 
-class GdbServerModes(Enum):
+class DebuggerServerModes(Enum):
     ONCE = auto()
     ATTACH = auto()
     MULTI = auto()
 
 
-class GdbCrossConfig:
-    """Base class defining the GDB configuration generator interface
+class DebuggerCrossConfig:
+    """Base class defining the cross-debugger configuration generator interface.
 
-    Generate a GDB configuration for a binary on the target device.
+    Manages the per-binary port assignment, script paths, and SSH argument
+    construction that are common to all debugger back-ends (GDB, LLDB).
+    Concrete subclasses provide the back-end-specific remote start/kill commands.
     """
-    _gdbserver_port_next = 1234
-    _gdb_cross_configs = {}
+    _port_next = 1234
+    _configs = {}
 
-    def __init__(self, image_recipe, modified_recipe, binary, gdbserver_default_mode):
+    def __init__(self, image_recipe, modified_recipe, binary, default_mode):
         self.image_recipe = image_recipe
         self.modified_recipe = modified_recipe
-        self.gdb_cross = modified_recipe.gdb_cross
+        self.debugger_cross = modified_recipe.debugger_cross
         self.binary = binary
-        self.gdbserver_default_mode = gdbserver_default_mode
+        self.default_mode = default_mode
         self.binary_pretty = self.binary.binary_path.replace(os.sep, '-').lstrip('-')
-        self.gdbserver_port = GdbCrossConfig._gdbserver_port_next
-        GdbCrossConfig._gdbserver_port_next += 1
-        self.id_pretty = "%d_%s" % (self.gdbserver_port, self.binary_pretty)
+        self.debug_server_port = DebuggerCrossConfig._port_next
+        DebuggerCrossConfig._port_next += 1
+        self.id_pretty = "%d_%s" % (self.debug_server_port, self.binary_pretty)
 
-        # Track all generated gdbserver configs to avoid duplicates
-        if self.id_pretty in GdbCrossConfig._gdb_cross_configs:
+        if self.id_pretty in DebuggerCrossConfig._configs:
             raise DevtoolError(
-                "gdbserver config for binary %s is already generated" % binary)
-        GdbCrossConfig._gdb_cross_configs[self.id_pretty] = self
+                "debugger config for binary %s is already generated" % binary)
+        DebuggerCrossConfig._configs[self.id_pretty] = self
 
-    def id_pretty_mode(self, gdbserver_mode):
-        return "%s_%s" % (self.id_pretty, gdbserver_mode.name.lower())
+    def id_pretty_mode(self, mode):
+        return "%s_%s" % (self.id_pretty, mode.name.lower())
 
-    # GDB and gdbserver script on the host
+    # Host-side script paths
     @property
     def script_dir(self):
         return self.modified_recipe.ide_sdk_scripts_dir
 
+    def server_script(self, mode):
+        raise NotImplementedError
+
+    # SSH argument helpers
+    def _target_ssh_args(self):
+        ssh_args = []
+        if self.debugger_cross.target_device.ssh_port:
+            ssh_args += self.debugger_cross.target_device.ssh_port
+        if self.debugger_cross.target_device.extraoptions:
+            ssh_args.extend(self.debugger_cross.target_device.extraoptions)
+        if self.debugger_cross.target_device.target:
+            ssh_args.append(self.debugger_cross.target_device.target)
+        return ssh_args
+
+    def server_modes(self):
+        """List of debug-server modes for which scripts are generated."""
+        modes = [self.default_mode]
+        if self.binary.runs_as_service and self.default_mode != DebuggerServerModes.ATTACH:
+            modes.append(DebuggerServerModes.ATTACH)
+        return modes
+
+    def initialize(self):
+        """Called after construction to generate any required config files."""
+        pass
+
+    # Abstract — subclasses must implement
+    def _target_start_cmd(self, mode):
+        raise NotImplementedError
+
+    def _target_kill_cmd(self):
+        raise NotImplementedError
+
+
+class GdbCrossConfig(DebuggerCrossConfig):
+    """GDB-specific cross-debugging configuration.
+
+    Manages gdbserver on the target and gdb-cross on the host.  Provides
+    gdbinit / gdb wrapper scripts used by ide=none as well as the
+    target-side tmp/pid/log paths consumed by the gdbserver start command.
+    """
+
+    def __init__(self, image_recipe, modified_recipe, binary,
+                 default_mode=DebuggerServerModes.MULTI):
+        super().__init__(image_recipe, modified_recipe, binary,
+                         default_mode)
+
+    # GDB-specific host paths
     @property
     def gdbinit_dir(self):
         return os.path.join(self.script_dir, 'gdbinit')
 
-    def gdbserver_script_file(self, gdbserver_mode):
-        return 'gdbserver_' + self.id_pretty_mode(gdbserver_mode)
-
-    def gdbserver_script(self, gdbserver_mode):
-        return os.path.join(self.script_dir, self.gdbserver_script_file(gdbserver_mode))
-
     @property
     def gdbinit(self):
-        return os.path.join(
-            self.gdbinit_dir, 'gdbinit_' + self.id_pretty)
+        return os.path.join(self.gdbinit_dir, 'gdbinit_' + self.id_pretty)
 
     @property
     def gdb_script(self):
-        return os.path.join(
-            self.script_dir, 'gdb_' + self.id_pretty)
+        return os.path.join(self.script_dir, 'gdb_' + self.id_pretty)
+
+    def server_script_file(self, mode):
+        return 'gdbserver_' + self.id_pretty_mode(mode)
+
+    def server_script(self, mode):
+        return os.path.join(self.script_dir, self.server_script_file(mode))
 
     # gdbserver files on the target
-    def gdbserver_tmp_dir(self, gdbserver_mode):
-        return os.path.join('/tmp', 'gdbserver_%s' % self.id_pretty_mode(gdbserver_mode))
+    def _gdbserver_tmp_dir(self, mode):
+        return os.path.join('/tmp', 'gdbserver_%s' % self.id_pretty_mode(mode))
 
-    def gdbserver_pid_file(self, gdbserver_mode):
-        return os.path.join(self.gdbserver_tmp_dir(gdbserver_mode), 'gdbserver.pid')
+    def _gdbserver_pid_file(self, mode):
+        return os.path.join(self._gdbserver_tmp_dir(mode), 'gdbserver.pid')
 
-    def gdbserver_log_file(self, gdbserver_mode):
-        return os.path.join(self.gdbserver_tmp_dir(gdbserver_mode), 'gdbserver.log')
+    def _gdbserver_log_file(self, mode):
+        return os.path.join(self._gdbserver_tmp_dir(mode), 'gdbserver.log')
 
-    def _target_gdbserver_start_cmd(self, gdbserver_mode):
-        """Get the ssh command to start gdbserver on the target device
+    def _target_start_cmd(self, server_mode):
+        """SSH command to start gdbserver on the target device.
 
-        returns something like:
+        Returns something like:
           "\"/bin/sh -c '/usr/bin/gdbserver --once :1234 /usr/bin/cmake-example'\""
-        or for multi mode:
-          "\"/bin/sh -c 'if [ \"$1\" = \"stop\" ]; then ... else ... fi'\""
         """
-        if gdbserver_mode == GdbServerModes.ONCE:
+        if server_mode == DebuggerServerModes.ONCE:
             gdbserver_cmd_start = "%s --once :%s %s" % (
-                self.gdb_cross.gdbserver_path, self.gdbserver_port, self.binary.binary_path)
-        elif gdbserver_mode == GdbServerModes.ATTACH:
+                self.debugger_cross.debug_server_path, self.debug_server_port, self.binary.binary_path)
+        elif server_mode == DebuggerServerModes.ATTACH:
             pid_command = self.binary.pid_command
             if pid_command:
                 gdbserver_cmd_start = "%s --attach :%s \\$(%s)" % (
-                    self.gdb_cross.gdbserver_path,
-                    self.gdbserver_port,
+                    self.debugger_cross.debug_server_path,
+                    self.debug_server_port,
                     pid_command)
             else:
                 raise DevtoolError("Cannot use gdbserver attach mode for binary %s. No PID found." % self.binary.binary_path)
-        elif gdbserver_mode == GdbServerModes.MULTI:
-            gdbserver_cmd_start = "test -f %s && exit 0; " % self.gdbserver_pid_file(gdbserver_mode)
-            gdbserver_cmd_start += "mkdir -p %s; " % self.gdbserver_tmp_dir(gdbserver_mode)
+        elif server_mode == DebuggerServerModes.MULTI:
+            gdbserver_cmd_start = "test -f %s && exit 0; " % self._gdbserver_pid_file(server_mode)
+            gdbserver_cmd_start += "mkdir -p %s; " % self._gdbserver_tmp_dir(server_mode)
             gdbserver_cmd_start += "%s --multi :%s > %s 2>&1 & " % (
-                self.gdb_cross.gdbserver_path, self.gdbserver_port, self.gdbserver_log_file(gdbserver_mode))
-            gdbserver_cmd_start += "echo \\$! > %s;" % self.gdbserver_pid_file(gdbserver_mode)
+                self.debugger_cross.debug_server_path, self.debug_server_port, self._gdbserver_log_file(server_mode))
+            gdbserver_cmd_start += "echo \\$! > %s;" % self._gdbserver_pid_file(server_mode)
         else:
-            raise DevtoolError("Unsupported gdbserver mode: %s" % gdbserver_mode)
+            raise DevtoolError("Unsupported gdbserver mode: %s" % server_mode)
         return "\"/bin/sh -c '" + gdbserver_cmd_start + "'\""
 
-    def _target_gdbserver_kill_cmd(self):
-        """Get the ssh command to kill gdbserver on the target device"""
-        return "\"kill \\$(pgrep -o -f 'gdbserver --attach :%s') 2>/dev/null || true\"" % self.gdbserver_port
-
-    def _target_ssh_gdbserver_args(self):
-        ssh_args = []
-        if self.gdb_cross.target_device.ssh_port:
-            ssh_args += self.gdb_cross.target_device.ssh_port
-        if self.gdb_cross.target_device.extraoptions:
-            ssh_args.extend(self.gdb_cross.target_device.extraoptions)
-        if self.gdb_cross.target_device.target:
-            ssh_args.append(self.gdb_cross.target_device.target)
-        return ssh_args
-
-    def gdbserver_modes(self):
-        """Get the list of gdbserver modes for which scripts are generated"""
-        modes = [self.gdbserver_default_mode]
-        if self.binary.runs_as_service and self.gdbserver_default_mode != GdbServerModes.ATTACH:
-            modes.append(GdbServerModes.ATTACH)
-        return modes
-
-    def initialize(self):
-        """Interface function to initialize the gdb config generation"""
-        pass
+    def _target_kill_cmd(self):
+        """SSH command to kill gdbserver on the target device."""
+        return "\"kill \\$(pgrep -o -f 'gdbserver --attach :%s') 2>/dev/null || true\"" % self.debug_server_port
 
 
 
@@ -167,7 +190,7 @@ class IdeBase:
 
     def __init__(self):
         self.ide_name = 'undefined'
-        self.gdb_cross_configs = []
+        self.cross_debug_configs = []
 
     @classmethod
     def ide_plugin_priority(cls):
@@ -182,12 +205,12 @@ class IdeBase:
         logger.warn("Modified recipe mode is not supported for IDE %s" %
                     self.ide_name)
 
-    def initialize_gdb_cross_configs(self, image_recipe, modified_recipe, gdb_cross_config_class=GdbCrossConfig):
+    def initialize_cross_debug_configs(self, image_recipe, modified_recipe, cross_debug_config_class=GdbCrossConfig):
         for _, exec_bin in modified_recipe.installed_binaries.items():
-            gdb_cross_config = gdb_cross_config_class(
+            cross_debug_config = cross_debug_config_class(
                 image_recipe, modified_recipe, exec_bin)
-            gdb_cross_config.initialize()
-            self.gdb_cross_configs.append(gdb_cross_config)
+            cross_debug_config.initialize()
+            self.cross_debug_configs.append(cross_debug_config)
 
     @staticmethod
     def gen_oe_scripts_sym_link(modified_recipe):
