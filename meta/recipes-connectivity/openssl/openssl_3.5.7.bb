@@ -24,6 +24,11 @@ SRC_URI[sha256sum] = "a8c0d28a529ca480f9f36cf5792e2cd21984552a3c8e4aa11a24aa31ae
 inherit lib_package multilib_header multilib_script ptest perlnative manpages
 MULTILIB_SCRIPTS = "${PN}-bin:${bindir}/c_rehash"
 
+# OpenSSL publishes bugfix/security-only releases on its per-minor branches.
+# When the tracked series reaches EOL, bump the regex manually to the next
+# maintained series.
+inherit upstream-stable-release-point
+
 PACKAGECONFIG ?= ""
 PACKAGECONFIG:class-native = ""
 PACKAGECONFIG:class-nativesdk = ""
