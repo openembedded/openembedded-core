@@ -9,9 +9,9 @@ from the user's session startup script to configure the keyboard \
 according to personal tastes."
 
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://COPYING;md5=272c17e96370e1e74773fa22d9989621"
+LIC_FILES_CHKSUM = "file://COPYING;md5=76caa89655fe179dbb374831c98ca65f"
 
 PE = "1"
-SRC_URI[sha256sum] = "9a2f8168f7b0bc382828847403902cb6bf175e17658b36189eac87edda877e81"
+SRC_URI[sha256sum] = "fc54b9b5bbf2ae58ba8f9d42bd051c41c7438377400c42c17d7496d19e1bb3ce"
 
 SRC_URI_EXT = "xz"
