@@ -58,5 +58,9 @@ int main(int argc, char* argv[])
         std::cout << "numbers[" << i << "] = " << numbers[i] << std::endl;
     }
 
+    // Example: call a header-only function once, to exercise breakpoint
+    // resolution against header-only debug info.
+    CppExample::scale_number(6);
+
     return 0;
 }

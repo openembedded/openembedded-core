@@ -2868,11 +2868,31 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertExists(i_and_d_script_path)
 
     def _devtool_ide_sdk_qemu(self, tempdir, qemu, recipe_name, example_exe, compile_cmd):
-        """Verify deployment and execution in Qemu system work for one recipe.
+        """Verify deployment, execution and remote debugging in Qemu system work for one recipe.
 
-        This function checks the entire SDK workflow: changing the code, recompiling
-        it and deploying it back to Qemu, and checking that the changes have been
-        incorporated into the provided binaries. It also runs the tests of the recipe.
+        This function checks the entire SDK workflow twice, before and after a code
+        change:
+        - Deploying the example and its ptests to Qemu and running them.
+        - Remote debugging with gdb-cross, hitting breakpoints in the executable
+          (by file:line), the library (by symbol and by file:line) and a
+          header-only function (by file:line), see _gdb_cross_debugging_multi().
+
+        Between the two passes, it changes the magic string printed by the example
+        and inserts LINE_SHIFT extra lines right before the statements the file:line
+        breakpoints target, then recompiles and redeploys. This proves the second
+        pass's breakpoints resolve against the freshly rebuilt debug info (now at
+        shifted line numbers), rather than a stale/cached line-to-address mapping
+        left over from the first pass.
+
+        The library's own cpp-example-lib.cpp is shifted too, and a breakpoint is
+        set there by file:line (in addition to the existing symbol breakpoint on
+        print_json()). Only install_deploy_cmd (do_install + deploy-target) runs
+        between the two passes, not a full image rebuild, so rootfs/rootfs-dbg
+        keep whatever debug symbols the initial bootstrap image build produced.
+        A file:line breakpoint at a line that only exists after the shift can
+        therefore only resolve correctly if solib-search-path prefers the
+        library's freshly rebuilt debug info in the image folder (D) over a
+        stale rootfs-dbg copy.
         """
         recipe_id, _ = self._get_recipe_ids(recipe_name)
         i_and_d_script = "install_and_deploy_" + recipe_id
@@ -2905,13 +2925,55 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self._gdb_cross_debugging_multi(
             qemu, recipe_name, example_exe, DevtoolIdeSdkTests.MAGIC_STRING_ORIG)
 
-        # Replace the Magic String in the code, compile and deploy to Qemu
+        # Replace the Magic String in the code, compile and deploy to Qemu.
+        # Also insert LINE_SHIFT extra lines right before the statements the
+        # gdb file:line breakpoints target in the executable (cpp-example.cpp),
+        # the library (cpp-example-lib.cpp) and the header (cpp-example-lib.hpp),
+        # so those breakpoints land on different line numbers after the
+        # recompile/redeploy below. This proves the breakpoints are resolved
+        # against the freshly rebuilt debug info, rather than happening to
+        # still work against a stale, cached line-to-address mapping from the
+        # previous build.
+        LINE_SHIFT = 3
+        extra_lines = "".join(
+            "    // extra line %d inserted by the test to shift subsequent line numbers\n" % i
+            for i in range(LINE_SHIFT))
+
         cpp_example_lib_hpp = os.path.join(tempdir, 'cpp-example-lib.hpp')
         with open(cpp_example_lib_hpp, 'r') as file:
             cpp_code = file.read()
             cpp_code = cpp_code.replace(DevtoolIdeSdkTests.MAGIC_STRING_ORIG, MAGIC_STRING_NEW)
+            cpp_code = cpp_code.replace(
+                "    inline static int scale_number(int n)",
+                extra_lines + "    inline static int scale_number(int n)")
         with open(cpp_example_lib_hpp, 'w') as file:
             file.write(cpp_code)
+
+        cpp_example_cpp = os.path.join(tempdir, 'cpp-example.cpp')
+        with open(cpp_example_cpp, 'r') as file:
+            cpp_code = file.read()
+            cpp_code = cpp_code.replace(
+                "    std::vector<int> numbers = {1, 2, 3};",
+                extra_lines + "    std::vector<int> numbers = {1, 2, 3};")
+        with open(cpp_example_cpp, 'w') as file:
+            file.write(cpp_code)
+
+        # Shift a line inside the library's own .cpp file (not the header, not
+        # the executable). This is the only file:line breakpoint target that
+        # actually resolves through solib-search-path for the rebuilt shared
+        # library, so it is the one that would fail to resolve (or resolve to
+        # the wrong/stale line) if solib-search-path preferred a stale
+        # rootfs-dbg copy of the library's debug info over the freshly
+        # rebuilt one in the image folder (D).
+        cpp_example_lib_cpp = os.path.join(tempdir, 'cpp-example-lib.cpp')
+        with open(cpp_example_lib_cpp, 'r') as file:
+            cpp_code = file.read()
+            cpp_code = cpp_code.replace(
+                "    std::cout << json_object_to_json_string_ext(jobj, flag) << std::endl;",
+                extra_lines + "    std::cout << json_object_to_json_string_ext(jobj, flag) << std::endl;")
+        with open(cpp_example_lib_cpp, 'w') as file:
+            file.write(cpp_code)
+
         runCmd(compile_cmd, cwd=tempdir, output_log=self._cmd_logger)
         runCmd(install_deploy_cmd, cwd=tempdir, output_log=self._cmd_logger)
 
@@ -2927,9 +2989,13 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertEqual(status, 0, msg="%s failed: %s" % (ptest_cmd, output))
         self.assertIn("PASS: cpp-example-lib", output)
 
-        # Verify remote debugging works wit the modified magic string
+        # Verify remote debugging works with the modified magic string, with
+        # the file:line breakpoints shifted by LINE_SHIFT lines compared to
+        # the first _gdb_cross_debugging_multi call above.
         self._gdb_cross_debugging_multi(
-            qemu, recipe_name, example_exe, MAGIC_STRING_NEW)
+            qemu, recipe_name, example_exe, MAGIC_STRING_NEW,
+            exe_break_line=56 + LINE_SHIFT, exe_list_line=55 + LINE_SHIFT,
+            hpp_break_line=21 + LINE_SHIFT, lib_break_line=31 + LINE_SHIFT)
 
     def _gdb_cross(self):
         """Verify gdb-cross is provided by devtool ide-sdk"""
@@ -2944,53 +3010,91 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertEqual(r.status, 0)
         self.assertIn("GNU gdb", r.output)
 
-    def _gdb_debug_cpp_example(self, magic_string, gdb_start_cmd="run"):
+    def _gdb_debug_cpp_example(self, magic_string, gdb_start_cmd="run",
+                              exe_break_line=56, exe_list_line=55, hpp_break_line=21,
+                              lib_break_line=31):
         """Get a series of gdb commands to debug the cpp-example-lib example"""
         gdb_batch_cmd = " -ex 'break main' -ex '%s'" % gdb_start_cmd
         gdb_batch_cmd += " -ex 'break CppExample::print_json()' -ex 'continue'"
         gdb_batch_cmd += " -ex 'print CppExample::test_string.compare(\"cpp-example-lib %s\")'" % magic_string
         gdb_batch_cmd += " -ex 'print CppExample::test_string.compare(\"cpp-example-lib %saaa\")'" % magic_string
-        gdb_batch_cmd += " -ex 'list cpp-example-lib.hpp:14,14'"
+        gdb_batch_cmd += " -ex 'list cpp-example-lib.hpp:15,15'"
+
+        # Break inside the library's own .cpp file by file:line (not by
+        # symbol), while still inside the print_json() call reached above.
+        # Unlike the symbol breakpoint above, resolving a file:line breakpoint
+        # requires the line-to-address mapping from the library's debug info
+        # that matches the currently deployed build. lib_break_line shifts
+        # after the test edits and recompiles cpp-example-lib.cpp, to prove
+        # this breakpoint resolves via the freshly rebuilt library debug info
+        # found through solib-search-path, rather than a stale rootfs-dbg
+        # copy left over from the last full image build.
+        gdb_batch_cmd += " -ex 'break cpp-example-lib.cpp:%d'" % lib_break_line
+        gdb_batch_cmd += " -ex 'continue'"
+        gdb_batch_cmd += " -ex 'list cpp-example-lib.cpp:%d,%d'" % (lib_break_line, lib_break_line)
 
         # check if resolving std::vector works with python scripts
-        gdb_batch_cmd += " -ex 'list cpp-example.cpp:55,55'"
-        # Break on line 56 (the std::cout after the declaration) so the vector
-        # constructor on line 55 has already run when GDB stops.
-        gdb_batch_cmd += " -ex 'break cpp-example.cpp:56'"
+        gdb_batch_cmd += " -ex 'list cpp-example.cpp:%d,%d'" % (exe_list_line, exe_list_line)
+        # Break on exe_break_line (the std::cout after the declaration) so the
+        # vector constructor on exe_list_line has already run when GDB stops.
+        # These line numbers shift after the test inserts extra lines and
+        # recompiles, proving the breakpoint resolves via the freshly rebuilt
+        # debug info rather than a stale, cached line-to-address mapping.
+        gdb_batch_cmd += " -ex 'break cpp-example.cpp:%d'" % exe_break_line
         gdb_batch_cmd += " -ex 'continue'"
         gdb_batch_cmd += " -ex 'print numbers'"
+
+        # Break on scale_number(), an inline function defined directly in the
+        # header (cpp-example-lib.hpp), to exercise breakpoint resolution for
+        # header-only debug info, separately from the executable's own
+        # cpp-example.cpp (file:line breakpoint above) and the library's
+        # cpp-example-lib.cpp (CppExample::print_json() breakpoint above).
+        # hpp_break_line shifts for the same reason as exe_break_line above.
+        gdb_batch_cmd += " -ex 'break cpp-example-lib.hpp:%d'" % hpp_break_line
+        gdb_batch_cmd += " -ex 'continue'"
+        gdb_batch_cmd += " -ex 'print n'"
         gdb_batch_cmd += " -ex 'continue'"
         return gdb_batch_cmd
 
-    def _gdb_debug_cpp_example_check(self, gdb_output, magic_string):
+    def _gdb_debug_cpp_example_check(self, gdb_output, magic_string, exe_list_line=55, lib_break_line=31):
         self.assertIn("Breakpoint 1, main", gdb_output)
         self.assertIn("$1 = 0", gdb_output)  # test.string.compare equal
         self.assertIn("$2 = -3", gdb_output)  # test.string.compare longer
         self.assertIn(
             'inline static const std::string test_string = "cpp-example-lib %s";' % magic_string, gdb_output)
 
+        # check that the file:line breakpoint set directly in the library's
+        # own .cpp file actually resolved and was hit at the expected
+        # (possibly shifted) line, i.e. against the freshly rebuilt library
+        # debug info rather than a stale rootfs-dbg copy
+        self.assertIn("cpp-example-lib.cpp:%d" % lib_break_line, gdb_output)
+        self.assertRegex(
+            gdb_output, r"%d\s+std::cout << json_object_to_json_string_ext\(jobj, flag\) << std::endl;" % lib_break_line)
+
         # check if resolving std::vector works with python scripts
-        self.assertRegex(gdb_output, r"55\s+std::vector<int> numbers = \{1, 2, 3\};")
+        self.assertRegex(
+            gdb_output, r"%d\s+std::vector<int> numbers = \{1, 2, 3\};" % exe_list_line)
         self.assertIn("$3 = std::vector of length 3, capacity 3 = {1, 2, 3}", gdb_output)
+
+        # check that a breakpoint in an inline function defined directly in
+        # the header (cpp-example-lib.hpp) is resolved and hit
+        self.assertIn("scale_number", gdb_output)
+        self.assertIn("$4 = 6", gdb_output)  # n == 6, the call argument
 
         self.assertIn("exited normally", gdb_output)
 
-    def _gdb_cross_debugging_multi(self, qemu, recipe_name, example_exe, magic_string):
+    def _gdb_cross_debugging_multi(self, qemu, recipe_name, example_exe, magic_string,
+                                   exe_break_line=56, exe_list_line=55, hpp_break_line=21,
+                                   lib_break_line=31):
         """Verify gdb-cross is working
 
-        Test remote debugging:
-        break main
-        run
-        continue
-        break CppExample::print_json()
-        continue
-        print CppExample::test_string.compare("cpp-example-lib Magic: 123456789")
-        $1 = 0
-        print CppExample::test_string.compare("cpp-example-lib Magic: 123456789aaa")
-        $2 = -3
-        list cpp-example-lib.hpp:14,14
-        13	    inline static const std::string test_string = "cpp-example-lib Magic: 123456789";
-        continue
+        Test remote debugging with breakpoints in the executable
+        (cpp-example.cpp), the library (cpp-example-lib.cpp, by symbol and by
+        file:line) and a header defined directly in cpp-example-lib.hpp.
+        exe_break_line, exe_list_line, hpp_break_line and lib_break_line are
+        parameterized because the caller shifts them to different line
+        numbers after recompiling, to prove the breakpoints resolve via the
+        freshly rebuilt debug info.
         """
         sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
         gdbserver_script = os.path.join(self._workspace_scripts_dir(
@@ -3017,12 +3121,15 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertIn("1234", r.output)
 
         # Test remote debugging works
-        gdb_batch_cmd = " --batch " + self._gdb_debug_cpp_example(magic_string)
+        gdb_batch_cmd = " --batch " + self._gdb_debug_cpp_example(
+            magic_string, exe_break_line=exe_break_line, exe_list_line=exe_list_line,
+            hpp_break_line=hpp_break_line, lib_break_line=lib_break_line)
         r = runCmd(gdb_script + gdb_batch_cmd, output_log=self._cmd_logger)
         self.logger.debug("%s %s returned: %s", gdb_script,
                           gdb_batch_cmd, r.output)
         self.assertEqual(r.status, 0)
-        self._gdb_debug_cpp_example_check(r.output, magic_string=magic_string)
+        self._gdb_debug_cpp_example_check(
+            r.output, magic_string=magic_string, exe_list_line=exe_list_line, lib_break_line=lib_break_line)
 
         # Stop the gdbserver
         r = runCmd(gdbserver_script + ' stop', output_log=self._cmd_logger)
@@ -3314,7 +3421,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
             -ex 'continue'  \
             -ex 'print CppExample::test_string.compare("cpp-example-lib Magic: 123456789")'  \
             -ex 'print CppExample::test_string.compare("cpp-example-lib Magic: 123456789aaa")'  \
-            -ex 'list cpp-example-lib.hpp:14,14'  \
+            -ex 'list cpp-example-lib.hpp:15,15'  \
             -ex 'continue'
         3. Verifying debug output and stopping gdbserver
         """
