@@ -235,6 +235,7 @@ SRC_URI += "\
            file://0001-gio-tests-resources.c-comment-out-a-build-host-only-.patch \
            file://0010-Do-not-hardcode-python-path-into-various-tools.patch \
            file://skip-timeout.patch \
+           file://skip-monotonic-time-similar.patch \
            file://CVE-2026-58016-1.patch \
            file://CVE-2026-58016-2.patch \
            file://0001-gio-tests-services-Fix-installed-service-file-using-.patch \
