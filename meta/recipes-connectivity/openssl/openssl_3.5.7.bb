@@ -296,3 +296,5 @@ INSANE_SKIP:${PN} = "already-stripped"
 BBCLASSEXTEND = "native nativesdk"
 
 CVE_PRODUCT = "openssl:openssl"
+
+CVE_STATUS[CVE-2015-3216] = "not-applicable-platform: specific to RHEL patches"
