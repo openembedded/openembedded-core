@@ -78,3 +78,4 @@ SUMMARY:${PN}-l2tp     = "Plugin for PPP for l2tp support"
 SUMMARY:${PN}-dhcpv6relay     = "Plugin which can be used to provide IPv6 RAs to the remote side and relay the subsequent incoming DHCPv6 requests to a DHCPv6 server"
 SUMMARY:${PN}-tools    = "Additional tools for the PPP package"
 
+CVE_STATUS[CVE-2020-15704] = "not-applicable-platform: specific to Ubuntu"
