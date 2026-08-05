@@ -3,7 +3,7 @@ HOMEPAGE = "https://github.com/pypa/packaging"
 LICENSE = "Apache-2.0 OR BSD-2-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=faadaedca9251a90b205c9167578ce91"
 
-SRC_URI[sha256sum] = "ff452ff5a3e828ce110190feff1178bb1f2ea2281fa2075aadb987c2fb221661"
+SRC_URI[sha256sum] = "94edc256424af38762eb31306eed28beb9f0efc50a8837492c9d6fd6004aed79"
 
 SRC_URI += "file://run-ptest.in"
 
@@ -15,8 +15,6 @@ RDEPENDS:${PN} += "python3-profile"
 
 # This test needs tomli_w which isn't currently in meta/
 SKIPLIST = "--ignore=tests/test_pylock.py"
-# Tests don't handle manylinux+musl (https://github.com/pypa/packaging/issues/850)
-SKIPLIST:append:libc-musl = " --deselect=tests/test_manylinux.py::test_is_manylinux_compatible_old --deselect=tests/test_tags.py::TestManylinuxPlatform --deselect=tests/test_tags.py::TestSysTags"
 
 do_compile:class-native () {
     python_flit_core_do_manual_build
