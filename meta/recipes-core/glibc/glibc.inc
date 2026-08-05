@@ -36,11 +36,6 @@ EXTRA_OEMAKE[vardepsexclude] += "EGLIBCPARALLELISM"
 EXTRA_OEMAKE += "${EGLIBCPARALLELISM}"
 PARALLEL_MAKE = ""
 
-# glibc make-syscalls.sh has a number of issues with /bin/dash and
-# it's output which make calls via the SHELL also has issues, so
-# ensure make uses /bin/bash
-EXTRA_OEMAKE += "SHELL=/bin/bash"
-
 # We do not need bash to run tzselect script, the default is to use
 # bash but it can be configured by setting KSHELL Makefile variable
 EXTRA_OEMAKE += "KSHELL=/bin/sh"
