@@ -91,14 +91,6 @@ PACKAGECONFIG ??= ""
 
 PACKAGECONFIG[nscd] = "--enable-nscd,--disable-nscd"
 
-do_patch:append() {
-    bb.build.exec_func('do_fix_readlib_c', d)
-}
-
-do_fix_readlib_c () {
-	sed -i -e 's#OECORE_KNOWN_INTERPRETER_NAMES#${EGLIBC_KNOWN_INTERPRETER_NAMES}#' ${S}/elf/readlib.c
-}
-
 do_configure () {
 # override this function to avoid the autoconf/automake/aclocal/autoheader
 # calls for now
