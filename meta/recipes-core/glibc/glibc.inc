@@ -36,10 +36,6 @@ EXTRA_OEMAKE[vardepsexclude] += "EGLIBCPARALLELISM"
 EXTRA_OEMAKE += "${EGLIBCPARALLELISM}"
 PARALLEL_MAKE = ""
 
-# We do not need bash to run tzselect script, the default is to use
-# bash but it can be configured by setting KSHELL Makefile variable
-EXTRA_OEMAKE += "KSHELL=/bin/sh"
-
 TARGET_CC_ARCH:append:toolchain-gcc = " -fno-link-libatomic"
 SDK_CC_ARCH:append:toolchain-gcc = " -fno-link-libatomic"
 
