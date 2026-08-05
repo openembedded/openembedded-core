@@ -16,6 +16,9 @@ CVE_STATUS[CVE-2019-1010025] = "disputed: \
 Allows for ASLR bypass so can bypass some hardening, not an exploit in itself, may allow \
 easier access for another. 'ASLR bypass itself is not a vulnerability.'"
 
+CVE_STATUS[CVE-2011-0536] = "not-applicable-platform: specific to RHEL patches"
+CVE_STATUS[CVE-2025-0577] = "not-applicable-platform: specific to RHEL patches"
+
 # when upgrading, clear CVE list but keep the variables
 CVE_STATUS_GROUPS += "CVE_STATUS_STABLE_BACKPORTS"
 CVE_STATUS_STABLE_BACKPORTS = "\
