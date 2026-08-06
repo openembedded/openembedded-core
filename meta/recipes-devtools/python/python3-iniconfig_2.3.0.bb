@@ -8,6 +8,6 @@ SRC_URI[sha256sum] = "c76315c77db068650d49c5b56314774a7804df16fee4402c1f19d6d15d
 
 DEPENDS += "python3-hatch-vcs-native"
 
-inherit pypi python_hatchling
+inherit pypi python_setuptools_build_meta
 
 BBCLASSEXTEND = "native nativesdk"
