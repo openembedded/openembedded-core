@@ -78,7 +78,7 @@ EXTRA_OECONF:append:libc-musl = "\
 
 PARALLEL_MAKEINST = ""
 
-do_install:append:class-target () {
+ruby_scrub_rbconfig () {
     rbconfig_rb=`find ${D} -name rbconfig.rb`
     # Remove build host directories
     sed -i -e 's:--sysroot=${STAGING_DIR_TARGET}::g' \
@@ -95,6 +95,16 @@ do_install:append:class-target () {
 
     # logs that may contain host-specific paths
     find ${D} -name gem_make.out -delete
+}
+
+# Not for class-native: those paths point into the native sysroot and are
+# correct there, and scrubbing them leaves ruby-native naming the host's /usr.
+do_install:append:class-target () {
+    ruby_scrub_rbconfig
+}
+
+do_install:append:class-nativesdk () {
+    ruby_scrub_rbconfig
 }
 
 do_install_ptest () {
