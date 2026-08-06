@@ -25,23 +25,14 @@ SRC_URI = "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0001-localedef-Add-hardlink-resolver-from-util-linux.patch \
            file://0002-localedef-fix-ups-hardlink-to-make-it-compile.patch \
            \
-           file://0009-eglibc-Cross-building-and-testing-instructions.patch \
-           file://0010-eglibc-Help-bootstrap-cross-toolchain.patch \
-           file://0011-eglibc-Resolve-__fpscr_values-on-SH4.patch \
            file://0012-eglibc-Forward-port-cross-locale-generation-support.patch \
            file://0013-localedef-add-to-archive-uses-a-hard-coded-locale-pa.patch \
-           file://0016-Replace-echo-with-printf-builtin-in-nscd-init-script.patch \
-           file://0018-timezone-Make-shell-interpreter-overridable-in-tzsel.patch \
            "
 # Makes for a rather long rev (22 characters), but...
 #
 SRCREV_FORMAT = "glibc_localedef"
 
 EXTRA_OECONF = "--with-glibc=${S}"
-
-# We do not need bash to run tzselect script, the default is to use
-# bash but it can be configured by setting KSHELL Makefile variable
-EXTRA_OEMAKE += "KSHELL=/bin/sh"
 
 CFLAGS += "-fgnu89-inline -std=gnu99 -DIS_IN\(x\)='0'"
 
