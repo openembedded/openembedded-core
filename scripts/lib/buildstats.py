@@ -274,12 +274,42 @@ class BuildStats(dict):
 
         return buildstats
 
-    def aggregate(self, buildstats):
-        """Aggregate other buildstats into this"""
+    def aggregate(self, buildstats, strict=True):
+        """Aggregate other buildstats into this
+
+        Recipes that cannot be aggregated, i.e. those whose version or set of
+        tasks differs, are collected before any data is modified. With
+        strict=True a ValueError is raised and this object is left untouched.
+        With strict=False those recipes are skipped with a warning and the
+        remaining ones are aggregated.
+        """
         if set(self.keys()) != set(buildstats.keys()):
             raise ValueError("Refusing to aggregate buildstats, set of "
                              "recipes is different: %s" % (set(self.keys()) ^ set(buildstats.keys())))
+
+        # Aggregation mutates in place, so every recipe must be checked before
+        # any of them is modified: failing partway through would leave this
+        # object partially merged.
+        skip = {}
         for pkg, data in buildstats.items():
+            if self[pkg].nevr != data.nevr:
+                skip[pkg] = "recipe version differs: {} vs. {}".format(
+                    self[pkg].nevr, data.nevr)
+            elif set(self[pkg].tasks.keys()) != set(data.tasks.keys()):
+                skip[pkg] = "set of tasks differs"
+
+        if skip:
+            details = ", ".join("{} ({})".format(pkg, reason)
+                                for pkg, reason in sorted(skip.items()))
+            if strict:
+                raise ValueError("Refusing to aggregate buildstats, {} recipe(s) "
+                                 "cannot be aggregated: {}".format(len(skip), details))
+            log.warning("Skipping %d recipe(s) that cannot be aggregated: %s",
+                        len(skip), details)
+
+        for pkg, data in buildstats.items():
+            if pkg in skip:
+                continue
             self[pkg].aggregate(data)
 
 

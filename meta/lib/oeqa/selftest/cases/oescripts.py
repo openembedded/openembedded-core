@@ -7,6 +7,7 @@
 import os
 import shutil
 import importlib
+import sys
 import unittest
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var
@@ -171,4 +172,47 @@ class OEListPackageconfigTests(OESelftestTestCase):
         expected_endlines.append("pinentry                     gtk2 ncurses qt secret")
 
         self.check_endlines(results, expected_endlines)
+
+
+class OEBuildStatsAggregateTests(OESelftestTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        scripts_lib = os.path.join(get_bb_var('COREBASE'), 'scripts', 'lib')
+        if scripts_lib not in sys.path:
+            sys.path.insert(0, scripts_lib)
+
+    def _make_run(self, kernel_version, order):
+        from buildstats import BuildStats
+        task = {'start_time': 1000.0, 'elapsed_time': 42.0, 'status': 'PASSED',
+                'iostat': {}, 'rusage': {'ru_stime': 1.0, 'ru_utime': 2.0},
+                'child_rusage': {}}
+        recipes = {
+            'busybox': {'name': 'busybox', 'epoch': None, 'version': '1.37.0',
+                        'revision': 'r0', 'tasks': {'do_compile': dict(task)}},
+            'linux-yocto': {'name': 'linux-yocto', 'epoch': None,
+                            'version': kernel_version, 'revision': 'r0',
+                            'tasks': {'do_compile': dict(task)}},
+        }
+        return BuildStats.from_json([recipes[n] for n in order])
+
+    def test_aggregate_strict_does_not_mutate(self):
+        # Matching recipe first: it must not be aggregated when a later one fails
+        from buildstats import BSTask
+        order = ['busybox', 'linux-yocto']
+        bs1 = self._make_run('6.16.11+git', order)
+        bs2 = self._make_run('6.18.1+git', order)
+        with self.assertRaises(ValueError):
+            bs1.aggregate(bs2)
+        self.assertIsInstance(bs1['busybox'].tasks['do_compile'], BSTask)
+
+    def test_aggregate_non_strict_skips_mismatch(self):
+        from buildstats import BSTask, BSTaskAggregate
+        for order in (['busybox', 'linux-yocto'], ['linux-yocto', 'busybox']):
+            bs1 = self._make_run('6.16.11+git', order)
+            bs2 = self._make_run('6.18.1+git', order)
+            bs1.aggregate(bs2, strict=False)
+            self.assertIsInstance(bs1['busybox'].tasks['do_compile'], BSTaskAggregate)
+            self.assertIsInstance(bs1['linux-yocto'].tasks['do_compile'], BSTask)
 

@@ -427,7 +427,7 @@ def get_buildstats(repo, notes_ref, notes_ref2, revs, outdir=None):
                 if measurement not in buildstats[rev.commit_number]:
                     buildstats[rev.commit_number][measurement] = _bs
                 else:
-                    buildstats[rev.commit_number][measurement].aggregate(_bs)
+                    buildstats[rev.commit_number][measurement].aggregate(_bs, strict=False)
 
     if missing:
         log.info("Buildstats were missing for some test runs, please "
