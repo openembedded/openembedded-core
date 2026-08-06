@@ -36,7 +36,6 @@ SRC_URI += " \
            file://systemd-pager.sh \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0003-Do-not-create-var-log-README.patch \
-           file://0005-boot-downgrade-EFI_MEMORY_ATTRIBUTE_PROTOCOL-warning.patch \
            "
 
 PAM_PLUGINS = " \

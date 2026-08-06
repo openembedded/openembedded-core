@@ -4,8 +4,6 @@ require systemd.inc
 
 SUMMARY = "native tools from systemd"
 
-SRC_URI += "file://0001-hwdb-strip-the-root-from-filenames-when-generating-h.patch"
-
 # TODO: Remove STATX_MNT_ID patch once minimum supported build host kernel is >= 5.8 (RHEL 8 EOL: 2029)
 SRC_URI += "file://Handle-missing-STATX_MNT_ID-on-older-kernels.patch"
 
