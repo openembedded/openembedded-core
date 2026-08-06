@@ -22,7 +22,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=63ec52baf95163b597008bb46db68030 \
                     file://src/pip/_vendor/urllib3/LICENSE.txt;md5=52d273a3054ced561275d4d15260ecda \
                     "
 
-inherit pypi python_setuptools_build_meta
+inherit pypi python_flit_core
 
 SRC_URI += "file://no_shebang_mangling.patch"
 
