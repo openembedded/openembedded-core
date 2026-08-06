@@ -9,7 +9,7 @@ false-positive matches with the path it is configured into.
 
 The change is to use a more elaborated string to grep for.
 
-Upstream-Status: Submitted [libc-alpha@sourceware.org]
+Upstream-Status: Submitted [https://inbox.sourceware.org/libc-alpha/1425394379-41448-1-git-send-email-benjamin.esquivel@linux.intel.com/]
 
 Signed-off-by: Benjamin Esquivel <benjamin.esquivel@linux.intel.com>
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
