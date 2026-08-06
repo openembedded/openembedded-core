@@ -53,7 +53,6 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0015-wordsize.h-Unify-the-header-between-arm-and-aarch64.patch \
            file://0016-Replace-echo-with-printf-builtin-in-nscd-init-script.patch \
            file://0017-sysdeps-gnu-configure.ac-Set-libc_cv_rootsbindir-onl.patch \
-           file://0018-timezone-Make-shell-interpreter-overridable-in-tzsel.patch \
            file://0019-tzselect.ksh-Use-bin-sh-default-shell-interpreter.patch \
            file://0020-fix-create-thread-failed-in-unprivileged-process-BZ-.patch \
            file://0021-tests-Skip-2-qemu-tests-that-can-hang-in-oe-selftest.patch \
