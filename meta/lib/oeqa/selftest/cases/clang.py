@@ -121,6 +121,7 @@ class LLVMSelfTestSystemEmulated(ClangFamilyBase):
         "CodeGen/Thumb/frame-access\\.ll$",
         "CodeGen/Thumb/frame-chain\\.ll$",
         "CodeGen/Thumb/ldm-merge-call\\.ll$",
+        "CodeGen/Thumb/ldm-merge-struct\\.ll$",
         "CodeGen/Thumb/pop\\.ll$",
         "CodeGen/Thumb/pr35836\\.ll$",
         "CodeGen/Thumb/pr35836_2\\.ll$",
