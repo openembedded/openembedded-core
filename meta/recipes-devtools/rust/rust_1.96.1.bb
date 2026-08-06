@@ -69,8 +69,12 @@ do_rust_setup_snapshot () {
     # Need to use uninative's loader if enabled/present since the library paths
     # are used internally by rust and result in symbol mismatches if we don't
     if [ ! -z "${UNINATIVE_LOADER}" -a -e "${UNINATIVE_LOADER}" ]; then
-        for bin in cargo rustc rustdoc; do
-            patchelf ${WORKDIR}/rust-snapshot/bin/$bin --set-interpreter ${UNINATIVE_LOADER}
+        for bin in ${WORKDIR}/rust-snapshot/bin/cargo \
+                   ${WORKDIR}/rust-snapshot/bin/rustc \
+                   ${WORKDIR}/rust-snapshot/bin/rustdoc \
+                   ${WORKDIR}/rust-snapshot/lib/rustlib/*/bin/rust-lld \
+                   ${WORKDIR}/rust-snapshot/lib/rustlib/*/bin/gcc-ld/*; do
+            [ -f "$bin" ] && patchelf "$bin" --set-interpreter ${UNINATIVE_LOADER}
         done
     fi
 }
