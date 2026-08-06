@@ -18,6 +18,8 @@ SRCBRANCH ?= "binutils-2_47-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
+CVE_STATUS[CVE-2026-4647] = "fixed-version: fixed-version: Fixed from version 2.47"
+
 SRCREV ?= "6ce87bbc521cf46eaee9a1f7ef61cee2cdfb3e32"
 BINUTILS_GIT_URI ?= "git://sourceware.org/git/binutils-gdb.git;branch=${SRCBRANCH};protocol=https"
 SRC_URI = "\
