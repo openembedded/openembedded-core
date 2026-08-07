@@ -11,6 +11,7 @@ import sys
 import re
 import shlex
 import shutil
+import subprocess
 import tempfile
 import logging
 import argparse
@@ -64,7 +65,11 @@ _VENDORED_PATH_RE = re.compile(
 
 def _run(cmd, cwd=''):
     logger.debug("Running command %s> %s" % (cwd,cmd))
-    return bb.process.run('%s' % cmd, cwd=cwd)
+    result = subprocess.run(cmd, cwd=cwd or None, shell=True, capture_output=True,
+                            text=True, errors='replace')
+    if result.returncode != 0:
+        raise bb.process.ExecutionError(cmd, result.returncode, result.stdout, result.stderr)
+    return (result.stdout, result.stderr)
 
 def _get_srctree(tmpdir):
     srctree = tmpdir
