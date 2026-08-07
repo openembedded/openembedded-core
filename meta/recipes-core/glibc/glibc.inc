@@ -29,13 +29,6 @@ CACHED_CONFIGUREVARS:append:mipsarch = " libc_cv_ld_gnu_indirect_function=no"
 GLIBC_EXTRA_OECONF ?= ""
 GLIBC_EXTRA_OECONF:class-nativesdk = ""
 
-# glibc uses PARALLELMFLAGS variable to pass parallel build info so transfer
-# PARALLEL_MAKE into PARALLELMFLAGS and empty out PARALLEL_MAKE
-EGLIBCPARALLELISM := "PARALLELMFLAGS="${PARALLEL_MAKE}""
-EXTRA_OEMAKE[vardepsexclude] += "EGLIBCPARALLELISM"
-EXTRA_OEMAKE += "${EGLIBCPARALLELISM}"
-PARALLEL_MAKE = ""
-
 TARGET_CC_ARCH:append:toolchain-gcc = " -fno-link-libatomic"
 SDK_CC_ARCH:append:toolchain-gcc = " -fno-link-libatomic"
 
