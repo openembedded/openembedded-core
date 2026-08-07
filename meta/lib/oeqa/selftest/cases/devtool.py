@@ -8,6 +8,7 @@ import errno
 import os
 import re
 import shutil
+import socket
 import tempfile
 import time
 import glob
@@ -4218,14 +4219,43 @@ class DevtoolIdeSdkTests(DevtoolBase):
         lldb_binary = os.path.join(lldb_native_sysroot, 'usr', 'bin', 'lldb')
         self.assertExists(lldb_binary, "lldb binary should exist in lldb-native sysroot")
 
-        with RunCmdBackground(ssh_cmd, output_log=self._cmd_logger):
-            time.sleep(1)
+        # Parse host and port from the "platform connect connect://host:port" command
+        connect_match = re.search(r'connect://([^:]+):(\d+)', connect_cmd)
+        self.assertIsNotNone(connect_match, "Could not parse host:port from: %s" % connect_cmd)
+        lldb_server_host = connect_match.group(1)
+        lldb_server_port = int(connect_match.group(2))
 
-            # Verify lldb-server is running on the target
-            r = runCmd('ssh %s root@%s ps' % (sshargs, qemu.ip),
-                       output_log=self._cmd_logger)
-            self.assertIn("lldb-server", r.output,
-                          "lldb-server should be running on target")
+        self.logger.debug("Starting lldb-server via SSH: %s", " ".join(ssh_cmd))
+        with RunCmdBackground(ssh_cmd, output_log=self._cmd_logger):
+            # Poll the lldb-server port instead of sleeping a fixed amount.
+            # On a loaded autobuilder the process may take several seconds to
+            # bind its listening socket even after appearing in "ps".
+            t_start = time.monotonic()
+            deadline = t_start + 30
+            while True:
+                try:
+                    with socket.create_connection((lldb_server_host, lldb_server_port), timeout=1):
+                        break
+                except OSError as e:
+                    elapsed = time.monotonic() - t_start
+                    if time.monotonic() >= deadline:
+                        diag = ""
+                        try:
+                            r_ps = runCmd(
+                                'ssh %s root@%s "ps && echo --- && cat /proc/net/tcp /proc/net/tcp6 2>/dev/null"'
+                                % (sshargs, lldb_server_host))
+                            diag = "\nTarget diagnostics:\n" + r_ps.output
+                        except Exception:
+                            pass
+                        self.fail(
+                            "lldb-server did not start listening on %s:%d within 30s "
+                            "(last error: %s)%s" % (lldb_server_host, lldb_server_port, e, diag))
+                    self.logger.debug(
+                        "Waiting for lldb-server on %s:%d (%.1fs elapsed, error: %s)",
+                        lldb_server_host, lldb_server_port, elapsed, e)
+                    time.sleep(0.5)
+            self.logger.debug("lldb-server ready on %s:%d after %.1fs",
+                              lldb_server_host, lldb_server_port, time.monotonic() - t_start)
 
             # Run lldb --batch: connect to platform, create target with remote-file,
             # set a source-level breakpoint, and run.
