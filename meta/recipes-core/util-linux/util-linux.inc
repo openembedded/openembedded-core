@@ -24,3 +24,7 @@ SRC_URI[sha256sum] = "03a05d3adf9602ef128f2da05b84b3205ce60c351e5737c0370f740006
 CVE_PRODUCT = "util-linux"
 
 CVE_STATUS[CVE-2026-3184] = "fixed-version: Fixed since 2.42"
+
+# util-linux publishes bugfix/security-only point releases on its
+# stable/v<major.minor> branches.
+inherit upstream-stable-release-point
