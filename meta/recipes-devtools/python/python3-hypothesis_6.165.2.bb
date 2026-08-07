@@ -6,14 +6,18 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=4ee62c16ebd0f4f99d906f36b7de8c3c"
 PYPI_PACKAGE = "hypothesis"
 PTEST_PYTEST_DIR ?= "examples"
 
-inherit pypi python_setuptools_build_meta ptest-python-pytest
+require ${BPN}-crates.inc
+
+inherit pypi cargo-update-recipe-crates python_maturin ptest-python-pytest
+
+CARGO_SRC_DIR = "rust"
 
 SRC_URI += " \
     file://test_binary_search.py \
     file://test_rle.py \
     "
 
-SRC_URI[sha256sum] = "d8d6091753d0669db3c90c5e5b346cb37c72f3dd9378c8413acb1fd5da63f7ea"
+SRC_URI[sha256sum] = "680a1adf523ac792b46064f425b112ce6c08a7a8f50e65d08e029de6aa11df95"
 
 RDEPENDS:${PN} += " \
     python3-attrs \
