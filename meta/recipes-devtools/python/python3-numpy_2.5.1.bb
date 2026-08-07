@@ -29,10 +29,12 @@ do_install:append() {
     sed -i \
         -e 's|${S}=||g' \
         -e 's|${B}=||g' \
+        -e 's|${HOSTTOOLS_DIR}||g' \
         -e 's|${RECIPE_SYSROOT_NATIVE}=||g' \
         -e 's|${RECIPE_SYSROOT_NATIVE}||g' \
         -e 's|${RECIPE_SYSROOT}=||g' \
-        -e 's|${RECIPE_SYSROOT}||g' ${D}${PYTHON_SITEPACKAGES_DIR}/numpy/__config__.py
+        -e 's|${RECIPE_SYSROOT}||g' \
+        ${D}${PYTHON_SITEPACKAGES_DIR}/numpy/__config__.py
 
     nativepython3 -mcompileall -s ${D} ${D}${PYTHON_SITEPACKAGES_DIR}/numpy/__config__.py
 }
