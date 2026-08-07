@@ -594,6 +594,43 @@ def _resolve_rst_includes(content, srctree):
     return ''.join(result)
 
 
+_GIT_LOG_COMMIT_RE = re.compile(r'^commit ([0-9a-f]{7,40})\b.*$', re.MULTILINE)
+
+def _diff_git_log_changelog(old_content, new_content):
+    """Diff a ChangeLog that is itself `git log` output (e.g. nghttp2),
+    regenerated wholesale on every release. New commits get prepended, so
+    old ones shift position even though unchanged, which a textual diff
+    would wrongly show as removed/added lines. Compare commit hashes
+    instead: hashes already in old_content are just moved, anything else
+    is new. Returns the new commits' subject lines as one string, or
+    None if either file doesn't look like git log output."""
+    old_hashes = set(_GIT_LOG_COMMIT_RE.findall(old_content))
+    new_commits = _GIT_LOG_COMMIT_RE.split(new_content)[1:]  # [hash, block, hash, block, ...]
+    if not old_hashes or not new_commits:
+        return None
+
+    subjects = []
+    for commit_hash, block in zip(new_commits[0::2], new_commits[1::2]):
+        if commit_hash in old_hashes:
+            continue
+        # `git log` separates headers (Author:, Date:, etc.) from the
+        # commit message with a blank line; drop the leading blank line
+        # left over from splitting on "commit <hash>", then skip the
+        # headers up to the next blank line to get just the message.
+        lines = block.splitlines()
+        while lines and not lines[0].strip():
+            lines.pop(0)
+        blank_at = next((i for i, l in enumerate(lines) if not l.strip()), len(lines))
+        message_lines = [l.strip() for l in lines[blank_at:] if l.strip()]
+        # Skip the 'Merge pull request ...' line GitHub adds as the first
+        # message line of a merge commit; the actual change subject is the
+        # next line, and keeping the merge line would duplicate it.
+        subject = next((l for l in message_lines if not l.startswith('Merge pull request ')), None)
+        if subject and (not subjects or subjects[-1] != subject):
+            subjects.append(subject)
+    return '\n'.join(subjects) if subjects else None
+
+
 def _extract_changelog(srctree, pn, old_ver, new_ver, old_tag, new_tag, workspace_path, is_git_source):
     """Extract changelog between old and new version using devtool git tags."""
     changelog_content = None
@@ -635,15 +672,21 @@ def _extract_changelog(srctree, pn, old_ver, new_ver, old_tag, new_tag, workspac
             for fname in changed_files:
                 basename = os.path.basename(fname).lower()
                 if basename in _CHANGELOG_BASENAMES:
-                    diff_out, _ = _run('git diff %s %s -- %s' % (old_tag, new_tag, shlex.quote(fname)), srctree)
-                    if diff_out.strip():
-                        lines = [line[1:] for line in diff_out.splitlines()
-                                 if line.startswith('+') and not line.startswith('+++')]
-                        if lines:
-                            candidate = '\n'.join(lines)
-                            if not changelog_content or len(candidate) > len(changelog_content):
-                                changelog_content = candidate
-                                changelog_fname = fname
+                    candidate = None
+                    try:
+                        old_file, _ = _run('git show %s' % shlex.quote('%s:%s' % (old_tag, fname)), srctree)
+                        new_file, _ = _run('git show %s' % shlex.quote('%s:%s' % (new_tag, fname)), srctree)
+                        candidate = _diff_git_log_changelog(old_file, new_file)
+                    except bb.process.ExecutionError:
+                        pass
+                    if candidate is None:
+                        diff_out, _ = _run('git diff %s %s -- %s' % (old_tag, new_tag, shlex.quote(fname)), srctree)
+                        added_lines = [line[1:] for line in diff_out.splitlines()
+                                       if line.startswith('+') and not line.startswith('+++')]
+                        candidate = '\n'.join(added_lines) if added_lines else None
+                    if candidate and (not changelog_content or len(candidate) > len(changelog_content)):
+                        changelog_content = candidate
+                        changelog_fname = fname
     except bb.process.ExecutionError as e:
         logger.warning('Changelog file extraction failed: %s' % str(e))
 
