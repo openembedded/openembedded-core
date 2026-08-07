@@ -59,27 +59,26 @@ B:task-populate-sdk = "${SDK_DIR}"
 
 SDKTARGETSYSROOT = "${SDKPATH}/sysroots/${REAL_MULTIMACH_TARGET_SYS}"
 
-SDK_TOOLCHAIN_LANGS ??= ""
-SDK_TOOLCHAIN_LANGS:remove:sdkmingw32 = "rust"
+SDK_FEATURES:remove:sdkmingw32 = "rust"
 # libstd-rs doesn't build for mips n32 with compiler constraint errors
-SDK_TOOLCHAIN_LANGS:remove:mipsarchn32 = "rust"
+SDK_FEATURES:remove:mipsarchn32 = "rust"
 # go will not build for x86-x32 or mingw
-SDK_TOOLCHAIN_LANGS:remove:linux-gnux32 = "go"
-SDK_TOOLCHAIN_LANGS:remove:riscv32 = "go"
-SDK_TOOLCHAIN_LANGS:remove:sdkmingw32 = "go"
-SDK_TOOLCHAIN_LANGS:remove:powerpc = "go"
+SDK_FEATURES:remove:linux-gnux32 = "go"
+SDK_FEATURES:remove:riscv32 = "go"
+SDK_FEATURES:remove:sdkmingw32 = "go"
+SDK_FEATURES:remove:powerpc = "go"
 
 TOOLCHAIN_HOST_TASK ?= " \
     nativesdk-packagegroup-sdk-host \
     packagegroup-cross-canadian-${MACHINE} \
-    ${@bb.utils.contains('SDK_TOOLCHAIN_LANGS', 'go', 'packagegroup-go-cross-canadian-${MACHINE}', '', d)} \
-    ${@bb.utils.contains('SDK_TOOLCHAIN_LANGS', 'rust', 'packagegroup-rust-cross-canadian-${MACHINE}', '', d)} \
+    ${@bb.utils.contains('SDK_FEATURES', 'go', 'packagegroup-go-cross-canadian-${MACHINE}', '', d)} \
+    ${@bb.utils.contains('SDK_FEATURES', 'rust', 'packagegroup-rust-cross-canadian-${MACHINE}', '', d)} \
 "
 TOOLCHAIN_HOST_TASK_ATTEMPTONLY ?= ""
 TOOLCHAIN_TARGET_TASK ?= " \
     ${@oe.utils.multilib_pkg_extend(d, 'packagegroup-core-standalone-sdk-target')} \
-    ${@bb.utils.contains('SDK_TOOLCHAIN_LANGS', 'go', oe.utils.multilib_pkg_extend(d, 'packagegroup-go-sdk-target'), '', d)} \
-    ${@bb.utils.contains('SDK_TOOLCHAIN_LANGS', 'rust', oe.utils.multilib_pkg_extend(d, 'libstd-rs'), '', d)} \
+    ${@bb.utils.contains('SDK_FEATURES', 'go', oe.utils.multilib_pkg_extend(d, 'packagegroup-go-sdk-target'), '', d)} \
+    ${@bb.utils.contains('SDK_FEATURES', 'rust', oe.utils.multilib_pkg_extend(d, 'libstd-rs'), '', d)} \
     target-sdk-provides-dummy \
 "
 TOOLCHAIN_TARGET_TASK_ATTEMPTONLY ?= ""
