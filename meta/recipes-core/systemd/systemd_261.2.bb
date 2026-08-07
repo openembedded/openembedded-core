@@ -5,6 +5,7 @@ PROVIDES = "udev"
 PE = "1"
 
 DEPENDS = "gperf-native libcap util-linux python3-jinja2-native"
+DEPENDS:append:libc-musl = " libucontext"
 
 SECTION = "base/shell"
 
