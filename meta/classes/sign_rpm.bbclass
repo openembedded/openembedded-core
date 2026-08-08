@@ -31,8 +31,6 @@
 # GPG_PATH
 #           Optional variable for specifying the gnupg "home" directory:
 
-inherit sanity
-
 RPM_SIGN_PACKAGES = '1'
 RPM_SIGN_FILES ?= '0'
 RPM_GPG_BACKEND ?= 'local'

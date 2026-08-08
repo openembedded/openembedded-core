@@ -28,7 +28,6 @@
 # GPG_PATH
 #           Optional variable for specifying the gnupg "home" directory:
 #
-inherit sanity
 
 PACKAGE_FEED_SIGN = '1'
 PACKAGE_FEED_GPG_BACKEND ?= 'local'
