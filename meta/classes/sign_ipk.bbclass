@@ -26,8 +26,6 @@
 #           Optional variable for specifying the gnupg "home" directory:
 #
 
-inherit sanity
-
 IPK_SIGN_PACKAGES = '1'
 IPK_GPG_BACKEND ?= 'local'
 IPK_GPG_SIGNATURE_TYPE ?= 'ASC'
