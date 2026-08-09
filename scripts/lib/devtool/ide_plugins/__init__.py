@@ -97,6 +97,20 @@ class DebuggerCrossConfig:
             modes.append(DebuggerServerModes.ATTACH)
         return modes
 
+    def _target_tcp_port_check_cmd(self):
+        hex_port = "%04X" % self.debug_server_port
+        return "grep -q :%s /proc/net/tcp /proc/net/tcp6 2>/dev/null" % hex_port
+
+    def _target_wait_for_tcp_port_cmd(self, pid_var=None):
+        cleanup = ""
+        if pid_var:
+            cleanup = "kill \\$_%s 2>/dev/null; " % pid_var
+        return (
+            "_w=0; while ! %s; do _w=\\$((_w+1)); [ \\$_w -lt 100 ] || { "
+            "%secho %s did not start on port %s >&2; exit 1; }; sleep 0.1; done;"
+            % (self._target_tcp_port_check_cmd(), cleanup, self.DEBUG_SERVER_NAME,
+               self.debug_server_port))
+
     def initialize(self):
         """Called after construction to generate any required config files."""
         pass
@@ -197,6 +211,7 @@ class LldbServerConfig(DebuggerCrossConfig):
     The ATTACH mode is not supported because lldb-server platform does not take a
     PID argument; attaching is done client-side via 'process attach'.
     """
+    DEBUG_SERVER_NAME = "lldb-server"
 
     def __init__(self, image_recipe, modified_recipe, binary,
                  default_mode=DebuggerServerModes.MULTI):
@@ -224,18 +239,17 @@ class LldbServerConfig(DebuggerCrossConfig):
             cmd = "cd /tmp && %s platform --one-shot --server --listen *:%s" % (
                 lldb_server, self.debug_server_port)
         elif mode == DebuggerServerModes.MULTI:
-            hex_port = "%04X" % self.debug_server_port
             pid_file = self._lldb_server_pid_file(mode)
             tmp_dir = self._lldb_server_tmp_dir(mode)
             log_file = self._lldb_server_log_file(mode)
-            cmd = "grep -q :%s /proc/net/tcp /proc/net/tcp6 2>/dev/null && exit 0; " % hex_port
+            cmd = self._target_tcp_port_check_cmd() + " && exit 0; "
             cmd += "mkdir -p %s; " % tmp_dir
             cmd += "cd %s; " % tmp_dir
-            cmd += "%s platform --server --listen *:%s > %s 2>&1 & " % (
+            cmd += "%s platform --server --listen *:%s > %s 2>&1 & _lldb_server_pid=\\$!; " % (
                 lldb_server, self.debug_server_port, log_file)
-            cmd += "echo \\$! > %s; " % pid_file
-            cmd += "_w=0; while ! grep -q :%s /proc/net/tcp /proc/net/tcp6 2>/dev/null; " % hex_port
-            cmd += "do _w=\\$((_w+1)); [ \\$_w -lt 100 ] || { echo lldb-server did not start on port %s >&2; exit 1; }; sleep 0.1; done;" % self.debug_server_port
+            cmd += "echo \\$_lldb_server_pid > %s; " % pid_file
+            cmd += self._target_wait_for_tcp_port_cmd(
+                "lldb_server_pid")
         else:
             raise DevtoolError(
                 "lldb-server does not support mode %s "
