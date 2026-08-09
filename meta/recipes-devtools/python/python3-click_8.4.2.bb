@@ -1,8 +1,8 @@
 SUMMARY = "A simple wrapper around optparse for powerful command line utilities."
 DESCRIPTION = "\
 Click is a Python package for creating beautiful command line interfaces \
-in a composable way with as little code as necessary. It's the "Command \
-Line Interface Creation Kit". It's highly configurable but comes with \
+in a composable way with as little code as necessary. It is the 'Command \
+Line Interface Creation Kit'. It is highly configurable but comes with \
 sensible defaults out of the box."
 HOMEPAGE = "http://click.pocoo.org/"
 LICENSE = "BSD-3-Clause"
@@ -12,6 +12,8 @@ SRC_URI += "file://pytest-fix.patch"
 SRC_URI[sha256sum] = "9a6cea6e60b17ebe0a44c5cc636d94f09bd66142c1cd7d8b4cd731c4917a15f6"
 
 inherit pypi python_flit_core ptest-python-pytest
+
+CVE_PRODUCT = "palletsprojects:click"
 
 RDEPENDS:${PN}-ptest += " \
 	python3-pytest \
