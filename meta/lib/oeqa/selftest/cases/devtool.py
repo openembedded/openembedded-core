@@ -2955,8 +2955,8 @@ class DevtoolIdeSdkTests(DevtoolBase):
         with open(cpp_example_cpp, 'r') as file:
             cpp_code = file.read()
             cpp_code = cpp_code.replace(
-                "    std::vector<int> numbers = {1, 2, 3};",
-                extra_lines + "    std::vector<int> numbers = {1, 2, 3};")
+                "    volatile int n1 = 1, n2 = 2, n3 = 3;",
+                extra_lines + "    volatile int n1 = 1, n2 = 2, n3 = 3;")
         with open(cpp_example_cpp, 'w') as file:
             file.write(cpp_code)
 
@@ -2996,7 +2996,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         # the first _gdb_cross_debugging_multi call above.
         self._gdb_cross_debugging_multi(
             qemu, recipe_name, example_exe, MAGIC_STRING_NEW,
-            exe_break_line=56 + LINE_SHIFT, exe_list_line=55 + LINE_SHIFT,
+            exe_break_line=63 + LINE_SHIFT, exe_list_line=55 + LINE_SHIFT,
             hpp_break_line=21 + LINE_SHIFT, lib_break_line=31 + LINE_SHIFT)
 
     def _gdb_cross(self):
@@ -3013,7 +3013,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertIn("GNU gdb", r.output)
 
     def _gdb_debug_cpp_example(self, magic_string, gdb_start_cmd="run",
-                              exe_break_line=56, exe_list_line=55, hpp_break_line=21,
+                              exe_break_line=63, exe_list_line=55, hpp_break_line=21,
                               lib_break_line=31):
         """Get a series of gdb commands to debug the cpp-example-lib example"""
         gdb_batch_cmd = " -ex 'break main' -ex '%s'" % gdb_start_cmd
@@ -3037,8 +3037,9 @@ class DevtoolIdeSdkTests(DevtoolBase):
 
         # check if resolving std::vector works with python scripts
         gdb_batch_cmd += " -ex 'list cpp-example.cpp:%d,%d'" % (exe_list_line, exe_list_line)
-        # Break on exe_break_line (the std::cout after the declaration) so the
-        # vector constructor on exe_list_line has already run when GDB stops.
+        # Break on exe_break_line (the scale_number call) so the vector on
+        # exe_list_line is both constructed and referenced; the compiler cannot
+        # eliminate the vector because its elements are passed as the argument.
         # These line numbers shift after the test inserts extra lines and
         # recompiles, proving the breakpoint resolves via the freshly rebuilt
         # debug info rather than a stale, cached line-to-address mapping.
@@ -3075,7 +3076,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
 
         # check if resolving std::vector works with python scripts
         self.assertRegex(
-            gdb_output, r"%d\s+std::vector<int> numbers = \{1, 2, 3\};" % exe_list_line)
+            gdb_output, r"%d\s+std::vector<int> numbers = \{n1, n2, n3\};" % exe_list_line)
         self.assertIn("$3 = std::vector of length 3, capacity 3 = {1, 2, 3}", gdb_output)
 
         # check that a breakpoint in an inline function defined directly in
@@ -3086,7 +3087,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertIn("exited normally", gdb_output)
 
     def _gdb_cross_debugging_multi(self, qemu, recipe_name, example_exe, magic_string,
-                                   exe_break_line=56, exe_list_line=55, hpp_break_line=21,
+                                   exe_break_line=63, exe_list_line=55, hpp_break_line=21,
                                    lib_break_line=31):
         """Verify gdb-cross is working
 

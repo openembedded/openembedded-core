@@ -50,17 +50,17 @@ int main(int argc, char* argv[])
             sleep(1);
         }
     } while (endless_mode);
-
+    volatile int n1 = 1, n2 = 2, n3 = 3;
     // Example: Demonstrate std::vector traversal for debugger inspection
-    std::vector<int> numbers = {1, 2, 3};
+    std::vector<int> numbers = {n1, n2, n3};
     std::cout << "Traversing std::vector<int> numbers:" << std::endl;
     for (size_t i = 0; i < numbers.size(); ++i) {
         std::cout << "numbers[" << i << "] = " << numbers[i] << std::endl;
     }
 
-    // Example: call a header-only function once, to exercise breakpoint
-    // resolution against header-only debug info.
-    CppExample::scale_number(6);
+    // Pass numbers elements as the argument so the compiler cannot eliminate
+    // the vector; 1+2+3 == 6, so the scale_number(n) check is unchanged.
+    CppExample::scale_number(numbers[0] + numbers[1] + numbers[2]);
 
     return 0;
 }
