@@ -1292,10 +1292,9 @@ def process_split_and_strip_files(d):
 
         if dv["srcdir"] and not hostos.startswith("mingw"):
             if (d.getVar('PACKAGE_DEBUG_STATIC_SPLIT') == '1'):
-                results = oe.utils.multiprocess_launch(splitstaticdebuginfo, staticlibs, d, extraargs=(dvar, dv, d))
+                results.extend(oe.utils.multiprocess_launch(splitstaticdebuginfo, staticlibs, d, extraargs=(dvar, dv, d)))
             else:
-                for file in staticlibs:
-                    results.append( (file,source_info(file, d)) )
+                results.extend((file, source_info(file, d)) for file in staticlibs)
 
         d.setVar("PKGDEBUGSOURCES", {strip_pkgd_prefix(f): sorted(s) for f, s in results})
 
