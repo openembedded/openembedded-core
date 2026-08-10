@@ -813,6 +813,10 @@ def splitdebuginfo(file, dvar, dv, d):
     if file.endswith(".ko") and file.find("/lib/modules/") != -1:
         if oe.package.is_kernel_module_signed(file):
             bb.debug(1, "Skip strip on signed module %s" % file)
+            # Extracting the debug sources only reads the file, so it is still
+            # safe to do for a module we must not strip.
+            if dv["srcdir"]:
+                sources = source_info(file, d)
             return (file, sources)
 
     # Split the file...

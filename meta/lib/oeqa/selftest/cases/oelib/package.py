@@ -7,10 +7,11 @@
 import os
 import shutil
 import tempfile
+import unittest.mock
 from unittest.case import TestCase
 
 import oe.path
-from oe.package import copydebugsources
+from oe.package import copydebugsources, splitdebuginfo
 
 
 class FakeDataStore:
@@ -270,3 +271,70 @@ class TestCopyDebugSources(TestCase):
             with open(copied_source) as f:
                 self.assertEqual(f.read(), "real\n")
             self.assertFalse(os.path.exists(relocation))
+
+
+class TestSplitDebugInfoSignedModule(TestCase):
+    # The kernel appends this exact 28 byte marker to a signed module, which is
+    # what oe.package.is_kernel_module_signed() looks for.
+    SIGNATURE = b"~Module signature appended~\n"
+
+    def _make_module(self, pkgd, signed):
+        module = os.path.join(pkgd, "usr", "lib", "modules", "1.0",
+                              "kernel", "net", "testmod", "testmod.ko")
+        os.makedirs(os.path.dirname(module))
+        with open(module, "wb") as f:
+            f.write(b"\x7fELF" + b"\x00" * 64)
+            if signed:
+                f.write(self.SIGNATURE)
+        return module
+
+    def _dv(self):
+        return {
+            "libdir": "/usr/lib/debug",
+            "dir": "/.debug",
+            "append": "",
+            "srcdir": "/usr/src/debug",
+        }
+
+    def test_signed_module_keeps_debug_sources(self):
+        with tempfile.TemporaryDirectory(prefix="oe-test-package-") as tmpdir:
+            pkgd = os.path.join(tmpdir, "pkgd")
+            os.makedirs(pkgd)
+            module = self._make_module(pkgd, signed=True)
+            dv = self._dv()
+
+            self.assertTrue(oe.package.is_kernel_module_signed(module),
+                            "test module was not recognised as signed")
+
+            with open(module, "rb") as f:
+                before = f.read()
+
+            d = FakeDataStore({"PKGD": pkgd, "OBJCOPY": "objcopy"})
+            expected = ["/usr/src/debug/testmod/1.0/testmod.c"]
+            with unittest.mock.patch("oe.package.source_info",
+                                     return_value=expected) as source_info:
+                _, sources = splitdebuginfo(module, pkgd, dv, d)
+
+            # The debug sources must still be collected, even though the
+            # module itself is left alone.
+            source_info.assert_called_once_with(module, d)
+            self.assertEqual(sources, expected)
+
+            # The module must be untouched so that its signature stays valid.
+            with open(module, "rb") as f:
+                self.assertEqual(f.read(), before)
+
+    def test_signed_module_without_srcdir_collects_nothing(self):
+        with tempfile.TemporaryDirectory(prefix="oe-test-package-") as tmpdir:
+            pkgd = os.path.join(tmpdir, "pkgd")
+            os.makedirs(pkgd)
+            module = self._make_module(pkgd, signed=True)
+            dv = self._dv()
+            dv["srcdir"] = ""
+
+            d = FakeDataStore({"PKGD": pkgd, "OBJCOPY": "objcopy"})
+            with unittest.mock.patch("oe.package.source_info") as source_info:
+                _, sources = splitdebuginfo(module, pkgd, dv, d)
+
+            source_info.assert_not_called()
+            self.assertEqual(sources, [])
