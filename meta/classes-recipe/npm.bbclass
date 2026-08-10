@@ -82,7 +82,7 @@ def npm_pack(env, srcdir, workdir):
     # TODO: real 'npm pack' does not include directories while 'tar'
     # does.  But this does not seem to matter...
     subprocess.run(['tar', 'czf', tarball,
-                    '--exclude', './node-modules',
+                    '--exclude', './node_modules',
                     '--exclude-vcs',
                     '--transform', r's,^\./,package/,',
                     '--mtime', '1985-10-26T08:15:00.000Z',
