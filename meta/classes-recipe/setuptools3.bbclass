@@ -13,6 +13,9 @@ SETUPTOOLS_BUILD_ARGS ?= ""
 SETUPTOOLS_SETUP_PATH ?= "${S}"
 
 python do_check_backend() {
+    if "pep517-backend" in (d.getVar("INSANE_SKIP") or "").split():
+        return
+
     import re
     filename = d.expand("${SETUPTOOLS_SETUP_PATH}/pyproject.toml")
     if os.path.exists(filename):
@@ -21,8 +24,7 @@ python do_check_backend() {
             if not match: continue
 
             msg = f"inherits setuptools3 but has pyproject.toml with {match[1]}, use the correct class"
-            if "pep517-backend" not in (d.getVar("INSANE_SKIP") or "").split():
-                oe.qa.handle_error("pep517-backend", msg, d)
+            oe.qa.handle_error("pep517-backend", msg, d)
     oe.qa.exit_if_errors(d)
 }
 addtask check_backend after do_patch before do_configure
