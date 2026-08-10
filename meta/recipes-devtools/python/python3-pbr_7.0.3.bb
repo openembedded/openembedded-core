@@ -5,9 +5,11 @@ SECTION = "devel/python"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1dece7821bf3fd70fe1309eaa37d52a2"
 
-inherit pypi python_setuptools_build_meta
+DEPENDS = "python3-setuptools-native"
 
-RDEPENDS:${PN} += "python3-pip"
+inherit pypi python_pbr
+
+RDEPENDS:${PN} += "python3-setuptools"
 
 BBCLASSEXTEND = "native nativesdk"
 
