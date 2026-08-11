@@ -97,19 +97,28 @@ class DebuggerCrossConfig:
             modes.append(DebuggerServerModes.ATTACH)
         return modes
 
+    # Re-tries in 0.1s Example: 300 * 0.1s, i.e. ~30s.
+    TARGET_START_RETRIES = 300
+
     def _target_tcp_port_check_cmd(self):
         hex_port = "%04X" % self.debug_server_port
         return "grep -q :%s /proc/net/tcp /proc/net/tcp6 2>/dev/null" % hex_port
 
-    def _target_wait_for_tcp_port_cmd(self, pid_var=None):
+    def _target_wait_for_tcp_port_cmd(self, pid_var=None, log_file=None):
+        """Shell fragment waiting until the debug server listens on its port.
+
+        The server log is dumped to stderr when giving up.
+        """
+        dump_log = "cat %s >&2; " % log_file if log_file else ""
         cleanup = ""
         if pid_var:
             cleanup = "kill \\$_%s 2>/dev/null; " % pid_var
         return (
-            "_w=0; while ! %s; do _w=\\$((_w+1)); [ \\$_w -lt 100 ] || { "
-            "%secho %s did not start on port %s >&2; exit 1; }; sleep 0.1; done;"
-            % (self._target_tcp_port_check_cmd(), cleanup, self.DEBUG_SERVER_NAME,
-               self.debug_server_port))
+            "_w=0; while ! %s; do _w=\\$((_w+1)); [ \\$_w -lt %d ] || { "
+            "%secho %s did not start on port %s after \\$_w retries >&2; %sexit 1; }; "
+            "sleep 0.1; done;"
+            % (self._target_tcp_port_check_cmd(), self.TARGET_START_RETRIES,
+               cleanup, self.DEBUG_SERVER_NAME, self.debug_server_port, dump_log))
 
     def initialize(self):
         """Called after construction to generate any required config files."""
@@ -249,7 +258,7 @@ class LldbServerConfig(DebuggerCrossConfig):
                 lldb_server, self.debug_server_port, log_file)
             cmd += "echo \\$_lldb_server_pid > %s; " % pid_file
             cmd += self._target_wait_for_tcp_port_cmd(
-                "lldb_server_pid")
+                "lldb_server_pid", log_file)
         else:
             raise DevtoolError(
                 "lldb-server does not support mode %s "
