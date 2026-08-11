@@ -12,7 +12,7 @@ PYPI_PACKAGE = "qemu_qmp"
 
 SRC_URI[sha256sum] = "a3c25d871fab549122b2340810de1f99481002c942a2132476b062aacdbf6e92"
 
-DEPENDS += "python3-setuptools-scm-native"
+DEPENDS += "python3-setuptools-scm-native python3-wheel-native"
 
 RDEPENDS:${PN} += "python3-core python3-asyncio"
 
