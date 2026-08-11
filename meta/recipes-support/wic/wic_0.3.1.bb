@@ -16,7 +16,6 @@ RDEPENDS:${PN} += " \
     python3-logging \
     python3-misc \
     parted \
-    gptfdisk \
     dosfstools \
     mtools \
     bmaptool \
