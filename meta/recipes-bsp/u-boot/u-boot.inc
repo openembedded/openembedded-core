@@ -3,10 +3,6 @@ PROVIDES = "virtual/bootloader"
 
 PACKAGE_ARCH = "${MACHINE_ARCH}"
 
-# u-boot is best built with gcc
-# https://docs.u-boot-project.org/en/latest/build/clang.html
-TOOLCHAIN = "gcc"
-
 DEPENDS += "${@bb.utils.contains('UBOOT_ENV_SUFFIX', 'scr', 'u-boot-mkimage-native', '', d)}"
 DEPENDS += "${@ 'u-boot-mkenvimage-native' if bb.utils.to_boolean(d.getVar('UBOOT_INITIAL_ENV_BINARY')) else ''}"
 
@@ -15,7 +11,7 @@ inherit uboot-config uboot-extlinux-config uboot-sign deploy python3native
 DEPENDS += "swig-native"
 
 EXTRA_OEMAKE = 'CROSS_COMPILE=${TARGET_PREFIX} V=1'
-EXTRA_OEMAKE += 'CC="${TARGET_PREFIX}gcc ${TOOLCHAIN_OPTIONS} ${DEBUG_PREFIX_MAP}"'
+EXTRA_OEMAKE += 'CC="${TARGET_PREFIX}${@bb.utils.contains('TOOLCHAIN', 'clang', 'clang', 'gcc', d)} ${TOOLCHAIN_OPTIONS} ${DEBUG_PREFIX_MAP}"'
 EXTRA_OEMAKE += 'HOSTCC="${BUILD_CC} ${BUILD_CFLAGS} ${BUILD_LDFLAGS}"'
 EXTRA_OEMAKE += 'STAGING_INCDIR=${STAGING_INCDIR_NATIVE} STAGING_LIBDIR=${STAGING_LIBDIR_NATIVE}'
 
