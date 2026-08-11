@@ -85,7 +85,7 @@ python do_install_ptest_cargo() {
     cargo_test_binaries_file = d.getVar('CARGO_TEST_BINARIES_FILES')
     rust_test_args = d.getVar('RUST_TEST_ARGS') or ""
 
-    ptest_dir = os.path.join(dest_dir, ptest_path.lstrip('/'))
+    ptest_dir = oe.path.join(dest_dir, ptest_path)
     os.makedirs(ptest_dir, exist_ok=True)
 
     test_bins = []
