@@ -5,7 +5,7 @@ BUGTRACKER = "http://w1.fi/security/"
 SECTION = "network"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://COPYING;md5=5ebcb90236d1ad640558c3d3cd3035df \
-                    file://README;beginline=1;endline=56;md5=6e4b25e7d74bfc44a32ba37bdf5210a6 \
+                    file://README;beginline=1;endline=56;md5=155e35cb3d6ab0d6a17524f48f4e761c \
                     file://wpa_supplicant/wpa_supplicant.c;beginline=1;endline=12;md5=f5ccd57ea91e04800edb88267bf8eae4"
 
 DEPENDS = "dbus libnl"
@@ -15,15 +15,8 @@ SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz \
            file://wpa_supplicant.conf \
            file://wpa_supplicant.conf-sane \
            file://99_wpa_supplicant \
-           file://0001-macsec_linux-Hardware-offload-requires-Linux-headers.patch \
-           file://0002-defconfig-Update-Opportunistic-Wireless-Encryption-O.patch \
-           file://0003-defconfig-Document-IEEE-802.11be-as-a-published-amen.patch \
-           file://0004-defconfig-Uncomment-CONFIG_IEEE80211BE-y.patch \
-           file://0005-WNM-Extend-workaround-for-broken-AP-operating-class-behavior.patch \
-           file://CVE-2025-24912-01.patch \
-           file://CVE-2025-24912-02.patch \
            "
-SRC_URI[sha256sum] = "912ea06f74e30a8e36fbb68064d6cdff218d8d591db0fc5d75dee6c81ac7fc0a"
+SRC_URI[sha256sum] = "08e23937e16d0155e55cab2b51f51fbe10d80a1aa91c4e15442645059b737ef6"
 
 S = "${UNPACKDIR}/wpa_supplicant-${PV}"
 
