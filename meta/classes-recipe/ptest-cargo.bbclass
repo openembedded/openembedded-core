@@ -95,6 +95,8 @@ python do_install_ptest_cargo() {
 
     test_paths = []
     for test_bin in test_bins:
+        # Note that we can't strip the hash from the filename as some packages
+        # (eg librsvg) have multiple binaries with the same prefix.
         shutil.copy2(test_bin, ptest_dir)
         test_paths.append(os.path.join(ptest_path, os.path.basename(test_bin)))
 
