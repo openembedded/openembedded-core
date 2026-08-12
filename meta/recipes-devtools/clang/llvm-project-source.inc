@@ -28,6 +28,7 @@ CLANG_EXTRA_OE_VENDORS ?= "${TARGET_VENDOR} ${SDK_VENDOR}"
 # ":" separated the ID in "/etc/os-release" and the triple for finding gcc on this OE DISTRO.
 # eg: "poky:poky wrlinux:wrs"
 CLANG_EXTRA_OE_DISTRO ?= "poky:poky"
+CLANG_EXTRA_OE_DISTRO:append = "${@ ' ' + d.getVar('DISTRO') + ':oe' if d.getVar('DISTRO') not in ['poky', ''] else ''}"
 # Match with MULTILIB_GLOBAL_VARIANTS
 ML_VARIANTS = "lib32 lib64 libx32"
 
