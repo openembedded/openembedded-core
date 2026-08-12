@@ -35,6 +35,7 @@ SRC_URI = "https://libarchive.org/downloads/libarchive-${PV}.tar.gz \
            file://0001-test-skip-ppmd8-aes256-streaming-test-when-no-crypto.patch \
            file://0001-append_filter-Verify-that-bidder-and-filter-match.patch \
            file://0003-Remove-bidder-name.patch \
+           file://0004-Convert-RPM-reader-into-a-proper-format.patch \
           "
 UPSTREAM_CHECK_URI = "https://www.libarchive.org/"
 
