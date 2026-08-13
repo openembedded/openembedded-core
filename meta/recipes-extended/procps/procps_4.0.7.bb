@@ -14,10 +14,9 @@ inherit autotools gettext pkgconfig update-alternatives ptest
 
 SRC_URI = "git://gitlab.com/procps-ng/procps.git;protocol=https;branch=master;tag=v${PV} \
            file://sysctl.conf \
-           file://0001-tests-Disable-twice-total-pmap-X-tests.patch \
            file://run-ptest \
            "
-SRCREV = "4dafddf4c3f4646caa517f039a2307e92657ec93"
+SRCREV = "66b48a3720d46f304f0fa76f720ca925fa48d97e"
 
 # Upstream has a custom autogen.sh which invokes po/update-potfiles as they
 # don't ship a po/POTFILES.in (which is silly).  Without that file gettext
