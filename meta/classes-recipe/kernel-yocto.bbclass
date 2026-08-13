@@ -98,7 +98,7 @@ def get_machine_branch(d, default):
             btype = urldata.parm.get("type")
             if btype != "kmeta":
                 return branches[0]
-	    
+
     return default
 
 # returns a list of all directories that are on FILESEXTRAPATHS (and
@@ -425,11 +425,11 @@ do_kernel_checkout() {
 		# checkout and clobber any unimportant files
 		git checkout -f ${machine_branch}
 	else
-		# case: we have no git repository at all. 
-		# To support low bandwidth options for building the kernel, we'll just 
+		# case: we have no git repository at all.
+		# To support low bandwidth options for building the kernel, we'll just
 		# convert the tree to a git repo and let the rest of the process work unchanged
-		
-		# if ${S} hasn't been set to the proper subdirectory a default of "linux" is 
+
+		# if ${S} hasn't been set to the proper subdirectory a default of "linux" is
 		# used, but we can't initialize that empty directory. So check it and throw a
 		# clear error
 

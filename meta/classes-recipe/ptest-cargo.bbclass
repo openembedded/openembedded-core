@@ -107,7 +107,7 @@ python do_install_ptest_cargo() {
             f.write("#!/bin/sh\n")
         else:
             f.write(f"\necho \"\"\n")
-            f.write(f"echo \"## starting to run rust tests ##\"\n")               
+            f.write(f"echo \"## starting to run rust tests ##\"\n")
         f.write("if [ -z \"$rc\" ]; then rc=0; fi\n")
         for test_path in test_paths:
             script = textwrap.dedent(f"""\
@@ -120,7 +120,7 @@ python do_install_ptest_cargo() {
                 fi
             """)
             f.write(script)
-        
+
         f.write("exit $rc\n")
 
     if not script_exists:

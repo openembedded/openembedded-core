@@ -181,7 +181,7 @@ python () {
             binary = ubootbinary
             imagefstype = ""
             for f, v in ubootconfigflags.items():
-                if config == f: 
+                if config == f:
                     found = True
                     items = v.split(',')
                     if items[0] and len(items) > 1:
