@@ -451,8 +451,12 @@ kernel_do_install() {
 	#
 	# First install the modules
 	#
-	unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS MACHINE
+	unset CFLAGS CPPFLAGS CXXFLAGS INSTALL_MOD_STRIP LDFLAGS MACHINE
 	if (grep -q -i -e '^CONFIG_MODULES=y$' .config); then
+		# If the module will be auto-signed, perform stripping before signing.
+		if [ "$(${S}/scripts/config --state MODULE_SIG)" = "y" ] && [ "$(${S}/scripts/config --state MODULE_SIG_ALL)" = "y" ]; then
+			export INSTALL_MOD_STRIP="--strip-debug --remove-section=.comment --remove-section=.note --preserve-dates"
+		fi
 		oe_runmake DEPMOD=echo MODLIB=${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION} INSTALL_FW_PATH=${D}${firmwaredir} modules_install
 		rm -f "${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/build"
 		rm -f "${D}${nonarch_base_libdir}/modules/${KERNEL_VERSION}/source"
