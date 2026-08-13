@@ -68,7 +68,7 @@ if test "x`echo $GROUPADD_PARAM | tr -d '[:space:]'`" != "x"; then
 		opts=`echo "$remaining" | cut -d ';' -f 1 | sed -e 's#[ \t]*$##'`
 		remaining=`echo "$remaining" | cut -d ';' -f 2- | sed -e 's#[ \t]*$##'`
 	done
-fi 
+fi
 
 if test "x`echo $USERADD_PARAM | tr -d '[:space:]'`" != "x"; then
 	echo "Running useradd commands..."
@@ -132,8 +132,8 @@ usermod_sysroot() {
 }
 
 common_useradd_sysroot() {
-	# Pseudo may (do_prepare_recipe_sysroot) or may not (do_populate_sysroot_setscene) be running 
-	# at this point so we're explicit about the environment so pseudo can load if 
+	# Pseudo may (do_prepare_recipe_sysroot) or may not (do_populate_sysroot_setscene) be running
+	# at this point so we're explicit about the environment so pseudo can load if
 	# not already present.
 	# PSEUDO_SYSROOT can contain references to the build architecture and COMPONENT_DIR
 	# so needs the STAGING_FIXME below
@@ -247,7 +247,7 @@ python __anonymous() {
 # (groupadd|useradd|usermod) parameters for all USERADD_PACKAGES in this recipe
 def get_all_cmd_params(d, cmd_type):
     import string
-    
+
     param_type = cmd_type.upper() + "_PARAM:%s"
     params = []
 
