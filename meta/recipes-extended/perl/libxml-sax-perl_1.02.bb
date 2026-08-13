@@ -1,7 +1,7 @@
 SUMMARY = "Perl module for using and building Perl SAX2 XML processors"
 HOMEPAGE = "https://metacpan.org/dist/XML-SAX"
 DESCRIPTION = "XML::SAX consists of several framework classes for using and \
-building Perl SAX2 XML parsers, filters, and drivers.  It is designed \ 
+building Perl SAX2 XML parsers, filters, and drivers.  It is designed \
 around the need to be able to "plug in" different SAX parsers to an \
 application without requiring programmer intervention.  Those of you \
 familiar with the DBI will be right at home.  Some of the designs \

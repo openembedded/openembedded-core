@@ -15,7 +15,7 @@ SRC_URI = "http://www.libssh2.org/download/${BP}.tar.gz \
            file://CVE-2026-55199.patch \
            file://CVE-2025-15661-1.patch \
            file://CVE-2025-15661-2.patch \
-           file://CVE-2025-15661-3.patch \	   
+           file://CVE-2025-15661-3.patch \
            file://CVE-2026-66032.patch \
            file://CVE-2026-66033.patch \
            file://CVE-2026-66034.patch \

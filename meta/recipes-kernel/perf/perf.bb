@@ -445,4 +445,4 @@ perf_fix_sources () {
 # Rust in kernel support pulls in clang-native, which satisfies the
 # BUILD_BPF_SKEL dependency checks and causes perf to attempt
 # building bpftool, resulting in a build failure.
-PACKAGECONFIG[bpf-skel] = ",BUILD_BPF_SKEL=0" 
+PACKAGECONFIG[bpf-skel] = ",BUILD_BPF_SKEL=0"

@@ -26,7 +26,7 @@ inherit meson pkgconfig
 # These are for the tests and demos, which we don't install
 EXTRA_OEMESON = "-Dgtk=disabled -Dlibpng=disabled"
 # ld: pixman/libpixman-mmx.a(pixman-mmx.c.o):
-# linking mips:loongson_2f module with previous mips:isa64 modules 
+# linking mips:loongson_2f module with previous mips:isa64 modules
 EXTRA_OEMESON += "-Dloongson-mmi=disabled"
 
 EXTRA_OEMESON:append:class-target:powerpc = " ${@bb.utils.contains("TUNE_FEATURES", "altivec", "-Dvmx=enabled", "-Dvmx=disabled", d)}"

@@ -75,13 +75,13 @@ LIBCAP_PTEST_TESTS = " \
   exploit \
   noexploit \
 "
- 
+
 do_compile_ptest() {
         oe_runmake -C tests ${LIBCAP_PTEST_TESTS} \
                 AR="${AR}" \
                 CC="${CC}" \
                 RANLIB="${RANLIB}" \
-                OBJCOPY="${OBJCOPY}" 
+                OBJCOPY="${OBJCOPY}"
         oe_runmake -C libcap cap_test \
                 AR="${AR}" \
                 CC="${CC}" \

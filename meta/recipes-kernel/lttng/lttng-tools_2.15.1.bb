@@ -73,7 +73,7 @@ FILES:${PN} += "${libdir}/lttng/libexec/* ${datadir}/xml/lttng \
 FILES:${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/*.a"
 FILES:${PN}-dev += "${PYTHON_SITEPACKAGES_DIR}/*.la"
 
-# Since files are installed into ${libdir}/lttng/libexec we match 
+# Since files are installed into ${libdir}/lttng/libexec we match
 # the libexec insane test so skip it.
 # Python module needs to keep _lttng.so
 INSANE_SKIP:${PN} = "libexec dev-so"

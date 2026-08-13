@@ -5,14 +5,14 @@ SECTION = "devel"
 LICENSE = "GPL-2.0-only"
 
 #########################################################################
-####                        PLEASE READ 
+####                        PLEASE READ
 #########################################################################
 #
 # You're probably looking here thinking you need to create some new copy
-# of linux-libc-headers since you have your own custom kernel. To put 
+# of linux-libc-headers since you have your own custom kernel. To put
 # this simply, you DO NOT.
 #
-# Why? These headers are used to build the libc. If you customise the 
+# Why? These headers are used to build the libc. If you customise the
 # headers you are customising the libc and the libc becomes machine
 # specific. Most people do not add custom libc extensions to the kernel
 # and have a machine specific libc.
@@ -27,7 +27,7 @@ LICENSE = "GPL-2.0-only"
 #
 # There can also be a case where your kernel extremely old and you want
 # an older libc ABI for that old kernel. The headers installed by this
-# recipe should still be a standard mainline kernel, not your own custom 
+# recipe should still be a standard mainline kernel, not your own custom
 # one.
 #
 # -- RP

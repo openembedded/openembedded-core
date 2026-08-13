@@ -310,8 +310,8 @@ PACKAGES += "${PN}-pod"
 FILES:${PN}-pod = "${libdir}/perl5/${PV}/pod \
                    ${libdir}/perl5/${PV}/*.pod \
                    ${libdir}/perl5/${PV}/*/*.pod \
-                   ${libdir}/perl5/${PV}/*/*/*.pod \ 
-                   ${libdir}/perl5/${PV}/*/*/*/*.pod \ 
+                   ${libdir}/perl5/${PV}/*/*/*.pod \
+                   ${libdir}/perl5/${PV}/*/*/*/*.pod \
                   "
 
 PACKAGES += "${PN}-module-cpan ${PN}-module-unicore"

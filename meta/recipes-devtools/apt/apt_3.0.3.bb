@@ -55,7 +55,7 @@ EXTRA_OECMAKE:append = " -DCURRENT_VENDOR=debian -DWITH_DOC=False \
 "
 
 PACKAGECONFIG ??= ""
-# usrmerge displays a runtime warning during package installation in case 
+# usrmerge displays a runtime warning during package installation in case
 # the system doesn't have merged /usr folders.
 PACKAGECONFIG[usrmerge] = "-DREQUIRE_MERGED_USR=ON,-DREQUIRE_MERGED_USR=OFF"
 

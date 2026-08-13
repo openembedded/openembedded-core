@@ -3,7 +3,7 @@ DESCRIPTION = "The base-files package creates the basic system directory structu
 SECTION = "base"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://licenses/GPL-2;md5=94d55d512a9ba36caa9b7df079bae19f"
-# Removed all license related tasks in this recipe as license.bbclass 
+# Removed all license related tasks in this recipe as license.bbclass
 # now deals with this. In order to get accurate licensing on to the image:
 # Set COPY_LIC_MANIFEST to just copy just the license.manifest to the image
 # For the manifest and the license text for each package:

@@ -184,7 +184,7 @@ do_install:append() {
 	sed -i -e 's,@sbindir@,${sbindir},g' -e 's,@sysconfdir@,${sysconfdir},g' ${D}${sysconfdir}/init.d/avahi-*
 }
 
-# At the time the postinst runs, dbus might not be setup so only restart if running 
+# At the time the postinst runs, dbus might not be setup so only restart if running
 # Don't exit early, because update-rc.d needs to run subsequently.
 pkg_postinst:avahi-daemon () {
 if [ -z "$D" ]; then
