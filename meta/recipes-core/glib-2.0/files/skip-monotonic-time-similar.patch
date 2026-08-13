@@ -12,7 +12,7 @@ assertion "50 * ns_elapsed > 1000 * us_elapsed" to fail.
 
 https://bugzilla.yoctoproject.org/show_bug.cgi?id=16230
 
-Upstream-Status: Inappropriate [OE-specific]
+Upstream-Status: Inappropriate [upstream ticket: https://gitlab.gnome.org/GNOME/glib/-/work_items/4025]
 Signed-off-by: Pratik Farkase <pratik.farkase@est.tech>
 ---
  glib/tests/monotonic-time.c | 1 -
