@@ -11,7 +11,7 @@
 SANITY_REQUIRED_UTILITIES ?= "patch diffstat git bzip2 tar \
     gzip gawk chrpath wget cpio perl file which"
 
-# Functions added to this variable MUST throw a NotImplementedError exception unless 
+# Functions added to this variable MUST throw a NotImplementedError exception unless
 # they successfully changed the config version in the config file. Exceptions
 # are used since exec_func doesn't handle return values.
 BBLAYERS_CONF_UPDATE_FUNCS += " \
@@ -28,13 +28,13 @@ python oecore_update_localconf() {
     current_conf  = d.getVar('CONF_VERSION')
     conf_version =  d.getVar('LOCALCONF_VERSION')
 
-    failmsg = """Your version of local.conf was generated from an older/newer version of 
-local.conf.sample and there have been updates made to this file. Please compare the two 
+    failmsg = """Your version of local.conf was generated from an older/newer version of
+local.conf.sample and there have been updates made to this file. Please compare the two
 files and merge any changes before continuing.
 
 Matching the version numbers will remove this message.
 
-\"${SANITY_DIFF_TOOL} conf/local.conf ${SANITY_LOCALCONF_SAMPLE}\" 
+\"${SANITY_DIFF_TOOL} conf/local.conf ${SANITY_LOCALCONF_SAMPLE}\"
 
 is a good way to visualise the changes."""
     failmsg = d.expand(failmsg)
@@ -48,13 +48,13 @@ python oecore_update_siteconf() {
     current_sconf = d.getVar('SCONF_VERSION')
     sconf_version = d.getVar('SITE_CONF_VERSION')
 
-    failmsg = """Your version of site.conf was generated from an older version of 
-site.conf.sample and there have been updates made to this file. Please compare the two 
+    failmsg = """Your version of site.conf was generated from an older version of
+site.conf.sample and there have been updates made to this file. Please compare the two
 files and merge any changes before continuing.
 
 Matching the version numbers will remove this message.
 
-\"${SANITY_DIFF_TOOL} conf/site.conf ${SANITY_SITECONF_SAMPLE}\" 
+\"${SANITY_DIFF_TOOL} conf/site.conf ${SANITY_SITECONF_SAMPLE}\"
 
 is a good way to visualise the changes."""
     failmsg = d.expand(failmsg)
@@ -71,7 +71,7 @@ python oecore_update_bblayers() {
 
     failmsg = """Your version of bblayers.conf has the wrong LCONF_VERSION (has ${LCONF_VERSION}, expecting ${LAYER_CONF_VERSION}).
 Please compare your file against bblayers.conf.sample and merge any changes before continuing.
-"${SANITY_DIFF_TOOL} conf/bblayers.conf ${SANITY_BBLAYERCONF_SAMPLE}" 
+"${SANITY_DIFF_TOOL} conf/bblayers.conf ${SANITY_BBLAYERCONF_SAMPLE}"
 
 is a good way to visualise the changes."""
     failmsg = d.expand(failmsg)

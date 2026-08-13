@@ -346,7 +346,7 @@ python base_eventhandler() {
         #
         # If we have multiple providers of virtual/X and a PREFERRED_PROVIDER_virtual/X is set
         # skip parsing for all the other providers which will mean they get uninstalled from the
-        # sysroot since they're now "unreachable". This makes switching virtual/kernel work in 
+        # sysroot since they're now "unreachable". This makes switching virtual/kernel work in
         # particular.
         #
         pn = d.getVar('PN')
