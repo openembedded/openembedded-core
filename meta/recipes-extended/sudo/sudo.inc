@@ -48,3 +48,4 @@ do_install:prepend (){
 }
 
 CVE_VERSION_SUFFIX = "patch"
+OEQA_BUILDPATHS_SKIP = "/home/buildroot"
