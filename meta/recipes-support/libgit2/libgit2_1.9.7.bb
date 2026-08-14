@@ -8,7 +8,7 @@ DEPENDS = "curl openssl zlib libssh2 libgcrypt libpcre2"
 SRC_URI = "git://github.com/libgit2/libgit2.git;branch=maint/v1.9;protocol=https;tag=v${PV} \
            file://0001-cmake-mark-system-libraries-are-private-link-librari.patch"
 
-SRCREV = "26055f5af74ab1cf636d272e8a34315496d3f06f"
+SRCREV = "49e408b3208bc3093757a1c2db938d3590f3f412"
 
 inherit cmake
 

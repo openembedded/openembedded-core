@@ -1,4 +1,4 @@
-From 5670d3eed82f0d64766158809bf3d0c7c631b0ea Mon Sep 17 00:00:00 2001
+From 41048806aec8a4b71f3ccf11fdedbec88080a675 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@arm.com>
 Date: Thu, 23 Jul 2026 17:35:23 +0100
 Subject: [PATCH] cmake: mark system libraries are private link libraries
@@ -38,5 +38,3 @@ index 8045ddef9..fafdb09ec 100644
  target_include_directories(libgit2package SYSTEM PRIVATE ${LIBGIT2_INCLUDES})
  target_include_directories(libgit2package INTERFACE $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
  
--- 
-2.43.0
