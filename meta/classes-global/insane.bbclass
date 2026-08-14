@@ -437,12 +437,13 @@ def package_qa_check_buildpaths(path, name, d, elf):
 
     tmpdir = bytes(d.getVar('TMPDIR'), encoding="utf-8")
     homedir = bytes(os.environ.get('HOME', ''), encoding="utf-8")
+    buildpaths_skip = (d.getVar("OEQA_BUILDPATHS_SKIP") or "").split()
     with open(path, 'rb') as f:
         file_content = f.read()
         if tmpdir in file_content:
             path = package_qa_clean_path(path, d, name)
             oe.qa.handle_error("buildpaths", "File %s in package %s contains reference to TMPDIR" % (path, name), d)
-        if homedir and homedir in file_content and not homedir.decode() in (d.getVar("OEQA_BUILDPATHS_SKIP") or "").split():
+        if homedir and homedir in file_content and not any(path.startswith(homedir.decode()) for path in buildpaths_skip):
             path = package_qa_clean_path(path, d, name)
             oe.qa.handle_error("buildpaths", "File %s in package %s contains a reference to the build host HOME directory. If upstream hardcodes a directory path that matches your home, you can set OEQA_BUILDPATHS_SKIP = \"%s\" in the recipe." % (path, name, homedir.decode()), d)
 
