@@ -1798,7 +1798,7 @@ class UBootFitImageTests(FitImageTestCase):
                 'entry = <%s>;' % bb_vars['UBOOT_FIT_TEE_ENTRYPOINT'],
                 'compression = "none";',
             ]
-            loadables.insert(0, "tee")
+            loadables.append("tee")
         if bb_vars['UBOOT_FIT_ARM_TRUSTED_FIRMWARE'] == "1":
             its_field_check += [
                 'description = "ARM Trusted Firmware";',
@@ -1850,7 +1850,7 @@ class UBootFitImageTests(FitImageTestCase):
             }
         }
         if bb_vars['UBOOT_FIT_TEE'] == "1":
-            loadables.insert(0, "tee")
+            loadables.append("tee")
             req_sections['tee'] = {
                 "Type": "Trusted Execution Environment Image",
                 # "Load Address": bb_vars['UBOOT_FIT_TEE_LOADADDRESS'], not printed by mkimage?

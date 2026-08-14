@@ -428,7 +428,10 @@ EOF
         };
 EOF
 	if [ "${UBOOT_FIT_TEE}" = "1" ] ; then
-		conf_loadables="\"tee\", ${conf_loadables}"
+		# Listed behind U-Boot: an SPL handing off to the ARM Trusted
+		# Firmware only describes the images it loaded to the next stage
+		# once it has loaded the one it appends the device tree to.
+		conf_loadables="${conf_loadables}, \"tee\""
 		uboot_fitimage_tee
 	fi
 
