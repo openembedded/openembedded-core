@@ -1047,12 +1047,10 @@
             "core"
         ],
         "files": [
-            "${libdir}/python${PYTHON_MAJMIN}/string/__init__.py",
-            "${libdir}/python${PYTHON_MAJMIN}/string/templatelib.py"
+            "${libdir}/python${PYTHON_MAJMIN}/string",
+            "${libdir}/python${PYTHON_MAJMIN}/string/__pycache__"
         ],
-        "cached": [
-            "${libdir}/python${PYTHON_MAJMIN}/__pycache__/string.*.pyc"
-        ]
+        "cached": []
     },
     "syslog": {
         "summary": "Python syslog interface",
