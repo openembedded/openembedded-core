@@ -1,6 +1,6 @@
 SUMMARY = "Selftest fixture: go_src_uri parameter variants"
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302" 
+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
 # Parsed via tinfoil for its GO_SRC_URI_* variables only; never actually built
 # (it has no real SRC_URI, so do_go_vendor would fail).

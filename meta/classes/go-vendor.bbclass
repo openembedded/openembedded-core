@@ -5,14 +5,14 @@
 # Handle Go vendor support for offline builds
 #
 # When importing Go modules, Go downloads the imported modules using
-# a network (proxy) connection ahead of the compile stage. This contradicts 
+# a network (proxy) connection ahead of the compile stage. This contradicts
 # the yocto build concept of fetching every source ahead of build-time
 # and supporting offline builds.
 #
-# To support offline builds, we use Go 'vendoring': module dependencies are 
+# To support offline builds, we use Go 'vendoring': module dependencies are
 # downloaded during the fetch-phase and unpacked into the modules 'vendor'
 # folder. Additionally a manifest file is generated for the 'vendor' folder
-# 
+#
 
 inherit go-mod
 
@@ -87,7 +87,7 @@ python do_go_vendor() {
 
         destsuffix = fetcher.ud[url].parm.get('destsuffix')
         # We derive the module repo / version in the following manner (exmaple):
-        # 
+        #
         # destsuffix = git/src/import/vendor.fetch/github.com/foo/bar@v1.2.3
         # p = github.com/foo/bar@v1.2.3
         # repo = github.com/foo/bar
