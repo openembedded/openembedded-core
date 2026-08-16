@@ -1461,13 +1461,17 @@ def _export_local_files(srctree, rd, destdir, srctreebase):
         if os.path.exists(os.path.join(fullfile, ".git")):
             # submodules handled elsewhere
             continue
-        if f not in existing_files:
+        if f not in existing_files and os.path.exists(fullfile):
             added[f] = {}
+            parentdir = os.path.normpath(os.path.join(destdir, f, os.pardir))
+            if not os.path.isdir(parentdir):
+                os.makedirs(parentdir)
+
             if os.path.isdir(os.path.join(srctree, f)):
                 shutil.copytree(fullfile, os.path.join(destdir, f))
             else:
                 shutil.copy2(fullfile, os.path.join(destdir, f))
-        elif not os.path.exists(fullfile):
+        elif f in existing_files and not os.path.exists(fullfile):
             removed[f] = existing_files[f]
         elif f in existing_files:
             updated[f] = {'path' : existing_files[f]}
