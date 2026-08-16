@@ -1437,7 +1437,6 @@ def _export_local_files(srctree, rd, destdir, srctreebase):
     # recipe space).
     existing_files = oe.recipeutils.get_recipe_local_files(rd)
 
-    new_set = None
     updated = OrderedDict()
     added = OrderedDict()
     removed = OrderedDict()
