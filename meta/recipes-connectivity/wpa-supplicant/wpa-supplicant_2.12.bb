@@ -12,7 +12,6 @@ DEPENDS = "dbus libnl"
 
 SRC_URI = "http://w1.fi/releases/wpa_supplicant-${PV}.tar.gz \
            file://wpa-supplicant.sh \
-           file://wpa_supplicant.conf \
            file://wpa_supplicant.conf-sane \
            file://99_wpa_supplicant \
            "
@@ -77,7 +76,7 @@ do_install () {
 	oe_runmake -C wpa_supplicant DESTDIR="${D}" install
 
 	install -d ${D}${docdir}/wpa_supplicant
-	install -m 644 wpa_supplicant/README ${UNPACKDIR}/wpa_supplicant.conf ${D}${docdir}/wpa_supplicant
+	install -m 644 wpa_supplicant/README ${S}/wpa_supplicant/wpa_supplicant.conf ${D}${docdir}/wpa_supplicant
 
 	install -d ${D}${sysconfdir}
 	install -m 600 ${UNPACKDIR}/wpa_supplicant.conf-sane ${D}${sysconfdir}/wpa_supplicant.conf
