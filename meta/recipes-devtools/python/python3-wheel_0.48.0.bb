@@ -4,7 +4,7 @@ SECTION = "devel/python"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=7ffb0db04527cfe380e4f2726bd05ebf"
 
-SRC_URI[sha256sum] = "cc72bd1009ba0cf63922e28f94d9d83b920aa2bb28f798a31d0691b02fa3c9b3"
+SRC_URI[sha256sum] = "94800765601e9171bf5d58d066e640662842bcedcbab982b2c90787a2c987322"
 
 inherit python_flit_core pypi ptest-python-pytest
 
