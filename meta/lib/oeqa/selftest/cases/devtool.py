@@ -713,6 +713,64 @@ class DevtoolAddTests(DevtoolBase):
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
         result = runCmd('devtool add %s %s -f %s' % (testrecipe, srcdir, url))
 
+    def test_devtool_add_build_finish(self):
+        url = 'https://ftp.gnu.org/gnu/hello/hello-2.12.3.tar.gz'
+        pn = 'hello'
+        recipe = 'hello_2.12.3.bb'
+        # Test devtool add
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake -c cleansstate %s' % pn)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        result = runCmd('devtool add %s' % (url, ))
+        self.assertExists(os.path.join(self.workspacedir, 'conf', 'layer.conf'),
+                          'Workspace directory not created')
+        # Test devtool build
+        result = runCmd('devtool build %s' % pn)
+        bb_vars = get_bb_vars(['D', 'bindir'], pn)
+        installdir = bb_vars['D']
+        self.assertTrue(installdir, 'Could not query installdir variable')
+        # devtool finish
+        result = runCmd('devtool finish %s meta-selftest' % pn,
+                        ignore_status=True)
+        self.assertNotEqual(result.status, 0,
+                            'devtool finish should have failed on a dirty directory. devtool output: %s' %
+                            (result.output))
+        # clean directory
+        sourcedir = os.path.join(self.workspacedir, 'sources', 'hello')
+        runCmd('git reset --hard; git clean -dxf', cwd=sourcedir)
+        # devtool finish (again)
+        self.assertExists(os.path.join(self.workspacedir, 'recipes', pn),
+                          'Recipe directory should exist before finish')
+        result = runCmd('devtool finish %s meta-selftest' % pn)
+        self.assertNotExists(os.path.join(self.workspacedir, 'recipes', pn),
+                             'Recipe directory should not exist after finish')
+        # Check recipe got created as expected
+        self.assertExists(os.path.join(get_test_layer(), f'recipes-{pn}', pn, recipe),
+                          'Recipe should exist in the layer after finish')
+
+    def test_devtool_add_build_finish_force(self):
+        url = 'https://ftp.gnu.org/gnu/hello/hello-2.12.3.tar.gz'
+        pn = 'hello'
+        recipe = 'hello_2.12.3.bb'
+        # Test devtool add
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake -c cleansstate %s' % pn)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        result = runCmd('devtool add %s' % (url, ))
+        self.assertExists(os.path.join(self.workspacedir, 'conf', 'layer.conf'),
+                          'Workspace directory not created')
+        # Test devtool build
+        result = runCmd('devtool build %s' % pn)
+        bb_vars = get_bb_vars(['D', 'bindir'], pn)
+        installdir = bb_vars['D']
+        self.assertTrue(installdir, 'Could not query installdir variable')
+        # devtool finish
+        result = runCmd('devtool finish %s meta-selftest --force' % pn)
+        # Check recipe got created as expected
+        self.assertExists(os.path.join(get_test_layer(), f'recipes-{pn}', pn, recipe),
+                          'Recipe should exist in the layer after finish')
+
+
 class DevtoolModifyTests(DevtoolBase):
 
     def test_devtool_modify(self):
