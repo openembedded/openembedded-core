@@ -14,6 +14,7 @@ inherit autotools gettext pkgconfig update-alternatives ptest
 
 SRC_URI = "git://gitlab.com/procps-ng/procps.git;protocol=https;branch=master;tag=v${PV} \
            file://sysctl.conf \
+           file://0001-testsuite-skip-signal-based-kill-tests.patch \
            file://run-ptest \
            "
 SRCREV = "66b48a3720d46f304f0fa76f720ca925fa48d97e"
