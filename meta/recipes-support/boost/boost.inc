@@ -89,7 +89,7 @@ FILES:${PN}-test = "${libdir}/libboost_prg_exec_monitor*.so.* \
 
 # -dev last to pick up the remaining stuff
 PACKAGES += "${PN}-dev ${PN}-staticdev"
-FILES:${PN}-dev = "${includedir} ${libdir}/libboost_*.so ${libdir}/cmake"
+FILES:${PN}-dev = "${includedir} ${libdir}/libboost_*.so ${libdir}/cmake ${datadir}"
 FILES:${PN}-staticdev = "${libdir}/libboost_*.a"
 
 # "boost" is a metapackage which pulls in all boost librabries
@@ -200,6 +200,7 @@ do_compile() {
 do_install() {
 	cd ${S}
 	b2 ${BJAM_OPTS} \
+		--prefix=${D}${prefix} \
 		--libdir=${D}${libdir} \
 		--includedir=${D}${includedir} \
 		install
