@@ -31,7 +31,7 @@ SRC_URI += "\
            file://migrator.patch \
            file://distributor.patch \
            "
-SRC_URI[archive.sha256sum] = "1e26f9901f0f08bfe943aa70163c953334c7ec3d4aefc8d354e8a9c140b334a7"
+SRC_URI[archive.sha256sum] = "458222a8694cfc914e7a2d6de9879067001a8d65e00a907d96112059c67ad446"
 
 export GI_TYPELIB_PATH = "${STAGING_LIBDIR}/girepository-1.0/"
 
