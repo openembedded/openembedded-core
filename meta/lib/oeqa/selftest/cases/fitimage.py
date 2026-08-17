@@ -965,7 +965,7 @@ class KernelFitImageBase(FitImageTestCase):
         if bb_vars['INITRAMFS_IMAGE'] and bb_vars['INITRAMFS_IMAGE_BUNDLE'] != "1":
             sign_images += ', "ramdisk"'
         if bb_vars['FIT_UBOOT_ENV']:
-            sign_images += ', "bootscr"'
+            sign_images += ', "script"'
         if bb_vars.get('KERNEL_SETUP_BIN'):
             sign_images += ', "setup"'
         req_sigvalues_config = {
