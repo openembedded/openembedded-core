@@ -368,6 +368,9 @@ do_install() {
         cp -a --parents kernel/sched/ext.h $kerneldir/build 2>/dev/null || :
         cp -a --parents kernel/workqueue_internal.h $kerneldir/build 2>/dev/null || :
 
+        # 7.1+
+        cp -a --parents kernel/sched/ext/ext.h $kerneldir/build 2>/dev/null || :
+
         if [ "${ARCH}" = "mips" ]; then
             cp -a --parents arch/mips/Kbuild.platforms $kerneldir/build/
             cp --parents $(find -type f -name "Platform") $kerneldir/build
