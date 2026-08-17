@@ -631,6 +631,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-iwlwifi-3160-7 ${PN}-iwlwifi-3160-8 ${PN}-iwlwifi-3160-9 \
              ${PN}-iwlwifi-3160-10 ${PN}-iwlwifi-3160-12 ${PN}-iwlwifi-3160-13 \
              ${PN}-iwlwifi-3160-16 ${PN}-iwlwifi-3160-17 \
+             ${PN}-iwlwifi-5000-5 \
              ${PN}-iwlwifi-6000-4 ${PN}-iwlwifi-6000g2a-5 ${PN}-iwlwifi-6000g2a-6 \
              ${PN}-iwlwifi-6000g2b-5 ${PN}-iwlwifi-6000g2b-6 \
              ${PN}-iwlwifi-6050-4 ${PN}-iwlwifi-6050-5 \
@@ -2165,6 +2166,7 @@ LICENSE:${PN}-iwlwifi-3160-12   = "LicenseRef-Firmware-iwlwifi-firmware"
 LICENSE:${PN}-iwlwifi-3160-13   = "LicenseRef-Firmware-iwlwifi-firmware"
 LICENSE:${PN}-iwlwifi-3160-16   = "LicenseRef-Firmware-iwlwifi-firmware"
 LICENSE:${PN}-iwlwifi-3160-17   = "LicenseRef-Firmware-iwlwifi-firmware"
+LICENSE:${PN}-iwlwifi-5000-5    = "LicenseRef-Firmware-iwlwifi-firmware"
 LICENSE:${PN}-iwlwifi-6000-4    = "LicenseRef-Firmware-iwlwifi-firmware"
 LICENSE:${PN}-iwlwifi-6000g2a-5 = "LicenseRef-Firmware-iwlwifi-firmware"
 LICENSE:${PN}-iwlwifi-6000g2a-6 = "LicenseRef-Firmware-iwlwifi-firmware"
@@ -2192,6 +2194,7 @@ FILES:${PN}-iwlwifi-3160-12 = "${firmwaredir}/iwlwifi-3160-12.ucode* ${firmwared
 FILES:${PN}-iwlwifi-3160-13 = "${firmwaredir}/iwlwifi-3160-13.ucode* ${firmwaredir}/intel/iwlwifi/iwlwifi-3160-13.ucode*"
 FILES:${PN}-iwlwifi-3160-16 = "${firmwaredir}/iwlwifi-3160-16.ucode* ${firmwaredir}/intel/iwlwifi/iwlwifi-3160-16.ucode*"
 FILES:${PN}-iwlwifi-3160-17 = "${firmwaredir}/iwlwifi-3160-17.ucode* ${firmwaredir}/intel/iwlwifi/iwlwifi-3160-17.ucode*"
+FILES:${PN}-iwlwifi-5000-5 = "${firmwaredir}/iwlwifi-5000-5.ucode* ${firmwaredir}/intel/iwlwifi/iwlwifi-5000-5.ucode*"
 FILES:${PN}-iwlwifi-6000-4 = "${firmwaredir}/iwlwifi-6000-4.ucode* ${firmwaredir}/intel/iwlwifi/iwlwifi-6000-4.ucode*"
 FILES:${PN}-iwlwifi-6000g2a-5 = "${firmwaredir}/iwlwifi-6000g2a-5.ucode* ${firmwaredir}/intel/iwlwifi/iwlwifi-6000g2a-5.ucode*"
 FILES:${PN}-iwlwifi-6000g2a-6 = "${firmwaredir}/iwlwifi-6000g2a-6.ucode* ${firmwaredir}/intel/iwlwifi/iwlwifi-6000g2a-6.ucode*"
@@ -2220,6 +2223,7 @@ RDEPENDS:${PN}-iwlwifi-3160-12   = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-3160-13   = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-3160-16   = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-3160-17   = "${PN}-iwlwifi-license"
+RDEPENDS:${PN}-iwlwifi-5000-5    = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-6000-4    = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-6000g2a-5 = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-6000g2a-6 = "${PN}-iwlwifi-license"
