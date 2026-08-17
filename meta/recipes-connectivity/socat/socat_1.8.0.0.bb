@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 SRC_URI = "http://www.dest-unreach.org/socat/download/socat-${PV}.tar.bz2 \
            file://0001-fix-compile-procan.c-failed.patch \
+           file://0001-Fixed-strchr-with-const-for-new-glibc.patch \
            file://CVE-2024-54661.patch \
            file://CVE-2026-56123.patch \
 "

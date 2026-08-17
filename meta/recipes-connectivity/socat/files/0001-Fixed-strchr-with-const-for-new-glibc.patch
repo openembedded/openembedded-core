@@ -1,0 +1,38 @@
+From 3033625d5a67514e3d74021fc39f7fcb542d7f2d Mon Sep 17 00:00:00 2001
+From: Gerhard Rieger <gerhard@dest-unreach.org>
+Date: Wed, 11 Feb 2026 14:06:25 +0100
+Subject: [PATCH] Fixed strchr with const for new glibc
+
+Upstream-Status: Backport [https://repo.or.cz/socat.git/commit/a7058c9340db0bf90bf4372de0ae87ad37f57735]
+Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
+---
+ filan.c   | 2 +-
+ xio-ip6.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/filan.c b/filan.c
+index 36def50..e256f74 100644
+--- a/filan.c
++++ b/filan.c
+@@ -1055,7 +1055,7 @@ const char *getfiletypestring(int st_mode) {
+ }
+ 
+ static int printtime(FILE *outfile, time_t time) {
+-   const char *s;
++   char *s;
+ 
+    if (filan_rawoutput) {
+       fprintf(outfile, "\t"F_time, time);
+diff --git a/xio-ip6.c b/xio-ip6.c
+index bd94bdd..09abdd1 100644
+--- a/xio-ip6.c
++++ b/xio-ip6.c
+@@ -114,7 +114,7 @@ int xioparsenetwork_ip6(
+ 	struct xiorange *range,
+ 	const int ai_flags[2])
+ {
+-   char *delimpos;	/* absolute address of delimiter */
++   const char *delimpos;	/* absolute address of delimiter */
+    size_t delimind;	/* index of delimiter in string */
+    unsigned int bits;	/* netmask bits */
+    char *endptr;
