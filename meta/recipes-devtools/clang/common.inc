@@ -61,6 +61,7 @@ SRC_URI = "\
     file://0040-libcxxabi-declare-__gnu_unwind_frame-in-cxa_personal.patch \
     file://0041-Consolidate-and-fix-sysroot-based-compiler-rt-search.patch \
     file://0042-guard-clang-tools-extra-test.patch \
+    file://0043-LoopUnroll-Iterate-exit-fold-candidates-in-determini.patch \
 "
 # Fallback to no-PIE if not set
 GCCPIE ??= ""

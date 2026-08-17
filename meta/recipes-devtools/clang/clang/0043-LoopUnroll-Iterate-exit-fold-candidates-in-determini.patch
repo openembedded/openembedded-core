@@ -1,0 +1,71 @@
+From 965f9d87adb0a7376454374fbc140ab69bd796a9 Mon Sep 17 00:00:00 2001
+From: Florian Hahn <flo@fhahn.com>
+Date: Fri, 27 Mar 2026 13:02:51 +0000
+Subject: [PATCH] [LoopUnroll] Use MapVector for deterministic iteration order.
+ (#188821)
+
+NonLoopBlocksIDom determines the order we adjust the DT, impacting DRT
+child ordering.
+
+Similarly, ExitInfos order impacts the order of SetDest, which applies
+DT updates.
+
+The order impacts collectChildrenInLoop, which in turn impacts the we
+process BBs in LICM. And this in turn impacts the order in which we
+perform alias queries.
+
+If the order is not deterministic, we sometimes get different NumNoAlias
+statistic counts, and possibly also different IR, although I have not
+confirmed the latter.
+
+Upstream-Status: Backport [https://github.com/llvm/llvm-project/commit/965f9d87adb0a7376454374fbc140ab69bd796a9]
+Signed-off-by: Sunilkumar Dora <sunilkumar.dora@windriver.com>
+Signed-off-by: Deepesh Varatharajan <Deepesh.Varatharajan@windriver.com>
+
+---
+ llvm/lib/Transforms/Utils/LoopPeel.cpp   | 3 ++-
+ llvm/lib/Transforms/Utils/LoopUnroll.cpp | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/llvm/lib/Transforms/Utils/LoopPeel.cpp b/llvm/lib/Transforms/Utils/LoopPeel.cpp
+index 91737b5c30533..4c67d5a9ae680 100644
+--- a/llvm/lib/Transforms/Utils/LoopPeel.cpp
++++ b/llvm/lib/Transforms/Utils/LoopPeel.cpp
+@@ -11,6 +11,7 @@
+
+ #include "llvm/Transforms/Utils/LoopPeel.h"
+ #include "llvm/ADT/DenseMap.h"
++#include "llvm/ADT/MapVector.h"
+ #include "llvm/ADT/SmallVector.h"
+ #include "llvm/ADT/Statistic.h"
+ #include "llvm/Analysis/Loads.h"
+@@ -1121,7 +1122,7 @@ void llvm::peelLoop(Loop *L, unsigned PeelCount, bool PeelLast, LoopInfo *LI,
+   // later. Immediate dominator of such block might change, because we add more
+   // routes which can lead to the exit: we can reach it from the peeled
+   // iterations too.
+-  DenseMap<BasicBlock *, BasicBlock *> NonLoopBlocksIDom;
++  MapVector<BasicBlock *, BasicBlock *> NonLoopBlocksIDom;
+   for (auto *BB : L->blocks()) {
+     auto *BBDomNode = DT.getNode(BB);
+     SmallVector<BasicBlock *, 16> ChildrenToUpdate;
+diff --git a/llvm/lib/Transforms/Utils/LoopUnroll.cpp b/llvm/lib/Transforms/Utils/LoopUnroll.cpp
+index 6a2ccbea996bf..ab35d217f0d93 100644
+--- a/llvm/lib/Transforms/Utils/LoopUnroll.cpp
++++ b/llvm/lib/Transforms/Utils/LoopUnroll.cpp
+@@ -17,6 +17,7 @@
+
+ #include "llvm/ADT/ArrayRef.h"
+ #include "llvm/ADT/DenseMap.h"
++#include "llvm/ADT/MapVector.h"
+ #include "llvm/ADT/STLExtras.h"
+ #include "llvm/ADT/ScopedHashTable.h"
+ #include "llvm/ADT/SetVector.h"
+@@ -515,7 +516,7 @@ llvm::UnrollLoop(Loop *L, UnrollLoopOptions ULO, LoopInfo *LI,
+     BasicBlock *FirstExitingBlock = nullptr;
+     SmallVector<BasicBlock *> ExitingBlocks;
+   };
+-  DenseMap<BasicBlock *, ExitInfo> ExitInfos;
++  MapVector<BasicBlock *, ExitInfo> ExitInfos;
+   SmallVector<BasicBlock *, 4> ExitingBlocks;
+   L->getExitingBlocks(ExitingBlocks);
+   for (auto *ExitingBlock : ExitingBlocks) {
