@@ -57,3 +57,6 @@ do_install_ptest:class-target() {
 BBCLASSEXTEND += "native nativesdk"
 
 CVE_PRODUCT = "expat libexpat"
+
+CVE_STATUS[CVE-2026-72522] = "not-applicable-config: Needs Expat compiled with 16bit character support , Issue only affects firefox/Windows. \
+EXPAT_CHAR_TYPE:STRING=char is for Yocto builds"
