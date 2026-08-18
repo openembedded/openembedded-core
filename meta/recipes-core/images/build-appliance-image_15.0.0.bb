@@ -27,7 +27,7 @@ inherit core-image features_check
 REQUIRED_DISTRO_FEATURES += "xattr"
 
 SRCREV_bitbake ?= "fae9db3168dbff1b8c76fe9c6726a9687ff97514"
-SRCREV_oe-core ?= "243aa188889c765564c75247b7314e3f6168520a"
+SRCREV_oe-core ?= "3b859a1f3eb0c7eace3f66bbbba845cba0c20133"
 SRCREV_yocto ?= "1b132647002eea43a2c7a7f857f63f42dacbc26c"
 SRCREV_FORMAT = "bitbake_oe-core_yocto"
 
