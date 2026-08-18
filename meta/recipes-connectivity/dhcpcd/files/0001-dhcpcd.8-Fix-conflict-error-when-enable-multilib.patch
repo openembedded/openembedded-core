@@ -1,4 +1,4 @@
-From d3e517be04e660d72233cde91b44c3cf705126e2 Mon Sep 17 00:00:00 2001
+From e9b462a5b3fe875effc05a246948533da1c5baaf Mon Sep 17 00:00:00 2001
 From: Lei Maohui <leimaohui@fujitsu.com>
 Date: Fri, 10 Mar 2023 03:48:46 +0000
 Subject: [PATCH] dhcpcd.8: Fix conflict error when enable multilib.

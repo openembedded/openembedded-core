@@ -1,4 +1,4 @@
-From a3e397d3764fdb779e2f995b690ba365956612f5 Mon Sep 17 00:00:00 2001
+From 5f9b3c4aa7965cf9edf7d6adc8626f50462ad979 Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Wed, 9 Nov 2022 16:33:18 +0800
 Subject: [PATCH] 20-resolv.conf: improve the sitation of working with systemd
