@@ -319,6 +319,13 @@ SKIPPED_TESTS += " \
     --ignore test.test_tracemalloc.TestCAPI.test_tracemalloc_track_race \
 "
 
+# Intermittent failure under load - the remote pdb attach test is timing
+# sensitive and fails on loaded autobuilder hosts (CPython #130363)
+# Bugzilla YP 16201
+SKIPPED_TESTS += " \
+    --ignore test.test_remote_pdb.PdbAttachTestCase.test_attach_to_process_with_colors \
+"
+
 SKIPPED_TESTS:append:libc-musl = " \
     -x test__locale \
     -x test_c_locale_coercion \
