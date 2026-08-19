@@ -817,6 +817,11 @@ class RecipeModified:
             if self.toolchain == "gcc":
                 gcc_python_helpers_pattern = os.path.join(self.recipe_sysroot, "usr", "share", "gcc-*", "python")
                 gcc_python_helpers_dirs = glob.glob(gcc_python_helpers_pattern)
+                if len(gcc_python_helpers_dirs) > 1:
+                    raise DevtoolError(
+                        "Found multiple gcc python helpers directories matching %s: %s. "
+                        "The recipe sysroot likely has stale files from a previous gcc version, "
+                        "remove tmp/work and rebuild the recipe." % (gcc_python_helpers_pattern, gcc_python_helpers_dirs))
                 if gcc_python_helpers_dirs:
                     gcc_python_helpers = gcc_python_helpers_dirs[0]
                 else:
