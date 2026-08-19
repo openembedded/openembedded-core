@@ -8,7 +8,9 @@ import errno
 import os
 import re
 import shutil
+import subprocess
 import tempfile
+import threading
 import time
 import glob
 import fnmatch
@@ -18,7 +20,7 @@ import logging
 import shlex
 
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import runCmd, Command, bitbake, get_bb_var, create_temp_layer
+from oeqa.utils.commands import runCmd, bitbake, get_bb_var, create_temp_layer
 from oeqa.utils.commands import get_bb_vars, runqemu, runqemu_check_taps, get_test_layer
 from oeqa.core.decorator import OETestTag
 from oeqa.core.decorator.data import skipIfNotFeature
@@ -2805,15 +2807,76 @@ class DevtoolUpgradeTests(DevtoolBase):
 
 
 class RunCmdBackground:
-    """Context manager to manage a background subprocess"""
+    """Context manager running a command in the background
+
+    This mirrors what VS Code itself does with a task's "isBackground" +
+    "problemMatcher": ["background"]["endsPattern"] (see the generated
+    tasks.json and how _verify_launch_config() reads
+    prelaunch_task["problemMatcher"][0]["background"]["endsPattern"]): VS
+    Code also watches the task's output incrementally and considers the
+    background task "ready" as soon as a line matches endsPattern, rather
+    than waiting for the task to exit or polling on an interval.
+    """
     def __init__(self, command, output_log=None, **options):
-        self.cmd = Command(command, bg=True, output_log=output_log, **options)
+        self.command = command
+        self.output_log = output_log
+        self.options = options
+        self.process = None
+        self._reader_thread = None
+        self._cond = threading.Condition()
+        self._chunks = []
 
     def __enter__(self):
-        self.cmd.run()
+        popen_options = dict(self.options)
+        popen_options.setdefault("stdout", subprocess.PIPE)
+        popen_options.setdefault("stderr", subprocess.STDOUT)
+        popen_options.setdefault("shell", isinstance(self.command, str))
+        self.process = subprocess.Popen(self.command, **popen_options)
+        self._reader_thread = threading.Thread(target=self._read_output, daemon=True)
+        self._reader_thread.start()
+        return self
+
+    def _read_output(self):
+        for line in self.process.stdout:
+            text = line.decode("utf-8", errors="replace")
+            if self.output_log:
+                self.output_log.info(text.rstrip())
+            with self._cond:
+                self._chunks.append(text)
+                self._cond.notify_all()
+        # Wake up a waiter still blocked once stdout closes, in case the
+        # process exited without ever producing the awaited pattern.
+        with self._cond:
+            self._cond.notify_all()
+
+    def output(self):
+        with self._cond:
+            return "".join(self._chunks)
+
+    def wait_for_output(self, pattern, timeout):
+        """Block until pattern appears in the output, the process exits, or timeout elapses."""
+        pattern = re.compile(pattern, re.MULTILINE)
+        deadline = time.monotonic() + timeout
+        with self._cond:
+            while True:
+                if pattern.search("".join(self._chunks)):
+                    return True
+                if self.process.poll() is not None:
+                    return False
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    return False
+                self._cond.wait(remaining)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        self.cmd.stop()
+        if self.process.poll() is None:
+            self.process.terminate()
+            try:
+                self.process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                self.process.kill()
+                self.process.wait()
+        self._reader_thread.join(timeout=5)
 
 
 class DevtoolIdeSdkTests(DevtoolBase):
@@ -3595,16 +3658,16 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
         if len(ssh_gdbserver_cmd) > 0 and ssh_gdbserver_cmd[-1].startswith('"') and ssh_gdbserver_cmd[-1].endswith('"'):
             ssh_gdbserver_cmd[-1] = ssh_gdbserver_cmd[-1][1:-1].replace('\\$', '$')  # Remove surrounding quotes
         self.logger.debug(f"Starting gdbserver with command: {' '.join(ssh_gdbserver_cmd)}")
-        with RunCmdBackground(ssh_gdbserver_cmd, output_log=self._cmd_logger):
-            # Give gdbserver a moment to start
-            time.sleep(1)
-
-            # Verify gdbserver is running on target and listening on expected port
-            result = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, 'ps'), output_log=self._cmd_logger)
-            self.assertEqual(result.status, 0, "Failed to check processes on target")
-            self.assertIn("gdbserver", result.output, "gdbserver should be running on target")
-            _, server_port = server_addr.split(':')
-            self.assertIn(server_port, result.output, f"gdbserver should be listening on port {server_port}")
+        _, server_port = server_addr.split(':')
+        with RunCmdBackground(ssh_gdbserver_cmd, output_log=self._cmd_logger) as gdbserver:
+            ready_pattern = prelaunch_task["problemMatcher"][0]["background"]["endsPattern"]
+            # Must exceed the target side budget (TARGET_START_RETRIES * 0.1s),
+            # otherwise this gives up while the target is still waiting and its
+            # diagnostics never make it into the failure.
+            self.assertTrue(
+                gdbserver.wait_for_output(ready_pattern, timeout=60),
+                "gdbserver did not report readiness on port %s:\n%s" %
+                (server_port, gdbserver.output()))
 
             if debug_func and debug_check_func:
                 # Do a gdb remote session using the once configuration
