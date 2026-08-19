@@ -1258,6 +1258,15 @@ def ide_setup(args, config, basepath, workspace):
                     recipes_modified_names))
                 invalid_params = True
         if args.mode == DevtoolIdeMode.modified:
+            if not recipes_modified_names:
+                appends_dir = os.path.join(config.workspace_path, 'appends')
+                recipes_modified_names = sorted(
+                    os.path.splitext(os.path.basename(path))[0]
+                    for path in glob.glob(os.path.join(appends_dir, '*.bbappend')))
+                if recipes_modified_names:
+                    logger.info(
+                        "No modified recipes specified, using workspace bbappends from %s: %s",
+                        appends_dir, ', '.join(recipes_modified_names))
             if len(recipes_other_names):
                 logger.error("Only in shared sysroots mode not modified recipes %s can be handled." % str(
                     recipes_other_names))
@@ -1265,6 +1274,11 @@ def ide_setup(args, config, basepath, workspace):
             if len(recipes_image_names) != 1:
                 logger.error(
                     "One image recipe is required as the rootfs for the remote development.")
+                invalid_params = True
+            if not recipes_modified_names:
+                logger.error(
+                    "At least one modified recipe is required or must be guessable from %s." %
+                    os.path.join(config.workspace_path, 'appends'))
                 invalid_params = True
             for modified_recipe_name in recipes_modified_names:
                 if modified_recipe_name.startswith('nativesdk-') or modified_recipe_name.endswith('-native'):
@@ -1422,7 +1436,9 @@ def register_commands(subparsers, context):
                                            help='Setup the SDK and configure the IDE')
     parser_ide_sdk.add_argument(
         'recipenames', nargs='+', help='Generate an IDE configuration suitable to work on the given recipes.\n'
-        'Depending on the --mode parameter different types of SDKs and IDE configurations are generated.')
+        'Depending on the --mode parameter different types of SDKs and IDE configurations are generated.\n'
+        'In modified mode at least the image recipe is required; if no modified recipe is passed, '
+        'all modified recipes are taken from <workspace>/appends/*.bbappend.')
     parser_ide_sdk.add_argument(
         '-m', '--mode', type=DevtoolIdeMode, default=DevtoolIdeMode.modified,
         help='Different SDK types are supported:\n'
