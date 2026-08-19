@@ -19,12 +19,11 @@ SRC_URI = "https://sourceware.org/elfutils/ftp/${PV}/${BP}.tar.bz2 \
            file://ptest.patch \
            file://0001-tests-Makefile.am-compile-test_nlist-with-standard-C.patch \
            file://0001-config-eu.am-do-not-force-Werror.patch \
-           file://0001-libelf-Add-libeu-objects-to-libelf.a-static-archive.patch \
            "
 SRC_URI:append:libc-musl = " \
            file://0003-musl-utils.patch \
            "
-SRC_URI[sha256sum] = "37629fdf7f1f3dc2818e138fca2b8094177d6c2d0f701d3bb650a561218dc026"
+SRC_URI[sha256sum] = "fd5cc6b77ad6773cac93cb3f415f9318ac3b3455eecf801f6b4a742c4f6c7209"
 
 inherit autotools gettext ptest pkgconfig
 
@@ -65,10 +64,12 @@ PTEST_XFAILS ?= ""
 # See - https://sourceware.org/bugzilla/show_bug.cgi?id=32232
 PTEST_XFAILS:append = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', ' run-strip-strmerge.sh run-elflint-self.sh run-backtrace-data.sh run-reverse-sections-self.sh', '', d)}"
 PTEST_XFAILS:append:libc-musl = " run-large-elf-file.sh run-backtrace-data.sh run-backtrace-native.sh run-stack-d-test.sh run-stack-i-test.sh run-stack-demangled-test.sh run-deleted.sh run-compress-test.sh"
+# systemwide stackprof tests need userspace CPU activity, which minimal qemu images lack
+PTEST_XFAILS:append:qemuall = " run-stackprof-system.sh run-stackprof-system-gprof.sh"
 
 do_install_ptest() {
 	# copy the files which needed by the cases
-	TEST_FILES="strip strip.o addr2line elfcmp objdump readelf size.o nm.o nm elflint elfcompress elfclassify stack unstrip srcfiles"
+	TEST_FILES="strip strip.o addr2line elfcmp objdump readelf size.o nm.o nm elflint elfcompress elfclassify stack unstrip srcfiles stackprof"
 	install -d -m 755                       ${D}${PTEST_PATH}/src
 	install -d -m 755                       ${D}${PTEST_PATH}/config
 	install -d -m 755                       ${D}${PTEST_PATH}/lib
@@ -90,6 +91,7 @@ do_install_ptest() {
 	cp ${B}/libcpu/libcpu.a ${D}${PTEST_PATH}/libcpu/
 	cp ${B}/libebl/libebl.a ${D}${PTEST_PATH}/libebl/
 	cp ${B}/lib/libeu.a ${D}${PTEST_PATH}/lib/
+	cp ${B}/libdw/libdw.a ${D}${PTEST_PATH}/libdw/
 	cp ${S}/libelf/*.h             ${D}${PTEST_PATH}/libelf/
 	cp ${S}/libdw/*.h              ${D}${PTEST_PATH}/libdw/
 	cp ${S}/libdwfl/*.h            ${D}${PTEST_PATH}/libdwfl/
@@ -169,6 +171,7 @@ INHIBIT_PACKAGE_STRIP_FILES = "\
     ${PKGD}${PTEST_PATH}/src/stack \
     ${PKGD}${PTEST_PATH}/src/unstrip \
     ${PKGD}${PTEST_PATH}/src/srcfiles \
+    ${PKGD}${PTEST_PATH}/src/stackprof \
     ${PKGD}${PTEST_PATH}/libelf/libelf.so \
     ${PKGD}${PTEST_PATH}/libdw/libdw.so \
     ${PKGD}${PTEST_PATH}/libasm/libasm.so \
