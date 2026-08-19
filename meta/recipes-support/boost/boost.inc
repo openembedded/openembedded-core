@@ -49,8 +49,9 @@ BOOST_LIBS = "\
 	"
 
 # optional libraries
-PACKAGECONFIG ??= "locale python"
-PACKAGECONFIG[locale] = ",,icu"
+PACKAGECONFIG ??= "locale python icu"
+PACKAGECONFIG[locale] = ",,"
+PACKAGECONFIG[icu] = "boost.locale.icu=on -sICU_PATH=${STAGING_EXECPREFIXDIR},boost.locale.icu=off --disable-icu,icu"
 PACKAGECONFIG[graph_parallel] = ",,,boost-mpi mpich"
 PACKAGECONFIG[mpi] = ",,mpich"
 PACKAGECONFIG[numpy] = ",,python3-numpy"
@@ -151,9 +152,8 @@ BOOST_PARALLEL_MAKE = "${@oe.utils.parallel_make_argument(d, '-j%d')}"
 BJAM_OPTS    = '${BOOST_PARALLEL_MAKE} -d+2 -q \
 		${BJAM_TOOLS} \
 		-sBOOST_BUILD_USER_CONFIG=${WORKDIR}/user-config.jam \
-		-sICU_PATH=${STAGING_EXECPREFIXDIR} \
+		${PACKAGECONFIG_CONFARGS} \
 		--build-dir=${B} \
-		--disable-icu \
 		${BJAM_EXTRA}'
 
 # Native compilation of bzip2 isn't working
