@@ -3325,7 +3325,6 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
         numbers after recompiling, to prove the breakpoints resolve via the
         freshly rebuilt debug info.
         """
-        sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
         gdbserver_script = os.path.join(self._workspace_scripts_dir(
             recipe_name), 'gdbserver_1234_usr-bin-' + example_exe + '_multi')
         gdb_script = os.path.join(self._workspace_scripts_dir(
@@ -3335,19 +3334,18 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
         r = runCmd(gdbserver_script, output_log=self._cmd_logger)
         self.assertEqual(r.status, 0)
 
-        # Check there is a gdbserver running
-        r = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, 'ps'), output_log=self._cmd_logger)
-        self.assertEqual(r.status, 0)
-        self.assertIn("gdbserver ", r.output)
+        pid_file = '/tmp/gdbserver_1234_usr-bin-%s_multi/gdbserver.pid' % example_exe
+        status, output = qemu.run('cat %s' % pid_file)
+        self.assertEqual(status, 0)
+        gdbserver_pid = output.strip()
+        self.assertRegex(gdbserver_pid, r'^\d+$')
 
-        # Check the pid file is correct
-        test_cmd = "'cat /proc/$(cat /tmp/gdbserver_1234_usr-bin-" + \
-            example_exe + "_multi/gdbserver.pid)/cmdline'"
-        r = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, test_cmd), output_log=self._cmd_logger)
-        self.assertEqual(r.status, 0)
-        self.assertIn("gdbserver", r.output)
-        self.assertIn("--multi", r.output)
-        self.assertIn("1234", r.output)
+        # Check the pid file identifies the expected gdbserver process
+        status, output = qemu.run('cat /proc/%s/cmdline' % gdbserver_pid)
+        self.assertEqual(status, 0)
+        self.assertIn("gdbserver", output)
+        self.assertIn("--multi", output)
+        self.assertIn("1234", output)
 
         # Test remote debugging works
         gdb_batch_cmd = " --batch " + self._gdb_debug_cpp_example(
@@ -3364,10 +3362,10 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
         r = runCmd(gdbserver_script + ' stop', output_log=self._cmd_logger)
         self.assertEqual(r.status, 0)
 
-        # Check there is no gdbserver running
-        r = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, 'ps'), output_log=self._cmd_logger)
-        self.assertEqual(r.status, 0)
-        self.assertNotIn("gdbserver ", r.output)
+        # The stop script waits for its recorded PID before it succeeds.
+        status, _ = qemu.run('test ! -d /proc/%s && test ! -e %s' % (
+            gdbserver_pid, pid_file))
+        self.assertEqual(status, 0)
 
     @OETestTag("runqemu")
     def test_devtool_ide_sdk_none_qemu(self):
@@ -4536,7 +4534,6 @@ class DevtoolIdeSdkClangTests(DevtoolIdeSdkTests):
         lldbinit source map / debug-file-search-paths setup for the library's
         own debug info specifically.
         """
-        sshargs = '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
         scripts_dir = self._workspace_scripts_dir(recipe_name)
         binary_pretty = 'usr-bin-' + example_exe
         lldb_server_script = os.path.join(
@@ -4550,19 +4547,16 @@ class DevtoolIdeSdkClangTests(DevtoolIdeSdkTests):
         r = runCmd(lldb_server_script, output_log=self._cmd_logger)
         self.assertEqual(r.status, 0)
 
-        # Verify lldb-server is running on the target
-        r = runCmd('ssh %s root@%s ps' % (sshargs, qemu.ip),
-                   output_log=self._cmd_logger)
-        self.assertEqual(r.status, 0)
-        self.assertIn('lldb-server', r.output)
+        pid_file = '/tmp/lldb_server_1234_%s_multi/lldb_server.pid' % binary_pretty
+        status, output = qemu.run('cat %s' % pid_file)
+        self.assertEqual(status, 0)
+        lldb_server_pid = output.strip()
+        self.assertRegex(lldb_server_pid, r'^\d+$')
 
         # Verify the pid file points at the running lldb-server process
-        pid_file = '/tmp/lldb_server_1234_%s_multi/lldb_server.pid' % binary_pretty
-        test_cmd = "'cat /proc/$(cat %s)/cmdline'" % pid_file
-        r = runCmd('ssh %s root@%s %s' % (sshargs, qemu.ip, test_cmd),
-                   output_log=self._cmd_logger)
-        self.assertEqual(r.status, 0)
-        self.assertIn('lldb-server', r.output)
+        status, output = qemu.run('cat /proc/%s/cmdline' % lldb_server_pid)
+        self.assertEqual(status, 0)
+        self.assertIn('lldb-server', output)
 
         # Run an lldb batch session covering the executable, library and
         # header breakpoints, then continue to completion
@@ -4577,11 +4571,10 @@ class DevtoolIdeSdkClangTests(DevtoolIdeSdkTests):
         r = runCmd(lldb_server_script + ' stop', output_log=self._cmd_logger)
         self.assertEqual(r.status, 0)
 
-        # Verify lldb-server is no longer running
-        r = runCmd('ssh %s root@%s ps' % (sshargs, qemu.ip),
-                   output_log=self._cmd_logger)
-        self.assertEqual(r.status, 0)
-        self.assertNotIn('lldb-server', r.output)
+        # The stop script waits for its recorded PID before it succeeds.
+        status, _ = qemu.run('test ! -d /proc/%s && test ! -e %s' % (
+            lldb_server_pid, pid_file))
+        self.assertEqual(status, 0)
 
     @OETestTag("runqemu")
     def test_devtool_ide_sdk_none_cmake(self):
