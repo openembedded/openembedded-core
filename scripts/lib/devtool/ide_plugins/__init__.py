@@ -59,8 +59,11 @@ class DebuggerCrossConfig:
         self.binary = binary
         self.default_mode = default_mode
         self.binary_pretty = self.binary.binary_path.replace(os.sep, '-').lstrip('-')
-        self.debug_server_port = DebuggerCrossConfig._port_next
-        DebuggerCrossConfig._port_next += 1
+        self.debug_server_ports = {}
+        for mode in self.server_modes():
+            self.debug_server_ports[mode] = DebuggerCrossConfig._port_next
+            DebuggerCrossConfig._port_next += 1
+        self.debug_server_port = self.debug_server_ports[self.default_mode]
         self.id_pretty = "%d_%s" % (self.debug_server_port, self.binary_pretty)
 
         if self.id_pretty in DebuggerCrossConfig._configs:
@@ -68,8 +71,14 @@ class DebuggerCrossConfig:
                 "debugger config for binary %s is already generated" % binary)
         DebuggerCrossConfig._configs[self.id_pretty] = self
 
+    def port(self, mode=None):
+        """Return the debug server port allocated for a server mode."""
+        if mode is None:
+            mode = self.default_mode
+        return self.debug_server_ports[mode]
+
     def id_pretty_mode(self, mode):
-        return "%s_%s" % (self.id_pretty, mode.name.lower())
+        return "%d_%s_%s" % (self.port(mode), self.binary_pretty, mode.name.lower())
 
     # Host-side script paths
     @property
@@ -100,15 +109,16 @@ class DebuggerCrossConfig:
     # Re-tries in 0.1s Example: 300 * 0.1s, i.e. ~30s.
     TARGET_START_RETRIES = 300
 
-    def _target_tcp_port_check_cmd(self):
-        hex_port = "%04X" % self.debug_server_port
+    def _target_tcp_port_check_cmd(self, mode=None):
+        hex_port = "%04X" % self.port(mode)
         return "grep -q :%s /proc/net/tcp /proc/net/tcp6 2>/dev/null" % hex_port
 
-    def _target_wait_for_tcp_port_cmd(self, pid_var=None, log_file=None):
+    def _target_wait_for_tcp_port_cmd(self, pid_var=None, log_file=None, mode=None):
         """Shell fragment waiting until the debug server listens on its port.
 
         The server log is dumped to stderr when giving up.
         """
+        port = self.port(mode)
         dump_log = "cat %s >&2; " % log_file if log_file else ""
         cleanup = ""
         if pid_var:
@@ -117,8 +127,15 @@ class DebuggerCrossConfig:
             "_w=0; while ! %s; do _w=\\$((_w+1)); [ \\$_w -lt %d ] || { "
             "%secho %s did not start on port %s after \\$_w retries >&2; %sexit 1; }; "
             "sleep 0.1; done;"
-            % (self._target_tcp_port_check_cmd(), self.TARGET_START_RETRIES,
-               cleanup, self.DEBUG_SERVER_NAME, self.debug_server_port, dump_log))
+                % (self._target_tcp_port_check_cmd(mode), self.TARGET_START_RETRIES,
+                    cleanup, self.DEBUG_SERVER_NAME, port, dump_log))
+
+    def _target_wait_for_process_exit_cmd(self, pid_var):
+        return (
+            "_w=0; while kill -0 \\$_%s 2>/dev/null; do _w=\\$((_w+1)); "
+            "[ \\$_w -lt 100 ] || { echo %s did not stop >&2; exit 1; }; "
+            "sleep 0.1; done;"
+            % (pid_var, self.DEBUG_SERVER_NAME))
 
     def initialize(self):
         """Called after construction to generate any required config files."""
@@ -128,7 +145,7 @@ class DebuggerCrossConfig:
     def _target_start_cmd(self, mode):
         raise NotImplementedError
 
-    def _target_kill_cmd(self):
+    def _target_stop_cmd(self, mode):
         raise NotImplementedError
 
 
@@ -181,33 +198,59 @@ class GdbCrossConfig(DebuggerCrossConfig):
         Returns something like:
           "\"/bin/sh -c '/usr/bin/gdbserver --once :1234 /usr/bin/cmake-example'\""
         """
+        port = self.port(server_mode)
         if server_mode == DebuggerServerModes.ONCE:
+            # gdbserver runs directly in the foreground for the whole debug
+            # session and exits by itself once it ends. Its own "Listening
+            # on port ..." message (matched by get_debug_server_ready_pattern())
+            # is the readiness signal, so no backgrounding, PID file or
+            # separate polling loop is needed here.
             gdbserver_cmd_start = "%s --once :%s %s" % (
-                self.debugger_cross.debug_server_path, self.debug_server_port, self.binary.binary_path)
-        elif server_mode == DebuggerServerModes.ATTACH:
-            pid_command = self.binary.pid_command
-            if pid_command:
-                gdbserver_cmd_start = "%s --attach :%s \\$(%s)" % (
-                    self.debugger_cross.debug_server_path,
-                    self.debug_server_port,
-                    pid_command)
-            else:
-                raise DevtoolError("Cannot use gdbserver attach mode for binary %s. No PID found." % self.binary.binary_path)
-        elif server_mode == DebuggerServerModes.MULTI:
-            gdbserver_cmd_start = self._target_tcp_port_check_cmd() + " && exit 0; "
+                self.debugger_cross.debug_server_path, port, self.binary.binary_path)
+        elif server_mode in (DebuggerServerModes.ATTACH, DebuggerServerModes.MULTI):
+            # Both modes run a persistent server speaking the extended-remote
+            # protocol. They differ on the client side only: ATTACH attaches to
+            # a process that is already running on the target.
+            pid_file = self._gdbserver_pid_file(server_mode)
+            log_file = self._gdbserver_log_file(server_mode)
+            # Reuse an already-running server for this configuration instead
+            # of starting a second one on the same port.
+            gdbserver_cmd_start = "if test -f %s && kill -0 \\$(cat %s) 2>/dev/null; then exit 0; fi; " % (
+                pid_file, pid_file)
             gdbserver_cmd_start += "mkdir -p %s; " % self._gdbserver_tmp_dir(server_mode)
             gdbserver_cmd_start += "%s --multi :%s > %s 2>&1 & _gdbserver_pid=\\$!; " % (
-                self.debugger_cross.debug_server_path, self.debug_server_port,
-                self._gdbserver_log_file(server_mode))
-            gdbserver_cmd_start += "echo \\$_gdbserver_pid > %s; " % self._gdbserver_pid_file(server_mode)
-            gdbserver_cmd_start += self._target_wait_for_tcp_port_cmd("gdbserver_pid")
+                self.debugger_cross.debug_server_path, port, log_file)
+            gdbserver_cmd_start += "echo \\$_gdbserver_pid > %s; " % pid_file
+            gdbserver_cmd_start += self._target_wait_for_tcp_port_cmd(
+                "gdbserver_pid", mode=server_mode)
         else:
             raise DevtoolError("Unsupported gdbserver mode: %s" % server_mode)
         return "\"/bin/sh -c '" + gdbserver_cmd_start + "'\""
 
-    def _target_kill_cmd(self):
-        """SSH command to kill gdbserver on the target device."""
-        return "\"kill \\$(pgrep -o -f 'gdbserver --attach :%s') 2>/dev/null || true\"" % self.debug_server_port
+    def get_debug_server_ready_pattern(self, mode=None):
+        """Regex matching gdbserver's own "Listening on port N" startup message.
+
+        Used as the problemMatcher endsPattern for VS Code and by selftests to
+        detect readiness directly from gdbserver's output, instead of a
+        separate polling probe.
+        """
+        return r"^Listening on port %d$" % self.port(mode)
+
+    def _target_stop_cmd(self, server_mode):
+        """SSH command to stop gdbserver on the target device.
+
+        Stopping is based on the PID file written by the start command. Other
+        debug sessions run their own gdbserver on the target, so anything
+        matching by process name would hit them as well.
+        """
+        pid_file = self._gdbserver_pid_file(server_mode)
+        gdbserver_cmd_stop = "if test -f %s; then _gdbserver_pid=\\$(cat %s); " % (
+            pid_file, pid_file)
+        gdbserver_cmd_stop += "kill \\$_gdbserver_pid 2>/dev/null; "
+        gdbserver_cmd_stop += self._target_wait_for_process_exit_cmd(
+            "gdbserver_pid")
+        gdbserver_cmd_stop += " fi; rm -rf %s" % self._gdbserver_tmp_dir(server_mode)
+        return "\"/bin/sh -c '" + gdbserver_cmd_stop + "'\""
 
 
 class LldbServerConfig(DebuggerCrossConfig):
@@ -244,10 +287,7 @@ class LldbServerConfig(DebuggerCrossConfig):
         # lldb-server 21.x and the remote lldb client connects from the host.
         # Start from /tmp because lldb-server creates temp files in its cwd and
         # the SSH default cwd (/home/root) may not exist on a minimal image.
-        if mode == DebuggerServerModes.ONCE:
-            cmd = "cd /tmp && %s platform --one-shot --server --listen *:%s" % (
-                lldb_server, self.debug_server_port)
-        elif mode == DebuggerServerModes.MULTI:
+        if mode == DebuggerServerModes.MULTI:
             pid_file = self._lldb_server_pid_file(mode)
             tmp_dir = self._lldb_server_tmp_dir(mode)
             log_file = self._lldb_server_log_file(mode)
@@ -261,11 +301,11 @@ class LldbServerConfig(DebuggerCrossConfig):
                 "lldb_server_pid", log_file)
         else:
             raise DevtoolError(
-                "lldb-server does not support mode %s "
-                "(ATTACH is handled client-side with 'process attach')" % mode)
+                "lldb-server only supports MULTI mode; "
+                "ATTACH is handled client-side with 'process attach': %s" % mode)
         return "\"/bin/sh -c '" + cmd + "'\""
 
-    def _target_kill_cmd(self):
+    def _target_stop_cmd(self, server_mode):
         """SSH command to stop a MULTI-mode lldb-server on the target."""
         pid_file = self._lldb_server_pid_file(DebuggerServerModes.MULTI)
         tmp_dir = self._lldb_server_tmp_dir(DebuggerServerModes.MULTI)

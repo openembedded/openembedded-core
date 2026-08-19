@@ -3397,21 +3397,31 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
         # Track configurations found
         once_configs = []
         attach_configs = []
+        server_addresses = []
 
         for config in configurations:
             # Verify required fields exist
-            required_fields = ["name", "type", "request", "program", "cwd", "MIMode",
+            required_fields = ["name", "type", "request", "program", "MIMode",
                              "miDebuggerPath", "miDebuggerServerAddress"]
             for field in required_fields:
                 self.assertIn(field, config, f"Configuration '{config.get('name', 'Unknown')}' missing required field: {field}")
 
             # Verify common configuration values
             self.assertEqual(config["type"], "cppdbg", f"Configuration '{config['name']}' should use cppdbg type")
-            self.assertEqual(config["request"], "launch", f"Configuration '{config['name']}' should be launch type")
-            self.assertEqual(config["cwd"], "${workspaceFolder}", f"Configuration '{config['name']}' should use workspaceFolder as cwd")
             self.assertEqual(config["MIMode"], "gdb", f"Configuration '{config['name']}' should use gdb MIMode")
-            self.assertEqual(config.get("externalConsole", False), False, f"Configuration '{config['name']}' should not use external console")
-            self.assertEqual(config.get("stopAtEntry", True), True, f"Configuration '{config['name']}' should stop at entry")
+
+            if config["request"] == "launch":
+                self.assertEqual(config["cwd"], "${workspaceFolder}", f"Configuration '{config['name']}' should use workspaceFolder as cwd")
+                self.assertEqual(config.get("externalConsole", False), False, f"Configuration '{config['name']}' should not use external console")
+                self.assertEqual(config.get("stopAtEntry", True), True, f"Configuration '{config['name']}' should stop at entry")
+            elif config["request"] == "attach":
+                # Attaching to a process running on the target requires the
+                # extended-remote protocol. Stopping the session then detaches
+                # from the process instead of killing it.
+                self.assertTrue(config.get("useExtendedRemote"), f"Configuration '{config['name']}' should use useExtendedRemote")
+                self.assertNotIn("cwd", config, f"Configuration '{config['name']}' should not set cwd in attach mode")
+            else:
+                self.fail(f"Configuration '{config['name']}' has unexpected request type: {config['request']}")
 
             # Verify program path is absolute and exists conceptually
             program = config["program"]
@@ -3426,6 +3436,7 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
             # Verify server address format
             server_addr = config["miDebuggerServerAddress"]
             self.assertRegex(server_addr, r"^\d+\.\d+\.\d+\.\d+:\d+$", f"Configuration '{config['name']}' server address should be IP:PORT format: {server_addr}")
+            server_addresses.append(server_addr)
 
             # Verify additional SO lib search path exists and contains debug paths
             so_paths = config.get("additionalSOLibSearchPath", [])
@@ -3466,6 +3477,8 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
         # Verify we have expected configuration types
         self.assertEqual(len(once_configs), 2, f"Should have two once configuration, found: {once_configs}")
         self.assertEqual(len(attach_configs), 1, f"Should have one attach configuration, found: {attach_configs}")
+        self.assertEqual(len(server_addresses), len(set(server_addresses)),
+                 "Each debug configuration should use a distinct server address")
 
     def _verify_launch_json_debugging(self, tempdir, qemu, example_exe):
         """Verify remote debugging and deployment works using launch.json configurations

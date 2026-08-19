@@ -21,16 +21,19 @@ class GdbCrossConfigNone(GdbCrossConfig):
                          default_mode)
 
     def _target_gdbserver_stop_cmd(self, server_mode):
-        """Kill a gdbserver process"""
-        # This is the usual behavior: gdbserver is stopped on demand
-        if server_mode == DebuggerServerModes.MULTI:
-            gdbserver_cmd_stop = "test -f %s && kill \\$(cat %s);" % (
-                self._gdbserver_pid_file(server_mode), self._gdbserver_pid_file(server_mode))
-            gdbserver_cmd_stop += " rm -rf %s" % self._gdbserver_tmp_dir(server_mode)
-        # This is unexpected since gdbserver should terminate after each debug session
-        # Just kill all gdbserver instances to keep it simple
-        else:
-            gdbserver_cmd_stop = "killall gdbserver"
+        """Kill a gdbserver process
+
+        Stopping is based on the PID file written by the start command. Other
+        debug sessions run their own gdbserver on the target, so anything
+        matching by process name would hit them as well.
+        """
+        pid_file = self._gdbserver_pid_file(server_mode)
+        gdbserver_cmd_stop = "if test -f %s; then _gdbserver_pid=\\$(cat %s); " % (
+            pid_file, pid_file)
+        gdbserver_cmd_stop += "kill \\$_gdbserver_pid 2>/dev/null; "
+        gdbserver_cmd_stop += self._target_wait_for_process_exit_cmd(
+            "gdbserver_pid")
+        gdbserver_cmd_stop += " fi; rm -rf %s" % self._gdbserver_tmp_dir(server_mode)
         return "\"/bin/sh -c '" + gdbserver_cmd_stop + "'\""
 
     def _gen_gdbserver_start_script(self, server_mode=None):
@@ -165,14 +168,19 @@ class LldbServerConfigNone(LldbServerConfig):
         return os.path.join(self.script_dir, 'lldb_' + self.id_pretty)
 
     def _target_lldb_server_stop_cmd(self, server_mode):
-        """SSH command to stop lldb-server on the target."""
-        if server_mode == DebuggerServerModes.MULTI:
-            pid_file = self._lldb_server_pid_file(server_mode)
-            tmp_dir = self._lldb_server_tmp_dir(server_mode)
-            cmd = ("test -f %(pf)s && kill \\$(cat %(pf)s) 2>/dev/null; rm -rf %(td)s"
-                   % {'pf': pid_file, 'td': tmp_dir})
-        else:
-            cmd = "killall lldb-server 2>/dev/null || true"
+        """SSH command to stop lldb-server on the target.
+
+        Stopping is based on the PID file written by the start command. Other
+        debug sessions run their own lldb-server on the target, so anything
+        matching by process name would hit them as well.
+        """
+        pid_file = self._lldb_server_pid_file(server_mode)
+        tmp_dir = self._lldb_server_tmp_dir(server_mode)
+        cmd = "if test -f %s; then _lldb_server_pid=\\$(cat %s); " % (
+            pid_file, pid_file)
+        cmd += "kill \\$_lldb_server_pid 2>/dev/null; "
+        cmd += self._target_wait_for_process_exit_cmd("lldb_server_pid")
+        cmd += " fi; rm -rf %s" % tmp_dir
         return "\"/bin/sh -c '" + cmd + "'\""
 
     def _gen_lldb_server_start_script(self, server_mode=None):

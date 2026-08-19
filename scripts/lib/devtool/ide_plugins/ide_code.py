@@ -32,14 +32,12 @@ class GdbCrossConfigVSCode(GdbCrossConfig):
             self._target_start_cmd(mode)
         ]
 
-    def target_ssh_gdbserver_kill_args(self):
-        """Get the ssh command arguments to kill gdbserver on the target device
-
-        returns something like:
-          ['-p', '2222', 'root@target', '"kill $(pgrep -o -f \'gdbserver --attach :1234\') 2>/dev/null || true"']
-        """
+    def target_ssh_gdbserver_stop_args(self, mode=None):
+        """Get the ssh command arguments to stop gdbserver on the target device"""
+        if mode is None:
+            mode = self.default_mode
         return self._target_ssh_args() + [
-            self._target_kill_cmd()
+            self._target_stop_cmd(mode)
         ]
 
 
@@ -59,10 +57,12 @@ class LldbServerConfigVSCode(LldbServerConfig):
             self._target_start_cmd(mode)
         ]
 
-    def target_ssh_gdbserver_kill_args(self):
+    def target_ssh_gdbserver_stop_args(self, mode=None):
         """SSH argument list to stop a running MULTI-mode lldb-server"""
+        if mode is None:
+            mode = self.default_mode
         return self._target_ssh_args() + [
-            self._target_kill_cmd()
+            self._target_stop_cmd(mode)
         ]
 
 class IdeVSCode(IdeBase):
@@ -338,24 +338,42 @@ class IdeVSCode(IdeBase):
             return self._vscode_launch_bin_dbg_lldb(cross_debug_config, server_mode)
         return self._vscode_launch_bin_dbg_gdb(cross_debug_config, server_mode)
 
+    @staticmethod
+    def _stop_task_label(cross_debug_config, server_mode):
+        return "stop_%s_%s" % (cross_debug_config.DEBUG_SERVER_NAME,
+                               cross_debug_config.id_pretty_mode(server_mode))
+
     def _vscode_launch_bin_dbg_gdb(self, cross_debug_config, server_mode):
         """Generate a cppdbg (GDB) launch configuration entry for launch.json."""
         modified_recipe = cross_debug_config.modified_recipe
 
+        is_attach = server_mode == DebuggerServerModes.ATTACH
+
         launch_config = {
             "name": cross_debug_config.id_pretty_mode(server_mode),
             "type": "cppdbg",
-            "request": "launch",
+            "request": "attach" if is_attach else "launch",
             "program": cross_debug_config.binary.binary_host_path,
-            "stopAtEntry": True,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": False,
             "MIMode": "gdb",
             "preLaunchTask": cross_debug_config.id_pretty_mode(server_mode),
             "miDebuggerPath": modified_recipe.debugger_cross.gdb,
-            "miDebuggerServerAddress": "%s:%d" % (modified_recipe.debugger_cross.host, cross_debug_config.debug_server_port)
+            "miDebuggerServerAddress": "%s:%d" % (modified_recipe.debugger_cross.host, cross_debug_config.port(server_mode))
         }
+
+        if is_attach:
+            # Without useExtendedRemote, cppdbg rejects attaching to a remote
+            # target. It also makes cppdbg offer a picker listing the processes
+            # running on the target, so the PID does not have to be known when
+            # this configuration is generated. Stopping the session detaches
+            # from the process instead of killing it.
+            launch_config["useExtendedRemote"] = True
+        else:
+            # cwd, environment and externalConsole configure the process the
+            # debugger starts, they are not part of the attach schema.
+            launch_config["cwd"] = "${workspaceFolder}"
+            launch_config["environment"] = []
+            launch_config["externalConsole"] = False
+            launch_config["stopAtEntry"] = True
 
         # Search for header files in recipe-sysroot.
         src_file_map = {
@@ -415,10 +433,10 @@ class IdeVSCode(IdeBase):
         launch_config['sourceFileMap'] = src_file_map
         launch_config['setupCommands'] = setup_commands
 
-        # Add postDebugTask for attach mode to clean up gdbserver
-        if server_mode == DebuggerServerModes.ATTACH:
-            kill_task_label = "kill_gdbserver_" + cross_debug_config.id_pretty_mode(server_mode)
-            launch_config["postDebugTask"] = kill_task_label
+        if is_attach:
+            # The extended-remote server outlives the debug session
+            launch_config["postDebugTask"] = self._stop_task_label(
+                cross_debug_config, server_mode)
 
         return launch_config
 
@@ -574,8 +592,9 @@ class IdeVSCode(IdeBase):
             if cross_debug_config.modified_recipe is not modified_recipe:
                 continue
             for server_mode in cross_debug_config.server_modes():
-                if server_mode == DebuggerServerModes.MULTI:
-                    # MULTI mode: the SSH command blocks until the port is ready
+                if server_mode in (DebuggerServerModes.MULTI,
+                                   DebuggerServerModes.ATTACH):
+                    # The SSH command blocks until the port is ready
                     # (wait loop in _target_start_cmd), so VSCode treats this as
                     # a regular non-background task.
                     new_task = {
@@ -586,7 +605,7 @@ class IdeVSCode(IdeBase):
                         "problemMatcher": []
                     }
                 else:
-                    # ONCE / ATTACH: gdbserver runs in the foreground for the
+                    # ONCE: gdbserver runs in the foreground for the
                     # whole session, so VSCode needs isBackground + a pattern
                     # matcher to avoid waiting for the task to exit.
                     new_task = {
@@ -608,7 +627,7 @@ class IdeVSCode(IdeBase):
                                 "background": {
                                     "activeOnStart": True,
                                     "beginsPattern": ".",
-                                    "endsPattern": ".",
+                                    "endsPattern": cross_debug_config.get_debug_server_ready_pattern(server_mode),
                                 }
                             }
                         ]
@@ -621,28 +640,20 @@ class IdeVSCode(IdeBase):
 
                 tasks_dict['tasks'].append(new_task)
 
-                # For attach mode, add a kill task to stop a previously running gdbserver
-                # This is a known issue with gdbserver --attach that it does not terminate
-                # after detaching. With this helper task, it is possible to:
-                # 1. Start debugging in attach mode
-                # 2. Add breakpoints, step, continue, etc.
-                # 3. Press the Continue button
-                # 4. Press the Stop button which detaches gdbserver from the debugged process
-                # 5. Start debugging again in attach mode
-                # Without this kill task, step 5 would fail because gdbserver is still running
+                # The extended-remote server used by attach mode keeps running
+                # after the debug session, launch.json refers to this task as
+                # postDebugTask.
                 if server_mode == DebuggerServerModes.ATTACH:
-                    new_task_kill_label = "kill_gdbserver_"+ cross_debug_config.id_pretty_mode(server_mode)
-                    new_task_kill = {
-                        "label": new_task_kill_label,
+                    tasks_dict['tasks'].append({
+                        "label": self._stop_task_label(cross_debug_config, server_mode),
                         "type": "shell",
                         "command": cross_debug_config.debugger_cross.target_device.ssh_sshexec,
-                        "args": cross_debug_config.target_ssh_gdbserver_kill_args(),
+                        "args": cross_debug_config.target_ssh_gdbserver_stop_args(server_mode),
                         "presentation": {
                             "close": True
                         },
                         "problemMatcher": []
-                    }
-                    tasks_dict['tasks'].append(new_task_kill)
+                    })
 
         tasks_file = 'tasks.json'
         IdeBase.update_json_file(
@@ -804,8 +815,9 @@ class IdeVSCode(IdeBase):
                 if cross_debug_config.modified_recipe is not modified_recipe:
                     continue
                 for server_mode in cross_debug_config.server_modes():
-                    if server_mode == DebuggerServerModes.MULTI:
-                        # MULTI mode: SSH command blocks until port is ready, treat as
+                    if server_mode in (DebuggerServerModes.MULTI,
+                                       DebuggerServerModes.ATTACH):
+                        # SSH command blocks until port is ready, treat as
                         # a regular non-background task (same as vscode_tasks_cpp).
                         new_task = {
                             "label": cross_debug_config.id_pretty_mode(server_mode),
@@ -815,7 +827,7 @@ class IdeVSCode(IdeBase):
                             "problemMatcher": []
                         }
                     else:
-                        # ONCE / ATTACH: server runs for the whole session, needs
+                        # ONCE: server runs for the whole session, needs
                         # isBackground so VSCode does not wait for the task to exit.
                         new_task = {
                             "label": cross_debug_config.id_pretty_mode(server_mode),
