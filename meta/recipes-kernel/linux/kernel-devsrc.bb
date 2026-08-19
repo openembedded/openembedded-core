@@ -129,6 +129,8 @@ do_install() {
 
         rm -f $kerneldir/include/generated/.vdso-offsets.h.cmd
         rm -f $kerneldir/build/include/generated/.vdso-offsets.h.cmd
+        rm -f $kerneldir/include/generated/.vdso-cfi-offsets.h.cmd
+        rm -f $kerneldir/build/include/generated/.vdso-cfi-offsets.h.cmd
         rm -f $kerneldir/build/include/generated/.compat_vdso-offsets.h.cmd
         rm -f $kerneldir/build/include/generated/.vdso32-offsets.h.cmd
         rm -f $kerneldir/build/include/generated/.vdso64-offsets.h.cmd
