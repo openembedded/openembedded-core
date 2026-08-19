@@ -155,21 +155,27 @@ common_useradd_sysroot() {
 		exit 0
 	fi
 
-	# It is also possible we may be in a recipe which doesn't have useradd dependencies and hence the
-	# useradd/groupadd tools are unavailable. If there is no dependency, we assume we don't want to
-	# create users in the sysroot
-	if ! command -v "$1"; then
-		bbwarn "The $1 command could not be found!"
-		exit 0
-	fi
+	cmd=$1
 
 	# Add groups and users defined for all recipe packages
 	case "$1" in
 		groupadd) GROUPADD_PARAM="${@get_all_cmd_params(d, 'groupadd')}";;
 		useradd) USERADD_PARAM="${@get_all_cmd_params(d, 'useradd')}";;
 		usermod) USERMOD_PARAM="${@get_all_cmd_params(d, 'usermod')}";;
-		groupmems) GROUPMEMS_PARAM="${@get_all_cmd_params(d, 'groupmems')}";;
+		groupmems)
+			GROUPMEMS_PARAM="${@get_all_cmd_params(d, 'groupmems')}"
+			# groupmems is emulated using usermod
+			cmd=usermod
+			;;
 	esac
+
+	# It is also possible we may be in a recipe which doesn't have useradd dependencies and hence the
+	# useradd/groupadd tools are unavailable. If there is no dependency, we assume we don't want to
+	# create users in the sysroot
+	if ! command -v "$cmd"; then
+		bbwarn "The $cmd command could not be found!"
+		exit 0
+	fi
 
 	# Tell the system to use the environment vars
 	UA_SYSROOT=1
