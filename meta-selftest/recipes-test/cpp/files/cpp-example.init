@@ -14,6 +14,11 @@ PIDFILE="/var/run/$DAEMON.pid"
 LOCK_FILE="/var/lock/subsys/$DAEMON"
 
 start() {
+    # A debugger which kills the process it debugs leaves the PID file behind
+    if [ -f $PIDFILE ] && ! kill -0 $(cat $PIDFILE) 2>/dev/null; then
+        rm -f $PIDFILE $LOCK_FILE
+    fi
+
     if [ -f $PIDFILE ]; then
         echo "$DAEMON is already running."
         return 1
