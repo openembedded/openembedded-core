@@ -3,12 +3,12 @@ HOMEPAGE = "https://github.com/kjd/idna"
 LICENSE = "BSD-3-Clause AND Python-2.0 AND Unicode-TOU"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=9a6c29079fc90c29d80332f44d2625f2"
 
-SRC_URI[sha256sum] = "ffb385a7e039654cef1ab9ef32c6fafe283c0c0467bba1d9029738ce4a14a848"
+SRC_URI[sha256sum] = "5e0811a4383b21dc5838069f801c4fb62113b7447663d2530d2bd6e77b49bf15"
 
 inherit pypi python_flit_core ptest-python-pytest
 
 RDEPENDS:${PN} += "python3-codecs"
-RDEPENDS:${PN}-ptest += "python3-unittest-automake-output"
+RDEPENDS:${PN}-ptest += "python3-unittest-automake-output python3-hypothesis"
 
 CVE_PRODUCT = "kjd:idna kjd:internationalized_domain_names_in_applications"
 
