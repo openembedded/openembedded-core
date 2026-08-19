@@ -108,9 +108,10 @@ def _prepare_remote_script(deploy, destdir='/', verbose=False, dryrun=False, und
         lines.append('mkdir -p `dirname $manifest`')
         lines.append('mkdir -p $2')
         if verbose:
-            lines.append('    tar xv -C $2 -f - | tee $manifest')
+            # -m avoids "time stamp is in the future" warnings if the target's clock is behind
+            lines.append('    tar xvm -C $2 -f - | tee $manifest')
         else:
-            lines.append('    tar xv -C $2 -f - > $manifest')
+            lines.append('    tar xvm -C $2 -f - > $manifest')
         lines.append('sed -i "s!^./!$2!" $manifest')
     elif not dryrun:
         # Put any preserved files back
