@@ -7,7 +7,7 @@ C14N and much more."
 HOMEPAGE = "https://lxml.de/"
 SECTION = "devel/python"
 LICENSE = "BSD-3-Clause AND GPL-2.0-only AND MIT AND PSF-2.0"
-LIC_FILES_CHKSUM = "file://LICENSES.txt;md5=e4c045ebad958ead4b48008f70838403 \
+LIC_FILES_CHKSUM = "file://LICENSES.txt;md5=d1118b9913749904166e8726c5331c11 \
                     file://doc/licenses/elementtree.txt;md5=eb34d036a6e3d56314ee49a6852ac891 \
                     file://doc/licenses/BSD.txt;md5=700a1fc17f4797d4f2d34970c8ee694b \
                     file://doc/licenses/GPL.txt;md5=94d55d512a9ba36caa9b7df079bae19f \
@@ -18,7 +18,7 @@ LIC_FILES_CHKSUM = "file://LICENSES.txt;md5=e4c045ebad958ead4b48008f70838403 \
 
 DEPENDS += "libxml2 libxslt"
 
-SRC_URI[sha256sum] = "ba96ae44888e0185281e937633a743ea90d5a196c6000f82565ebb0580012d40"
+SRC_URI[sha256sum] = "1055241852f2b02068af4a625a5d32c087db193c12251928af2562ecd2239f18"
 
 SRC_URI += "${PYPI_SRC_URI}"
 inherit pkgconfig pypi setuptools3
