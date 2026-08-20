@@ -5,7 +5,7 @@ library that can be used independently of setuptools."
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=c9b06ad2ebd7e2e82d34b3caf353e7d5"
 
-SRC_URI[sha256sum] = "ed718fdee42170e128a8add6f23f53aa64dc7d9ab2de87d3083a691df881a809"
+SRC_URI[sha256sum] = "806635bd0ea653c96af98a70624be758d408a989f2cd0b390e63474d99f96b63"
 
 SRC_URI += "\
     file://run-ptest \
