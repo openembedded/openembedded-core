@@ -8,6 +8,8 @@ SRC_URI[sha256sum] = "c45be39f7882c9d34243236f2d63cbd58039e360f85d0913425fbd7cee
 
 inherit python_flit_core pypi
 
+CVE_PRODUCT = "wheel_project:wheel"
+
 SRC_URI += "file://CVE-2026-24049.patch"
 
 BBCLASSEXTEND = "native nativesdk"
