@@ -7,7 +7,7 @@ DEPENDS += "openssl python3-cryptography"
 
 SRC_URI[sha256sum] = "28dfcce0162b9211413e26dfbfdf1d24317fbeba18fc93c12400a1856b2a0bc7"
 
-inherit pypi setuptools3
+inherit pypi setuptools3 ptest-python-pytest
 
 PACKAGES =+ "${PN}-tests"
 FILES:${PN}-tests = "${libdir}/${PYTHON_DIR}/site-packages/OpenSSL/test"
@@ -17,6 +17,13 @@ RDEPENDS:${PN}:class-target = " \
     python3-threading \
 "
 RDEPENDS:${PN}-tests = "${PN}"
+
+RDEPENDS:${PN}-ptest += " \
+    python3-datetime \
+    python3-io \
+    python3-netclient \
+    python3-pretend \
+"
 
 CVE_PRODUCT = "jean-paul_calderone:pyopenssl pyca:pyopenssl pyopenssl:pyopenssl pyopenssl_project:pyopenssl"
 
