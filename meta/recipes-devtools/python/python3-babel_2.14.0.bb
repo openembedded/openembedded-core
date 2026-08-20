@@ -9,6 +9,8 @@ PYPI_PACKAGE = "Babel"
 
 inherit pypi setuptools3
 
+CVE_PRODUCT = "pocoo:babel"
+
 CLEANBROKEN = "1"
 
 RDEPENDS:${PN} += " \
