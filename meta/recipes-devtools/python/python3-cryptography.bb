@@ -14,6 +14,7 @@ require python3-cryptography-common.inc
 SRC_URI[sha256sum] = "e4cfd68c5f3e0bfdad0d38e023239b96a2fe84146481852dffbcca442c245aa5"
 
 SRC_URI += "file://0001-pyproject.toml-remove-benchmark-disable-option.patch \
+            file://0002-Fix-installing-stray-files-into-site-packages.patch \
             file://check-memfree.py \
             file://run-ptest \
            "
