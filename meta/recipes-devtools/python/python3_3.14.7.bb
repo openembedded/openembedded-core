@@ -335,6 +335,7 @@ SKIPPED_TESTS:append:libc-musl = " \
     -x test_threading \
     --ignore test.test_strptime.StrptimeTests.test_date_locale2 \
     --ignore test.test_ctypes.test_dlerror.TestNullDlsym.test_null_dlsym \
+    --ignore test.test_multiprocessing_fork.test_processes.WithProcessesTestProcess.test_interrupt \
 "
 
 
