@@ -45,7 +45,6 @@ DEPENDS:append = " update-rc.d-native"
 PACKAGES =+ "${PN}-functions ${PN}-sushell"
 RDEPENDS:${PN} = "initd-functions \
                   ${@bb.utils.contains('DISTRO_FEATURES','selinux','${PN}-sushell','',d)} \
-                  init-system-helpers-service \
 		 "
 # Recommend pn-functions so that it will be a preferred default provider for initd-functions
 RRECOMMENDS:${PN} = "${PN}-functions"
