@@ -1,4 +1,4 @@
-From 75923521847618392e20fd9abd3245618b77c8f7 Mon Sep 17 00:00:00 2001
+From 582334d31432969be7e10906de7540f1dc64b17e Mon Sep 17 00:00:00 2001
 From: Chen Qi <Qi.Chen@windriver.com>
 Date: Thu, 27 Mar 2014 02:34:41 +0000
 Subject: [PATCH] init.d: add support for read-only rootfs
