@@ -14,6 +14,8 @@ inherit pypi setuptools3 ptest
 
 SRC_URI += "file://run-ptest"
 
+CVE_PRODUCT = "palletsprojects:click"
+
 RDEPENDS:${PN}-ptest += " \
 	python3-pytest \
 	python3-terminal \
