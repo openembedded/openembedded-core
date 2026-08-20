@@ -1,6 +1,3 @@
-# Copyright (C) 2022 Khem Raj <raj.khem@gmail.com>
-# Released under the MIT license (see COPYING.MIT for the terms)
-
 SUMMARY = "Library to access the kernel tracefs directory"
 HOMEPAGE = "https://git.kernel.org/pub/scm/libs/libtrace/libtracefs.git/"
 LICENSE = "GPL-2.0-or-later AND LGPL-2.1-or-later"
@@ -10,16 +7,14 @@ SECTION = "libs"
 DEPENDS = "libtraceevent bison-native flex-native"
 
 SRCREV = "6fad6a14ba0d4c4b437d9e4eed7098d4bb07b4fc"
-SRC_URI = "git://git.kernel.org/pub/scm/libs/libtrace/libtracefs.git;branch=${BPN};protocol=https \
-           file://0001-makefile-Do-not-preserve-ownership-in-cp-command.patch \
-           "
+SRC_URI = "git://git.kernel.org/pub/scm/libs/libtrace/libtracefs.git;branch=${BPN};protocol=https"
 
-inherit pkgconfig bash-completion
+PACKAGECONFIG ??= ""
+PACKAGECONFIG[doc] = ",-Ddoc=false,asciidoc-native xmlto-native"
+PACKAGECONFIG[samples] = ",-Dsamples=false"
+PACKAGECONFIG[utest] = ",-Dutest=false,cunit"
 
-do_compile:prepend() {
-    touch ${S}/src/sqlhist.tab.c
-}
+EXTRA_OEMESON = "--bindir=${sbindir}"
 
-do_install() {
-    oe_runmake install DESTDIR=${D} pkgconfig_dir=${libdir}/pkgconfig
-}
+inherit meson pkgconfig bash-completion
+
