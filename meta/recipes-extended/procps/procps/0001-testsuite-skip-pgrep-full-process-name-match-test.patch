@@ -14,7 +14,7 @@ are reliable.
 
 https://bugzilla.yoctoproject.org/show_bug.cgi?id=16290
 
-Upstream-Status: Inappropriate [OE-ptest specific: fails only under QEMU TCG emulation]
+Upstream-Status: Inappropriate [upstream ticket: https://gitlab.com/procps-ng/procps/-/work_items/435]
 Signed-off-by: Pratik Farkase <pratik.farkase@est.tech>
 ---
  testsuite/pgrep.test/pgrep.exp | 6 +++---
