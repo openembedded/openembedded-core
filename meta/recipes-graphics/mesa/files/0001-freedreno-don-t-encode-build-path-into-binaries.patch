@@ -1,4 +1,4 @@
-From 1ae1feb55885c8ec26ed2ef148fa75c6240d9804 Mon Sep 17 00:00:00 2001
+From ea7f29215915d3e08111b4ed489defedc0f30c8b Mon Sep 17 00:00:00 2001
 From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 Date: Wed, 10 Dec 2025 02:27:16 +0200
 Subject: [PATCH] freedreno: don't encode build path into binaries
@@ -25,7 +25,7 @@ Signed-off-by: Quentin Schulz <quentin.schulz@cherry.de>
  2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/src/freedreno/meson.build b/src/freedreno/meson.build
-index e8f01b880bc..8144a75bd1c 100644
+index e8f01b8..8144a75 100644
 --- a/src/freedreno/meson.build
 +++ b/src/freedreno/meson.build
 @@ -4,9 +4,10 @@
@@ -42,7 +42,7 @@ index e8f01b880bc..8144a75bd1c 100644
  dep_libarchive = dependency('libarchive', allow_fallback: true, required: false, disabler : true)
  dep_libxml2 = dependency('libxml-2.0', allow_fallback: true, required: false)
 diff --git a/src/freedreno/registers/meson.build b/src/freedreno/registers/meson.build
-index 9318ce48fe5..8d2b305d202 100644
+index 9318ce4..8d2b305 100644
 --- a/src/freedreno/registers/meson.build
 +++ b/src/freedreno/registers/meson.build
 @@ -16,6 +16,8 @@ freedreno_copyright = files(copyright_file)
@@ -54,6 +54,3 @@ index 9318ce48fe5..8d2b305d202 100644
  subdir('adreno')
  
  foreach f : xml_adreno_files
--- 
-2.55.0
-

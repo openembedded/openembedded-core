@@ -1,4 +1,4 @@
-From 43090e97a7c586a682eb845442191236f3963242 Mon Sep 17 00:00:00 2001
+From 26b14d36b941b7839d13f82d12a8ca569b718235 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex@linutronix.de>
 Date: Sun, 14 Jun 2026 17:42:19 +0200
 Subject: [PATCH] src/intel/compiler/jay/jay_ir.h: do not used typed enum
@@ -13,7 +13,7 @@ Signed-off-by: Alexander Kanavin <alex@linutronix.de>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/src/intel/compiler/jay/jay_ir.h b/src/intel/compiler/jay/jay_ir.h
-index 8307044..abf175a 100644
+index 3b819cb..34b8877 100644
 --- a/src/intel/compiler/jay/jay_ir.h
 +++ b/src/intel/compiler/jay/jay_ir.h
 @@ -518,7 +518,7 @@ jay_type_is_any_float(enum jay_type t)

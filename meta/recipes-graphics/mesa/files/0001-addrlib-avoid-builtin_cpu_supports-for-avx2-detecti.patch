@@ -1,3 +1,4 @@
+From 539870cc9dc54989c588f9a6bcf71f19f3ca45f6 Mon Sep 17 00:00:00 2001
 From: Khem Raj <khem.raj@oss.qualcomm.com>
 Date: Thu, 13 Aug 2026 00:00:00 +0000
 Subject: [PATCH] addrlib: avoid __builtin_cpu_supports for avx2 detection
@@ -16,8 +17,8 @@ entirely and works with both GCC and Clang.
 Upstream-Status: Submitted [https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/43820]
 Signed-off-by: Khem Raj <khem.raj@oss.qualcomm.com>
 ---
- src/amd/addrlib/src/core/addrswizzlersimd.h | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ src/amd/addrlib/src/core/addrswizzlersimd.h | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/src/amd/addrlib/src/core/addrswizzlersimd.h b/src/amd/addrlib/src/core/addrswizzlersimd.h
 index fd53e40..ce30204 100644
@@ -31,7 +32,7 @@ index fd53e40..ce30204 100644
 +#include <cpuid.h>
  #endif
  #include <immintrin.h>
-
+ 
 @@ -85,7 +87,18 @@ static inline bool CpuSupportsAvx2() {
  #if _MSC_VER
      return IsProcessorFeaturePresent(PF_AVX2_INSTRUCTIONS_AVAILABLE);
@@ -52,5 +53,3 @@ index fd53e40..ce30204 100644
  #else
  #error "What platform is this?"
  #endif
---
-2.43.0

@@ -1,4 +1,4 @@
-From 2e41d846e6da26e73418d31b782f6b65eca48c45 Mon Sep 17 00:00:00 2001
+From 425aa8da2249c01f852fade871721e5e2f25555f Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex@linutronix.de>
 Date: Wed, 1 Jul 2026 22:48:15 +0200
 Subject: [PATCH] src/util/u_math.c: do not use arm fpu instructions if fpu is
