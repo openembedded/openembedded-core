@@ -277,14 +277,44 @@ def get_compiled_sources(d):
         bb.debug(1, "Do not have debugsources.list. Skipping")
         return [], []
 
-    # Sources are not split now in SPDX, so we aggregate them
-    sources = set(itertools.chain.from_iterable(source_info.values()))
-    # Check extensions of files
+    unpackdir = d.getVar("UNPACKDIR")
+    srcdir = d.getVar("S")
+    bp = d.getVar("BP")
+    kernel_src = d.getVar("KERNEL_SRC_PATH")
+    dbgsrc_dir = d.getVar("TARGET_DBGSRC_DIR")
+
+    # Compute the relative path of source directory from ${UNPACKDIR}.
+    # The goal is to replace ${TARGET_DBGSRC_DIR} by this relative path.
+    srcdir_rel = None
+    if srcdir and unpackdir:
+        srcdir_rel = os.path.relpath(srcdir, unpackdir)
+        if srcdir_rel.startswith(".."):
+            srcdir_rel = None
+
+    sources = set()
     types = set()
-    for src in sources:
+
+    # Sources are not split now in SPDX, so we aggregate them
+    for src in set(itertools.chain.from_iterable(source_info.values())):
+        # In the common case, the sources are located in ${S}. To format them as
+        # expected by SPDX, we replace /usr/src/debug/${PN}/${PV} with the path
+        # of ${S} relative to ${UNPACKDIR}.
+        if dbgsrc_dir and srcdir_rel:
+            src = src.replace(f"{dbgsrc_dir}/", f"{srcdir_rel}/")
+
+        # Kernel sources are in a different directory and are special case
+        # we format the sources as expected by spdx by replacing /usr/src/kernel/
+        # into ${BP}/
+        if kernel_src and bp:
+            src = src.replace(f"{kernel_src}/", f"{bp}/")
+
+        sources.add(src)
+
+        # Check extensions of files
         basename = os.path.basename(src)
         ext = basename.partition(".")[2]
-        if ext not in types and ext:
+        if ext:
             types.add(ext)
-    bb.debug(1, f"Num of sources: {len(sources)} and types: {len(types)} {str(types)}")
+
+    bb.debug(1, f"Num of sources: {len(sources)} and types: {len(types)} {types!s}")
     return sources, types
