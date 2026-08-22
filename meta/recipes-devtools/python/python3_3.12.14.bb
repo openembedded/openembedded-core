@@ -31,30 +31,18 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-test_storlines-skip-due-to-load-variability.patch \
            file://0001-test_shutdown-skip-problematic-test.patch \
            file://0001-gh-107811-tarfile-treat-overflow-in-UID-GID-as-failu.patch \
-	   file://0001-test_deadlock-skip-problematic-test.patch \
-	   file://0001-test_active_children-skip-problematic-test.patch \
+           file://0001-test_deadlock-skip-problematic-test.patch \
+           file://0001-test_active_children-skip-problematic-test.patch \
            file://0001-test_readline-skip-limited-history-test.patch \
-           file://CVE-2026-1502.patch \
-           file://CVE-2026-6100.patch \
-           file://CVE-2026-3644_CVE-2026-0672.patch \
-           file://CVE-2026-4519_p1.patch \
-           file://CVE-2026-4519_p2.patch \
-           file://CVE-2026-4519_CVE-2026-4786.patch \
            file://CVE-2026-6019_p1.patch \
            file://CVE-2026-6019_p2.patch \
-           file://CVE-2025-13462.patch \
-           file://CVE-2026-4224.patch \
-           file://CVE-2026-11940.patch \
-           file://CVE-2026-11972.patch \
-           file://CVE-2026-9669.patch \
-           file://CVE-2026-7210.patch \
            "
 
 SRC_URI:append:class-native = " \
            file://0001-Lib-sysconfig.py-use-prefix-value-from-build-configu.patch \
            "
 
-SRC_URI[sha256sum] = "c08bc65a81971c1dd5783182826503369466c7e67374d1646519adf05207b684"
+SRC_URI[sha256sum] = "5c8462af5790baf43a321a1559dbe0db06d1be4300fb85fb53c40060668e548a"
 
 # exclude pre-releases for both python 2.x and 3.x
 UPSTREAM_CHECK_REGEX = "[Pp]ython-(?P<pver>\d+(\.\d+)+).tar"
@@ -69,6 +57,12 @@ CVE_STATUS[CVE-2022-26488] = "not-applicable-platform: Issue only applies on Win
 CVE_STATUS[CVE-2015-20107] = "upstream-wontfix: The mailcap module is insecure by design, so this can't be fixed in a meaningful way"
 CVE_STATUS[CVE-2023-36632] = "disputed: Not an issue, in fact expected behaviour"
 CVE_STATUS[CVE-2026-3087] = "not-applicable-platform: Issue only applies on Windows"
+CVE_STATUS[CVE-2025-12084] = "cpe-stable-backport: Fixed in v3.12.13"
+CVE_STATUS[CVE-2025-13462] = "cpe-stable-backport: Fixed in v3.12.14"
+CVE_STATUS[CVE-2025-13837] = "cpe-stable-backport: Fixed in v3.12.13"
+CVE_STATUS[CVE-2026-3644] = "cpe-stable-backport: Fixed in v3.12.14"
+CVE_STATUS[CVE-2026-4519] = "cpe-stable-backport: Fixed in v3.12.14"
+CVE_STATUS[CVE-2026-7210] = "cpe-stable-backport: Fixed in v3.12.14"
 
 PYTHON_MAJMIN = "3.12"
 

@@ -13,7 +13,7 @@ diff --git a/Makefile.pre.in b/Makefile.pre.in
 index 083f4c7..dce36a5 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -660,8 +660,7 @@ profile-run-stamp:
+@@ -663,8 +663,7 @@ profile-run-stamp:
  	# enabled.
  	$(MAKE) profile-gen-stamp
  	# Next, run the profile task to generate the profile information.
