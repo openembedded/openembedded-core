@@ -26,3 +26,5 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
 SRC_URI[sha256sum] = "f586e35d320ff537aab3ffeca37e9ecd482ccbe013590db4429a414d8aa6a728"
 
 CVE_PRODUCT = "util-linux"
+
+CVE_STATUS[CVE-2026-13595] = "cpe-stable-backport: Fixed from version >=2.41.5"
