@@ -129,3 +129,4 @@ pkg_postinst_ontarget:${PN}-fips () {
 }
 
 CVE_STATUS[CVE-2026-3832] = "fixed-version: vulnerable multi-record OCSP response handling was introduced in 3.8.8 and is not present in 3.8.4"
+CVE_STATUS[CVE-2026-1584] = "fixed-version: vulnerable code not present, introduced with 3.8.11"
