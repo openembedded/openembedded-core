@@ -31,8 +31,8 @@ class KernelModuleTest(OESDKTestCase):
 
         with tempfile.TemporaryDirectory(prefix="cryptodev", dir=self.tc.sdk_dir) as testdir:
             git_url = "https://github.com/cryptodev-linux/cryptodev-linux"
-            # This is a knnown-good commit post-1.13 that builds with kernel 6.7+
-            git_sha = "bb8bc7cf60d2c0b097c8b3b0e807f805b577a53f"
+            # This is a known-good commit post-1.14 that builds with kernel 6.18+
+            git_sha = "08644db02d43478f802755903212f5ee506af73b"
 
             sourcedir = os.path.join(testdir, "cryptodev-linux")
             subprocess.check_output(["git", "clone", git_url, sourcedir], stderr=subprocess.STDOUT)
