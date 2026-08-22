@@ -16,6 +16,7 @@ SRCREV = "ece349ade2973e220f524ce59e59711cc919263f"
 
 SRC_URI = "git://git.u-boot-project.org/u-boot/u-boot.git;protocol=https;branch=main;tag=v${PV} \
            file://0001-pylibfdt-Replace-removed-SWIG-Python-2-compatibility.patch \
+           file://0001-Add-support-for-OpenSSL-Provider-API.patch \
            "
 
 B = "${WORKDIR}/build"
