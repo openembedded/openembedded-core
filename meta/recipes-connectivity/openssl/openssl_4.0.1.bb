@@ -11,7 +11,6 @@ SRC_URI = "http://www.openssl.org/source/openssl-${PV}.tar.gz \
            file://run-ptest \
            file://0001-buildinfo-strip-sysroot-and-debug-prefix-map-from-co.patch \
            file://0001-Configure-do-not-tweak-mips-cflags.patch \
-           file://0001-Added-handshake-history-reporting-when-test-fails.patch \
            file://0001-extend-check_cwm-test-timeout.patch \
            "
 
@@ -19,10 +18,9 @@ SRC_URI:append:class-nativesdk = " \
            file://environment.d-openssl.sh \
            "
 
-SRC_URI[sha256sum] = "a8f84a39918ec6415ce765d9b429d313ba97b8143169c172e734b9514464f5b2"
+SRC_URI[sha256sum] = "2db3f3a0d6ea4b59e1f094ace2c8cd536dffb87cdc39084c5afa1e6f7f37dd09"
 
-inherit lib_package multilib_header multilib_script ptest perlnative manpages
-MULTILIB_SCRIPTS = "${PN}-bin:${bindir}/c_rehash"
+inherit lib_package multilib_header ptest perlnative manpages
 
 # OpenSSL publishes bugfix/security-only releases on its per-minor branches.
 # When the tracked series reaches EOL, bump the regex manually to the next
@@ -33,7 +31,6 @@ PACKAGECONFIG ?= ""
 PACKAGECONFIG:class-native = ""
 PACKAGECONFIG:class-nativesdk = ""
 
-PACKAGECONFIG[cryptodev-linux] = "enable-devcryptoeng,disable-devcryptoeng,cryptodev-linux,,cryptodev-module"
 PACKAGECONFIG[legacy] = ",no-legacy"
 PACKAGECONFIG[tls1] = ",no-tls1"
 PACKAGECONFIG[tls1_1] = ",no-tls1_1"
@@ -57,8 +54,8 @@ EXTRA_OECONF:append:class-native = " --with-rand-seed=os,devrandom"
 EXTRA_OECONF:append:class-nativesdk = " --with-rand-seed=os,devrandom"
 
 # Relying on hardcoded built-in paths causes openssl-native to not be relocateable from sstate.
-EXTRA_OEMAKE:append:task-compile:class-native = ' OPENSSLDIR="/not/builtin" ENGINESDIR="/not/builtin" MODULESDIR="/not/builtin"'
-EXTRA_OEMAKE:append:task-compile:class-nativesdk = ' OPENSSLDIR="/not/builtin" ENGINESDIR="/not/builtin" MODULESDIR="/not/builtin"'
+EXTRA_OEMAKE:append:task-compile:class-native = ' OPENSSLDIR="/not/builtin" MODULESDIR="/not/builtin"'
+EXTRA_OEMAKE:append:task-compile:class-nativesdk = ' OPENSSLDIR="/not/builtin" MODULESDIR="/not/builtin"'
 
 #| threads_pthread.c:(.text+0x372): undefined reference to `__atomic_is_lock_free'
 EXTRA_OECONF:append:toolchain-clang:x86 = " -latomic"
@@ -204,12 +201,10 @@ do_install:append:class-native () {
 	    OPENSSL_CONF=\${OPENSSL_CONF:-${libdir}/ssl-3/openssl.cnf} \
 	    SSL_CERT_DIR=\${SSL_CERT_DIR:-${libdir}/ssl-3/certs} \
 	    SSL_CERT_FILE=\${SSL_CERT_FILE:-${libdir}/ssl-3/cert.pem} \
-	    OPENSSL_ENGINES=\${OPENSSL_ENGINES:-${libdir}/engines-3} \
 	    OPENSSL_MODULES=\${OPENSSL_MODULES:-${libdir}/ossl-modules}
 
-	# Setting ENGINESDIR and MODULESDIR to invalid paths prevents host contamination,
+	# Setting MODULESDIR to invalid paths prevents host contamination,
 	# but also breaks the generated libcrypto.pc file. Post-Fix it manually here.
-	sed -i 's|^enginesdir=\($.libdir.\)/.*|enginesdir=\1/engines-3|' ${D}${libdir}/pkgconfig/libcrypto.pc
 	sed -i 's|^modulesdir=\($.libdir.\)/.*|modulesdir=\1/ossl-modules|' ${D}${libdir}/pkgconfig/libcrypto.pc
 }
 
@@ -252,10 +247,6 @@ do_install_ptest() {
 
 	sed 's|${S}|${PTEST_PATH}|g' -i ${D}${PTEST_PATH}/configdata.pm ${D}${PTEST_PATH}/util/wrap.pl
 
-	install -d ${D}${PTEST_PATH}/engines
-	install -m755 ${B}/engines/dasync.so ${D}${PTEST_PATH}/engines/
-	install -m755 ${B}/engines/ossltest.so ${D}${PTEST_PATH}/engines/
-	ln -s ${libdir}/engines-3/loader_attic.so ${D}${PTEST_PATH}/engines/
 	ln -s ${libdir}/ossl-modules/ ${D}${PTEST_PATH}/providers
 }
 
@@ -270,17 +261,14 @@ pkg_postinst_ontarget:${PN}-ossl-module-fips () {
 # file to be installed for both the openssl-bin package and the libcrypto
 # package since the openssl-bin package depends on the libcrypto package.
 
-PACKAGES =+ "libcrypto libssl openssl-conf ${PN}-engines ${PN}-misc ${PN}-ossl-module-legacy ${PN}-ossl-module-fips"
+PACKAGES =+ "libcrypto libssl openssl-conf ${PN}-misc ${PN}-ossl-module-legacy ${PN}-ossl-module-fips"
 
 FILES:libcrypto = "${libdir}/libcrypto${SOLIBS}"
 FILES:libssl = "${libdir}/libssl${SOLIBS}"
 FILES:openssl-conf = "${sysconfdir}/ssl/openssl.cnf* \
                       ${libdir}/ssl-3/openssl.cnf* \
                       "
-FILES:${PN}-engines = "${libdir}/engines-3"
-# ${prefix} comes from what we pass into --prefix at configure time (which is used for INSTALLTOP)
-FILES:${PN}-engines:append:mingw32:class-nativesdk = " ${prefix}${libdir}/engines-3"
-FILES:${PN}-misc = "${libdir}/ssl-3/misc ${bindir}/c_rehash"
+FILES:${PN}-misc = "${libdir}/ssl-3/misc"
 FILES:${PN}-ossl-module-legacy = "${libdir}/ossl-modules/legacy.so"
 FILES:${PN}-ossl-module-fips = "${libdir}/ossl-modules/fips.so"
 FILES:${PN} =+ "${libdir}/ssl-3/* ${libdir}/ossl-modules/"
@@ -290,7 +278,7 @@ CONFFILES:openssl-conf = "${sysconfdir}/ssl/openssl.cnf"
 
 RRECOMMENDS:libcrypto += "openssl-conf ${PN}-ossl-module-legacy"
 RDEPENDS:${PN}-misc = "perl"
-RDEPENDS:${PN}-ptest += "openssl-bin perl perl-modules bash sed openssl-engines"
+RDEPENDS:${PN}-ptest += "openssl-bin perl perl-modules bash sed"
 RRECOMMENDS:${PN}-ptest += "${PN}-ossl-module-legacy"
 
 RDEPENDS:${PN}-bin += "openssl-conf"
