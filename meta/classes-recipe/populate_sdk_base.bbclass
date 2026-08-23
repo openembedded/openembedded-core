@@ -247,7 +247,7 @@ def populate_sdk_common(d):
     oe.packagedata.runtime_mapping_rename("TOOLCHAIN_HOST_TASK_ATTEMPTONLY", pn, ld)
     d.setVar("TOOLCHAIN_HOST_TASK", ld.getVar("TOOLCHAIN_HOST_TASK"))
     d.setVar("TOOLCHAIN_HOST_TASK_ATTEMPTONLY", ld.getVar("TOOLCHAIN_HOST_TASK_ATTEMPTONLY"))
-    
+
     # create target/host SDK manifests
     create_manifest(d, manifest_dir=d.getVar('SDK_DIR'),
                     manifest_type=Manifest.MANIFEST_TYPE_SDK_HOST)

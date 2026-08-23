@@ -102,7 +102,7 @@ do_install() {
     chmod -x ${D}${datadir}/${BPN}/${VIMDIR}/tools/mve.awk
     chmod -x ${D}${datadir}/${BPN}/${VIMDIR}/tools/*.pl
     chmod -x ${D}${datadir}/${BPN}/${VIMDIR}/tools/*.py
-    
+
     # Install example vimrc from runtime files
     install -m 0644 runtime/vimrc_example.vim ${D}/${datadir}/${BPN}/vimrc
 

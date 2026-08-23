@@ -226,17 +226,17 @@ python npm_do_configure() {
     if has_shrinkwrap_file:
         foreach_dependencies(orig_shrinkwrap, _count_dependency, dev)
         foreach_dependencies(orig_shrinkwrap, _cache_dependency, dev)
-    
+
     # Manage Peer Dependencies
     if has_shrinkwrap_file:
         packages = orig_shrinkwrap.get("packages", {})
         peer_deps = packages.get("", {}).get("peerDependencies", {})
         package_runtime_dependencies = d.getVar("RDEPENDS:%s" % d.getVar("PN"))
-        
+
         for peer_dep in peer_deps:
             peer_dep_yocto_name = npm_package(peer_dep)
             if peer_dep_yocto_name not in package_runtime_dependencies:
-                bb.warn(peer_dep + " is a peer dependencie that is not in RDEPENDS variable. " + 
+                bb.warn(peer_dep + " is a peer dependencie that is not in RDEPENDS variable. " +
                 "Please add this peer dependencie to the RDEPENDS variable as %s and generate its recipe with devtool"
                 % peer_dep_yocto_name)
 
