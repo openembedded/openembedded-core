@@ -52,12 +52,8 @@ do_install:append() {
 }
 
 do_install_ptest() {
-	install -d ${D}${PTEST_PATH}/test
-	for file in ${B}/test/.libs/regress ${B}/test/.libs/test*
-	do
-		install -m 0755 $file ${D}${PTEST_PATH}/test
-	done
-
+        install -d ${D}${PTEST_PATH}/test
+        ${B}/libtool --mode=install install ${B}/test/regress ${D}${PTEST_PATH}/test/
         # handle multilib
         sed -i s:@libdir@:${libdir}:g ${D}${PTEST_PATH}/run-ptest
 }
