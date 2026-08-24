@@ -48,6 +48,8 @@ def _crunch_known_licenses(d):
     for lic_dir in lic_dirs:
         for fn in os.listdir(lic_dir):
             path = os.path.join(lic_dir, fn)
+            if not os.path.isfile(path):
+                continue
             # Hash the exact contents
             md5value = bb.utils.md5_file(path)
             md5sums[md5value] = fn
