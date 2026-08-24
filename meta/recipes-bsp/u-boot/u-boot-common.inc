@@ -10,6 +10,8 @@ LICENSE = "GPL-2.0-or-later"
 LIC_FILES_CHKSUM = "file://Licenses/README;md5=2ca5f2c35c8cc335f0a19756634782f1"
 PE = "1"
 
+CVE_PRODUCT = "u-boot:u-boot denx:u-boot"
+
 # We use the revision in order to avoid having to fetch it from the
 # repo during parse
 SRCREV = "ece349ade2973e220f524ce59e59711cc919263f"
