@@ -18,8 +18,8 @@ SRC_URI = "git://github.com/vim/vim.git;branch=master;protocol=https;tag=v${PV} 
            file://no-path-adjust.patch \
            "
 
-PV .= ".0843"
-SRCREV = "975e191dc817d8d00abca7197c4529a417c2f805"
+PV .= ".0993"
+SRCREV = "ffce1ce58dd3d08110c35c8af61ad2555b344569"
 
 # Do not consider .z in x.y.z, as that is updated with every commit
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+\.\d+)\.0"
