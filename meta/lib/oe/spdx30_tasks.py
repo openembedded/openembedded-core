@@ -379,11 +379,14 @@ def _generate_git_purl(d, download_location, srcrev):
 
     for domain, purl_type in git_purl_handlers.items():
         if hostname == domain:
-            path = parsed.path.strip("/")
+            # oe.spdx_common.fetch_data_to_uri() appends "@<rev>" to the
+            # download location, which must not become part of the
+            # repository name
+            path = parsed.path.strip("/").partition("@")[0]
             path_parts = path.split("/")
             if len(path_parts) >= 2:
                 owner = path_parts[0]
-                repo = path_parts[1].replace(".git", "")
+                repo = path_parts[1].removesuffix(".git")
                 return f"{purl_type}/{owner}/{repo}@{srcrev}"
             break
 
