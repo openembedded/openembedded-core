@@ -48,6 +48,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
            file://CVE-2025-14104-02.patch \
            file://CVE-2026-27456.patch \
            file://CVE-2026-13595.patch \
+           file://CVE-2026-3184.patch \
            "
 
 SRC_URI[sha256sum] = "7b6605e48d1a49f43cc4b4cfc59f313d0dd5402fa40b96810bd572e167dfed0f"
