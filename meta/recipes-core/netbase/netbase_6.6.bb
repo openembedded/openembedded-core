@@ -3,14 +3,16 @@ DESCRIPTION = "This package provides the necessary infrastructure for basic TCP/
 HOMEPAGE = "http://packages.debian.org/netbase"
 SECTION = "base"
 LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://debian/copyright;md5=78dd2c7c6f487348e4a0092c17a19d42"
+LIC_FILES_CHKSUM = "file://debian/copyright;md5=03a03b9cf1aa619e30b1c9d53141163e"
 PE = "1"
 
 SRC_URI = "${DEBIAN_MIRROR}/main/n/${BPN}/${BPN}_${PV}.tar.xz"
 
+S = "${UNPACKDIR}/work"
+
 inherit allarch
 
-SRC_URI[sha256sum] = "9116047aebbaa1698934052d01c6e09b4c3aed643e93df63d2ddcbec243c26d1"
+SRC_URI[sha256sum] = "31f7e8a37f3f07010e484f74bcbee503923b38d1a36c6a11326b804acc07224e"
 
 UPSTREAM_CHECK_URI = "${DEBIAN_MIRROR}/main/n/netbase/"
 
@@ -21,5 +23,3 @@ do_install () {
 	install -m 0644 ${S}/etc/services ${D}${sysconfdir}/services
 	install -m 0644 ${S}/etc/ethertypes ${D}${sysconfdir}/ethertypes
 }
-
-S = "${UNPACKDIR}/netbase"
