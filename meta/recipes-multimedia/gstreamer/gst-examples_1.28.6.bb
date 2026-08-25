@@ -9,6 +9,7 @@ DEPENDS = "glib-2.0 gstreamer1.0 gstreamer1.0-plugins-base gstreamer1.0-plugins-
 
 SRC_URI = "git://gitlab.freedesktop.org/gstreamer/gstreamer.git;protocol=https;branch=1.28;tag=${PV} \
            file://0001-Make-player-examples-installable.patch \
+           file://0002-examples-gtk-show-player-warnings-in-a-dialog-box.patch \
            file://gst-player.desktop \
            "
 
