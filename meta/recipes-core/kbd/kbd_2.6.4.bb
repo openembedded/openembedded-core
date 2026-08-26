@@ -25,6 +25,7 @@ RCONFLICTS:${PN} = "console-tools"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/${BPN}/${BP}.tar.xz \
            file://0001-Remove-non-free-Agafari-fonts.patch \
+           file://CVE-2026-72693.patch \
            "
 
 SRC_URI[sha256sum] = "519f8d087aecca7e0a33cd084bef92c066eb19731666653dcc70c9d71aa40926"
