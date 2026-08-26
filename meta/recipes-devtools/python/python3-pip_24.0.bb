@@ -36,6 +36,7 @@ SRC_URI += "file://no_shebang_mangling.patch \
             file://CVE-2026-8643.patch \
             file://CVE-2026-8643-regression_p1.patch \
             file://CVE-2026-8643-regression_p2.patch \
+            file://CVE-2026-13346.patch \
            "
 
 SRC_URI[sha256sum] = "ea9bd1a847e8c5774a5777bb398c19e80bcd4e2aa16a4b301b718fe6f593aba2"
