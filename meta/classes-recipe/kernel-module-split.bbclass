@@ -61,7 +61,7 @@ post_strip_kernel_modules_signing(){
         # be invoked manually after retrieving M= variable from package source code Makefile.
         oe_runmake \
             -C ${KBUILD_OUTPUT}  \
-            MODLIB=${PKGD}${nonarch_base_libdir}/modules/${KERNEL_VERSION} \
+            MODLIB=${PKGD}${KERNEL_MODULE_INSTALL_PREFIX} \
             ${@'M=%s' % oe.kernel_module.get_ext_mod(d) if not "virtual/kernel" in d.getVar('PROVIDES') else ''} \
             modules_sign
     fi
