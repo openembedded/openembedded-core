@@ -10,6 +10,8 @@ inherit pypi python_setuptools_build_meta ptest-python-pytest
 
 SRC_URI[sha256sum] = "9f778e93289bd410bb35daadeb4fc66d95a746f0b75777b942088b7fd7af550a"
 
+CVE_PRODUCT = "makotemplates:mako sqlalchemy:mako"
+
 RDEPENDS:${PN} = "python3-html \
                   python3-markupsafe \
                   python3-misc \
