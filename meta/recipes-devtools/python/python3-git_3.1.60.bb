@@ -14,7 +14,7 @@ CVE_PRODUCT = "gitpython_project:gitpython"
 
 inherit pypi python_setuptools_build_meta
 
-SRC_URI[sha256sum] = "0a1475cfdc38a5bfba1a3e9a4a9da52a39749ecec322b772915c019f94e5b7e4"
+SRC_URI[sha256sum] = "e936431879fa85581b4311fa63492ea52251909e2d655b6529c704c904ddcc24"
 
 DEPENDS += " python3-gitdb"
 
