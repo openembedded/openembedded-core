@@ -276,7 +276,9 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
             if item in ['.git', 'oe-local-files']:
                 continue
             itempath = os.path.join(srctree, item)
-            if os.path.isdir(itempath):
+            if os.path.islink(itempath):
+                os.remove(itempath)
+            elif os.path.isdir(itempath):
                 shutil.rmtree(itempath)
             else:
                 os.remove(itempath)
