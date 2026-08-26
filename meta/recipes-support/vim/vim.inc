@@ -30,6 +30,8 @@ SRC_URI = "git://github.com/vim/vim.git;branch=master;protocol=https \
            file://CVE-2026-28421.patch \
            file://CVE-2026-32249.patch \
            file://CVE-2026-28417.patch \
+           file://CVE-2026-28417-regression_p1.patch \
+           file://CVE-2026-28417-regression_p2.patch \
            file://CVE-2026-45130.patch \
            file://CVE-2026-46483.patch \
            file://CVE-2026-28420.patch \
