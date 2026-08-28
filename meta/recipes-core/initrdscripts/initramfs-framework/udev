@@ -43,6 +43,18 @@ udev_trigger_root_device() {
 		PARTUUID=?*)
 			root_match="PARTUUID=${bootparam_root#PARTUUID=}"
 			;;
+		LABEL=?*)
+			# The kernel does not export the filesystem LABEL in the
+			# uevent, so resolve it to a device node with findfs and
+			# match on that device's kernel-provided PARTUUID.
+			root_label="${bootparam_root#LABEL=}"
+			root_dev=$(findfs "LABEL=$root_label" 2>/dev/null) || return 1
+			[ -n "$root_dev" ] || return 1
+			root_partuuid=$(sed -n 's/^PARTUUID=//p' \
+				"/sys/class/block/${root_dev#/dev/}/uevent" 2>/dev/null)
+			[ -n "$root_partuuid" ] || return 1
+			root_match="PARTUUID=$root_partuuid"
+			;;
 		*)
 			return 1
 			;;
