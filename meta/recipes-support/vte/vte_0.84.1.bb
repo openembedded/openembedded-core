@@ -20,10 +20,7 @@ inherit gnomebase gi-docgen features_check upstream-version-is-even gobject-intr
 SRC_URI += "file://0001-Add-W_EXITCODE-macro-for-non-glibc-systems.patch \
 "
 
-SRC_URI[archive.sha256sum] = "0414e31583836aeb7878da25f67c515f7e8879917ecc37c92e26b83e8d8fc3e3"
-# remove the below line when updating to vte 0.84.1 (or higher) as it includes
-# https://gitlab.gnome.org/GNOME/vte/-/commit/77fe661760d2afac1e4d5a4b7eba477cbed6b430
-EXTRA_OEMESON += "-Dsimdutf:base64=true"
+SRC_URI[archive.sha256sum] = "aca1caa8478aebcdbb1d67897fb3511eb7601debae6810e16a15b6fa25f31ac8"
 
 ANY_OF_DISTRO_FEATURES = "${GTK3DISTROFEATURES}"
 
