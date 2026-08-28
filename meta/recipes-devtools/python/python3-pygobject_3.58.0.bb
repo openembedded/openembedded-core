@@ -19,7 +19,7 @@ DEPENDS += "python3 glib-2.0"
 GNOME_COMPRESS_TYPE = "gz"
 GNOMEBN = "pygobject"
 
-SRC_URI[archive.sha256sum] = "12760e4a0e3d04b6eb95e06f7a27e362c826d567ea613373a92c003b6c70d2d6"
+SRC_URI[archive.sha256sum] = "45068697de3ffe46840ca369705f23118b34db4f7deb63f6eff079a6734ddcca"
 
 S = "${UNPACKDIR}/${GNOMEBN}-${PV}"
 
