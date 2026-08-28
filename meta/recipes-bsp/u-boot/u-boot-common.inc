@@ -1,4 +1,4 @@
-HOMEPAGE = "http://www.denx.de/wiki/U-Boot/WebHome"
+HOMEPAGE = "https://u-boot-project.org"
 DESCRIPTION = "U-Boot, a boot loader for Embedded boards based on PowerPC, \
 ARM, MIPS and several other processors, which can be installed in a boot \
 ROM and used to initialize and test the hardware or to download and run \
