@@ -21,7 +21,7 @@ SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
 # Use :append here so that the patch is applied also when using devupstream
 SRC_URI:append = " file://0001-src-Kbuild-change-missing-CONFIG_TRACEPOINTS-to-warn.patch \
                 "
-SRC_URI[sha256sum] = "7dc7fdac82a42ce2ed78e00270b69d69e7418a620e8e30791191fe52f0fd3eda"
+SRC_URI[sha256sum] = "854600604cdaaa66fc1711e564aff37d8dbba9bd1d3aaa94f12a561da845deb9"
 
 export INSTALL_MOD_DIR = "kernel/lttng-modules"
 
