@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://COPYING.txt;md5=af1174fd3d1a254eec3a4a1d1da170a9"
 SRC_URI = "git://git.code.sf.net/p/dos2unix/dos2unix;branch=master;protocol=https;tag=${BPN}-${PV}"
 UPSTREAM_CHECK_GITTAGREGEX = "dos2unix-(?P<pver>(\d+(\.\d+)+))"
 
-SRCREV = "9c2ea173af3bc49324f8288d81c5a2bbfc0884d0"
+SRCREV = "5a6f3306165567e9828d694d73705ad86366cc61"
 
 S = "${UNPACKDIR}/${BP}/dos2unix"
 
