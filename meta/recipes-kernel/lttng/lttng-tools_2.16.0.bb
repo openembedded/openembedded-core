@@ -5,10 +5,22 @@ to extract program execution details from the Linux operating system \
 and interpret them."
 HOMEPAGE = "https://github.com/lttng/lttng-tools"
 
-LICENSE = "GPL-2.0-only AND LGPL-2.1-only"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=40ef17463fbd6f377db3c47b1cbaded8 \
-                    file://LICENSES/GPL-2.0;md5=e68f69a54b44ba526ad7cb963e18fbce \
-                    file://LICENSES/LGPL-2.1;md5=9920968d0f2ff585ce61fae30344dd95"
+LICENSE = "BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND CC0-1.0 AND CC-BY-SA-4.0 AND FSFAP AND GPL-2.0-only AND GPL-2.0-or-later AND GPL-2.0-or-later WITH Autoconf-exception-2.0 AND GPL-2.0-or-later WITH Autoconf-exception-macro AND LGPL-2.1-only AND LGPL-2.1-or-later AND MIT"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=f7adf214dab700ec91b393898b515f13 \
+                    file://LICENSES/BSD-2-Clause.txt;md5=5d6306d1b08f8df623178dfd81880927 \
+                    file://LICENSES/BSD-3-Clause.txt;md5=4e91b9e6ef320f74590c8c7a64a9188a \
+                    file://LICENSES/BSL-1.0.txt;md5=4415c1f5128c6d51273f9c8362305778 \
+                    file://LICENSES/CC0-1.0.txt;md5=65d3616852dbf7b1a6d4b53b00626032 \
+                    file://LICENSES/CC-BY-SA-4.0.txt;md5=62ccd6e67b4925bbb3063925cd0e57e5 \
+                    file://LICENSES/FSFAP.txt;md5=232368338ef6dc99de71c2e05ff12176 \
+                    file://LICENSES/GPL-2.0-only.txt;md5=3d26203303a722dedc6bf909d95ba815 \
+                    file://LICENSES/GPL-2.0-or-later.txt;md5=3d26203303a722dedc6bf909d95ba815 \
+                    file://LICENSES/GPL-3.0-or-later.txt;md5=75d892af193fd5a298f724c4377d8f62 \
+                    file://LICENSES/LGPL-2.1-only.txt;md5=41890f71f740302b785c27661123bff5 \
+                    file://LICENSES/LGPL-2.1-or-later.txt;md5=41890f71f740302b785c27661123bff5 \
+                    file://LICENSES/MIT.txt;md5=e8f57dd048e186199433be2c41bd3d6d \
+                    file://LICENSES/Autoconf-exception-2.0.txt;md5=13a739a6793bb6742c30b1d3727df7e2 \
+                    file://LICENSES/Autoconf-exception-macro.txt;md5=887fe9d860687d5c7602a5d8ab978171"
 
 include lttng-platforms.inc
 
@@ -28,6 +40,7 @@ RDEPENDS:${PN}-ptest += "perl-module-getopt-long \
                          python3-json \
                          python3-io \
                          python3-shell \
+                         python3-sqlite3 \
                          python3-xml \
                          python3-resource \
 "
@@ -50,11 +63,11 @@ SRC_URI = "https://lttng.org/files/lttng-tools/lttng-tools-${PV}.tar.bz2 \
            file://lttng-sessiond.service \
            file://disable-tests.patch \
            file://disable-tests2.patch \
-           file://libc++.patch \
            file://0001-m4-ax_am_macros_static.m4-do-not-write-generation-da.patch \
+           file://muslfix.patch \
            "
 
-SRC_URI[sha256sum] = "8b6d4ba7ae2c036f7dafbb4e29717677411078f9a9d961b2dc7c1ba16273e9e9"
+SRC_URI[sha256sum] = "b8b3244894e49e773d4942b8899f768057974edf75c18dbb48b65bb123c7b2c7"
 
 inherit autotools ptest pkgconfig useradd python3-dir manpages systemd upstream-stable-release-point
 
@@ -69,7 +82,8 @@ USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM:${PN} = "tracing"
 
 FILES:${PN} += "${libdir}/lttng/libexec/* ${datadir}/xml/lttng \
-                ${PYTHON_SITEPACKAGES_DIR}/*"
+                ${PYTHON_SITEPACKAGES_DIR}/* \
+                ${libdir}/lttng/libtpp*"
 FILES:${PN}-staticdev += "${PYTHON_SITEPACKAGES_DIR}/*.a"
 FILES:${PN}-dev += "${PYTHON_SITEPACKAGES_DIR}/*.la"
 
@@ -89,6 +103,7 @@ do_install:append () {
 
 do_install_ptest () {
     for f in Makefile tests/Makefile tests/utils/utils.sh tests/regression/tools/save-load/*.lttng \
+            tests/utils/lttng-build-profile.json \
             tests/regression/tools/save-load/configuration/load-42*.lttng tests/regression/tools/health/test_health.sh \
             tests/regression/tools/metadata/utils.sh tests/regression/tools/rotation/rotate_utils.sh \
             tests/regression/tools/trace-format/ust-local-trace-pretty.expect* \
@@ -97,7 +112,7 @@ do_install_ptest () {
         install -D "${B}/$f" "${D}${PTEST_PATH}/$f"
     done
 
-    for f in tests/utils/tap-driver.sh config/test-driver src/common/session.xsd src/common/mi-lttng-4.2.xsd \
+    for f in tests/utils/tap-driver.sh config/test-driver src/common/session.xsd src/common/mi-lttng-4.3.xsd \
              tests/regression/tests.serial; do
         install -D "${S}/$f" "${D}${PTEST_PATH}/$f"
     done
