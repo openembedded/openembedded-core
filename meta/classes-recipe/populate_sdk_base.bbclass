@@ -79,6 +79,7 @@ TOOLCHAIN_TARGET_TASK ?= " \
     ${@oe.utils.multilib_pkg_extend(d, 'packagegroup-core-standalone-sdk-target')} \
     ${@bb.utils.contains('SDK_FEATURES', 'go', oe.utils.multilib_pkg_extend(d, 'packagegroup-go-sdk-target'), '', d)} \
     ${@bb.utils.contains('SDK_FEATURES', 'rust', oe.utils.multilib_pkg_extend(d, 'libstd-rs'), '', d)} \
+    ${@bb.utils.contains('SDK_FEATURES', 'kernel-src', 'kernel-devsrc', '', d)} \
     target-sdk-provides-dummy \
 "
 TOOLCHAIN_TARGET_TASK_ATTEMPTONLY ?= ""
