@@ -85,6 +85,8 @@ mkdir -p "$pseudo_state_dir"
 touch "$pseudo_state_dir/pseudo.pid"
 PSEUDO_LOCALSTATEDIR="$pseudo_state_dir"
 export PSEUDO_LOCALSTATEDIR
+PSEUDO_INCLUDE_PATHS="$SDK_ROOTFS_DIR"
+export PSEUDO_INCLUDE_PATHS
 
 echo "Extracting rootfs tarball using pseudo..."
 echo "$PSEUDO $PSEUDO_OPTS tar -C \"$SDK_ROOTFS_DIR\" $TAR_OPTS \"$ROOTFS_TARBALL\""
