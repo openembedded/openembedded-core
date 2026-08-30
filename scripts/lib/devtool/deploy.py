@@ -500,7 +500,15 @@ def register_commands(subparsers, context):
 
     parser_deploy = subparsers.add_parser('deploy-target',
                                           help='Deploy recipe output files to live target machine',
-                                          description='Deploys a recipe\'s build output (i.e. the output of the do_install task) to a live target machine over ssh. By default, any existing files will be preserved instead of being overwritten and will be restored if you run devtool undeploy-target. Note: this only deploys the recipe itself and not any runtime dependencies, so it is assumed that those have been installed on the target beforehand. Use --package/--file-glob to deploy only a subset of the recipe\'s installed files.',
+                                          description='Deploys a recipe\'s build output (i.e. the output of '
+                                                       'the do_install task) to a live target machine over ssh. '
+                                                       'By default, any existing files will be preserved instead '
+                                                       'of being overwritten and will be restored if you run '
+                                                       'devtool undeploy-target. Note: this only deploys the '
+                                                       'recipe itself and not any runtime dependencies, so it is '
+                                                       'assumed that those have been installed on the target '
+                                                       'beforehand. Use --package/--file-glob to deploy only a '
+                                                       'subset of the recipe\'s installed files.',
                                           group='testbuild')
     parser_deploy.add_argument('recipename', help='Recipe to deploy')
     parser_deploy.add_argument('target', help='Live target machine running an ssh server: user@hostname[:destdir]')

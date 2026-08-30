@@ -2038,8 +2038,14 @@ class DevtoolDeployTargetTests(DevtoolBase):
         # Definitions
         testrecipe = 'mdadm'
         testfile = '/sbin/mdadm'
+        # mdmon is installed by the same do_install, used to check --package/--file-glob filtering
+        otherfile = '/sbin/mdmon'
         if "usrmerge" in get_bb_var('DISTRO_FEATURES'):
             testfile = '/usr/sbin/mdadm'
+            otherfile = '/usr/sbin/mdmon'
+        # Use the mdadm-doc package for testing --package and --file-glob filtering
+        mandir = get_bb_var('mandir', testrecipe)
+        docfile = os.path.join(mandir, 'man8', '%s.8' % testrecipe)
         testimage = 'oe-selftest-image'
         testcommand = '/sbin/mdadm --help'
         # Build an image to run
@@ -2066,47 +2072,104 @@ class DevtoolDeployTargetTests(DevtoolBase):
         self.assertIn('  %s' % testfile, result.output)
         # Boot the image
         with runqemu(testimage) as qemu:
-            # Now really test deploy-target
-            for extra_opt in ['', '--strip']:
-                deploy_cmd= 'devtool deploy-target -c %s root@%s %s' % (testrecipe, qemu.ip, extra_opt)
-                self.logger.debug(deploy_cmd)
-                result = runCmd(deploy_cmd)
-                # Run a test command to see if it was installed properly
-                status, _ = qemu.run(testcommand)
-                self.assertEqual(status, 0)
-                # Check if it deployed all of the files with the right ownership/perms
-                # First look on the host - need to do this under pseudo to get the correct ownership/perms
-                bb_vars = get_bb_vars(['D', 'FAKEROOTENV', 'FAKEROOTCMD', 'PATH'], testrecipe)
-                installdir = bb_vars['D']
-                fakerootenv = bb_vars['FAKEROOTENV']
-                fakerootcmd = bb_vars['FAKEROOTCMD']
-                path = bb_vars['PATH']
-                result = runCmd('PATH="%s" %s %s find . -type f -exec ls -l {} \\;' % (path, fakerootenv, fakerootcmd), cwd=installdir)
-                filelist1 = self._process_ls_output(result.output)
+            def _deploy_and_check(extra_args, check_full_filelist, expected_files):
+                """Deploy with extra_args, verify the result, then undeploy and verify removal.
 
-                # Now look on the target
-                tempdir2 = tempfile.mkdtemp(prefix='devtoolqa')
-                self.track_for_cleanup(tempdir2)
-                tmpfilelist = os.path.join(tempdir2, 'files.txt')
-                with open(tmpfilelist, 'w') as f:
-                    for line in filelist1:
-                        splitline = line.split()
-                        f.write(splitline[-1] + '\n')
-                remotefilelist = '/tmp/%s' % os.path.basename(tmpfilelist)
-                status, _ = qemu.copy_to(tmpfilelist, remotefilelist)
-                self.assertEqual(status, 0)
-                status, output = qemu.run(
-                    'xargs ls -l < %s; status=$?; rm -f %s; exit $status' % (
-                        remotefilelist, remotefilelist))
-                self.assertEqual(status, 0)
-                filelist2 = self._process_ls_output(output)
-                filelist1.sort(key=lambda item: item.split()[-1])
-                filelist2.sort(key=lambda item: item.split()[-1])
-                self.assertEqual(filelist1, filelist2)
+                check_full_filelist is only meaningful for an unfiltered deploy: it
+                compares every file installed by do_install against what actually
+                landed on the target. For a --package/--file-glob filtered deploy,
+                expected_files instead maps a handful of representative paths
+                (testfile, otherfile, docfile) to whether they should have been
+                deployed by this particular filter.
+                """
+                deploy_cmd = 'devtool deploy-target -c %s root@%s %s' % (testrecipe, qemu.ip, extra_args)
+                if self.logger.isEnabledFor(logging.DEBUG):
+                    deploy_cmd += ' -s'
+                result = runCmd(deploy_cmd)
+                self.logger.debug('%s\n%s' % (deploy_cmd, result.output))
+
+                if check_full_filelist:
+                    # Run a test command to see if it was installed properly
+                    status, _ = qemu.run(testcommand)
+                    self.assertEqual(status, 0, '%s: %s was not deployed' % (extra_args, testfile))
+
+                    # Check if it deployed all of the files with the right ownership/perms
+                    # First look on the host - need to do this under pseudo to get the correct ownership/perms
+                    bb_vars = get_bb_vars(['D', 'FAKEROOTENV', 'FAKEROOTCMD', 'PATH'], testrecipe)
+                    installdir = bb_vars['D']
+                    fakerootenv = bb_vars['FAKEROOTENV']
+                    fakerootcmd = bb_vars['FAKEROOTCMD']
+                    path = bb_vars['PATH']
+                    result = runCmd('PATH="%s" %s %s find . -type f -exec ls -l {} \\;' % (path, fakerootenv, fakerootcmd), cwd=installdir)
+                    filelist1 = self._process_ls_output(result.output)
+
+                    # Now look on the target
+                    tempdir2 = tempfile.mkdtemp(prefix='devtoolqa')
+                    self.track_for_cleanup(tempdir2)
+                    tmpfilelist = os.path.join(tempdir2, 'files.txt')
+                    with open(tmpfilelist, 'w') as f:
+                        for line in filelist1:
+                            splitline = line.split()
+                            f.write(splitline[-1] + '\n')
+                    remotefilelist = '/tmp/%s' % os.path.basename(tmpfilelist)
+                    status, _ = qemu.copy_to(tmpfilelist, remotefilelist)
+                    self.assertEqual(status, 0)
+                    status, output = qemu.run(
+                        'xargs ls -l < %s; status=$?; rm -f %s; exit $status' % (
+                            remotefilelist, remotefilelist))
+                    self.assertEqual(status, 0)
+                    filelist2 = self._process_ls_output(output)
+                    filelist1.sort(key=lambda item: item.split()[-1])
+                    filelist2.sort(key=lambda item: item.split()[-1])
+                    self.assertEqual(filelist1, filelist2)
+                else:
+                    for path, expected in expected_files.items():
+                        status, _ = qemu.run('test -e %s' % path)
+                        if expected:
+                            self.assertEqual(status, 0, '%s: %s should have been deployed' % (extra_args, path))
+                        else:
+                            self.assertNotEqual(status, 0, '%s: %s should not have been deployed' % (extra_args, path))
+
                 # Test undeploy-target
-                result = runCmd('devtool undeploy-target -c %s root@%s' % (testrecipe, qemu.ip))
+                runCmd('devtool undeploy-target -c %s root@%s' % (testrecipe, qemu.ip))
                 status, _ = qemu.run(testcommand)
                 self.assertNotEqual(status, 0, 'undeploy-target did not remove command as it should have')
+
+            filter_cases = [
+                ('', {}),
+                ('--package %s' % testrecipe,
+                 {testfile: True, otherfile: True, docfile: False}),
+                ('--package %s-doc' % testrecipe,
+                 {testfile: False, otherfile: False, docfile: True}),
+                ('--package %s,%s-doc' % (testrecipe, testrecipe),
+                 {testfile: True, otherfile: True, docfile: True}),
+                ('--file-glob %s' % testfile,
+                 {testfile: True, otherfile: False, docfile: False}),
+                ('--package %s --file-glob %s' % (testrecipe, testfile),
+                 {testfile: True, otherfile: True, docfile: False}),
+                # "RECIPE:" prefix (needed so a single 'devtool ide-sdk' invocation
+                # can scope --package/--file-glob entries to one of several recipes)
+                ('--package %s:%s' % (testrecipe, testrecipe),
+                 {testfile: True, otherfile: True, docfile: False}),
+                # shorthand: "RECIPE:-suffix" expands to "RECIPE-suffix"
+                ('--package %s:-doc' % testrecipe,
+                 {testfile: False, otherfile: False, docfile: True}),
+                # shorthand: empty item + "-suffix" combined in one entry
+                ('--package %s:,-doc' % testrecipe,
+                 {testfile: True, otherfile: True, docfile: True}),
+                # a "RECIPE:" prefix that doesn't match this recipe is skipped,
+                # leaving no package filter applied (same as passing none at all)
+                ('--package other-recipe:%s' % testrecipe,
+                 {testfile: True, otherfile: True, docfile: True}),
+                ('--file-glob %s:%s' % (testrecipe, testfile),
+                 {testfile: True, otherfile: False, docfile: False}),
+                ('--file-glob other-recipe:%s' % testfile,
+                 {testfile: True, otherfile: True, docfile: True}),
+            ]
+            for strip_opt in ['', '--strip']:
+                for filter_args, expected_files in filter_cases:
+                    extra_args = ' '.join(a for a in (strip_opt, filter_args) if a)
+                    _deploy_and_check(extra_args, check_full_filelist=not filter_args, expected_files=expected_files)
 
 class DevtoolBuildImageTests(DevtoolBase):
 
