@@ -17,6 +17,7 @@ import tempfile
 import bb.utils
 import argparse_oe
 import oe.types
+import oe.package
 
 from devtool import exec_fakeroot_no_d, setup_tinfoil, check_workspace_recipe, DevtoolError
 
@@ -137,6 +138,92 @@ def _prepare_remote_script(deploy, destdir='/', verbose=False, dryrun=False, und
 
     return '\n'.join(lines)
 
+def parse_file_globs_arg(entries, recipename=None):
+    """Flatten --file-glob entries ("[RECIPE:]GLOB") into glob patterns for recipename.
+
+    E.g. ["other:/usr/bin/*", "/etc/*"] with recipename="myrecipe" -> ["/etc/*"].
+    """
+    globs = []
+    for entry in entries or []:
+        recipe, spec = entry.split(':', 1) if ':' in entry else (None, entry)
+        if recipe is not None and recipename is not None and recipe != recipename:
+            continue
+        if spec:
+            globs.append(spec)
+    return globs
+
+def _match_deploy_files(recipe_outdir, file_globs, recipename=None):
+    """Match file_globs (FILES-variable-style patterns) against recipe_outdir.
+
+    Returns the matched files (relative to recipe_outdir), or None if no glob
+    applies to recipename.
+    """
+    file_globs = parse_file_globs_arg(file_globs, recipename)
+    if not file_globs:
+        return None
+    cwd = os.getcwd()
+    os.chdir(recipe_outdir)
+    try:
+        matched, _ = oe.package.files_from_filevars(file_globs)
+    finally:
+        os.chdir(cwd)
+    return {os.path.normpath(f) for f in matched}
+
+def parse_packages_arg(entries, recipename=None):
+    """Flatten --package entries ("[RECIPE:]PKG[,PKG...]") into package names.
+
+    E.g. with recipename="myrecipe": "myrecipe:,-doc,-ptest" ->
+    ["myrecipe", "myrecipe-doc", "myrecipe-ptest"]; "other:foo" -> [].
+    """
+    packages = []
+    for entry in entries or []:
+        recipe, spec = entry.split(':', 1) if ':' in entry else (None, entry)
+        if recipe is not None and recipename is not None and recipe != recipename:
+            continue
+        for item in spec.split(','):
+            if not item:
+                if recipe is not None:
+                    packages.append(recipe)
+            elif item.startswith('-'):
+                if recipe is None:
+                    raise DevtoolError('Package suffix "%s" requires a "RECIPE:" prefix, '
+                                    'e.g. "RECIPE:%s"' % (item, item))
+                packages.append(recipe + item)
+            else:
+                packages.append(item)
+    return packages
+
+def is_default_excluded_package(pkg):
+    """True for packages left out of a deploy"""
+    return pkg.endswith(('-dbg', '-src', '-staticdev'))
+
+def _match_package_files(recipe_outdir, packages_files, packages, recipename=None):
+    """Resolve packages (see parse_packages_arg) into their files under recipe_outdir."""
+    packages = parse_packages_arg(packages, recipename)
+    all_package_names = [pkg for pkg, _ in packages_files]
+    for pkg in packages:
+        if pkg not in all_package_names:
+            raise DevtoolError('Package "%s" is not one of the packages produced '
+                            'by this recipe (PACKAGES: %s)' % (pkg, ' '.join(all_package_names)))
+    cwd = os.getcwd()
+    os.chdir(recipe_outdir)
+    try:
+        seen = set()
+        result = set() if packages else None
+        default_excluded = set()
+        for pkg, files_var in packages_files:
+            matched, _ = oe.package.files_from_filevars((files_var or '').split())
+            matched = {os.path.normpath(f) for f in matched} - seen
+            seen |= matched
+            if pkg in packages:
+                if result is not None:
+                    result |= matched
+            elif is_default_excluded_package(pkg):
+                default_excluded |= matched
+    finally:
+        os.chdir(cwd)
+    return result, default_excluded
+
 def deploy(args, config, basepath, workspace):
     """Entry point for the devtool 'deploy' subcommand"""
     import oe.utils
@@ -160,14 +247,15 @@ def deploy(args, config, basepath, workspace):
         max_process = oe.utils.get_bb_number_threads(rd)
         fakerootcmd = rd.getVar('FAKEROOTCMD')
         fakerootenv = rd.getVar('FAKEROOTENV')
+        packages_files = [(pkg, rd.getVar('FILES:' + pkg) or '')
+                        for pkg in (rd.getVar('PACKAGES') or '').split()]
     finally:
         tinfoil.shutdown()
 
-    return deploy_no_d(srcdir, workdir, path, strip_cmd, libdir, base_libdir, max_process, fakerootcmd, fakerootenv, args)
+    return deploy_no_d(srcdir, workdir, path, strip_cmd, libdir, base_libdir, max_process, fakerootcmd, fakerootenv, args, file_globs=args.file_globs, packages_files=packages_files)
 
-def deploy_no_d(srcdir, workdir, path, strip_cmd, libdir, base_libdir, max_process, fakerootcmd, fakerootenv, args):
+def deploy_no_d(srcdir, workdir, path, strip_cmd, libdir, base_libdir, max_process, fakerootcmd, fakerootenv, args, file_globs=None, packages_files=None):
     import math
-    import oe.package
 
     try:
         host, destdir = args.target.split(':')
@@ -208,11 +296,35 @@ def deploy_no_d(srcdir, workdir, path, strip_cmd, libdir, base_libdir, max_proce
         if ret != 0:
             raise DevtoolError('Failed to strip files for deployment')
 
+    allowed_files = None
+    default_excluded_files = set()
+    file_sets = []
+    if file_globs:
+        deploy_files = _match_deploy_files(recipe_outdir, file_globs, getattr(args, 'recipename', None))
+        if deploy_files is not None:
+            file_sets.append(deploy_files)
+    if packages_files:
+        package_files, default_excluded_files = _match_package_files(recipe_outdir, packages_files, getattr(args, 'package', None),
+                                            getattr(args, 'recipename', None))
+        if package_files is not None:
+            file_sets.append(package_files)
+    if file_sets:
+        allowed_files = set().union(*file_sets)
+
     filelist = []
+    tar_relpaths = []
     inodes = set({})
     ftotalsize = 0
     for root, _, files in os.walk(recipe_outdir):
         for fn in files:
+            relpath = os.path.normpath(os.path.join(os.path.relpath(root, recipe_outdir), fn))
+            if allowed_files is not None:
+                if relpath not in allowed_files:
+                    continue
+            elif relpath in default_excluded_files:
+                # No explicit --package/--file-glob filter was given: still leave
+                # out packages like -staticdev that aren't needed on a live target.
+                continue
             fstat = os.lstat(os.path.join(root, fn))
             # Get the size in kiB (since we'll be comparing it to the output of du -k)
             # MUST use lstat() here not stat() or getfilesize() since we don't want to
@@ -226,6 +338,12 @@ def deploy_no_d(srcdir, workdir, path, strip_cmd, libdir, base_libdir, max_proce
             # The path as it would appear on the target
             fpath = os.path.join(destdir, os.path.relpath(root, recipe_outdir), fn)
             filelist.append((fpath, fsize))
+            tar_relpaths.append(relpath)
+
+    if allowed_files is not None and not filelist:
+        raise DevtoolError('No files to deploy for %s - the --package/--file-glob '
+                        'filter(s) did not match any of the files installed by this '
+                        'recipe.' % args.recipename)
 
     if args.dry_run:
         print('Files to be deployed for %s on target %s:' % (args.recipename, args.target))
@@ -282,8 +400,28 @@ def deploy_no_d(srcdir, workdir, path, strip_cmd, libdir, base_libdir, max_proce
     finally:
         shutil.rmtree(tmpdir)
 
-    # Now run the script
-    ret = exec_fakeroot_no_d(fakerootcmd, fakerootenv, path, 'tar cf - . | %s  %s %s %s \'sh %s %s %s %s\'' % (ssh_sshexec, ssh_port, extraoptions, args.target, tmpscript, args.recipename, destdir, tmpfilelist), cwd=recipe_outdir, shell=True)
+    # Now run the script. When a package/glob filter narrowed down filelist,
+    # tar is given an explicit list of relative paths (-T) instead of packing
+    # the whole recipe_outdir tree.
+    tar_filelist_path = None
+    try:
+        if allowed_files is not None:
+            tar_fd, tar_filelist_path = tempfile.mkstemp(prefix='devtool-deploy-filelist-')
+            with os.fdopen(tar_fd, 'w') as f:
+                for relpath in tar_relpaths:
+                    # './' prefix matches what 'tar cf - .' itself would produce, which
+                    # the remote script's manifest handling (sed "s!^./!$2!") relies on.
+                    f.write('./' + relpath + '\n')
+            tar_cmd = 'tar cf - -T %s' % shlex.quote(tar_filelist_path)
+        else:
+            tar_cmd = 'tar cf - .'
+        remote_cmd = '%s | %s  %s %s %s \'sh %s %s %s %s\'' % (
+            tar_cmd, ssh_sshexec, ssh_port, extraoptions, args.target,
+            tmpscript, args.recipename, destdir, tmpfilelist)
+        ret = exec_fakeroot_no_d(fakerootcmd, fakerootenv, path, remote_cmd, cwd=recipe_outdir, shell=True)
+    finally:
+        if tar_filelist_path:
+            os.remove(tar_filelist_path)
     if ret != 0:
         raise DevtoolError('Deploy failed - rerun with -s to get a complete '
                         'error message')
@@ -362,7 +500,7 @@ def register_commands(subparsers, context):
 
     parser_deploy = subparsers.add_parser('deploy-target',
                                           help='Deploy recipe output files to live target machine',
-                                          description='Deploys a recipe\'s build output (i.e. the output of the do_install task) to a live target machine over ssh. By default, any existing files will be preserved instead of being overwritten and will be restored if you run devtool undeploy-target. Note: this only deploys the recipe itself and not any runtime dependencies, so it is assumed that those have been installed on the target beforehand.',
+                                          description='Deploys a recipe\'s build output (i.e. the output of the do_install task) to a live target machine over ssh. By default, any existing files will be preserved instead of being overwritten and will be restored if you run devtool undeploy-target. Note: this only deploys the recipe itself and not any runtime dependencies, so it is assumed that those have been installed on the target beforehand. Use --package/--file-glob to deploy only a subset of the recipe\'s installed files.',
                                           group='testbuild')
     parser_deploy.add_argument('recipename', help='Recipe to deploy')
     parser_deploy.add_argument('target', help='Live target machine running an ssh server: user@hostname[:destdir]')
@@ -375,6 +513,17 @@ def register_commands(subparsers, context):
     parser_deploy.add_argument('-P', '--port', help='Specify port to use for connection to the target')
     parser_deploy.add_argument('-I', '--key',
                                help='Specify ssh private key for connection to the target')
+    parser_deploy.add_argument('--package', action='append', metavar='PACKAGE',
+                               help='Only deploy files belonging to PACKAGE, as defined by that '
+                                    'package\'s FILES variable in the recipe metadata. May be a '
+                                    'comma-separated list and/or specified multiple times to '
+                                    'include several packages. May be prefixed with "RECIPE:" (must '
+                                    'match RECIPENAME), e.g. "RECIPE:,-doc,-ptest" is short for '
+                                    '"RECIPE,RECIPE-doc,RECIPE-ptest".')
+    parser_deploy.add_argument('--file-glob', action='append', dest='file_globs', metavar='GLOB',
+                               help='Only deploy files whose installed path matches this glob '
+                                    'pattern (e.g. "/usr/bin/*" or "${bindir}/myprog"). May be '
+                                    'specified multiple times. Combined with --package if both are given.')
 
     strip_opts = parser_deploy.add_mutually_exclusive_group(required=False)
     strip_opts.add_argument('-S', '--strip',
