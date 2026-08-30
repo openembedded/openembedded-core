@@ -33,7 +33,7 @@ class oeSDKExtSelfTest(OESelftestTestCase):
         if not 'shell' in options:
             options['shell'] = True
 
-        runCmd("cd %s; unset BBPATH; unset BUILDDIR; . %s; %s" % (tmpdir_eSDKQA, env_eSDK, cmd), **options)
+        return runCmd("cd %s; unset BBPATH; unset BUILDDIR; . %s; %s" % (tmpdir_eSDKQA, env_eSDK, cmd), **options)
 
     @staticmethod
     def generate_eSDK(image):
@@ -111,8 +111,48 @@ SSTATE_MIRRORS =  "file://.* file://%s/PATH"
         cmd = "devtool sdk-install %s " % pn_sstate
         oeSDKExtSelfTest.run_esdk_cmd(self.env_eSDK, self.tmpdir_eSDKQA, cmd)
 
+    def test_sdk_install_assembles_the_shared_sysroot(self):
+        """
+        A recipe's commands are only on PATH once the shared sysroot has
+        been assembled from the components directory, and sdk-install
+        assembles it only when it had something to install. Install a
+        recipe, discard the assembled sysroot, and ask for the recipe
+        again: it is already staged, so there is nothing to install, and
+        the commands have to be reachable regardless.
+
+        The recipe has to be a native one. An eSDK builds PATH from the
+        native sysroot alone, so a target recipe's commands are not
+        reachable however the sysroot was assembled.
+        """
+        recipe = 'bc-native'
+        command = 'bc'
+        bitbake(recipe)
+        install = "devtool sdk-install %s" % recipe
+        oeSDKExtSelfTest.run_esdk_cmd(self.env_eSDK, self.tmpdir_eSDKQA, install)
+
+        # the state devtool build leaves behind: staged, not assembled
+        oeSDKExtSelfTest.run_esdk_cmd(self.env_eSDK, self.tmpdir_eSDKQA,
+                                      "bitbake build-sysroots -c clean")
+        oeSDKExtSelfTest.run_esdk_cmd(self.env_eSDK, self.tmpdir_eSDKQA, install)
+
+        # The eSDK environment appends the caller's PATH, and bc is not a
+        # host tool oe requires, so an unassembled sysroot resolves either
+        # to the build machine's copy or to nothing at all. Neither is a
+        # command error, so ask without raising and report which happened.
+        result = oeSDKExtSelfTest.run_esdk_cmd(self.env_eSDK, self.tmpdir_eSDKQA,
+                                               "command -v %s" % command,
+                                               ignore_status=True)
+        # sourcing the eSDK environment prints a banner, and run_esdk_cmd
+        # merges stderr into the output, so the answer is the last line
+        found = ""
+        if result.status == 0:
+            found = result.output.strip().splitlines()[-1].strip()
+        self.assertTrue(found.startswith(self.tmpdir_eSDKQA),
+                        "sdk-install left %s out of the eSDK's shared sysroot; "
+                        "%s resolved to %s"
+                        % (command, command, found or "nothing"))
+
     def test_image_generation_binary_feeds(self):
         image = 'core-image-minimal'
         cmd = "devtool build-image %s" % image
         oeSDKExtSelfTest.run_esdk_cmd(self.env_eSDK, self.tmpdir_eSDKQA, cmd)
-
