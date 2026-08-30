@@ -3927,6 +3927,56 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
             # Verify deployment and remote debugging works
             self._verify_launch_json_debugging(tempdir, qemu, example_exe)
 
+    @OETestTag("runqemu")
+    def test_devtool_ide_sdk_none_qemu_slirp(self):
+        """Verify devtool ide-sdk works with runqemu slirp networking.
+
+        Slirp mode uses SSH port forwarding (default: localhost:2222 -> guest:22).
+        This test checks that:
+          - update_qb_slirp_opt() writes the QB_SLIRP_OPT host-forwarding
+            entries to the image workspace bbappend before the build.
+          - runqemu boots the image in slirp mode.
+          - devtool deploy-target reaches the target via localhost:2222.
+        """
+        recipe_name = "cmake-example"
+        build_file = "CMakeLists.txt"
+        testimage = "oe-selftest-image"
+
+        self._check_workspace()
+        self._write_bb_config()
+
+        # devtool modify and build image; QB_SLIRP_OPT is written to the bbappend.
+        tempdir = self._devtool_ide_sdk_recipe(recipe_name, build_file, None)
+        runCmd('devtool ide-sdk %s %s -c --ide=none' % (recipe_name, testimage),
+               output_log=self._cmd_logger)
+
+        # Verify QB_SLIRP_OPT was written to the workspace bbappend.
+        appends_dir = os.path.join(self.workspacedir, 'appends')
+        bbappend = os.path.join(appends_dir, testimage + '.bbappend')
+        self.assertExists(bbappend, 'Image bbappend not created at %s' % bbappend)
+        with open(bbappend) as f:
+            bbappend_content = f.read()
+        self.assertIn('QB_SLIRP_OPT', bbappend_content,
+                      'QB_SLIRP_OPT not written to image bbappend')
+        self.assertIn('hostfwd=tcp:127.0.0.1:2222-:22', bbappend_content,
+                      'SSH slirp port forward missing from QB_SLIRP_OPT')
+
+        with runqemu(testimage, runqemuparams="nographic slirp") as qemu:
+            slirp_host = qemu.ip
+            slirp_port = qemu.port or '2222'
+
+            # Re-run ide-sdk with the actual slirp address; image is already built.
+            bitbake_sdk_cmd = (
+                'devtool ide-sdk %s %s -t root@%s -P %s --skip-bitbake --ide=none'
+                % (recipe_name, testimage, slirp_host, slirp_port))
+            runCmd(bitbake_sdk_cmd, output_log=self._cmd_logger)
+
+            self._gdb_cross()
+            compile_cmd = self._verify_cmake_preset(tempdir)
+            self._devtool_ide_sdk_qemu(tempdir, qemu, recipe_name,
+                                        recipe_name, compile_cmd)
+
+
 class DevtoolIdeSdkKernelTests(DevtoolIdeSdkTests):
 
     @OETestTag("runqemu")
