@@ -457,6 +457,7 @@ class RecipeModified:
         self.staging_incdir = None
         self.strip_cmd = None
         self.target_arch = None
+        self.tmpdir = None
         self.toolchain = None
         self.topdir = None
         self.workdir = None
@@ -545,6 +546,7 @@ class RecipeModified:
             recipe_d.getVar('STAGING_INCDIR'))
         self.strip_cmd = recipe_d.getVar('STRIP')
         self.target_arch = recipe_d.getVar('TARGET_ARCH')
+        self.tmpdir = os.path.realpath(recipe_d.getVar('TMPDIR'))
         self.toolchain = recipe_d.getVar('TOOLCHAIN')
         self.topdir = recipe_d.getVar('TOPDIR')
         self.workdir = os.path.realpath(recipe_d.getVar('WORKDIR'))

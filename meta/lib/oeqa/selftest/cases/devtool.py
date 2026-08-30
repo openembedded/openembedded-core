@@ -4008,11 +4008,11 @@ class DevtoolIdeSdkKernelTests(DevtoolIdeSdkTests):
                          os.path.join(tempdir, 'Makefile'),
                          'makefilePath should point to the Makefile in the source tree')
 
-        # Verify kernel sources are set read-only
+        # Verify kernel sources (under TMPDIR) are set read-only
+        tmpdir = get_bb_var('TMPDIR', recipe_name)
         readonly_includes = settings_d.get('files.readonlyInclude', {})
-        self.assertTrue(
-            any(k for k in readonly_includes if 'staging_kernel' in k.lower() or 'linux' in k.lower()),
-            'Kernel staging dir should be set read-only in files.readonlyInclude: %s' % readonly_includes)
+        self.assertIn(os.path.realpath(tmpdir) + '/**', readonly_includes,
+                     'TMPDIR should be set read-only in files.readonlyInclude: %s' % readonly_includes)
 
         # Verify the cross-build environment is exported for the terminal
         self.assertIn('terminal.integrated.env.linux', settings_d,

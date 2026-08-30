@@ -205,9 +205,6 @@ class IdeVSCode(IdeBase):
         settings_dict["files.watcherExclude"].update(files_excludes_kernel)
         settings_dict["python.analysis.exclude"] += kernel_exclude_patterns
 
-        # protect the kernel sources
-        settings_dict["files.readonlyInclude"][modified_recipe.staging_kernel_dir + '/**'] = True
-
         # Export the complete cross-build environment
         settings_dict["terminal.integrated.env.linux"] = modified_recipe.exported_vars
 
@@ -232,12 +229,15 @@ class IdeVSCode(IdeBase):
         ]
 
     def vscode_settings(self, modified_recipe, image_recipe):
-        files_excludes = {
+        files_hide = {
             "**/.git/**": True,
-            "**/oe-logs/**": True,
-            "**/oe-workdir/**": True,
             "**/source-date-epoch/**": True
         }
+        files_watcher_exclude = dict(files_hide)
+        files_watcher_exclude.update({
+            "**/oe-logs/**": True,
+            "**/oe-workdir/**": True,
+        })
         python_exclude = [
             "**/.git/**",
             "**/oe-logs/**",
@@ -245,14 +245,16 @@ class IdeVSCode(IdeBase):
             "**/source-date-epoch/**"
         ]
         files_readonly = {
-            modified_recipe.recipe_sysroot + '/**': True,
-            modified_recipe.recipe_sysroot_native + '/**': True,
+            modified_recipe.tmpdir + '/**': True,
+            "**/oe-logs/**": True,
+            "**/oe-workdir/**": True,
         }
         if image_recipe.rootfs_dbg is not None:
             files_readonly[image_recipe.rootfs_dbg + '/**'] = True
         settings_dict = {
-            "files.watcherExclude": files_excludes,
-            "files.exclude": files_excludes,
+            "files.watcherExclude": files_watcher_exclude,
+            "files.exclude": files_hide,
+            "search.exclude": dict(files_watcher_exclude),
             "files.readonlyInclude": files_readonly,
             "python.analysis.exclude": python_exclude
         }
@@ -287,7 +289,7 @@ class IdeVSCode(IdeBase):
         IdeBase.update_json_file(
             self.dot_code_dir(modified_recipe), extensions_file, {"recommendations": recommendations})
 
-    def vscode_c_cpp_properties(self, modified_recipe):
+    def vscode_c_cpp_properties(self, modified_recipe, image_recipe):
         properties_dict = {
             "name": modified_recipe.recipe_id_pretty,
         }
@@ -321,6 +323,24 @@ class IdeVSCode(IdeBase):
             properties_dict["cStandard"] = "gnu11"
         else:  # no C/C++ build
             return
+
+        # configurationProvider/compileCommands only cover the recipe under
+        # development. Add includePath as a fallback so the C/C++ extension
+        # also resolves symbols in other recipes sources found in rootfs-dbg.
+        if image_recipe.rootfs_dbg is not None:
+            recipe_sysroot_include = os.path.join(modified_recipe.recipe_sysroot, "usr", "include")
+            # rootfs_dbg/usr/include is empty, target headers come from recipe-sysroot,
+            # consistent with the GDB sourceFileMap for "/usr/include".
+            rootfs_dbg_src_debug = os.path.join(image_recipe.rootfs_dbg, "usr", "src", "debug")
+            include_path = properties_dict.get("includePath", ["${workspaceFolder}/**"])
+            for path in (recipe_sysroot_include, rootfs_dbg_src_debug + "/**"):
+                if path not in include_path:
+                    include_path.append(path)
+            properties_dict["includePath"] = include_path
+            # That's the default, but make it easy to change if a big index is preferred.
+            properties_dict["browse"] = {
+                "limitSymbolsToIncludedHeaders": True
+            }
 
         properties_dicts = {
             "configurations": [
@@ -873,7 +893,7 @@ class IdeVSCode(IdeBase):
     def setup_modified_recipe(self, args, image_recipe, modified_recipe):
         self.vscode_settings(modified_recipe, image_recipe)
         self.vscode_extensions(modified_recipe)
-        self.vscode_c_cpp_properties(modified_recipe)
+        self.vscode_c_cpp_properties(modified_recipe, image_recipe)
         if args.target:
             if modified_recipe.toolchain == 'clang':
                 self.initialize_cross_debug_configs(
