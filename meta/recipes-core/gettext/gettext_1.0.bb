@@ -31,6 +31,11 @@ SRC_URI:append:libc-musl = " file://0001-Ignore-failing-tests-needing-BIG5-encod
 
 inherit autotools texinfo pkgconfig ptest
 
+# configure's Objective-C probe would pick the bare ${HOST_PREFIX}cc, which
+# has no default sysroot and trips the configure-unsafe QA check; give it
+# the fully-flagged C compiler instead.
+export OBJC = "${CC}"
+
 EXTRA_OECONF += "--without-lispdir \
                  --disable-csharp \
                  --disable-libasprintf \
