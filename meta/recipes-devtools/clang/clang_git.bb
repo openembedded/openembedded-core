@@ -75,6 +75,10 @@ EXTRA_OECMAKE += "-DLLVM_ENABLE_ASSERTIONS=OFF \
                   -DCMAKE_STRIP=${STAGING_BINDIR_NATIVE}/llvm-strip \
 "
 
+# The generated completion model overflows ppc32's 16-bit branch range
+# ("operand out of range" from gas); use the heuristic ranking instead.
+EXTRA_OECMAKE:append:powerpc = " -DCLANGD_DECISION_FOREST=OFF"
+
 CLANG_ENABLE_TESTSUITE ??= "0"
 CLANG_TESTSUITE_FLAGS = "\
                   -DCLANG_INCLUDE_TESTS=ON \
