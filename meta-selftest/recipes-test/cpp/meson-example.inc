@@ -16,6 +16,7 @@ SRC_URI += "\
 inherit pkgconfig meson
 
 PACKAGECONFIG[failing_test] = "-DFAILING_TEST=enabled"
+PACKAGECONFIG[systemd] = "-DWITH_SYSTEMD=enabled,-DWITH_SYSTEMD=disabled"
 
 # Support installing all recipes variants in parallel
 EXTRA_OEMESON += "\

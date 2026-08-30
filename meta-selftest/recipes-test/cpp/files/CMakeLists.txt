@@ -13,6 +13,7 @@ project(cmake-example
 
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 option(FAILING_TEST "Compile a failing unit test to test the test infrastructure" OFF)
+option(WITH_SYSTEMD "Target is managed by systemd: skip the legacy SysV daemonize/pidfile/privilege-drop code" OFF)
 
 set(BINARY_NAME "cmake-example" CACHE STRING "Name of the installed executable and library prefix")
 set(TEST_BINARY_NAME "test-cmake-example" CACHE STRING "Name of the installed test executable")
@@ -54,6 +55,11 @@ install(TARGETS ${BINARY_NAME}-lib
 add_executable(${BINARY_NAME} cpp-example.cpp)
 target_include_directories(${BINARY_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(${BINARY_NAME} PRIVATE ${BINARY_NAME}-lib)
+if (WITH_SYSTEMD)
+    target_compile_definitions(${BINARY_NAME} PRIVATE WITH_SYSTEMD)
+else()
+    target_sources(${BINARY_NAME} PRIVATE daemonize.cpp daemonize.hpp)
+endif(WITH_SYSTEMD)
 
 install(TARGETS ${BINARY_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}

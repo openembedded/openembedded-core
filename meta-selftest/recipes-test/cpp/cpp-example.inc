@@ -15,6 +15,8 @@ SRC_URI = "\
     file://cpp-example.cpp \
     file://cpp-example-lib.hpp \
     file://cpp-example-lib.cpp \
+    file://daemonize.cpp \
+    file://daemonize.hpp \
     file://test-cpp-example.cpp \
     file://cpp-example.conf \
     file://config.h.in \
@@ -32,6 +34,8 @@ SYSTEMD_SERVICE:${PN} = "${BPN}.service"
 
 INITSCRIPT_NAME = "${BPN}"
 INITSCRIPT_PARAMS = "defaults 99"
+
+PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
 
 # Create cpp-example user and group
 USERADD_PACKAGES = "${PN}"

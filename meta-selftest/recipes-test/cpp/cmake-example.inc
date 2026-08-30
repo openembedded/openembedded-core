@@ -11,6 +11,7 @@ SRC_URI += "file://CMakeLists.txt"
 inherit cmake-qemu
 
 PACKAGECONFIG[failing_test] = "-DFAILING_TEST=ON"
+PACKAGECONFIG[systemd] = "-DWITH_SYSTEMD=ON,-DWITH_SYSTEMD=OFF"
 
 # Support installing all recipe variants in parallel
 EXTRA_OECMAKE += "\

@@ -30,6 +30,13 @@ configure_file(input : 'config.h.in',
 # Include the build directory for config.h
 inc_dir = include_directories('.')
 
+example_sources = ['cpp-example.cpp']
+if get_option('WITH_SYSTEMD').enabled()
+    add_project_arguments('-DWITH_SYSTEMD', language: 'cpp')
+else
+    example_sources += ['daemonize.cpp', 'daemonize.hpp']
+endif
+
 exlib = shared_library(binary_name + 'lib',
     'cpp-example-lib.cpp', 'cpp-example-lib.hpp',
     version: meson.project_version(),
@@ -40,7 +47,7 @@ exlib = shared_library(binary_name + 'lib',
     )
 
 executable(binary_name,
-    'cpp-example.cpp',
+    example_sources,
     link_with : exlib,
     include_directories : inc_dir,
     install : true

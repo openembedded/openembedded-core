@@ -3186,7 +3186,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         # the first _gdb_cross_debugging_multi call above.
         self._gdb_cross_debugging_multi(
             qemu, recipe_name, example_exe, MAGIC_STRING_NEW,
-            exe_break_line=63 + LINE_SHIFT, exe_list_line=55 + LINE_SHIFT,
+            exe_break_line=136 + LINE_SHIFT, exe_list_line=128 + LINE_SHIFT,
             hpp_break_line=21 + LINE_SHIFT, lib_break_line=31 + LINE_SHIFT)
 
     def _verify_cmake_preset(self, tempdir):
@@ -3302,7 +3302,7 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
         self.assertIn("GNU gdb", r.output)
 
     def _gdb_debug_cpp_example(self, magic_string, gdb_start_cmd="run",
-                              exe_break_line=63, exe_list_line=55, hpp_break_line=21,
+                              exe_break_line=136, exe_list_line=128, hpp_break_line=21,
                               lib_break_line=31):
         """Get a series of gdb commands to debug the cpp-example-lib example"""
         gdb_batch_cmd = " -ex 'break main' -ex '%s'" % gdb_start_cmd
@@ -3348,7 +3348,7 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
         gdb_batch_cmd += " -ex 'continue'"
         return gdb_batch_cmd
 
-    def _gdb_debug_cpp_example_check(self, gdb_output, magic_string, exe_list_line=55, lib_break_line=31):
+    def _gdb_debug_cpp_example_check(self, gdb_output, magic_string, exe_list_line=128, lib_break_line=31):
         self.assertIn("Breakpoint 1, main", gdb_output)
         self.assertIn("$1 = 0", gdb_output)  # test.string.compare equal
         self.assertIn("$2 = -3", gdb_output)  # test.string.compare longer
@@ -3376,7 +3376,7 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
         self.assertIn("exited normally", gdb_output)
 
     def _gdb_cross_debugging_multi(self, qemu, recipe_name, example_exe, magic_string,
-                                   exe_break_line=63, exe_list_line=55, hpp_break_line=21,
+                                   exe_break_line=136, exe_list_line=128, hpp_break_line=21,
                                    lib_break_line=31):
         """Verify gdb-cross is working
 
