@@ -65,6 +65,10 @@ class DebuggerCrossConfig:
             DebuggerCrossConfig._port_next += 1
         self.debug_server_port = self.debug_server_ports[self.default_mode]
         self.id_pretty = "%d_%s" % (self.debug_server_port, self.binary_pretty)
+        # Hook for subclasses needing additional fixed ports forwarded through
+        # slirp beyond the one-per-mode debug_server_ports (e.g. lldb-server's
+        # spawned gdbserver instances).
+        self.extra_ports = []
 
         if self.id_pretty in DebuggerCrossConfig._configs:
             raise DevtoolError(
@@ -269,6 +273,13 @@ class LldbServerConfig(DebuggerCrossConfig):
                  default_mode=DebuggerServerModes.MULTI):
         super().__init__(image_recipe, modified_recipe, binary,
                          default_mode)
+        # lldb-server platform spawns a separate gdb-remote-protocol
+        # "gdbserver" instance per debug session; without --gdbserver-port it
+        # picks a random port, which cannot be forwarded through slirp NAT.
+        # Pin it to a fixed, dedicated port that gets slirp-forwarded too.
+        self.gdbserver_port = DebuggerCrossConfig._port_next
+        DebuggerCrossConfig._port_next += 1
+        self.extra_ports.append(self.gdbserver_port)
 
     def _lldb_server_tmp_dir(self, mode):
         return os.path.join('/tmp', 'lldb_server_%s' % self.id_pretty_mode(mode))
@@ -294,8 +305,8 @@ class LldbServerConfig(DebuggerCrossConfig):
             cmd = self._target_tcp_port_check_cmd() + " && exit 0; "
             cmd += "mkdir -p %s; " % tmp_dir
             cmd += "cd %s; " % tmp_dir
-            cmd += "%s platform --server --listen *:%s > %s 2>&1 & _lldb_server_pid=\\$!; " % (
-                lldb_server, self.debug_server_port, log_file)
+            cmd += "%s platform --server --listen *:%s --gdbserver-port %s > %s 2>&1 & _lldb_server_pid=\\$!; " % (
+                lldb_server, self.debug_server_port, self.gdbserver_port, log_file)
             cmd += "echo \\$_lldb_server_pid > %s; " % pid_file
             cmd += self._target_wait_for_tcp_port_cmd(
                 "lldb_server_pid", log_file)

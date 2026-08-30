@@ -23,7 +23,7 @@ import scriptutils
 import bb
 from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, DevtoolError, parse_recipe
 from devtool.standard import get_real_srctree
-from devtool.ide_plugins import BuildTool
+from devtool.ide_plugins import BuildTool, DebuggerCrossConfig
 from oe.kernel_module import kernel_module_os_env
 
 
@@ -186,15 +186,17 @@ class RecipeImage:
     """
 
     MARKER = '# devtool ide-sdk: image debug settings'
+    QB_SLIRP_MARKER = '# devtool ide-sdk: QB_SLIRP_OPT'
 
     def __init__(self, name, orig_bbappend_content=None):
         self.name = name
         self.rootfs = None
         self.__rootfs_dbg = None
+        self.qb_slirp_opt = ''
         self.bootstrap_tasks = [self.name + ':do_build']
         # Debug settings already provided by the base configuration (e.g.
         # local.conf, MACHINE, DISTRO, the recipe itself) plus any bbappend
-        # content other than devtool ide-sdk's own section (see
+        # content other than devtool ide-sdk's own sections (see
         # strip_bbappend_sections()). Populated by initialize().
         self.base_image_gen_debugfs = False
         self.base_image_fstypes_debugfs = ''
@@ -204,11 +206,11 @@ class RecipeImage:
         # Content of the bbappend before strip_bbappend_sections() ran.
         self._orig_bbappend_content = orig_bbappend_content
 
-    @classmethod
-    def _strip_marker_section(cls, content):
-        """Remove devtool ide-sdk's own image debug settings section, if any"""
+    @staticmethod
+    def _strip_marker_section(content, marker):
+        """Remove one devtool ide-sdk marker section, if present"""
         return re.sub(
-            r'^' + re.escape(cls.MARKER) + r'\n(?:[^\n]+\n)*',
+            r'^' + re.escape(marker) + r'\n(?:[^\n]+\n)*',
             '', content, flags=re.MULTILINE)
 
     @classmethod
@@ -227,7 +229,8 @@ class RecipeImage:
             with open(bbappend, 'r') as f:
                 content = f.read()
             originals[name] = content
-            stripped = cls._strip_marker_section(content)
+            stripped = cls._strip_marker_section(content, cls.MARKER)
+            stripped = cls._strip_marker_section(stripped, cls.QB_SLIRP_MARKER)
             if stripped != content:
                 with open(bbappend, 'w') as f:
                     f.write(stripped)
@@ -259,6 +262,8 @@ class RecipeImage:
         self.rootfs = os.path.join(workdir, 'rootfs')
         self.__rootfs_dbg = os.path.join(workdir, 'rootfs-dbg')
 
+        self.qb_slirp_opt = image_d.getVar('QB_SLIRP_OPT') or ''
+
     @property
     def debug_support(self):
         return bool(self.rootfs_dbg)
@@ -279,9 +284,10 @@ class RecipeImage:
 
         initialize() already stripped this section from the bbappend on
         disk before parsing, so it only needs to be added back here, if
-        still needed. Returns True if the resulting bbappend content
-        actually differs from what was on disk when initialize() ran, False
-        if it is left exactly as it was.
+        still needed. Also updates QB_SLIRP_OPT with the debugger server
+        port forwards (see update_qb_slirp_opt()). Returns True if the
+        resulting bbappend content actually differs from what was on disk
+        when initialize() ran, False if it is left exactly as it was.
         """
         wants_gdbserver = any(
             r.wants_gdbserver and r.toolchain != 'clang'
@@ -319,24 +325,90 @@ class RecipeImage:
             parsed_content = ''
 
         if not lines:
-            # The base configuration already provides everything needed.
-            if parsed_content != original_content:
+            if self.MARKER in original_content:
                 logger.info(
                     "Removed image debug settings from %s: already provided by the base configuration", self._bbappend)
+            image_changed = False
+        else:
+            new_section = self.MARKER + '\n' + '\n'.join(lines) + '\n'
+            new_content = parsed_content
+            if new_content and not new_content.endswith('\n'):
+                new_content += '\n'
+            new_content += new_section
+
+            appends_dir = os.path.dirname(self._bbappend)
+            os.makedirs(appends_dir, exist_ok=True)
+            with open(self._bbappend, 'w') as f:
+                f.write(new_content)
+            logger.info("Updated image bbappend %s", self._bbappend)
+            image_changed = True
+
+        slirp_changed = self.update_qb_slirp_opt()
+        return image_changed or slirp_changed
+
+    def update_qb_slirp_opt(self):
+        """Update QB_SLIRP_OPT in the image bbappend
+
+        Support connecting to a debugger server running on the target device via
+        runqemu's slirp network:
+        - If the base value is non-empty (recipe/machine sets QB_SLIRP_OPT):
+          only missing port forwards are appended via QB_SLIRP_OPT:append.
+        - If the base value is empty (runqemu would use its own built-in default
+          of SSH 2222, telnet 2323, tftp): a full QB_SLIRP_OPT assignment is
+          written that mirrors that default plus the debugger ports, so that
+          runqemu reads the complete set from the .qemuboot.conf.
+
+        Returns True if the bbappend content actually changed, False otherwise.
+        """
+        ports = sorted({port for cfg in DebuggerCrossConfig._configs.values()
+                        for port in list(cfg.debug_server_ports.values()) + cfg.extra_ports})
+        if not ports:
             return False
 
-        new_section = self.MARKER + '\n' + '\n'.join(lines) + '\n'
-        new_content = parsed_content
+        # Determine which ports are already in the base value
+        already = {int(m.group(1))
+                   for m in re.finditer(r':(\d+)-:\d+', self.qb_slirp_opt)}
+        missing_ports = [p for p in ports if p not in already]
+        if not missing_ports:
+            logger.info("QB_SLIRP_OPT already contains all needed port forwards")
+            return False
+
+        if self.qb_slirp_opt:
+            # Base value exists: :append only the missing port forwards
+            extra = ''.join(
+                ',hostfwd=tcp:127.0.0.1:%d-:%d' % (p, p) for p in missing_ports)
+            new_line = 'QB_SLIRP_OPT:append = "%s"' % extra
+        else:
+            # No base value: mirror runqemu's built-in default (SSH 2222, telnet
+            # 2323, tftp) and add the debugger ports.
+            all_hostfwds = (
+                'hostfwd=tcp:127.0.0.1:2222-:22,'
+                'hostfwd=tcp:127.0.0.1:2323-:23'
+            )
+            all_hostfwds += ''.join(
+                ',hostfwd=tcp:127.0.0.1:%d-:%d' % (p, p) for p in missing_ports)
+            new_line = 'QB_SLIRP_OPT = "-netdev user,id=net0,%s,tftp=${DEPLOY_DIR_IMAGE}"' % all_hostfwds
+
+        if os.path.exists(self._bbappend):
+            with open(self._bbappend, 'r') as f:
+                content = f.read()
+        else:
+            content = ''
+        stripped_content = self._strip_marker_section(content, self.QB_SLIRP_MARKER)
+        new_content = stripped_content
         if new_content and not new_content.endswith('\n'):
             new_content += '\n'
-        new_content += new_section
+        new_content += self.QB_SLIRP_MARKER + '\n' + new_line + '\n'
+
+        if new_content == content:
+            logger.debug("QB_SLIRP_OPT in %s is already up to date", self._bbappend)
+            return False
 
         appends_dir = os.path.dirname(self._bbappend)
         os.makedirs(appends_dir, exist_ok=True)
         with open(self._bbappend, 'w') as f:
             f.write(new_content)
-
-        logger.info("Updated image bbappend %s", self._bbappend)
+        logger.info("Updated QB_SLIRP_OPT in %s: %s", self._bbappend, new_line)
         return True
 
 
@@ -1358,9 +1430,9 @@ def ide_setup(args, config, basepath, workspace):
     # Collect information about tasks which need to be bitbaked.
     # In modified mode the image build is held back until after
     # setup_modified_recipe() has assigned the debugger port numbers and
-    # update_image_bbappend() has written the complete bbappend. That way
-    # the image is built with a single, stable recipe hash so that no
-    # basehash-changed warnings are emitted.
+    # update_image_bbappend() has written the complete bbappend (including
+    # QB_SLIRP_OPT). That way the image is built with a single, stable
+    # recipe hash so that no basehash-changed warnings are emitted.
     bootstrap_tasks = []
     bootstrap_tasks_late = []
     image_bootstrap_tasks = []
@@ -1441,8 +1513,8 @@ def ide_setup(args, config, basepath, workspace):
             recipe_image.initialize(config, tinfoil)
             if args.mode == DevtoolIdeMode.modified:
                 # Keep the image build separate so that the complete bbappend
-                # can be written in one step before the image is built,
-                # avoiding sstate hash mismatches.
+                # (IMAGE_ vars + QB_SLIRP_OPT) can be written in one step
+                # before the image is built, avoiding sstate hash mismatches.
                 image_bootstrap_tasks += recipe_image.bootstrap_tasks
             else:
                 bootstrap_tasks += recipe_image.bootstrap_tasks
@@ -1535,12 +1607,13 @@ def ide_setup(args, config, basepath, workspace):
                     'Note that devtool modify --debug-build can do this automatically.',
                     recipe_modified.name, recipe_modified.bbappend)
 
-        # Ports are now assigned. Write the complete image bbappend in a
-        # single step so that the image is built with exactly one recipe
-        # hash. This avoids the sstate basehash-changed warnings that
-        # arise when the bbappend is modified after the image has
-        # already been built. This also runs with --skip-bitbake, otherwise
-        # the section removed by strip_bbappend_sections() would be lost.
+        # Ports are now assigned. Write the complete image bbappend --
+        # IMAGE_ debug settings and QB_SLIRP_OPT -- in a single step so
+        # that the image is built with exactly one recipe hash. This
+        # avoids the sstate basehash-changed warnings that arise when
+        # the bbappend is modified after the image has already been
+        # built. This also runs with --skip-bitbake, otherwise the sections
+        # removed by strip_bbappend_sections() would be lost.
         bbappend_changed = False
         for ri in recipes_images:
             if ri.update_image_bbappend(recipes_modified):
@@ -1563,7 +1636,9 @@ def ide_setup(args, config, basepath, workspace):
                     finally:
                         reparse_tinfoil.shutdown()
 
-                # Phase 2: build the image
+                # Phase 2: build the image. do_image -> do_write_qemuboot_conf
+                # picks up QB_SLIRP_OPT from the bbappend written above, so no
+                # separate write_qemuboot_conf step is needed.
                 exec_build_env_command(
                     config.init_path, basepath,
                     bb_cmd + ' '.join(image_bootstrap_tasks), watch=True)
