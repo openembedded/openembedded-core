@@ -596,6 +596,11 @@ class IdeVSCode(IdeBase):
     def vscode_tasks_cpp(self, args, modified_recipe):
         run_install_deploy = modified_recipe.gen_install_deploy_script(args)
         install_task_name = "install && deploy-target %s" % modified_recipe.recipe_id_pretty
+        deploy_args = ["--target", args.target]
+        if args.port:
+            deploy_args += ["--port", args.port]
+        for package in args.package or []:
+            deploy_args += ["--package", package]
         tasks_dict = {
             "version": "2.0.0",
             "tasks": [
@@ -603,7 +608,7 @@ class IdeVSCode(IdeBase):
                     "label": install_task_name,
                     "type": "shell",
                     "command": run_install_deploy,
-                    "args": ["--target", args.target] + (["--port", args.port] if args.port else []),
+                    "args": deploy_args,
                     "problemMatcher": []
                 }
             ]
@@ -712,6 +717,11 @@ class IdeVSCode(IdeBase):
         reload_task_name = "reload module %s" % modified_recipe.recipe_id_pretty
         verify_task_name = "verify module %s" % modified_recipe.recipe_id_pretty
         run_install_deploy = modified_recipe.gen_install_deploy_script(args)
+        deploy_args = ["--target", args.target]
+        if args.port:
+            deploy_args += ["--port", args.port]
+        for package in args.package or []:
+            deploy_args += ["--package", package]
         tasks_dict = {
             "version": "2.0.0",
             "tasks": [
@@ -719,7 +729,7 @@ class IdeVSCode(IdeBase):
                     "label": install_task_name,
                     "type": "shell",
                     "command": run_install_deploy,
-                    "args": ["--target", args.target] + (["--port", args.port] if args.port else []),
+                    "args": deploy_args,
                     "problemMatcher": []
                 },
                 {

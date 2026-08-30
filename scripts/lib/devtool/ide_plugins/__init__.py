@@ -427,4 +427,8 @@ def get_devtool_deploy_opts(args):
         devtool_deploy_opts += ["-I", args.key]
     if args.strip is False:
         devtool_deploy_opts += ["--no-strip"]
+    for package in (args.package or []):
+        devtool_deploy_opts += ["--package", package]
+    for file_glob in (args.file_globs or []):
+        devtool_deploy_opts += ["--file-glob", file_glob]
     return devtool_deploy_opts

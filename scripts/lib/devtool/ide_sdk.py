@@ -23,6 +23,7 @@ import scriptutils
 import bb
 from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, DevtoolError, parse_recipe
 from devtool.standard import get_real_srctree
+from devtool.deploy import parse_packages_arg
 from devtool.ide_plugins import BuildTool, DebuggerCrossConfig
 from oe.kernel_module import kernel_module_os_env
 
@@ -671,6 +672,8 @@ class RecipeModified:
         self.toolchain = None
         self.topdir = None
         self.workdir = None
+        # Maps each package name (from PACKAGES) to the glob patterns from its FILES variable
+        self.packages_files = {}
         # Service management
         self.systemd_services = {}
         self.init_scripts = {}
@@ -745,6 +748,8 @@ class RecipeModified:
         self.package_arch = recipe_d.getVar('PACKAGE_ARCH')
         self.package_debug_split_style = recipe_d.getVar(
             'PACKAGE_DEBUG_SPLIT_STYLE')
+        for package in (recipe_d.getVar('PACKAGES') or '').split():
+            self.packages_files[package] = recipe_d.getVar('FILES:' + package) or ''
         self.path = recipe_d.getVar('PATH')
         self.pn = recipe_d.getVar('PN')
         self.recipe_sysroot = os.path.realpath(
@@ -1325,6 +1330,17 @@ class RecipeModified:
         self._installed_binaries = dict(sorted(binaries.items()))
         return self._installed_binaries
 
+    def _validate_requested_packages(self, args):
+        """Raise if --package (once scoped to this recipe and expanded via
+        parse_packages_arg) references a package this recipe doesn't produce.
+        """
+        packages = parse_packages_arg(getattr(args, 'package', None), self.bpn)
+        for package in packages:
+            if package not in self.packages_files:
+                raise DevtoolError('Package "%s" is not one of the packages produced '
+                                'by the %s recipe (PACKAGES: %s)' %
+                                (package, self.pn, ' '.join(self.packages_files.keys())))
+
     def gen_deploy_target_script(self, args):
         """Generate a script which does what devtool deploy-target does
 
@@ -1332,6 +1348,7 @@ class RecipeModified:
         does not need to start a bitbake server. All information from tinfoil
         is hard-coded in the generated script.
         """
+        self._validate_requested_packages(args)
         cmd_lines = ['#!%s' % str(sys.executable)]
         cmd_lines.append('import sys')
         cmd_lines.append('devtool_sys_path = %s' % str(sys.path))
@@ -1352,6 +1369,8 @@ class RecipeModified:
         cmd_lines.append('        for key in my_dict:')
         cmd_lines.append('            setattr(self, key, my_dict[key])')
         cmd_lines.append('filtered_args = Dict2Class(filtered_args_dict)')
+        cmd_lines.append('packages_files = %s' % repr(list(self.packages_files.items())))
+        cmd_lines.append('file_globs = %s' % repr(list(getattr(args, 'file_globs', None) or []) or None))
         cmd_lines.append('i = 1')
         cmd_lines.append('while i < len(sys.argv) - 1:')
         cmd_lines.append('    if sys.argv[i] in ("-t", "--target"):')
@@ -1360,6 +1379,13 @@ class RecipeModified:
         cmd_lines.append('    elif sys.argv[i] in ("-P", "--port"):')
         cmd_lines.append('        setattr(filtered_args, "port", sys.argv[i + 1])')
         cmd_lines.append('        i += 2')
+        cmd_lines.append('    elif sys.argv[i] in ("-g", "--file-glob"):')
+        cmd_lines.append('        file_globs = (file_globs or []) + [sys.argv[i + 1]]')
+        cmd_lines.append('        i += 2')
+        cmd_lines.append('    elif sys.argv[i] in ("-p", "--package"):')
+        cmd_lines.append('        packages = getattr(filtered_args, "package", None) or []')
+        cmd_lines.append('        setattr(filtered_args, "package", packages + [sys.argv[i + 1]])')
+        cmd_lines.append('        i += 2')
         cmd_lines.append('    else:')
         cmd_lines.append('        i += 1')
         cmd_lines.append(
@@ -1367,7 +1393,7 @@ class RecipeModified:
         cmd_lines.append('    filtered_args.no_host_check = True')
         cmd_lines.append(
             'setattr(filtered_args, "recipename", "%s")' % self.bpn)
-        cmd_lines.append('deploy_no_d("%s", "%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", filtered_args)' %
+        cmd_lines.append('deploy_no_d("%s", "%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", filtered_args, file_globs=file_globs, packages_files=packages_files)' %
                          (self.d, self.workdir, self.path, self.strip_cmd,
                           self.libdir, self.base_libdir, self.max_process,
                           self.fakerootcmd, self.fakerootenv))
@@ -1757,4 +1783,17 @@ def register_commands(subparsers, context):
         '-p', '--no-preserve', help='Do not preserve existing files', action='store_true')
     parser_ide_sdk.add_argument(
         '--no-check-space', help='Do not check for available space before deploying', action='store_true')
+    parser_ide_sdk.add_argument(
+        '--package', action='append', metavar='PACKAGE',
+        help='Only deploy files belonging to PACKAGE, as defined by that package\'s '
+        'FILES variable in the recipe metadata. May be a comma-separated list '
+        'and/or specified multiple times. May be prefixed with "RECIPE:" to target '
+        'one of several recipes at once, e.g. "RECIPE:,-doc,-ptest" is short for '
+        '"RECIPE,RECIPE-doc,RECIPE-ptest".')
+    parser_ide_sdk.add_argument(
+        '--file-glob', action='append', dest='file_globs', metavar='GLOB',
+        help='Only deploy files whose installed path matches this glob pattern '
+        '(e.g. "/usr/bin/*"). May be specified multiple times. Combined with '
+        '--package if both are given. May be prefixed with "RECIPE:" to scope '
+        'the entry to one of the recipes being processed e.g. "RECIPE:/usr/bin/*".')
     parser_ide_sdk.set_defaults(func=ide_setup)
