@@ -18,6 +18,7 @@ UPSTREAM_CHECK_REGEX = "pango-(?P<pver>\d+\.(?!9\d+)\d+\.\d+)"
 GIR_MESON_ENABLE_FLAG = "enabled"
 GIR_MESON_DISABLE_FLAG = "disabled"
 
+SRC_URI += "file://0001-meson-don-t-error-on-clang-s-unused-but-set-global.patch"
 SRC_URI[archive.sha256sum] = "bc5bad6213ad4886a47d1e80292fd850b64159b50db67917a43d9ea80ee2298a"
 
 DEPENDS = "glib-2.0 glib-2.0-native fontconfig freetype virtual/libiconv cairo harfbuzz fribidi"
