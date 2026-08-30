@@ -45,22 +45,24 @@ class DevtoolIdeMode(Enum):
     shared = 'shared'
 
 
+# Hosts a ssh target is considered to loop back to the local machine, e.g. a
+# QEMU instance reached through slirp/hostfwd port forwarding (root@localhost)
+# which has an ephemeral ssh host key that changes on every boot.
+LOOPBACK_HOSTS = ('localhost', '127.0.0.1', '::1')
+
+
+def target_host(target):
+    return target.split('@')[-1]
+
+
+def is_loopback_target(target):
+    return target_host(target) in LOOPBACK_HOSTS
+
+
 class TargetDevice:
     """SSH remote login parameters"""
 
     def __init__(self, args):
-        self.extraoptions = []
-        if args.no_host_check:
-            self.extraoptions += ['-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no']
-        self.ssh_sshexec = 'ssh'
-        if args.ssh_exec:
-            self.ssh_sshexec = args.ssh_exec
-        self.ssh_port = []
-        if args.port:
-            self.ssh_port = ['-p', args.port]
-        if args.key:
-            self.extraoptions += ['-i', args.key]
-
         self.target = args.target
         target_sp = args.target.split('@')
         if len(target_sp) == 1:
@@ -71,6 +73,25 @@ class TargetDevice:
             self.host = target_sp[1]
         else:
             logger.error("Invalid target argument: %s" % args.target)
+
+        no_host_check = args.no_host_check
+        if not no_host_check and is_loopback_target(args.target):
+            logger.debug(
+                "Target %s is a loopback address, disabling ssh host key checking "
+                "(assuming a QEMU instance with an ephemeral host key)." % args.target)
+            no_host_check = True
+
+        self.extraoptions = []
+        if no_host_check:
+            self.extraoptions += ['-o', 'UserKnownHostsFile=/dev/null', '-o', 'StrictHostKeyChecking=no']
+        self.ssh_sshexec = 'ssh'
+        if args.ssh_exec:
+            self.ssh_sshexec = args.ssh_exec
+        self.ssh_port = []
+        if args.port:
+            self.ssh_port = ['-p', args.port]
+        if args.key:
+            self.extraoptions += ['-i', args.key]
 
 
 class RecipeNative:
@@ -1323,6 +1344,8 @@ class RecipeModified:
                        'no_preserve', 'port', 'show_status', 'ssh_exec', 'strip', 'target']
         filtered_args_dict = {key: value for key, value in vars(
             args).items() if key in args_filter}
+        if is_loopback_target(filtered_args_dict['target']):
+            filtered_args_dict['no_host_check'] = True
         cmd_lines.append('filtered_args_dict = %s' % str(filtered_args_dict))
         cmd_lines.append('class Dict2Class(object):')
         cmd_lines.append('    def __init__(self, my_dict):')
@@ -1339,6 +1362,9 @@ class RecipeModified:
         cmd_lines.append('        i += 2')
         cmd_lines.append('    else:')
         cmd_lines.append('        i += 1')
+        cmd_lines.append(
+            "if filtered_args.target.split('@')[-1] in %s:" % str(LOOPBACK_HOSTS))
+        cmd_lines.append('    filtered_args.no_host_check = True')
         cmd_lines.append(
             'setattr(filtered_args, "recipename", "%s")' % self.bpn)
         cmd_lines.append('deploy_no_d("%s", "%s", "%s", "%s", "%s", "%s", %d, "%s", "%s", filtered_args)' %
