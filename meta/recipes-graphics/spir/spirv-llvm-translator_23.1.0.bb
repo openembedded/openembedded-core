@@ -5,8 +5,8 @@ LICENSE = "NCSA"
 LIC_FILES_CHKSUM = "file://LICENSE.TXT;md5=47e311aa9caedd1b3abf098bd7814d1d"
 
 # pattern: llvm_branch_200, currently there are no minor releases, so, no llvm_branch_201
-SPIRV_BRANCH = "llvm_release_220"
-SRCREV = "27afcfe385cf542197dfde8c658e1f5ff53fc2fc"
+SPIRV_BRANCH = "llvm_release_230"
+SRCREV = "19a29d4376ab470909ba43ca014ae668fb1156c9"
 SRC_URI = " \
     git://github.com/KhronosGroup/SPIRV-LLVM-Translator;protocol=https;branch=${SPIRV_BRANCH};tag=v${PV} \
 "
@@ -18,7 +18,7 @@ DEPENDS = "llvm spirv-tools spirv-headers"
 inherit cmake pkgconfig lib_package
 
 EXTRA_OECMAKE = "\
-    -DBASE_LLVM_VERSION=22.1.0 \
+    -DBASE_LLVM_VERSION=23.1.0 \
     -DCMAKE_SKIP_BUILD_RPATH=ON \
     -DBUILD_SHARED_LIBS=ON \
     -DLLVM_EXTERNAL_SPIRV_HEADERS_SOURCE_DIR=${STAGING_INCDIR}/.. \
