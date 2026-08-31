@@ -35,6 +35,9 @@ SRC_URI = "https://download.qemu.org/${BPN}-${PV}.tar.xz \
            file://qemu-guest-agent.init \
            file://qemu-guest-agent.udev \
            file://0001-ui-sdl2.c-force-disable-SDL_HINT_VIDEO_X11_FORCE_EGL.patch \
+           file://0001-target-riscv-extract-sfence_vma_allowed-from-helper_.patch \
+           file://0002-target-riscv-add-helper_tlb_flush_page.patch \
+           file://0003-target-riscv-use-a-targeted-TLB-page-flush-for-sfenc.patch \
            "
 # file index at download.qemu.org isn't reliable: https://gitlab.com/qemu-project/qemu-web/-/issues/9
 UPSTREAM_CHECK_URI = "https://www.qemu.org"
