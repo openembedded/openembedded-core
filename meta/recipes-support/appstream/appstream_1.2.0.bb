@@ -24,7 +24,7 @@ SRC_URI = " \
 	file://0002-Do-not-build-qt-tests.patch \
 	file://0003-Fix-PACKAGE_PREFIX_DIR-in-qt-cmake-AppStreamQtConfig.patch \
 "
-SRC_URI[sha256sum] = "e298929f39729e84a70f6be6941f3e7f3fc2ee3c83cb3ea1b1b5b280a8fe3a24"
+SRC_URI[sha256sum] = "901919378910550271feb2d826034c9af6522f3ad218de04d3d6d35ddba5cb45"
 
 S = "${UNPACKDIR}/AppStream-${PV}"
 

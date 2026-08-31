@@ -1,4 +1,4 @@
-From 6b50c15e350f80e805816f1c2ae2abe97cef6312 Mon Sep 17 00:00:00 2001
+From 0d387b6cb8907dd377212de187fbe749b40eedb4 Mon Sep 17 00:00:00 2001
 From: Marc Ferland <marc.ferland@sonatest.com>
 Date: Fri, 26 Jul 2024 15:41:00 -0400
 Subject: [PATCH] Do not build qt/tests
