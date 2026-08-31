@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/sysstat/sysstat.git;protocol=https;branch=master;tag
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=a23a74b3f4caf9616230789d94217acb"
 
-SRCREV = "b8f987807e7c7ba5c1b2ca8b7b1e9d80e61bce6c"
+SRCREV = "ffabe8175aa9a7aa056380c66ed3648e50c1967d"
 
 DEPENDS += "base-passwd xz-native"
 
@@ -21,7 +21,7 @@ inherit autotools-brokensep gettext systemd
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)}"
 PACKAGECONFIG[lm-sensors] = "--enable-sensors,--disable-sensors,lmsensors,lmsensors-libsensors"
-PACKAGECONFIG[cron] = "--enable-install-cron --enable-copy-only,--disable-install-cron --disable-copy-only"
+PACKAGECONFIG[automated-sar] = "--enable-automated-sar-reporting --enable-copy-only,--disable-automated-sar-reporting --disable-copy-only"
 PACKAGECONFIG[systemd] = "--with-systemdsystemunitdir=${systemd_system_unitdir}"
 
 EXTRA_OECONF += "--disable-stripping"
