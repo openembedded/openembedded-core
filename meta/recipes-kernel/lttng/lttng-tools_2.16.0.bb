@@ -5,7 +5,14 @@ to extract program execution details from the Linux operating system \
 and interpret them."
 HOMEPAGE = "https://github.com/lttng/lttng-tools"
 
-LICENSE = "BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND CC0-1.0 AND CC-BY-SA-4.0 AND FSFAP AND GPL-2.0-only AND GPL-2.0-or-later AND GPL-2.0-or-later WITH Autoconf-exception-2.0 AND GPL-2.0-or-later WITH Autoconf-exception-macro AND LGPL-2.1-only AND LGPL-2.1-or-later AND MIT"
+CODE_LICENSES = "BSD-2-Clause AND BSD-3-Clause AND BSL-1.0 AND CC0-1.0 AND FSFAP AND GPL-2.0-only AND GPL-2.0-or-later AND GPL-2.0-or-later WITH Autoconf-exception-2.0 AND GPL-2.0-or-later WITH Autoconf-exception-macro AND LGPL-2.1-only AND LGPL-2.1-or-later AND MIT"
+
+LICENSE = "${CODE_LICENSES} AND CC-BY-SA-4.0"
+LICENSE:${PN} = "${CODE_LICENSES}"
+LICENSE:${PN}-dev = "${CODE_LICENSES}"
+LICENSE:${PN}-dbg = "${CODE_LICENSES}"
+LICENSE:${PN}-ptest = "${CODE_LICENSES}"
+LICENSE:${PN}-src = "${CODE_LICENSES}"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f7adf214dab700ec91b393898b515f13 \
                     file://LICENSES/BSD-2-Clause.txt;md5=5d6306d1b08f8df623178dfd81880927 \
                     file://LICENSES/BSD-3-Clause.txt;md5=4e91b9e6ef320f74590c8c7a64a9188a \
