@@ -12,8 +12,6 @@ SRC_URI[sha256sum] = "d7904710b662996425a21627710c4777c45053146942cf8a7aebf757c9
 
 CVE_PRODUCT = "makotemplates:mako sqlalchemy:mako"
 
-DEPENDS += "python3-wheel-native"
-
 RDEPENDS:${PN} = "python3-html \
                   python3-markupsafe \
                   python3-misc \
