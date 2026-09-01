@@ -51,6 +51,8 @@ python check_prepare() {
         content.append(d.expand('set CXXFILT "${TARGET_PREFIX}c++filt"'))
         content.append(d.expand('set CC "${TARGET_PREFIX}gcc --sysroot=${STAGING_DIR_TARGET} ${TUNE_CCARGS}"'))
         content.append(d.expand('set CXX "${TARGET_PREFIX}g++ --sysroot=${STAGING_DIR_TARGET} ${TUNE_CCARGS}"'))
+        content.append(d.expand('set CC_FOR_TARGET "${TARGET_PREFIX}gcc --sysroot=${STAGING_DIR_TARGET} ${TUNE_CCARGS}"'))
+        content.append(d.expand('set CXX_FOR_TARGET "${TARGET_PREFIX}g++ --sysroot=${STAGING_DIR_TARGET} ${TUNE_CCARGS}"'))
         content.append(d.expand('set CFLAGS_FOR_TARGET "--sysroot=${STAGING_DIR_TARGET} ${TUNE_CCARGS}"'))
         content.append(d.expand('set LD "${TARGET_PREFIX}ld ${TUNE_LDARGS}"'))
         content.append(d.expand('set LDFLAGS_FOR_TARGET "${TUNE_LDARGS}"'))
