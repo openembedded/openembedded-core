@@ -15,7 +15,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/R_${VERSION_TAG}/expat-${PV}.tar.bz2  \
 GITHUB_BASE_URI = "https://github.com/libexpat/libexpat/releases/"
 UPSTREAM_CHECK_REGEX = "releases/tag/R_(?P<pver>.+)"
 
-SRC_URI[sha256sum] = "b4cc2483927d5e90bf8c40b44a6b95b368b42a8a96e25883fce188b48a92b670"
+SRC_URI[sha256sum] = "963250a823c16a498582b4ad82ad0f88926be0769675d3b6956be4d769a1cd8f"
 
 EXTRA_OECMAKE:class-native += "-DEXPAT_BUILD_DOCS=OFF"
 
