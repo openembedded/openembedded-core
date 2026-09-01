@@ -9,7 +9,7 @@ SRC_URI = "git://github.com/rpm-software-management/librepo.git;branch=master;pr
            file://0002-Do-not-try-to-obtain-PYTHON_INSTALL_DIR-by-running-p.patch \
            "
 
-SRCREV = "363cb70c6548be900832bc9b18ced3e7569da15a"
+SRCREV = "5e5bddacad52121f970c499e13a98d936dcdc7b6"
 
 DEPENDS = "curl glib-2.0 openssl attr gpgme libxml2"
 
