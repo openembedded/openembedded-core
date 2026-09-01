@@ -17,8 +17,7 @@
 #
 # As verified boot depends on fitImage generation, following is also required:
 #
-#   KERNEL_CLASSES ?= " kernel-fitimage "
-#   KERNEL_IMAGETYPE ?= "fitImage"
+#   KERNEL_CLASSES += "kernel-fit-extra-artifacts"
 #
 # The signature support is limited to the use of CONFIG_OF_SEPARATE in U-Boot.
 #
