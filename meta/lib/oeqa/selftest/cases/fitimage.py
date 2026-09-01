@@ -36,7 +36,7 @@ class BbVarsMockGenKeys:
         return self.bb_vars[var]
 
 class FitImageTestCase(OESelftestTestCase):
-    """Test functions usable for testing kernel-fitimage.bbclass and uboot-sign.bbclass
+    """Test functions usable for testing kernel-fit-image.bbclass and uboot-sign.bbclass
 
     A brief summary showing the structure of a test case:
 
@@ -260,9 +260,7 @@ class FitImageTestCase(OESelftestTestCase):
         function generates only the keys which are really needed, not just two.
         """
 
-        # Define some variables which are usually defined by the kernel-fitimage.bbclass.
-        # But for testing purpose check if the uboot-sign.bbclass is independent from
-        # the kernel-fitimage.bbclass
+        # Define some variables which are usually defined by image-fitimage.conf
         fit_sign_numbits = bb_vars.get('FIT_SIGN_NUMBITS', "2048")
         fit_key_genrsa_args = bb_vars.get('FIT_KEY_GENRSA_ARGS', "-F4")
         fit_key_req_args =  bb_vars.get('FIT_KEY_REQ_ARGS', "-batch -new")
@@ -521,7 +519,7 @@ class FitImageTestCase(OESelftestTestCase):
                 elif line.endswith('{'):
                     its_path.append(line[:-1].strip())
                     its_paths.append(its_path[:])
-                # kernel-fitimage uses signature-1, uboot-sign uses signature
+                # kernel-fit-image uses signature-1, uboot-sign uses signature
                 elif its_path and (its_path[-1] == 'signature-1' or its_path[-1] == 'signature'):
                     itsdotpath = '.'.join(its_path)
                     if not itsdotpath in sigs:
@@ -1160,7 +1158,7 @@ class KernelFitImageBase(FitImageTestCase):
                              (num_signatures, a_comment))
 
 class KernelFitImageRecipeTests(KernelFitImageBase):
-    """Test cases for the kernel-fitimage bbclass"""
+    """Test cases for the kernel-fit-image bbclass"""
 
     def test_fit_image(self):
         """
@@ -2181,7 +2179,7 @@ UBOOT_FIT_HASH_ALG = "sha256"
         """
         Summary:     Check if the device-tree from U-Boot has two public keys
                      for verifying the kernel FIT image created by the
-                     kernel-fitimage.bbclass included.
+                     kernel-fit-image.bbclass included.
                      This test sets: FIT_SIGN_INDIVIDUAL = "1"
         Expected:    There must be two signature nodes. One is required for
                      the individual image nodes, the other is required for the
