@@ -103,6 +103,7 @@ PTESTS_FAST = "\
     slang \
     utfcpp \
     wayland \
+    wget \
     xz \
     zlib \
 "
