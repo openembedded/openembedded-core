@@ -150,6 +150,7 @@ PTESTS_SLOW = "\
     tcl \
     tcl8 \
     util-linux \
+    zstd \
 "
 
 # python3 ptests hang on qemuriscv64
