@@ -9,7 +9,7 @@ SECTION = "console/network"
 LICENSE = "GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=6f65012d1daf98cb09b386cfb68df26b"
 
-inherit autotools gettext texinfo update-alternatives pkgconfig
+inherit autotools gettext texinfo update-alternatives pkgconfig ptest
 
 DEPENDS += "autoconf-archive-native pod2man-native"
 
@@ -23,6 +23,7 @@ SRC_URI = "${GNU_MIRROR}/wget/wget-${PV}.tar.gz \
            file://CVE-2026-58472.patch \
            file://CVE-2026-58472-regression.patch \
            file://CVE-2026-58471.patch \
+           file://run-ptest \
            "
 
 SRC_URI[sha256sum] = "766e48423e79359ea31e41db9e5c289675947a7fcf2efdcedb726ac9d0da3784"
@@ -50,5 +51,23 @@ ALTERNATIVE:${PN}:class-nativesdk = ""
 ALTERNATIVE_PRIORITY = "100"
 
 RRECOMMENDS:${PN} += "ca-certificates"
+
+do_install_ptest() {
+    install -d ${D}${PTEST_PATH}/testenv
+    cp -r ${S}/testenv/certs ${D}${PTEST_PATH}/testenv/
+    cp -r ${S}/testenv/conf ${D}${PTEST_PATH}/testenv/
+    cp -r ${S}/testenv/exc ${D}${PTEST_PATH}/testenv/
+    cp -r ${S}/testenv/misc ${D}${PTEST_PATH}/testenv/
+    cp -r ${S}/testenv/server ${D}${PTEST_PATH}/testenv/
+    cp -r ${S}/testenv/test ${D}${PTEST_PATH}/testenv/
+    for t in ${S}/testenv/Test-*.py ${S}/testenv/test_*.py; do
+        case $t in
+            */Test-metalink-*) continue ;;
+        esac
+        install -m 0755 $t ${D}${PTEST_PATH}/testenv/
+    done
+}
+
+RDEPENDS:${PN}-ptest += "python3-core python3-modules"
 
 BBCLASSEXTEND = "nativesdk"
