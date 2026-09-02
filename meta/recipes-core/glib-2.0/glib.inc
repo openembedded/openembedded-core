@@ -30,7 +30,9 @@ LEAD_SONAME = "libglib-2.0.*"
 
 GNOMEBN = "glib"
 
-inherit gettext gi-docgen gnomebase ptest-gnome upstream-version-is-even bash-completion gio-module-cache manpages gobject-introspection-data
+# GLib publishes bugfix/security-only micro releases on its stable
+# (even-minor) series.
+inherit gettext gi-docgen gnomebase ptest-gnome upstream-version-is-even bash-completion gio-module-cache manpages gobject-introspection-data upstream-stable-release-point
 
 S = "${UNPACKDIR}/${GNOMEBN}-${PV}"
 
