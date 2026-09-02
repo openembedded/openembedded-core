@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=756e7412ee04c80f5833cd2f35242f7a \
                     file://map-ISO8859-1;beginline=1;endline=4;md5=9c9c1d525d29c0e82b5c99edbb8e71c1 \
                     "
 
-DEPENDS = "encodings util-macros"
+DEPENDS = "encodings util-macros-native"
 DEPENDS:class-native = "util-macros-native"
 RDEPENDS:${PN} = "mkfontdir mkfontscale encodings"
 RDEPENDS:${PN}:class-native = ""
