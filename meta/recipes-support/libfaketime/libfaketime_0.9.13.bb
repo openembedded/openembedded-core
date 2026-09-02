@@ -4,28 +4,24 @@ HOMEPAGE = "https://github.com/wolfcw/libfaketime"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRCREV = "3ccdd344aadf1e317156fa5fb7c881f2c4404778"
+SRCREV = "86b37fde2fed7336ea2d0c17928e3015a55d9b4a"
 
-SRC_URI = "git://github.com/wolfcw/libfaketime.git;branch=master;tag=v${PV};protocol=https \
-           file://0001-Add-const-qualifiers-to-fix-build-with-ISO-C23.patch \
-"
-
-CFLAGS:append:libc-musl = " -D_LARGEFILE64_SOURCE"
-
-do_configure[noexec] = "1"
-
-do_compile () {
-    oe_runmake
-}
+SRC_URI = "git://github.com/wolfcw/libfaketime.git;branch=master;tag=v${PV};protocol=https"
 
 do_install () {
     install -d ${D}${libdir}/faketime
     oe_libinstall -C src libfaketime ${D}${libdir}/faketime
+
     install -d ${D}${bindir}
     install -m 0755 src/faketime ${D}${bindir}
+
+    oe_runmake -C ${B}/man install DESTDIR=${D} PREFIX=${prefix}
 }
 
 FILES:${PN} = "${bindir}/faketime ${libdir}/faketime/lib*${SOLIBS}"
 FILES:${PN}-dev += "${libdir}/faketime/lib*${SOLIBSDEV}"
 
 BBCLASSEXTEND = "native"
+
+# Building with -O2 results in clobbered variable error on 0.9.13
+FULL_OPTIMIZATION = "-O1"
