@@ -34,8 +34,7 @@ CVE_STATUS[CVE-2024-5290] = "not-applicable-platform: this only affects Ubuntu a
 
 EXTRA_OEMAKE = "'LIBDIR=${libdir}' 'INCDIR=${includedir}' 'BINDIR=${sbindir}'"
 
-do_configure () {
-	${MAKE} -C wpa_supplicant clean
+wpa_supplicant_write_config () {
 	sed -e '/^CONFIG_TLS=/d' <wpa_supplicant/defconfig >wpa_supplicant/.config
 
 	if ${@ bb.utils.contains('PACKAGECONFIG', 'openssl', 'true', 'false', d) }; then
@@ -60,6 +59,12 @@ do_configure () {
 	if ${@ bb.utils.contains('PACKAGECONFIG', 'mbo', 'true', 'false', d) }; then
 		echo 'CONFIG_MBO=y' >>wpa_supplicant/.config
 	fi
+}
+
+do_configure () {
+	${MAKE} -C wpa_supplicant clean
+
+	wpa_supplicant_write_config
 
 	# For rebuild
 	rm -f wpa_supplicant/*.d wpa_supplicant/dbus/*.d
