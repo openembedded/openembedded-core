@@ -7,6 +7,12 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=018e002dbdda3306682e394ddd65fa32"
 
 inherit module
 
+# lttng-modules publishes bugfix/security-only releases on its per-minor
+# stable-X.Y branches. Point releases also carry kernel-version enablement,
+# which keeps existing probes working against newer kernels rather than adding
+# user-visible functionality.
+inherit upstream-stable-release-point
+
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
