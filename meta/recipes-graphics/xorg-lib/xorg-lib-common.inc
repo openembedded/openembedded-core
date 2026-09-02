@@ -3,7 +3,7 @@ BUGTRACKER = "https://bugs.freedesktop.org/enter_bug.cgi?product=xorg"
 
 SECTION = "x11/libs"
 LICENSE = "MIT"
-DEPENDS = "util-macros"
+DEPENDS = "util-macros-native"
 
 XORG_PN = "${BPN}"
 XORG_EXT ?= "tar.xz"
