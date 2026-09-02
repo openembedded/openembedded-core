@@ -1,0 +1,28 @@
+From 28c886568aaf8328fba9c47d5b5c613acad1d808 Mon Sep 17 00:00:00 2001
+From: Wang Mingyu <wangmy@fujitsu.com>
+Date: Wed, 2 Sep 2026 06:47:35 +0000
+Subject: [PATCH] Update shacl2code dependency to allow versions >= 1.1.0.
+
+Upstream-Status: Submitted [https://github.com/spdx/spdx-python-model/pull/57/changes/813c189567695a61b9bde86a1f3773005109a5af]
+
+Signed-off-by: Wang Mingyu <wangmy@fujitsu.com>
+---
+ pyproject.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index 94b511c..119c2bf 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -49,7 +49,7 @@ issues = "https://github.com/spdx/spdx-python-model/issues"
+ requires = [
+     "hatchling >= 1.27.0",
+     "hatch-build-scripts >= 0.0.4",
+-    "shacl2code == 1.1.0",
++    "shacl2code >= 1.1.0",
+ ]
+ build-backend = "hatchling.build"
+ 
+-- 
+2.43.0
+
