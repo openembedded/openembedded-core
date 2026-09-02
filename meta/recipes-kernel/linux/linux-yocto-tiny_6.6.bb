@@ -17,8 +17,8 @@ DEPENDS += "openssl-native util-linux-native"
 KMETA = "kernel-meta"
 KCONF_BSP_AUDIT_LEVEL = "2"
 
-SRCREV_machine ?= "20c2ecb592178ed51039ae1a75a523c66c1eee5d"
-SRCREV_meta ?= "b768be4d32d53a825349353e988ca5930e83f99c"
+SRCREV_machine ?= "c51e01ecff210644b5d199a4edb30cb1a94a746f"
+SRCREV_meta ?= "dd201eb6ec53179f45836d41610ca68c725d28e2"
 
 PV = "${LINUX_VERSION}+git"
 
