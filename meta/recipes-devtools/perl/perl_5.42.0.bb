@@ -35,7 +35,7 @@ SRC_URI[perl.sha256sum] = "e093ef184d7f9a1b9797e2465296f55510adb6dab8842b0c3ed53
 
 B = "${WORKDIR}/perl-${PV}-build"
 
-inherit upstream-version-is-even update-alternatives
+inherit upstream-version-is-even update-alternatives upstream-stable-release-point
 
 DEPENDS += "perlcross-native bzip2 zlib virtual/crypt"
 DEPENDS:append:class-native = " bzip2-replacement-native"
