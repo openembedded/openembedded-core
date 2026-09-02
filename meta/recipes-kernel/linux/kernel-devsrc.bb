@@ -158,6 +158,11 @@ do_install() {
         # Remove as we else would ned to RDEPEND on make
         rm $kerneldir/build/scripts/package/debian/rules 2>/dev/null || :
 
+        # tools/include is needed by the archscripts host tools that
+        # 'make scripts prepare' rebuilds on target (e.g. x86 vdso2c) and
+	# not checked against objtool as it previously was.
+        cp -a --parents tools/include/* $kerneldir/build/
+
         # if our build dir had objtool, it will also be rebuilt on target, so
         # we copy what is required for that build
         if [ -f ${B}/tools/objtool/objtool ]; then
@@ -172,8 +177,6 @@ do_install() {
             cp -a --parents tools/objtool/* $kerneldir/build/
             cp -a --parents tools/lib/* $kerneldir/build/
             cp -a --parents tools/lib/subcmd/* $kerneldir/build/
-
-            cp -a --parents tools/include/* $kerneldir/build/
 
             cp -a --parents $(find tools/arch/${ARCH}/ -type f) $kerneldir/build/
         fi
