@@ -6,7 +6,9 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRCREV = "86b37fde2fed7336ea2d0c17928e3015a55d9b4a"
 
-SRC_URI = "git://github.com/wolfcw/libfaketime.git;branch=master;tag=v${PV};protocol=https"
+SRC_URI = "git://github.com/wolfcw/libfaketime.git;branch=master;tag=v${PV};protocol=https \
+           file://0001-libfaketime.c-do-not-declare-__time64-when-D_TIME_BI.patch \
+"
 
 do_install () {
     install -d ${D}${libdir}/faketime
