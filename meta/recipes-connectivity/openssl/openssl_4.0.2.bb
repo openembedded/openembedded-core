@@ -18,7 +18,7 @@ SRC_URI:append:class-nativesdk = " \
            file://environment.d-openssl.sh \
            "
 
-SRC_URI[sha256sum] = "2db3f3a0d6ea4b59e1f094ace2c8cd536dffb87cdc39084c5afa1e6f7f37dd09"
+SRC_URI[sha256sum] = "736b467530f916737b7031310ccb21d8218c6229e61e8e160cd1d3458cd543a8"
 
 inherit lib_package multilib_header ptest perlnative manpages
 

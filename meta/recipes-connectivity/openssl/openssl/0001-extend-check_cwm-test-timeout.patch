@@ -1,4 +1,4 @@
-From 14856dbd767621ce6f162680c00557b54af0effb Mon Sep 17 00:00:00 2001
+From 07bbd037ca61264bcc311856a119b664ce13f586 Mon Sep 17 00:00:00 2001
 From: Gyorgy Sarvari <skandigraun@gmail.com>
 Date: Thu, 23 Oct 2025 11:24:36 +0200
 Subject: [PATCH] extend check_cwm test timeout
