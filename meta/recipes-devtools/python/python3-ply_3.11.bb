@@ -16,5 +16,6 @@ RDEPENDS:${PN}:class-target += "\
 "
 
 CVE_PRODUCT = "dabeaz:ply"
+CVE_STATUS[CVE-2025-56005] = "disputed: Exploitation requires application-specific use of PLY's picklefile parameter with attacker-controlled pickle data"
 
 BBCLASSEXTEND = "native nativesdk"
