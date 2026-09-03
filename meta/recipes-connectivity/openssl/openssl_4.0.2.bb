@@ -150,7 +150,7 @@ do_configure () {
 	PERLEXTERNAL="$(realpath ${S}/external/perl/Text-Template-*/lib)"
 	test -d "$PERLEXTERNAL" || bberror "PERLEXTERNAL '$PERLEXTERNAL' not found!"
 	HASHBANGPERL="/usr/bin/env perl" PERL=perl PERL5LIB="$PERLEXTERNAL" \
-	perl ${S}/Configure ${EXTRA_OECONF} ${PACKAGECONFIG_CONFARGS} ${DEPRECATED_CRYPTO_FLAGS} --prefix=${prefix} --openssldir=${libdir}/ssl-3 --libdir=${baselib} $target
+	perl ${S}/Configure ${EXTRA_OECONF} ${PACKAGECONFIG_CONFARGS} ${DEPRECATED_CRYPTO_FLAGS} --prefix=${prefix} --openssldir=${nonarch_libdir}/ssl-3 --libdir=${baselib} $target
 	perl ${B}/configdata.pm --dump
 }
 
@@ -172,20 +172,20 @@ do_install () {
 	# Create SSL structure for packages such as ca-certificates which
 	# contain hard-coded paths to /etc/ssl. Debian does the same.
 	install -d ${D}${sysconfdir}/ssl
-	mv ${D}${libdir}/ssl-3/certs \
-	   ${D}${libdir}/ssl-3/private \
-	   ${D}${libdir}/ssl-3/openssl.cnf \
+	mv ${D}${nonarch_libdir}/ssl-3/certs \
+	   ${D}${nonarch_libdir}/ssl-3/private \
+	   ${D}${nonarch_libdir}/ssl-3/openssl.cnf \
 	   ${D}${sysconfdir}/ssl/
 
 	# Although absolute symlinks would be OK for the target, they become
 	# invalid if native or nativesdk are relocated from sstate.
-	ln -sf ${@oe.path.relative('${libdir}/ssl-3', '${sysconfdir}/ssl/certs')} ${D}${libdir}/ssl-3/certs
-	ln -sf ${@oe.path.relative('${libdir}/ssl-3', '${sysconfdir}/ssl/private')} ${D}${libdir}/ssl-3/private
-	ln -sf ${@oe.path.relative('${libdir}/ssl-3', '${sysconfdir}/ssl/openssl.cnf')} ${D}${libdir}/ssl-3/openssl.cnf
+	ln -sf ${@oe.path.relative('${nonarch_libdir}/ssl-3', '${sysconfdir}/ssl/certs')} ${D}${nonarch_libdir}/ssl-3/certs
+	ln -sf ${@oe.path.relative('${nonarch_libdir}/ssl-3', '${sysconfdir}/ssl/private')} ${D}${nonarch_libdir}/ssl-3/private
+	ln -sf ${@oe.path.relative('${nonarch_libdir}/ssl-3', '${sysconfdir}/ssl/openssl.cnf')} ${D}${nonarch_libdir}/ssl-3/openssl.cnf
 
 	# Generate fipsmodule.cnf in pkg_postinst_ontarget
 	if ${@bb.utils.contains('PACKAGECONFIG', 'fips', 'true', 'false', d)}; then
-		rm -f ${D}${libdir}/ssl-3/fipsmodule.cnf
+		rm -f ${D}${nonarch_libdir}/ssl-3/fipsmodule.cnf
 	fi
 }
 
@@ -198,9 +198,9 @@ do_install:append:class-target () {
 
 do_install:append:class-native () {
 	create_wrapper ${D}${bindir}/openssl \
-	    OPENSSL_CONF=\${OPENSSL_CONF:-${libdir}/ssl-3/openssl.cnf} \
-	    SSL_CERT_DIR=\${SSL_CERT_DIR:-${libdir}/ssl-3/certs} \
-	    SSL_CERT_FILE=\${SSL_CERT_FILE:-${libdir}/ssl-3/cert.pem} \
+	    OPENSSL_CONF=\${OPENSSL_CONF:-${nonarch_libdir}/ssl-3/openssl.cnf} \
+	    SSL_CERT_DIR=\${SSL_CERT_DIR:-${nonarch_libdir}/ssl-3/certs} \
+	    SSL_CERT_FILE=\${SSL_CERT_FILE:-${nonarch_libdir}/ssl-3/cert.pem} \
 	    OPENSSL_MODULES=\${OPENSSL_MODULES:-${libdir}/ossl-modules}
 
 	# Setting MODULESDIR to invalid paths prevents host contamination,
@@ -252,7 +252,7 @@ do_install_ptest() {
 
 pkg_postinst_ontarget:${PN}-ossl-module-fips () {
 	if test -f ${libdir}/ossl-modules/fips.so; then
-		${bindir}/openssl fipsinstall -out ${libdir}/ssl-3/fipsmodule.cnf -module ${libdir}/ossl-modules/fips.so
+		${bindir}/openssl fipsinstall -out ${nonarch_libdir}/ssl-3/fipsmodule.cnf -module ${libdir}/ossl-modules/fips.so
 	fi
 }
 
@@ -266,12 +266,12 @@ PACKAGES =+ "libcrypto libssl openssl-conf ${PN}-misc ${PN}-ossl-module-legacy $
 FILES:libcrypto = "${libdir}/libcrypto${SOLIBS}"
 FILES:libssl = "${libdir}/libssl${SOLIBS}"
 FILES:openssl-conf = "${sysconfdir}/ssl/openssl.cnf* \
-                      ${libdir}/ssl-3/openssl.cnf* \
+                      ${nonarch_libdir}/ssl-3/openssl.cnf* \
                       "
-FILES:${PN}-misc = "${libdir}/ssl-3/misc"
+FILES:${PN}-misc = "${nonarch_libdir}/ssl-3/misc"
 FILES:${PN}-ossl-module-legacy = "${libdir}/ossl-modules/legacy.so"
 FILES:${PN}-ossl-module-fips = "${libdir}/ossl-modules/fips.so"
-FILES:${PN} =+ "${libdir}/ssl-3/* ${libdir}/ossl-modules/"
+FILES:${PN} =+ "${nonarch_libdir}/ssl-3/* ${libdir}/ossl-modules/"
 FILES:${PN}:append:class-nativesdk = " ${SDKPATHNATIVE}/environment-setup.d/openssl.sh"
 
 CONFFILES:openssl-conf = "${sysconfdir}/ssl/openssl.cnf"
