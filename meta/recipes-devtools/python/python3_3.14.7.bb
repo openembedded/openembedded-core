@@ -324,9 +324,10 @@ SKIPPED_TESTS += " \
 
 # Intermittent failure under load - the remote pdb attach test is timing
 # sensitive and fails on loaded autobuilder hosts (CPython #130363)
-# Bugzilla YP 16201
+# Bugzilla YP 16201, 16412
 SKIPPED_TESTS += " \
     --ignore test.test_remote_pdb.PdbAttachTestCase.test_attach_to_process_with_colors \
+    --ignore test.test_remote_pdb.PdbAttachTestCase.test_attach_to_process_without_colors \
 "
 
 SKIPPED_TESTS:append:libc-musl = " \
