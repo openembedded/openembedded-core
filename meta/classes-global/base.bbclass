@@ -176,9 +176,9 @@ python base_do_fetch() {
         return
 
     try:
-        fetcher = bb.fetch2.Fetch(src_uri, d)
+        fetcher = bb.fetch.Fetch(src_uri, d)
         fetcher.download()
-    except bb.fetch2.BBFetchException as e:
+    except bb.fetch.BBFetchException as e:
         bb.fatal("Bitbake Fetcher Error: " + repr(e))
 }
 
@@ -204,9 +204,9 @@ python base_do_unpack() {
             d.setVar("SOURCE_BASEDIR", unpackdir + '/' + basedir)
 
     try:
-        fetcher = bb.fetch2.Fetch(src_uri, d)
+        fetcher = bb.fetch.Fetch(src_uri, d)
         fetcher.unpack(d.getVar('UNPACKDIR'))
-    except bb.fetch2.BBFetchException as e:
+    except bb.fetch.BBFetchException as e:
         bb.fatal("Bitbake Fetcher Error: " + repr(e))
 }
 
@@ -706,7 +706,7 @@ python () {
             for s in srcuri.split():
                 if not s.startswith("file://"):
                     continue
-                fetcher = bb.fetch2.Fetch([s], d)
+                fetcher = bb.fetch.Fetch([s], d)
                 local = fetcher.localpath(s)
                 for mp in paths:
                     if local.startswith(mp):
@@ -739,9 +739,9 @@ python do_cleanall() {
         return
 
     try:
-        fetcher = bb.fetch2.Fetch(src_uri, d)
+        fetcher = bb.fetch.Fetch(src_uri, d)
         fetcher.clean()
-    except bb.fetch2.BBFetchException as e:
+    except bb.fetch.BBFetchException as e:
         bb.fatal(str(e))
 }
 do_cleanall[nostamp] = "1"

@@ -69,7 +69,7 @@ def find_sccs(d):
 # the name of the repository or directory as it will be found in UNPACKDIR
 def find_kernel_feature_dirs(d):
     feature_dirs=[]
-    fetch = bb.fetch2.Fetch([], d)
+    fetch = bb.fetch.Fetch([], d)
     for url in fetch.urls:
         urldata = fetch.ud[url]
         parm = urldata.parm
@@ -89,7 +89,7 @@ def find_kernel_feature_dirs(d):
 # find the master/machine source branch. In the same way that the fetcher proceses
 # git repositories in the SRC_URI we take the first repo found, first branch.
 def get_machine_branch(d, default):
-    fetch = bb.fetch2.Fetch([], d)
+    fetch = bb.fetch.Fetch([], d)
     for url in fetch.urls:
         urldata = fetch.ud[url]
         parm = urldata.parm

@@ -12,9 +12,9 @@ import re
 import sys
 import tempfile
 import bb
-from bb.fetch2.npm import NpmEnvironment
-from bb.fetch2.npm import npm_package
-from bb.fetch2.npmsw import foreach_dependencies
+from bb.fetch.npm import NpmEnvironment
+from bb.fetch.npm import npm_package
+from bb.fetch.npmsw import foreach_dependencies
 from oe.license_finder import match_licenses, find_license_files
 from recipetool.create import RecipeHandler
 from recipetool.create import generate_common_licenses_chksums
@@ -275,7 +275,7 @@ class NpmRecipeHandler(RecipeHandler):
         # dependencies have to be fetched again using the npmsw url
         bb.note("Fetching npm dependencies ...")
         bb.utils.remove(os.path.join(srctree, "node_modules"), recurse=True)
-        fetcher = bb.fetch2.Fetch([url_local], d)
+        fetcher = bb.fetch.Fetch([url_local], d)
         fetcher.download()
         fetcher.unpack(srctree)
 

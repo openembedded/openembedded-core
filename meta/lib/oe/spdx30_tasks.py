@@ -438,7 +438,7 @@ def add_download_files(d, objset):
     inputs = set()
 
     urls = d.getVar("SRC_URI").split()
-    fetch = bb.fetch2.Fetch(urls, d)
+    fetch = bb.fetch.Fetch(urls, d)
 
     for download_idx, src_uri in enumerate(urls):
         fd = fetch.ud[src_uri]
@@ -500,7 +500,7 @@ def add_download_files(d, objset):
             _enrich_source_package(d, dl, fd, file_name, primary_purpose)
 
             if fd.method.supports_checksum(fd):
-                for checksum_id in bb.fetch2.CHECKSUM_LIST:
+                for checksum_id in bb.fetch.CHECKSUM_LIST:
                     if checksum_id not in oe.spdx30.HashAlgorithm.NAMED_INDIVIDUALS:
                         continue
 

@@ -129,10 +129,10 @@ python npm_do_configure() {
     import shlex
     import stat
     import tempfile
-    from bb.fetch2.npm import NpmEnvironment
-    from bb.fetch2.npm import npm_unpack
-    from bb.fetch2.npm import npm_package
-    from bb.fetch2.npmsw import foreach_dependencies
+    from bb.fetch.npm import NpmEnvironment
+    from bb.fetch.npm import npm_unpack
+    from bb.fetch.npm import npm_package
+    from bb.fetch.npmsw import foreach_dependencies
     from bb.progress import OutOfProgressHandler
     from oe.npm_registry import NpmRegistry
 
@@ -284,7 +284,7 @@ python npm_do_compile() {
     """
     import shlex
     import tempfile
-    from bb.fetch2.npm import NpmEnvironment
+    from bb.fetch.npm import NpmEnvironment
 
     bb.utils.remove(d.getVar("NPM_BUILD"), recurse=True)
 

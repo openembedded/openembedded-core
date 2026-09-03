@@ -235,7 +235,7 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
         (stdout, _) = __run('git submodule --quiet foreach \'echo $sm_path\'')
         paths += [os.path.join(srctree, p) for p in stdout.splitlines()]
         checksums = {}
-        _, _, _, _, _, params = bb.fetch2.decodeurl(uri)
+        _, _, _, _, _, params = bb.fetch.decodeurl(uri)
         srcsubdir_rel = params.get('destsuffix', 'git')
         if not srcbranch:
             check_branch, check_branch_err = __run('git branch -r --contains %s' % srcrev)
@@ -393,8 +393,8 @@ def _create_new_recipe(newpv, checksums, srcrev, srcbranch, srcsubdir_old, srcsu
         new_src_uri = []
         for entry in src_uri:
             try:
-                scheme, network, path, user, passwd, params = bb.fetch2.decodeurl(entry)
-            except bb.fetch2.MalformedUrl as e:
+                scheme, network, path, user, passwd, params = bb.fetch.decodeurl(entry)
+            except bb.fetch.MalformedUrl as e:
                 raise DevtoolError("Could not decode SRC_URI: {}".format(e))
             if replacing and scheme in ['git', 'gitsm']:
                 branch = params.get('branch', 'master')
@@ -407,7 +407,7 @@ def _create_new_recipe(newpv, checksums, srcrev, srcbranch, srcsubdir_old, srcsu
                         break
                     else:
                         params['branch'] = srcbranch
-                        entry = bb.fetch2.encodeurl((scheme, network, path, user, passwd, params))
+                        entry = bb.fetch.encodeurl((scheme, network, path, user, passwd, params))
                         changed = True
                 replacing = False
             new_src_uri.append(entry)
@@ -426,7 +426,7 @@ def _create_new_recipe(newpv, checksums, srcrev, srcbranch, srcsubdir_old, srcsu
     newnames = []
     addnames = []
     for newentry in new_src_uri:
-        _, _, _, _, _, params = bb.fetch2.decodeurl(newentry)
+        _, _, _, _, _, params = bb.fetch.decodeurl(newentry)
         if 'name' in params:
             newnames.append(params['name'])
             if newentry not in old_src_uri:
@@ -462,7 +462,7 @@ def _create_new_recipe(newpv, checksums, srcrev, srcbranch, srcsubdir_old, srcsu
         newvalues['SRC_URI[%smd5sum]' % nameprefix] = None
         oldsums.remove('md5sum')
         if not oldsums:
-            oldsums = ["%ssum" % s for s in bb.fetch2.SHOWN_CHECKSUM_LIST]
+            oldsums = ["%ssum" % s for s in bb.fetch.SHOWN_CHECKSUM_LIST]
 
     for checksum in oldsums:
         newvalues['SRC_URI[%s%s]' % (nameprefix, checksum)] = checksums[checksum]

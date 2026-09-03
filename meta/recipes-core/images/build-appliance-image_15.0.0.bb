@@ -48,7 +48,7 @@ IMAGE_CMD:ext4:append () {
 }
 
 fakeroot do_populate_poky_src () {
-	# Because fetch2's git's unpack uses -s cloneflag, the unpacked git repo
+	# Because bb.fetch's git's unpack uses -s cloneflag, the unpacked git repo
 	# will become invalid in the target.
 	for d in bitbake openembedded-core meta-yocto; do
 		rm -rf ${UNPACKDIR}/$d/.git

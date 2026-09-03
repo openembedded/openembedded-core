@@ -60,7 +60,7 @@ python do_go_vendor() {
 
     base_package = d.getVar('BP')
     default_destsuffix = "{}/src/import/vendor.fetch".format(base_package)
-    fetcher = bb.fetch2.Fetch(src_uri, d)
+    fetcher = bb.fetch.Fetch(src_uri, d)
     go_import = d.getVar('GO_IMPORT')
     source_dir = d.getVar('S')
 

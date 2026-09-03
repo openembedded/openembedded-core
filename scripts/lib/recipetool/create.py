@@ -16,7 +16,7 @@ import logging
 import scriptutils
 from urllib.parse import urlparse, urldefrag, urlsplit
 import hashlib
-import bb.fetch2
+import bb.fetch
 logger = logging.getLogger('recipetool')
 import oe.license
 import oe.spdx_license
@@ -354,12 +354,12 @@ def supports_srcrev(uri):
     # odd interactions with the urldata cache which lead to errors
     localdata.setVar('SRCREV', '${AUTOREV}')
     try:
-        fetcher = bb.fetch2.Fetch([uri], localdata)
+        fetcher = bb.fetch.Fetch([uri], localdata)
         urldata = fetcher.ud
         for u in urldata:
             if urldata[u].method.supports_srcrev():
                 return True
-    except bb.fetch2.FetchError as e:
+    except bb.fetch.FetchError as e:
         logger.debug('FetchError in supports_srcrev: %s' % str(e))
         # Fall back to basic check
         if uri.startswith(('git://', 'gitsm://')):
@@ -373,7 +373,7 @@ def reformat_git_uri(uri):
         # Appends scheme if the scheme is missing
         if not '://' in uri:
             uri = 'git://' + uri
-        scheme, host, path, user, pswd, parms = bb.fetch2.decodeurl(uri)
+        scheme, host, path, user, pswd, parms = bb.fetch.decodeurl(uri)
         # Detection mechanism, this is required due to certain URL are formatter with ":" rather than "/"
         # which causes decodeurl to fail getting the right host and path
         if len(host.split(':')) > 1:
@@ -393,7 +393,7 @@ def reformat_git_uri(uri):
         elif (scheme == "http" or scheme == 'https' or scheme == 'ssh') and not ('protocol' in parms):
             parms.update({('protocol', scheme)})
         # Always append 'git://'
-        fUrl = bb.fetch2.encodeurl(('git', host, path, user, pswd, parms))
+        fUrl = bb.fetch.encodeurl(('git', host, path, user, pswd, parms))
         return fUrl
     else:
         return uri
@@ -487,7 +487,7 @@ def create_recipe(args):
 
         # Check whether users provides any branch info in fetchuri.
         # If true, we will skip all branch checking process to honor all user's input.
-        scheme, network, path, user, passwd, params = bb.fetch2.decodeurl(fetchuri)
+        scheme, network, path, user, passwd, params = bb.fetch.decodeurl(fetchuri)
         srcbranch = params.get('branch')
         if args.srcbranch:
             if srcbranch:
@@ -515,7 +515,7 @@ def create_recipe(args):
         # Assume 'master' branch if not set
         if scheme in ['git', 'gitsm'] and 'branch' not in params and 'nobranch' not in params:
             params['branch'] = 'master'
-        fetchuri = bb.fetch2.encodeurl((scheme, network, path, user, passwd, params))
+        fetchuri = bb.fetch.encodeurl((scheme, network, path, user, passwd, params))
 
         tmpparent = tinfoil.config_data.getVar('BASE_WORKDIR')
         bb.utils.mkdirhier(tmpparent)
@@ -578,7 +578,7 @@ def create_recipe(args):
 
         # Since we might have a value in srcbranch, we need to
         # recontruct the srcuri to include 'branch' in params.
-        scheme, network, path, user, passwd, params = bb.fetch2.decodeurl(srcuri)
+        scheme, network, path, user, passwd, params = bb.fetch.decodeurl(srcuri)
         if scheme in ['git', 'gitsm']:
             params['branch'] = srcbranch or 'master'
 
@@ -594,7 +594,7 @@ def create_recipe(args):
                 sys.exit(1)
             # Drop tag from srcuri as it will have conflicts with SRCREV during recipe parse.
             del params['tag']
-        srcuri = bb.fetch2.encodeurl((scheme, network, path, user, passwd, params))
+        srcuri = bb.fetch.encodeurl((scheme, network, path, user, passwd, params))
 
         if os.path.exists(os.path.join(srctree, '.gitmodules')) and srcuri.startswith('git://'):
             srcuri = 'gitsm://' + srcuri[6:]
@@ -603,7 +603,7 @@ def create_recipe(args):
 
         if is_package(fetchuri):
             localdata = bb.data.createCopy(tinfoil.config_data)
-            pkgfile = bb.fetch2.localpath(fetchuri, localdata)
+            pkgfile = bb.fetch.localpath(fetchuri, localdata)
             if pkgfile:
                 tmpfdir = tempfile.mkdtemp(prefix='recipetool-')
                 try:
@@ -708,7 +708,7 @@ def create_recipe(args):
     if not srcuri:
         lines_before.append('# No information for SRC_URI yet (only an external source tree was specified)')
     lines_before.append('SRC_URI = "%s"' % srcuri)
-    shown_checksums = ["%ssum" % s for s in bb.fetch2.SHOWN_CHECKSUM_LIST]
+    shown_checksums = ["%ssum" % s for s in bb.fetch.SHOWN_CHECKSUM_LIST]
     for key, value in sorted(checksums.items()):
         if key in shown_checksums:
             lines_before.append('SRC_URI[%s] = "%s"' % (key, value))
@@ -716,7 +716,7 @@ def create_recipe(args):
         lines_before.append('')
         lines_before.append('# Modify these as desired')
         # Note: we have code to replace realpv further down if it gets set to some other value
-        scheme, _, _, _, _, _ = bb.fetch2.decodeurl(srcuri)
+        scheme, _, _, _, _, _ = bb.fetch.decodeurl(srcuri)
         if scheme in ['git', 'gitsm']:
             srcpvprefix = 'git'
         elif scheme == 'svn':

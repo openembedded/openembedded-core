@@ -44,7 +44,7 @@ if not scriptpath.add_bitbake_lib_path():
 scriptpath.add_oe_lib_path()
 
 import bb.cache        # pylint: disable=wrong-import-position
-import bb.fetch2       # pylint: disable=wrong-import-position
+import bb.fetch       # pylint: disable=wrong-import-position
 import bb.tinfoil      # pylint: disable=wrong-import-position
 import oe.recipeutils  # pylint: disable=wrong-import-position
 
@@ -71,7 +71,7 @@ def get_literal_srcrev(name, data):
     """Return (sha, None) or (None, reason) for the named git URL.
 
     SRCREV candidates are read unexpanded (to avoid triggering AUTOREV
-    resolution) in the same fallback order used by bb.fetch2, accepting only a
+    resolution) in the same fallback order used by bb.fetch, accepting only a
     plain hex SHA (or the SHA embedded in a cached AUTOINC+<sha> value).
     """
     pn = data.getVar("PN") or ""
@@ -127,7 +127,7 @@ def lsremote_tags(ud, data):
 
     try:
         output = ud.method._lsremote(ud, data, "refs/tags/*")
-    except (bb.fetch2.NetworkAccess, bb.fetch2.FetchError) as exc:
+    except (bb.fetch.NetworkAccess, bb.fetch.FetchError) as exc:
         result = (None, f"remote error: {exc}")
         _lsremote_cache[key] = result
         return result
@@ -206,8 +206,8 @@ def add_candidate(result, exp_url, name, data):
         return
 
     try:
-        ud = bb.fetch2.FetchData(exp_url, data)
-    except bb.fetch2.FetchError as exc:
+        ud = bb.fetch.FetchData(exp_url, data)
+    except bb.fetch.FetchError as exc:
         result.status = "remote-error"
         result.detail = str(exc)
         return
@@ -227,8 +227,8 @@ def check_url(entry, data, args):
     """Process a single git/gitsm SRC_URI entry.  Returns a UrlResult."""
     exp = data.expand(entry)
     try:
-        scheme, host, path, _u, _p, parm = bb.fetch2.decodeurl(exp)
-    except bb.fetch2.MalformedUrl as exc:
+        scheme, host, path, _u, _p, parm = bb.fetch.decodeurl(exp)
+    except bb.fetch.MalformedUrl as exc:
         return UrlResult(entry, exp, "", "parse-error", detail=str(exc))
 
     base_url = f"{scheme}://{host}{path}"
@@ -256,9 +256,9 @@ def check_recipe(data, args):
 
 def add_tag_to_entry(entry, tag_fmt):
     """Return entry with ;tag=<tag_fmt> added (entry must be a literal URL)."""
-    decoded = list(bb.fetch2.decodeurl(entry))
+    decoded = list(bb.fetch.decodeurl(entry))
     decoded[5]["tag"] = tag_fmt
-    return bb.fetch2.encodeurl(decoded)
+    return bb.fetch.encodeurl(decoded)
 
 
 def find_source_file(entry, data):

@@ -202,7 +202,7 @@ def check_connectivity(d):
         data.delVar('PREMIRRORS')
         data.delVar('MIRRORS')
         try:
-            fetcher = bb.fetch2.Fetch(test_uris, data)
+            fetcher = bb.fetch.Fetch(test_uris, data)
             fetcher.checkstatus()
         except Exception as err:
             # Allow the message to be configured so that users can be
@@ -887,7 +887,7 @@ def check_sanity_everybuild(status, d):
         for mirror_entry in mirrors:
             pattern, mirror = mirror_entry
 
-            decoded = bb.fetch2.decodeurl(pattern)
+            decoded = bb.fetch.decodeurl(pattern)
             try:
                 pattern_scheme = re.compile(decoded[0])
             except re.error as exc:
@@ -919,7 +919,7 @@ def check_sanity_everybuild(status, d):
             bb.warn("You are using a local hash equivalence server but have configured an sstate mirror. This will likely mean no sstate will match from the mirror. You may wish to disable the hash equivalence use (BB_HASHSERVE), or use a hash equivalence server alongside the sstate mirror.")
 
         # Check that when SSTATE_DIR is shared between builds, hashserve database is not private to a build
-        hashserv_proto,_,hashserv_path,_,_,_ = bb.fetch2.decodeurl(hashserv)
+        hashserv_proto,_,hashserv_path,_,_,_ = bb.fetch.decodeurl(hashserv)
         if hashserv_proto == "unix":
             dbdir = d.getVar("BB_HASHSERVE_DB_DIR") or d.getVar("PERSISTENT_DIR") or d.getVar("CACHE")
             topdir = d.getVar("TOPDIR")
