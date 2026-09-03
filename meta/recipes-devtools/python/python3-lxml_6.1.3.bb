@@ -18,7 +18,7 @@ LIC_FILES_CHKSUM = "file://LICENSES.txt;md5=d1118b9913749904166e8726c5331c11 \
 
 DEPENDS += "libxml2 libxslt"
 
-SRC_URI[sha256sum] = "1055241852f2b02068af4a625a5d32c087db193c12251928af2562ecd2239f18"
+SRC_URI[sha256sum] = "45222d94ddd511536f3b2f7d9deae3b2339b4ce0f075f1ca25703b07cad9dd21"
 
 SRC_URI += "${PYPI_SRC_URI}"
 inherit pkgconfig pypi setuptools3
