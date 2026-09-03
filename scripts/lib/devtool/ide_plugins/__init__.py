@@ -125,13 +125,17 @@ class DebuggerCrossConfig:
         port = self.port(mode)
         dump_log = "cat %s >&2; " % log_file if log_file else ""
         cleanup = ""
+        died_check = ""
         if pid_var:
             cleanup = "kill \\$_%s 2>/dev/null; " % pid_var
+            died_check = (
+                "kill -0 \\$_%s 2>/dev/null || { %secho %s exited before it started listening on port %s >&2; exit 1; }; "
+                    % (pid_var, dump_log, self.DEBUG_SERVER_NAME, port))
         return (
-            "_w=0; while ! %s; do _w=\\$((_w+1)); [ \\$_w -lt %d ] || { "
+            "_w=0; while ! %s; do %s_w=\\$((_w+1)); [ \\$_w -lt %d ] || { "
             "%secho %s did not start on port %s after \\$_w retries >&2; %sexit 1; }; "
             "sleep 0.1; done;"
-                % (self._target_tcp_port_check_cmd(mode), self.TARGET_START_RETRIES,
+                % (self._target_tcp_port_check_cmd(mode), died_check, self.TARGET_START_RETRIES,
                     cleanup, self.DEBUG_SERVER_NAME, port, dump_log))
 
     def _target_wait_for_process_exit_cmd(self, pid_var):
@@ -268,6 +272,7 @@ class LldbServerConfig(DebuggerCrossConfig):
     PID argument; attaching is done client-side via 'process attach'.
     """
     DEBUG_SERVER_NAME = "lldb-server"
+    TARGET_START_RETRIES = 600
 
     def __init__(self, image_recipe, modified_recipe, binary,
                  default_mode=DebuggerServerModes.MULTI):
