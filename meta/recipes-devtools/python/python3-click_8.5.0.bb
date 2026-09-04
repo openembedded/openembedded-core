@@ -25,8 +25,6 @@ do_install_ptest:append() {
     cp -rf ${S}/docs ${D}${PTEST_PATH}/
 }
 
-CLEANBROKEN = "1"
-
 RDEPENDS:${PN} += "\
     python3-io \
     python3-threading \

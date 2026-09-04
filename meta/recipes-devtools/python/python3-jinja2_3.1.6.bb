@@ -10,8 +10,6 @@ PYPI_PACKAGE = "jinja2"
 
 CVE_PRODUCT = "jinja2 jinja"
 
-CLEANBROKEN = "1"
-
 inherit pypi python_flit_core ptest-python-pytest
 
 do_install_ptest:append() {

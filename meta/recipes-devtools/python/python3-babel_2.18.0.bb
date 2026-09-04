@@ -11,8 +11,6 @@ CVE_PRODUCT = "pocoo:babel"
 
 S = "${UNPACKDIR}/babel-${PV}"
 
-CLEANBROKEN = "1"
-
 RDEPENDS:${PN} += " \
     python3-codecs \
     python3-difflib \

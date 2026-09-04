@@ -40,5 +40,3 @@ BBCLASSEXTEND = "native nativesdk"
 RDEPENDS:${PN} += "libxml2 libxslt python3-compression"
 
 CVE_PRODUCT = "lxml:lxml"
-
-CLEANBROKEN = "1"
