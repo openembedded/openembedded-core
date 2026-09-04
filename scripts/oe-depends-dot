@@ -119,7 +119,7 @@ Reduce the .dot file packages only, no tasks:
                     if not key in depends[key]:
                         depends[key].add(dep)
                     else:
-                        print('WARNING: Fonud duplicated line: %s' % line)
+                        print('WARNING: Found duplicated line: %s' % line)
                 else:
                     depends[key] = set()
                     depends[key].add(dep)
