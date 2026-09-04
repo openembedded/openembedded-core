@@ -84,3 +84,8 @@ ALTERNATIVE_LINK_NAME[cpio] = "${base_bindir}/cpio"
 ALTERNATIVE_TARGET[cpio] = "${bindir}/bsdcpio"
 
 BBCLASSEXTEND = "native nativesdk"
+
+CVE_STATUS[CVE-2026-14164] = "fixed-version: Double-free regression in the RAR5\
+ reader's init_unpack() was introduced upstream by commit 620bdafa (2026-05-16) and existed\
+ only on the git master branch until the fix in PR #3071 (commit 1c914cdf, 2026-05-24). It was\
+ never part of an upstream release tarball."
