@@ -4,6 +4,8 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+import os
+
 def get_os_release():
     """Get all key-value pairs from /etc/os-release as a dict"""
 
