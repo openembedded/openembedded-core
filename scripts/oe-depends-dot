@@ -49,9 +49,6 @@ Reduce the .dot file packages only, no tasks:
 
         self.args = parser.parse_args()
 
-        if len(sys.argv) != 3 and len(sys.argv) < 5:
-            print('ERROR: Not enough args, see --help for usage')
-
     @staticmethod
     def insert_dep_chain(chain, rdeps, alldeps):
         """
