@@ -23,6 +23,7 @@ SRC_URI = "${GNU_MIRROR}/wget/wget-${PV}.tar.gz \
            file://CVE-2026-58472.patch \
            file://CVE-2026-58472-regression.patch \
            file://CVE-2026-58471.patch \
+           file://CVE-2026-16599.patch \
            file://run-ptest \
            "
 
