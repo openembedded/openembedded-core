@@ -39,8 +39,7 @@ def pypi_src_uri(d):
 
 def pypi_normalize(d):
     """"
-        Normalize the package names to match PEP625 (https://peps.python.org/pep-0625/).
-        For non-compliant packages, maintainers can set UPSTREAM_CHECK_PYPI_PACKAGE to override the normalization
+    Normalize the package names to match PEP625 (https://peps.python.org/pep-0625/).
     """
     import re
     return re.sub(r"[-_.]+", "-", d.getVar('PYPI_PACKAGE')).lower()
@@ -52,7 +51,10 @@ SECTION = "devel/python"
 SRC_URI:prepend = "${PYPI_SRC_URI} "
 S = "${UNPACKDIR}/${PYPI_PACKAGE}-${PV}"
 
-UPSTREAM_CHECK_PYPI_PACKAGE ?= "${PYPI_PACKAGE}"
+def pypi_normalize_regex(d):
+    # Use a regex wildcard instead of hyphen as the filenames
+    # may or may not have been normalised properly.
+    return pypi_normalize(d).replace("-", "[_-]")
 
 # Use the simple repository API rather than the potentially unstable project URL
 # More information on the pypi API specification is avaialble here:
@@ -60,7 +62,7 @@ UPSTREAM_CHECK_PYPI_PACKAGE ?= "${PYPI_PACKAGE}"
 #
 # NOTE: All URLs for the simple API MUST request canonical normalized URLs per the spec
 UPSTREAM_CHECK_URI ?= "https://pypi.org/simple/${@pypi_normalize(d)}/"
-UPSTREAM_CHECK_REGEX ?= "(?i)${UPSTREAM_CHECK_PYPI_PACKAGE}-(?P<pver>(\d+[\.\-_]*)+).(tar\.gz|tgz|zip|tar\.bz2)"
+UPSTREAM_CHECK_REGEX ?= "(?i)${@pypi_normalize_regex(d)}-(?P<pver>(\d+(\.[\d\-]+)*(\.post\d+)?))\.(tar\.gz|tgz|zip|tar\.bz2)"
 
 CVE_PRODUCT ?= "python:${PYPI_PACKAGE}"
 
