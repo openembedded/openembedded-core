@@ -4,7 +4,11 @@
 # SPDX-License-Identifier: MIT
 #
 
-def pypi_package(d):
+def pypi_default_package(d):
+    """
+    Return a reasonable guess for the PyPI package name by
+    stripping any python- prefix from PN.
+    """
     bpn = d.getVar('BPN')
     if bpn.startswith('python-'):
         return bpn[7:]
@@ -13,7 +17,7 @@ def pypi_package(d):
     return bpn
 
 # The PyPi package name (defaults to PN without the python3- prefix)
-PYPI_PACKAGE ?= "${@pypi_package(d)}"
+PYPI_PACKAGE ?= "${@pypi_default_package(d)}"
 # The file extension of the source archive
 PYPI_PACKAGE_EXT ?= "tar.gz"
 # An optional prefix for the download file in the case of name collisions
