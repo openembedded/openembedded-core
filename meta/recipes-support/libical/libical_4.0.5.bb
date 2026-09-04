@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=6d9294493d031c817783b0400a126c89 \
 SECTION = "libs"
 
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz \
-           file://flags.patch \
+           file://0001-Mark-ICU-as-private-linkage-1366.patch \
            "
 SRC_URI[sha256sum] = "cc09a3ac41d60e6144e644bd3fcf97d47106d659c4a0b8965102581401e67c9c"
 
@@ -43,12 +43,8 @@ EXTRA_OECMAKE += "-DLIBICAL_JAVA_BINDINGS=False"
 # Tell the cross-libical where the tool it needs to build is
 EXTRA_OECMAKE:append:class-target = " -DIMPORT_ICAL_GLIB_SRC_GENERATOR=${STAGING_LIBDIR_NATIVE}/cmake/LibIcal/IcalGlibSrcGenerator.cmake"
 
-do_install:append () {
-    # Remove build host references (https://github.com/libical/libical/issues/532)
-    sed -i -e 's,${STAGING_LIBDIR},${libdir},g' ${D}${libdir}/cmake/LibIcal/LibIcalTargets.cmake
-}
-
 # This tool is only needed to cross-compile, delete it from the target packages
+# https://github.com/libical/libical/issues/1365
 do_install:append:class-target() {
     rm -f ${D}${libexecdir}/libical/ical-glib-src-generator
     rm -f ${D}${libdir}/cmake/LibIcal/IcalGlibSrcGenerator*.cmake
