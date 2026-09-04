@@ -25,8 +25,13 @@ def pypi_src_uri(d):
     """
     package = d.getVar('PYPI_PACKAGE')
     archive_name = d.expand('${PYPI_PACKAGE}-${PV}.${PYPI_PACKAGE_EXT}')
-    archive_downloadname = d.getVar('PYPI_ARCHIVE_NAME_PREFIX') + archive_name
-    return 'https://files.pythonhosted.org/packages/source/%s/%s/%s;downloadfilename=%s' % (package[0], package, archive_name, archive_downloadname)
+    url = 'https://files.pythonhosted.org/packages/source/%s/%s/%s' % (package[0], package, archive_name)
+
+    download_prefix = d.getVar("PYPI_ARCHIVE_NAME_PREFIX")
+    if download_prefix:
+        url += ";downloadfilename=" + download_prefix + archive_name
+
+    return url
 
 def pypi_normalize(d):
     """"
