@@ -8,7 +8,7 @@ LICENSE = "GPL-2.0-or-later OR X11"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1556547711e8246992b999edd9445a57"
 
 SRC_URI = "git://github.com/vcrhonek/${BPN}.git;branch=master;protocol=https;tag=v${PV}"
-SRCREV = "8bb6c48dc2e683777e625d1c9ef02c1b25b741cd"
+SRCREV = "7fc63d411377e40aab66bfbf77dce6a439c3fe87"
 
 inherit allarch
 
