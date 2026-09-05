@@ -1,0 +1,21 @@
+From 996d4d71b18eee56c53dde6a609dea188bb26a96 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Miro=20Hron=C4=8Dok?= <miro@hroncok.cz>
+Date: Mon, 24 Aug 2026 18:40:42 +0200
+Subject: [PATCH] Allow building this package with flit-core 4 (#787)
+
+Upstream-Status: Backport [https://github.com/python/typing_extensions/pull/787]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ pyproject.toml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -1,6 +1,6 @@
+ # Build system requirements.
+ [build-system]
+-requires = ["flit_core >=3.11,<4"]
++requires = ["flit_core >=3.11,<5"]
+ build-backend = "flit_core.buildapi"
+
+ # Project metadata
