@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
+import os
 import re
 
 # Return a value for the ARCH environment variable for kernel compilation (including

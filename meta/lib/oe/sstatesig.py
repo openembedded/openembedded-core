@@ -7,6 +7,7 @@ import bb.parse
 import bb.siggen
 import bb.runqueue
 import oe
+import os
 import netrc
 
 def sstate_rundepfilter(siggen, fn, recipename, task, dep, depname, dataCaches):

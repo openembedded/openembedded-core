@@ -8,6 +8,7 @@ import bb
 import collections
 import json
 import oe.packagedata
+import os
 import re
 import shutil
 

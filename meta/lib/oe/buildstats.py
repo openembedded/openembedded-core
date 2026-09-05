@@ -7,6 +7,7 @@
 # Because it is a real Python module, it can hold persistent state,
 # like open log files and the time of the last sampling.
 
+import os
 import time
 import re
 import bb.event

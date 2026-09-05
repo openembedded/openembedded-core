@@ -5,6 +5,8 @@
 # Functions to get metadata from the testing host used
 # for analytics of test results.
 
+import os
+
 from collections import OrderedDict
 from collections.abc import MutableMapping
 from xml.dom.minidom import parseString

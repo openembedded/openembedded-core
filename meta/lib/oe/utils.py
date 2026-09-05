@@ -7,6 +7,7 @@
 import subprocess
 import traceback
 import errno
+import os
 
 import bb.parse
 from bb import multiprocessing

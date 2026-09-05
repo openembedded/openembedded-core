@@ -6,6 +6,7 @@
 
 import errno
 import glob
+import os
 import shutil
 import subprocess
 import os.path

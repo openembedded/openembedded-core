@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
+import os
 import oe.utils
 
 def bblayers_conf_file(d):

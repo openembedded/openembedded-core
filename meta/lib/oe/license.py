@@ -6,6 +6,7 @@
 """Code for parsing OpenEmbedded license strings"""
 
 import ast
+import os
 import re
 import oe.qa
 from fnmatch import fnmatchcase as fnmatch
