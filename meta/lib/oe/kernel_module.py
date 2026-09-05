@@ -25,24 +25,3 @@ def kernel_module_os_env(d, env_dict):
         env_dict['KBUILD_EXTRA_SYMBOLS'] = kbuild_extra_symbols
     else:
         env_dict['KBUILD_EXTRA_SYMBOLS'] = ''
-
-def get_ext_mod(d):
-    """
-    Extract the resolved Kbuild M= variable from an out of tree module Makefile variable database.
-    """
-    import re
-    import bb.process
-
-    try:
-        output = bb.process.run(
-            "make -C %s --dry-run --print-data-base" % d.getVar("B")
-        )[0]
-    except bb.process.ExecutionError:
-        return d.getVar("S")
-
-    for line in output.splitlines():
-        m = re.match(r'^M\s*=\s*(.*)$', line)
-        if m:
-            return m.group(1).strip()
-
-    return d.getVar("S")

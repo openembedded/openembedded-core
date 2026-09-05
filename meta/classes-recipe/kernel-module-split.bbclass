@@ -62,7 +62,7 @@ post_strip_kernel_modules_signing(){
         oe_runmake \
             -C ${KBUILD_OUTPUT}  \
             MODLIB=${PKGD}${KERNEL_MODULE_INSTALL_PREFIX} \
-            ${@'M=%s' % oe.kernel_module.get_ext_mod(d) if not "virtual/kernel" in d.getVar('PROVIDES') else ''} \
+            ${@'M=%s' % '${S}' if not "virtual/kernel" in d.getVar('PROVIDES') else ''} \
             modules_sign
     fi
 }
