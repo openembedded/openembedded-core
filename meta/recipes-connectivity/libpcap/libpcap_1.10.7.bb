@@ -13,7 +13,7 @@ DEPENDS = "flex-native bison-native"
 SRC_URI = "https://www.tcpdump.org/release/${BP}.tar.xz \
 	   file://0001-Fix-error-messages-about-32-bit-integer-overflow.patch \
           "
-SRC_URI[sha256sum] = "ec97d1206bdd19cb6bdd043eaa9f0037aa732262ec68e070fd7c7b5f834d5dfc"
+SRC_URI[sha256sum] = "68fa62cffb974f4275641ce14c2e2d75739251f30e00e6a0900903b247d76a03"
 
 inherit autotools binconfig-disabled pkgconfig
 
