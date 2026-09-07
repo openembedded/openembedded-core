@@ -3,7 +3,6 @@ HOMEPAGE = "https://github.com/HypothesisWorks/hypothesis/tree/master/hypothesis
 LICENSE = "MPL-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=4ee62c16ebd0f4f99d906f36b7de8c3c"
 
-PYPI_PACKAGE = "hypothesis"
 PTEST_PYTEST_DIR ?= "examples"
 
 require ${BPN}-crates.inc
