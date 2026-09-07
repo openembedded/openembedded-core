@@ -1421,26 +1421,32 @@ class RecipeModified:
                           self.fakerootcmd, self.fakerootenv))
         return self.write_script(cmd_lines, 'deploy_target')
 
+    def gen_install_task_script(self):
+        """Generate a script which runs do_install through BitBake."""
+        cmd_lines = ['#!%s' % sys.executable]
+        if self.cmd_compile:
+            cmd_lines += ['import subprocess',
+                          'subprocess.run(%s, cwd=%r, shell=True, check=True)' %
+                          (repr(self.cmd_compile), self.real_srctree)]
+        cmd_lines += ['import os',
+                      'import sys',
+                      'sys.path.insert(0, %r)' % os.path.realpath(
+                          os.path.join(self.bitbakepath, '..', 'lib')),
+                      'import bb.tinfoil',
+                      'os.chdir(%r)' % self.topdir,
+                      'tinfoil = bb.tinfoil.Tinfoil()',
+                      'try:',
+                      '    tinfoil.prepare(config_only=False, quiet=2)',
+                      '    tinfoil.run_prepared_task(%r, "do_install")' % self.pn,
+                      'finally:',
+                      '    tinfoil.shutdown()']
+        return self.write_script(cmd_lines, 'bb_run_do_install')
+
     def gen_install_deploy_script(self, args):
         """Generate a script which does install and deploy"""
-        cmd_lines = ['#!/bin/sh']
-
-        # Save the original command-line args before 'set' overwrites $@
-        cmd_lines.append('_args="$@"')
-        # . oe-init-build-env $BUILDDIR $BITBAKEDIR
-        # Using 'set' to pass the build directory to oe-init-build-env in sh syntax
-        cmd_lines.append('cd "%s" || { echo "cd %s failed"; exit 1; }' % (
-            self.oe_init_dir, self.oe_init_dir))
-        cmd_lines.append('set %s %s' % (self.topdir, self.bitbakepath.rstrip('/bin')))
-        cmd_lines.append('. "%s" || { echo ". %s %s failed"; exit 1; }' % (
-            self.oe_init_build_env, self.oe_init_build_env, self.topdir))
-
-        # bitbake -c install
-        cmd_lines.append(
-            'bitbake %s -c install --force || { echo "bitbake %s -c install --force failed"; exit 1; }' % (self.bpn, self.bpn))
-
-        # Self contained devtool deploy-target - use saved args, not $@ (overwritten by 'set')
-        cmd_lines.append(self.gen_deploy_target_script(args) + ' $_args')
+        cmd_lines = ['#!/bin/sh -e']
+        cmd_lines.append(self.gen_install_task_script())
+        cmd_lines.append(self.gen_deploy_target_script(args) + ' "$@"')
 
         return self.write_script(cmd_lines, 'install_and_deploy')
 
