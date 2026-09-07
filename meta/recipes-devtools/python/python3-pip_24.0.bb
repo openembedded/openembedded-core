@@ -45,6 +45,7 @@ do_install:append() {
 }
 
 CVE_PRODUCT = "pypa:pip"
+CVE_STATUS[CVE-2018-20225] = "disputed: Exploitation requires use of --extra-index-url with a private package not present on the primary public index; pip intentionally selects the highest version across configured indexes"
 
 do_install:append(){
 	# pip vendors distlib which ships Windows launcher templates (*.exe).
