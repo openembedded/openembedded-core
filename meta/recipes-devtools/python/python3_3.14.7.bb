@@ -330,6 +330,15 @@ SKIPPED_TESTS += " \
     --ignore test.test_remote_pdb.PdbAttachTestCase.test_attach_to_process_without_colors \
 "
 
+# Intermittent failure under load - this asyncio taskgroup test assumes
+# scheduled tasks finish within a fixed sleep, which does not hold on
+# loaded autobuilder hosts under QEMU emulation where timer callbacks are
+# delayed. Part of the broader timing-sensitive test class (CPython #130363).
+# Bugzilla YP 15564
+SKIPPED_TESTS += " \
+    --ignore test.test_asyncio.test_taskgroups.TestTaskGroup.test_taskgroup_23 \
+"
+
 SKIPPED_TESTS:append:libc-musl = " \
     -x test__locale \
     -x test_c_locale_coercion \
