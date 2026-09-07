@@ -277,8 +277,10 @@ def deploy_no_d(srcdir, workdir, path, strip_cmd, libdir, base_libdir, max_proce
         srcdir = recipe_outdir
         recipe_outdir = os.path.join(workdir, 'devtool-deploy-target-stripped')
         if os.path.isdir(recipe_outdir):
-            exec_fakeroot_no_d(fakerootcmd, fakerootenv, path, "rm -rf %s" % recipe_outdir, shell=True)
-        exec_fakeroot_no_d(fakerootcmd, fakerootenv, path, "cp -af %s %s" % (os.path.join(srcdir, '.'), recipe_outdir), shell=True)
+            exec_fakeroot_no_d(fakerootcmd, fakerootenv, path, "rm -rf %s" % recipe_outdir,
+                                env_overrides={'PSEUDO_INCLUDE_PATHS': recipe_outdir}, shell=True)
+        exec_fakeroot_no_d(fakerootcmd, fakerootenv, path, "cp -af %s %s" % (os.path.join(srcdir, '.'), recipe_outdir),
+                            env_overrides={'PSEUDO_INCLUDE_PATHS': '%s,%s' % (srcdir, recipe_outdir)}, shell=True)
 
         # Strip under pseudo so that it records any inode replacements made by
         # the strip tool before the deployment tar reads this directory.
@@ -292,7 +294,7 @@ def deploy_no_d(srcdir, workdir, path, strip_cmd, libdir, base_libdir, max_proce
         ret = exec_fakeroot_no_d(
             fakerootcmd, fakerootenv, path,
             '%s -c %s' % (shlex.quote(sys.executable), shlex.quote(strip_script)),
-            shell=True)
+            env_overrides={'PSEUDO_INCLUDE_PATHS': recipe_outdir}, shell=True)
         if ret != 0:
             raise DevtoolError('Failed to strip files for deployment')
 
@@ -418,7 +420,8 @@ def deploy_no_d(srcdir, workdir, path, strip_cmd, libdir, base_libdir, max_proce
         remote_cmd = '%s | %s  %s %s %s \'sh %s %s %s %s\'' % (
             tar_cmd, ssh_sshexec, ssh_port, extraoptions, args.target,
             tmpscript, args.recipename, destdir, tmpfilelist)
-        ret = exec_fakeroot_no_d(fakerootcmd, fakerootenv, path, remote_cmd, cwd=recipe_outdir, shell=True)
+        ret = exec_fakeroot_no_d(fakerootcmd, fakerootenv, path, remote_cmd, cwd=recipe_outdir,
+                                env_overrides={'PSEUDO_INCLUDE_PATHS': recipe_outdir}, shell=True)
     finally:
         if tar_filelist_path:
             os.remove(tar_filelist_path)
