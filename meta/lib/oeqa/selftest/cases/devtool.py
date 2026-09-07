@@ -3591,6 +3591,11 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
             so_paths = config.get("additionalSOLibSearchPath", [])
             self.assertIn("/.debug", so_paths, f"Configuration '{config['name']}' should include debug symbol paths")
             self.assertIn("/rootfs-dbg/", so_paths, f"Configuration '{config['name']}' should include rootfs-dbg paths")
+            # The recipe's own D/usr/lib must come first, so GDB's solib-search-path basename fallback
+            # prefers freshly rebuilt libraries over a stale rootfs-dbg/rootfs copy from the last full image build.
+            first_so_path = so_paths.split(":", 1)[0]
+            self.assertIn("/image/", first_so_path, f"Configuration '{config['name']}' first SO lib search path should be the recipe's own image dir: {first_so_path}")
+            self.assertNotIn("rootfs-dbg", first_so_path, f"Configuration '{config['name']}' first SO lib search path should not be rootfs-dbg: {first_so_path}")
 
             # Verify source file mappings
             source_map = config.get("sourceFileMap", {})

@@ -827,27 +827,50 @@ class RecipeModified:
             return True
         return False
 
+    @staticmethod
+    def _find_elf_dirs(root):
+        """Return every directory under root that contains an ELF file"""
+        elf_dirs = []
+        for dirpath, _dirnames, filenames in os.walk(root):
+            for filename in filenames:
+                file_path = os.path.join(dirpath, filename)
+                if os.path.islink(file_path):
+                    continue
+                try:
+                    with open(file_path, 'rb') as elf_file:
+                        is_elf = elf_file.read(4) == b'\x7fELF'
+                except OSError:
+                    continue
+                if is_elf:
+                    elf_dirs.append(dirpath)
+                    break
+        return elf_dirs
+
     def solib_search_path(self, image):
-        """Search for debug symbols in the rootfs and rootfs-dbg
+        """Search for debug symbols
 
-        The debug symbols of shared libraries which are provided by other packages
-        are grabbed from the -dbg packages in the rootfs-dbg.
+        This recipe's own D is searched (for ELF files, wherever they are
+        installed), so that this recipe's freshly rebuilt libraries take
+        precedence over any stale copy from the last full image build.
+        "set sysroot D" alone cannot achieve this: GDB's sysroot (tested with
+        GDB 17.2) only matches "/lib" paths, but D usually only contains
+        "usr/lib" (no top-level "lib" symlink), so it falls back to
+        solib-search-path's basename matching instead. This also covers
+        libraries not installed into the standard libdirs.
 
-        But most cross debugging tools like gdb, perf, and systemtap need to find
-        executable/library first and through it debuglink note find corresponding
-        symbols file. Therefore the library paths from the rootfs are added as well.
-
-        Note: For the devtool modified recipe compiled from the IDE, the debug
-        symbols are taken from the unstripped binaries in the image folder.
-        Also, devtool deploy-target takes the files from the image folder.
-        debug symbols in the image folder refer to the corresponding source files
-        with absolute paths of the build machine. Debug symbols found in the
-        rootfs-dbg are relocated and contain paths which refer to the source files
-        installed on the target device e.g. /usr/src/...
+        D is listed first, ahead of rootfs-dbg/rootfs. For every other
+        library, i.e. one provided by another package, debug symbols are
+        grabbed from the -dbg packages in rootfs-dbg. gdb, perf, and
+        systemtap need to find the executable/library itself first, and
+        through its debuglink find the symbols file, so the plain rootfs
+        paths are added too.
         """
         base_libdir = self.base_libdir.lstrip('/')
         libdir = self.libdir.lstrip('/')
-        so_paths = [
+        # dedupe (e.g. base_libdir = libdir) while keeping the order (using dict instead of set)
+        so_paths = dict.fromkeys([
+            # This recipe's own rebuilt libraries/plugins, ahead of rootfs-dbg/rootfs.
+            *self._find_elf_dirs(self.d),
             # debug symbols for package_debug_split_style: debug-with-srcpkg or .debug
             os.path.join(image.rootfs_dbg, base_libdir, ".debug"),
             os.path.join(image.rootfs_dbg, libdir, ".debug"),
@@ -858,13 +881,12 @@ class RecipeModified:
             # With image-combined-dbg.bbclass the binaries are copied into rootfs-dbg
             os.path.join(image.rootfs_dbg, base_libdir),
             os.path.join(image.rootfs_dbg, libdir),
-            # Without image-combined-dbg.bbclass the binaries are only in rootfs.
-            # Note: Stepping into source files located in rootfs-dbg does not
-            #       work without image-combined-dbg.bbclass yet.
+            # Without image-combined-dbg.bbclass the binaries are only in rootfs
+            # (stepping into rootfs-dbg sources needs image-combined-dbg.bbclass)
             os.path.join(image.rootfs, base_libdir),
             os.path.join(image.rootfs, libdir)
-        ]
-        return so_paths
+        ])
+        return list(so_paths)
 
     def solib_search_path_str(self, image):
         """Return a : separated list of paths usable by GDB's set solib-search-path"""
