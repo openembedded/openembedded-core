@@ -3991,7 +3991,8 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
 
         with runqemu(testimage, runqemuparams="nographic slirp") as qemu:
             slirp_host = qemu.ip
-            slirp_port = qemu.port or '2222'
+            self.assertIsNotNone(qemu.port, 'No SSH port for the slirp target')
+            slirp_port = qemu.port
 
             # Re-run ide-sdk with the actual slirp address; image is already built.
             bitbake_sdk_cmd = (
