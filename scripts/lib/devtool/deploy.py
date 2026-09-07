@@ -431,12 +431,6 @@ def deploy_no_d(srcdir, workdir, path, strip_cmd, libdir, base_libdir, max_proce
 
     logger.info('Successfully deployed %s' % recipe_outdir)
 
-    files_list = []
-    for root, _, files in os.walk(recipe_outdir):
-        for filename in files:
-            filename = os.path.relpath(os.path.join(root, filename), recipe_outdir)
-            files_list.append(os.path.join(destdir, filename))
-
     return 0
 
 def undeploy(args, config, basepath, workspace):
