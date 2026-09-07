@@ -387,6 +387,7 @@ class IdeVSCode(IdeBase):
             # this configuration is generated. Stopping the session detaches
             # from the process instead of killing it.
             launch_config["useExtendedRemote"] = True
+            launch_config["processFilter"] = "(^| )%s( |$)" % cross_debug_config.binary.binary_path
         else:
             # cwd, environment and externalConsole configure the process the
             # debugger starts, they are not part of the attach schema.

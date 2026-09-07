@@ -3569,6 +3569,7 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
                 # from the process instead of killing it.
                 self.assertTrue(config.get("useExtendedRemote"), f"Configuration '{config['name']}' should use useExtendedRemote")
                 self.assertNotIn("cwd", config, f"Configuration '{config['name']}' should not set cwd in attach mode")
+                self.assertTrue(config.get("processFilter"), f"Configuration '{config['name']}' should use processFilter")
             else:
                 self.fail(f"Configuration '{config['name']}' has unexpected request type: {config['request']}")
 
