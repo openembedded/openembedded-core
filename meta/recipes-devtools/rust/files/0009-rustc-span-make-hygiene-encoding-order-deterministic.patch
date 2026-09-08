@@ -1,0 +1,59 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Alejandro Hernandez <alhe@linux.microsoft.com>
+Date: Mon, 7 Sep 2026 00:00:00 +0000
+Subject: [PATCH] rustc_span: Make hygiene metadata encoding order deterministic
+
+In `HygieneEncodeContext::encode`, `latest_ctxts` (`FxHashSet<SyntaxContext>`)
+and `latest_expns` (`FxHashSet<ExpnId>`) are consumed by iterating directly
+over the hash set.
+
+While the table entries storing offsets for syntax contexts and expansions
+are indexed by ID, `encode_ctxt` and `encode_expn` serialize the actual
+`SyntaxContextData` and `ExpnData` payload blobs directly into the crate
+metadata buffer (`self.opaque`) during this loop.
+
+Because `FxHashSet` iteration order depends on hash values that differ
+between build host architectures, the byte stream of hygiene payloads
+in metadata was non-deterministic across x86_64 and aarch64 build hosts.
+
+Sort `latest_ctxts` and `latest_expns` prior to encoding so hygiene
+payloads are written into metadata in deterministic ascending ID order.
+
+Upstream-Status: Inappropriate [OE-specific]
+Assisted-by: AI - OpenAI
+Signed-off-by: Alejandro Hernandez <alhe@linux.microsoft.com>
+
+--- a/compiler/rustc_span/src/hygiene.rs
++++ b/compiler/rustc_span/src/hygiene.rs
+@@ -1314,24 +1326,26 @@
+             // Consume the current round of syntax contexts.
+             // Drop the lock() temporary early.
+-            // It's fine to iterate over a HashMap, because the serialization of the table
+-            // that we insert data into doesn't depend on insertion order.
+             #[allow(rustc::potential_query_instability)]
+-            let latest_ctxts = { mem::take(&mut *self.latest_ctxts.lock()) }.into_iter();
++            let mut latest_ctxts: Vec<_> = { mem::take(&mut *self.latest_ctxts.lock()) }.into_iter().collect();
++            latest_ctxts.sort_by_key(|ctxt| ctxt.0);
+             let all_ctxt_data: Vec<_> = HygieneData::with(|data| {
+                 latest_ctxts
++                    .into_iter()
+                     .map(|ctxt| (ctxt, data.syntax_context_data[ctxt.0 as usize].key()))
+                     .collect()
+             });
+             for (ctxt, ctxt_key) in all_ctxt_data {
+                 if self.serialized_ctxts.lock().insert(ctxt) {
+                     encode_ctxt(encoder, ctxt.0, &ctxt_key);
+                 }
+             }
+ 
+             // Same as above, but for expansions instead of syntax contexts.
+             #[allow(rustc::potential_query_instability)]
+-            let latest_expns = { mem::take(&mut *self.latest_expns.lock()) }.into_iter();
++            let mut latest_expns: Vec<_> = { mem::take(&mut *self.latest_expns.lock()) }.into_iter().collect();
++            latest_expns.sort_by_key(|expn| (expn.krate, expn.local_id));
+             let all_expn_data: Vec<_> = HygieneData::with(|data| {
+                 latest_expns
++                    .into_iter()
+                     .map(|expn| (expn, data.expn_data(expn).clone(), data.expn_hash(expn)))
+                     .collect()
+             });

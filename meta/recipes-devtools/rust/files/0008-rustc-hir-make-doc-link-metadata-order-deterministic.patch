@@ -1,0 +1,36 @@
+rustc_hir: serialise doc-link resolutions in a deterministic order
+
+DocLinkResMap is an UnordMap, which wraps an FxHashMap and derives its
+Encodable implementation, so crate metadata records the doc-link table in hash
+iteration order. That order is not stable across build hosts, leaving a few
+hundred bytes of the .rustc section, and the DefIndex values that follow it,
+different for otherwise identical builds.
+
+Use an insertion-ordered FxIndexMap instead. Entries are added while walking
+the AST, so insertion order is deterministic, and the consumers of this map
+only ever look entries up by key.
+
+Upstream-Status: Inappropriate [OE-specific]
+Assisted-by: AI - OpenAI
+Signed-off-by: Alejandro Hernandez <alhe@linux.microsoft.com>
+---
+--- a/compiler/rustc_hir/src/def.rs
++++ b/compiler/rustc_hir/src/def.rs
+@@ -4,7 +4,7 @@
+ 
+ use rustc_ast as ast;
+ use rustc_ast::NodeId;
+-use rustc_data_structures::unord::UnordMap;
++use rustc_data_structures::fx::FxIndexMap;
+ use rustc_error_messages::{DiagArgValue, IntoDiagArg};
+ use rustc_macros::{Decodable, Encodable, StableHash};
+ use rustc_span::Symbol;
+@@ -969,4 +969,7 @@
+     ElidedAnchor { start: NodeId, end: NodeId },
+ }
+ 
+-pub type DocLinkResMap = UnordMap<(Symbol, Namespace), Option<Res<NodeId>>>;
++// Serialise doc-link resolutions in insertion order: UnordMap wraps an
++// FxHashMap, whose iteration order varies with the build host and leaves
++// crate metadata unreproducible across builders.
++pub type DocLinkResMap = FxIndexMap<(Symbol, Namespace), Option<Res<NodeId>>>;
