@@ -27,8 +27,9 @@ PACKAGECONFIG[devlink] = ",,libmnl,"
 PACKAGECONFIG[iptables] = ",,iptables"
 PACKAGECONFIG[rdma] = ",,libmnl,"
 PACKAGECONFIG[selinux] = ",,libselinux"
+PACKAGECONFIG[dcb] = ",,libmnl,"
 
-IPROUTE2_MAKE_SUBDIRS = "lib tc ip bridge misc genl ${@bb.utils.filter('PACKAGECONFIG', 'devlink tipc rdma', d)}"
+IPROUTE2_MAKE_SUBDIRS = "lib tc ip bridge misc genl ${@bb.utils.filter('PACKAGECONFIG', 'devlink tipc rdma dcb', d)}"
 
 # This is needed with GCC-14 and musl
 CFLAGS += "-Wno-error=incompatible-pointer-types"
@@ -79,6 +80,7 @@ IPROUTE2_PACKAGES =+ "\
     ${PN}-tc \
     ${PN}-tipc \
     ${PN}-rdma \
+    ${PN}-dcb \
 "
 
 PACKAGE_BEFORE_PN += "${IPROUTE2_PACKAGES}"
@@ -100,6 +102,7 @@ FILES:${PN}-devlink = "${base_sbindir}/devlink"
 FILES:${PN}-rdma = "${base_sbindir}/rdma"
 FILES:${PN}-routel = "${base_sbindir}/routel"
 FILES:${PN}-bridge = "${base_sbindir}/bridge"
+FILES:${PN}-dcb = "${base_sbindir}/dcb"
 
 RDEPENDS:${PN}-routel = "python3-core"
 
