@@ -1,4 +1,4 @@
-From 11d95270c5216bbe4d0f011c219374800b9ac627 Mon Sep 17 00:00:00 2001
+From 1609881b8d1246e85d9eb68275d54d28e2170301 Mon Sep 17 00:00:00 2001
 From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 Date: Tue, 25 Aug 2026 11:03:34 +0200
 Subject: [PATCH] examples: gtk: show player warnings in a dialog box
@@ -9,11 +9,11 @@ a dialog box with the warning message coming from the gstplay instance.
 Upstream-Status: Submitted [https://gitlab.freedesktop.org/gstreamer/gstreamer/-/merge_requests/12346]
 Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 ---
- .../gst-examples/playback/player/gtk/gtk-play.c   | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ .../playback/player/gtk/gtk-play.c            | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/playback/player/gtk/gtk-play.c b/subprojects/gst-examples/playback/player/gtk/gtk-play.c
-index fb83f6be29c5..0b87bcb03171 100644
+diff --git a/playback/player/gtk/gtk-play.c b/playback/player/gtk/gtk-play.c
+index fb83f6be29c5..2310c716f2e9 100644
 --- a/playback/player/gtk/gtk-play.c
 +++ b/playback/player/gtk/gtk-play.c
 @@ -88,6 +88,7 @@ typedef struct
@@ -55,7 +55,7 @@ index fb83f6be29c5..0b87bcb03171 100644
  static GObject *
  gtk_play_constructor (GType type, guint n_construct_params,
      GObjectConstructParam * construct_params)
-@@ -1774,6 +1791,8 @@ gtk_play_constructor (GType type, guint n_construct_params,
+@@ -1774,6 +1792,8 @@ gtk_play_constructor (GType type, guint n_construct_params,
        G_CALLBACK (media_info_updated_cb), self);
    g_signal_connect (self->signal_adapter, "volume-changed",
        G_CALLBACK (player_volume_changed_cb), self);
@@ -64,6 +64,3 @@ index fb83f6be29c5..0b87bcb03171 100644
  
    /* enable visualization (by default playbin uses goom) */
    /* if visualization is enabled then use the first element */
--- 
-2.47.3
-
