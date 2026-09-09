@@ -13,19 +13,31 @@ SETUPTOOLS_BUILD_ARGS ?= ""
 SETUPTOOLS_SETUP_PATH ?= "${S}"
 
 python do_check_backend() {
+    """
+    Check if this package has a pyproject.toml that specifies a PEP517 build backend, so should be
+    using a different build class.
+    """
+
     if "pep517-backend" in (d.getVar("INSANE_SKIP") or "").split():
         return
 
-    import re
+    try:
+        import tomllib
+    except ImportError:
+        import bb._vendor.tomli as tomllib
+
     filename = d.expand("${SETUPTOOLS_SETUP_PATH}/pyproject.toml")
     if os.path.exists(filename):
-        for line in open(filename):
-            match = re.match(r"build-backend\s*=\s*\W([\w.]+)\W", line)
-            if not match: continue
+        with open(filename, "rb") as f:
+            toml = tomllib.load(f)
 
-            msg = f"inherits setuptools3 but has pyproject.toml with {match[1]}, use the correct class"
+        try:
+            backend = toml["build-system"]["build-backend"]
+            msg = f"inherits setuptools3 but has pyproject.toml specifying backend {backend}, use the correct class"
             oe.qa.handle_error("pep517-backend", msg, d)
-    oe.qa.exit_if_errors(d)
+            oe.qa.exit_if_errors(d)
+        except KeyError:
+            return
 }
 addtask check_backend after do_patch before do_configure
 
