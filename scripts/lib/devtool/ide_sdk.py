@@ -789,6 +789,7 @@ class RecipeModified:
         self.target_arch = None
         self.tmpdir = None
         self.toolchain = None
+        self.ide_sdk_intellisense = None
         self.topdir = None
         self.workdir = None
         # Maps each package name (from PACKAGES) to the glob patterns from its FILES variable
@@ -884,6 +885,7 @@ class RecipeModified:
         self.target_arch = recipe_d.getVar('TARGET_ARCH')
         self.tmpdir = os.path.realpath(recipe_d.getVar('TMPDIR'))
         self.toolchain = recipe_d.getVar('TOOLCHAIN')
+        self.ide_sdk_intellisense = 'clangd' if self.toolchain == 'clang' else 'cpptools'
         self.topdir = recipe_d.getVar('TOPDIR')
         self.workdir = os.path.realpath(recipe_d.getVar('WORKDIR'))
 

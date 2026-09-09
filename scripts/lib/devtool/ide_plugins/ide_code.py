@@ -228,6 +228,26 @@ class IdeVSCode(IdeBase):
             }
         ]
 
+    def __vscode_settings_clangd(self, settings_dict, modified_recipe):
+        if not (modified_recipe.ide_sdk_intellisense == 'clangd' and modified_recipe.build_tool.is_c_cpp):
+            return
+        # Use the recipe's real cross compiler (gcc or clang, whichever TOOLCHAIN
+        # actually builds it), not a hardcoded 'clang'/'clang++' name.
+        cross_cc = os.path.join(modified_recipe.staging_bindir_toolchain, modified_recipe.cc.split()[0])
+        cross_cxx = os.path.join(modified_recipe.staging_bindir_toolchain, modified_recipe.cxx.split()[0])
+        settings_dict["clangd.path"] = os.path.join(
+            modified_recipe.recipe_sysroot_native, 'usr', 'bin', 'clangd')
+        settings_dict["clangd.arguments"] = [
+            # Allow-list the cross compiler so clangd queries it (not its own
+            # bundled clang) for target-specific builtin includes/defines.
+            # Works for gcc cross-compilers too, not just clang.
+            "--query-driver=%s,%s" % (cross_cc, cross_cxx),
+            "--compile-commands-dir=%s" % modified_recipe.b,
+            "--background-index"
+        ]
+        # Avoid cpptools (if also installed) fighting clangd over IntelliSense.
+        settings_dict["C_Cpp.intelliSenseEngine"] = "disabled"
+
     def vscode_settings(self, modified_recipe, image_recipe):
         files_hide = {
             "**/.git/**": True,
@@ -261,6 +281,7 @@ class IdeVSCode(IdeBase):
         self.__vscode_settings_cmake(settings_dict, modified_recipe)
         self.__vscode_settings_meson(settings_dict, modified_recipe)
         self.__vscode_settings_kernel_module(settings_dict, modified_recipe)
+        self.__vscode_settings_clangd(settings_dict, modified_recipe)
 
         settings_file = 'settings.json'
         IdeBase.update_json_file(
@@ -268,16 +289,22 @@ class IdeVSCode(IdeBase):
 
     def vscode_extensions(self, modified_recipe):
         recommendations = []
-        if modified_recipe.build_tool.is_c_cpp_kernel:
+        # clangd (matched to the recipe's real cross compiler via
+        # compile_commands.json) replaces cpptools as the IntelliSense provider
+        # if toolchain is clang. CodeLLDB/GDB debugging is unaffected either way.
+        use_clangd = (modified_recipe.ide_sdk_intellisense == 'clangd'
+                      and modified_recipe.build_tool.is_c_cpp)
+        if use_clangd:
+            recommendations += [
+                "llvm-vs-code-extensions.vscode-clangd",
+                "vadimcn.vscode-lldb"
+            ]
+        elif modified_recipe.build_tool.is_c_cpp_kernel:
             recommendations += [
                 "ms-vscode.cpptools",
                 "ms-vscode.cpptools-extension-pack",
                 "ms-vscode.cpptools-themes"
             ]
-        # For clang toolchain, CodeLLDB provides native LLDB debugging in VSCode
-        if (modified_recipe.toolchain == 'clang'
-                and modified_recipe.build_tool.is_c_cpp):
-            recommendations.append("vadimcn.vscode-lldb")
         if modified_recipe.build_tool is BuildTool.CMAKE:
             recommendations.append("ms-vscode.cmake-tools")
         if modified_recipe.build_tool is BuildTool.MESON:
@@ -290,6 +317,10 @@ class IdeVSCode(IdeBase):
             self.dot_code_dir(modified_recipe), extensions_file, {"recommendations": recommendations})
 
     def vscode_c_cpp_properties(self, modified_recipe, image_recipe):
+        # cpptools' IntelliSense is disabled in settings.json when clangd is
+        # the active provider, so this file would be inert clutter.
+        if modified_recipe.build_tool.is_c_cpp and modified_recipe.ide_sdk_intellisense == 'clangd':
+            return
         properties_dict = {
             "name": modified_recipe.recipe_id_pretty,
         }
