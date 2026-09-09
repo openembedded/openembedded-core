@@ -36,6 +36,7 @@ SRC_URI = " \
     file://CVE-2026-9545-02.patch \
     file://CVE-2026-9079.patch \
     file://CVE-2026-13608.patch \
+    file://CVE-2026-80229.patch \
 "
 
 SRC_URI:append:class-nativesdk = " \
