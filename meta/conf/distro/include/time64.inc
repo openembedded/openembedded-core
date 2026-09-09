@@ -32,6 +32,23 @@ GLIBC_64BIT_TIME_FLAGS:pn-pulseaudio = ""
 # libsanitizer/sanitizer_common/sanitizer_platform_limits_posix.cpp
 GLIBC_64BIT_TIME_FLAGS:pn-gcc-sanitizers = ""
 
+# Apply the same flags to nativesdk packages when building for a 32-bit SDK
+# host (i686, i586).
+SDK_CC_ARCH:append:class-nativesdk:i686 = "${GLIBC_64BIT_TIME_FLAGS}"
+SDK_CC_ARCH:append:class-nativesdk:i586 = "${GLIBC_64BIT_TIME_FLAGS}"
+
+# Recipes which implement or wrap the libc APIs themselves must not be built
+# with these flags, as the redirections glibc performs would collide with the
+# symbols the recipes define (e.g. "symbol '__sigtimedwait64' is already
+# defined" in nativesdk-glibc, or duplicate creat64/fopen64 in
+# nativesdk-pseudo). The pn- overrides above only match the target recipes, so
+# the class extended variants have to be listed separately.
+GLIBC_64BIT_TIME_FLAGS:pn-nativesdk-glibc = ""
+GLIBC_64BIT_TIME_FLAGS:pn-nativesdk-pseudo = ""
+# The MinGW runtime provides the Windows CRT rather than glibc. These flags
+# change its stat declarations and cause conflicting types in the CRT sources.
+GLIBC_64BIT_TIME_FLAGS:pn-nativesdk-mingw-w64-runtime = ""
+
 # Caused by the flags exceptions above
 INSANE_SKIP:append:pn-gcc-sanitizers = " 32bit-time"
 INSANE_SKIP:append:pn-glibc = " 32bit-time"
