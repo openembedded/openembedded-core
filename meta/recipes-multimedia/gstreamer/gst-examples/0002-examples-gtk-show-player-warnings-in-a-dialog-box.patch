@@ -12,10 +12,10 @@ Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
  .../playback/player/gtk/gtk-play.c            | 20 +++++++++++++++++++
  1 file changed, 20 insertions(+)
 
-diff --git a/playback/player/gtk/gtk-play.c b/playback/player/gtk/gtk-play.c
+diff --git a/subprojects/gst-examples/playback/player/gtk/gtk-play.c b/subprojects/gst-examples/playback/player/gtk/gtk-play.c
 index fb83f6be29c5..2310c716f2e9 100644
---- a/playback/player/gtk/gtk-play.c
-+++ b/playback/player/gtk/gtk-play.c
+--- a/subprojects/gst-examples/playback/player/gtk/gtk-play.c
++++ b/subprojects/gst-examples/playback/player/gtk/gtk-play.c
 @@ -88,6 +88,7 @@ typedef struct
    gboolean loop;
    gboolean fullscreen;
