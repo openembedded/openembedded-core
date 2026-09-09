@@ -10,6 +10,7 @@
 import os
 import time
 import re
+import weakref
 import bb.event
 from collections import deque
 
@@ -56,6 +57,12 @@ class SystemStats:
                     destfile = os.path.join(bsdir, '%sproc_%s.log' % ('reduced_' if handler else '', filename))
                 self.proc_files.append((filename, open(destfile, 'ab'), handler))
         self.monitor_disk = open(os.path.join(bsdir, 'monitor_disk.log'), 'ab')
+        # Safety net: normally close() is called when bb.event.BuildCompleted
+        # fires, but that event is skipped for internal, event-less task runs
+        # (e.g. tinfoil's run_prepared_task()). Without this, the open files
+        # would only get closed implicitly at GC/interpreter-exit time,
+        # triggering a ResourceWarning.
+        self._finalizer = weakref.finalize(self, self._close_files, self.proc_files, self.monitor_disk)
         # Last time that we sampled /proc data resp. recorded disk monitoring data.
         self.last_proc = 0
         self.last_disk_monitor = 0
@@ -81,8 +88,12 @@ class SystemStats:
         self.net_stats = {}
 
     def close(self):
-        self.monitor_disk.close()
-        for _, output, _ in self.proc_files:
+        self._finalizer()
+
+    @staticmethod
+    def _close_files(proc_files, monitor_disk):
+        monitor_disk.close()
+        for _, output, _ in proc_files:
             output.close()
 
     def _reduce_meminfo(self, time, data, filename):
