@@ -353,6 +353,12 @@ def deploy_no_d(srcdir, workdir, path, strip_cmd, libdir, base_libdir, max_proce
             print('  %s' % item)
         return 0
 
+    return _deploy_ssh(args, destdir, filelist, ftotalsize, tar_relpaths, allowed_files,
+                       fakerootcmd, fakerootenv, path, recipe_outdir)
+
+def _deploy_ssh(args, destdir, filelist, ftotalsize, tar_relpaths, allowed_files,
+                fakerootcmd, fakerootenv, path, recipe_outdir):
+    """Copy files to target_dir over ssh/scp (user@hostname[:destdir])."""
     extraoptions = ''
     if args.no_host_check:
         extraoptions += '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
@@ -440,6 +446,10 @@ def undeploy(args, config, basepath, workspace):
     elif not args.recipename and not args.all:
         raise argparse_oe.ArgumentUsageError('If you don\'t specify a recipe, you must specify -a/--all', 'undeploy-target')
 
+    return _undeploy_ssh(args)
+
+def _undeploy_ssh(args):
+    """Run the undeploy script on the target over ssh/scp (user@hostname[:destdir])."""
     extraoptions = ''
     if args.no_host_check:
         extraoptions += '-o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
