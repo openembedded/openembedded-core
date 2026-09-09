@@ -1633,6 +1633,11 @@ class RecipeModified:
                           os.path.join(self.bitbakepath, '..', 'lib')),
                       'import bb.tinfoil',
                       'os.chdir(%r)' % self.topdir,
+                      # A stale BBPATH from the caller's environment (e.g. a
+                      # different, still-valid build dir) would otherwise take
+                      # precedence over cwd when bitbake looks for
+                      # conf/bblayers.conf (see bb.cookerdata.findConfigFile).
+                      'os.environ["BBPATH"] = %r' % self.topdir,
                       'tinfoil = bb.tinfoil.Tinfoil()',
                       'try:',
                       '    tinfoil.prepare(config_only=False, quiet=2)',
