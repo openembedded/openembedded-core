@@ -248,6 +248,19 @@ class IdeVSCode(IdeBase):
         # Avoid cpptools (if also installed) fighting clangd over IntelliSense.
         settings_dict["C_Cpp.intelliSenseEngine"] = "disabled"
 
+    def __vscode_settings_format(self, settings_dict, modified_recipe):
+        # clangd is the only formatter wired up here, so only enable it when
+        # clangd is actually the active IntelliSense engine (its extension is
+        # recommended/available).
+        if not (modified_recipe.ide_sdk_intellisense == 'clangd' and modified_recipe.build_tool.is_c_cpp):
+            return
+        # Respect the project's own formatting style only if it opted in.
+        if not os.path.isfile(os.path.join(modified_recipe.real_srctree, '.clang-format')):
+            return
+        settings_dict["[cpp]"] = {"editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"}
+        settings_dict["[c]"] = {"editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"}
+        settings_dict["editor.formatOnSave"] = True
+
     def vscode_settings(self, modified_recipe, image_recipe):
         files_hide = {
             "**/.git/**": True,
@@ -282,6 +295,7 @@ class IdeVSCode(IdeBase):
         self.__vscode_settings_meson(settings_dict, modified_recipe)
         self.__vscode_settings_kernel_module(settings_dict, modified_recipe)
         self.__vscode_settings_clangd(settings_dict, modified_recipe)
+        self.__vscode_settings_format(settings_dict, modified_recipe)
 
         settings_file = 'settings.json'
         IdeBase.update_json_file(
