@@ -508,11 +508,12 @@ class IdeVSCode(IdeBase):
         return launch_config
 
     def _vscode_launch_bin_dbg_lldb(self, lldb_config, server_mode):
-        """Generate a CodeLLDB (type: lldb) launch configuration entry for launch.json.
+        """Generate a CodeLLDB (type: lldb) launch/attach configuration entry for launch.json.
 
         CodeLLDB connects to lldb-server via the LLDB platform protocol.  The
         initCommands select the remote platform and open the connection before
-        the process is launched, so CodeLLDB can inspect and control it.
+        the process is launched or attached to, so CodeLLDB can inspect and
+        control it.
 
         Using targetCreateCommands instead of "program" so we can pass both the
         local host binary (for debug symbols) and the remote target path (where
@@ -520,14 +521,16 @@ class IdeVSCode(IdeBase):
         "target create --remote-file".  This prevents LLDB from uploading the
         binary from its module cache to a temporary directory and ensures the
         process starts from its installed location where the dynamic linker can
-        find shared libraries via the standard search paths.
+        find shared libraries via the standard search paths. In ATTACH mode the
+        same lldb-server platform connection is used.
         """
         modified_recipe = lldb_config.modified_recipe
         debugger_cross = modified_recipe.debugger_cross
+        is_attach = server_mode == DebuggerServerModes.ATTACH
 
         init_commands = [
             "platform select remote-linux",
-            "platform connect connect://%s:%d" % (debugger_cross.host, lldb_config.debug_server_port),
+            "platform connect connect://%s:%d" % (debugger_cross.host, lldb_config.port(server_mode)),
             # Clear the default step-avoid-regexp so std:: and other library
             # namespaces are not silently skipped on step-in. (default is "std::" in LLDB 15+)
             "settings set target.process.thread.step-avoid-regexp \"\"",
@@ -592,15 +595,21 @@ class IdeVSCode(IdeBase):
         launch_config = {
             "name": lldb_config.id_pretty_mode(server_mode),
             "type": "lldb",
-            "request": "launch",
+            "request": "attach" if is_attach else "launch",
             # Use targetCreateCommands instead of "program" to control both
             # the local binary (for debug symbols) and the remote path.
             "targetCreateCommands": [target_create_cmd],
-            "stopOnEntry": False,
-            "cwd": "/tmp",
             "preLaunchTask": lldb_config.id_pretty_mode(server_mode),
             "initCommands": init_commands,
         }
+        if is_attach:
+            launch_config["postDebugTask"] = self._stop_task_label(
+                lldb_config, server_mode)
+        else:
+            # cwd configures the process the debugger launches, it is not
+            # part of the attach schema.
+            launch_config["stopOnEntry"] = False
+            launch_config["cwd"] = "/tmp"
         if source_map:
             launch_config["sourceMap"] = source_map
         if modified_recipe.b:

@@ -4640,10 +4640,21 @@ class DevtoolIdeSdkClangTests(DevtoolIdeSdkTests):
                              f"Configuration '{config_name}' should not have MIMode (CodeLLDB)")
             self.assertNotIn("miDebuggerPath", config,
                              f"Configuration '{config_name}' should not have miDebuggerPath")
-            self.assertEqual(config["request"], "launch",
-                             f"Configuration '{config_name}' should be launch type")
-            self.assertEqual(config["cwd"], "/tmp",
-                             f"Configuration '{config_name}' cwd should be /tmp (writable on target)")
+
+            is_attach = "_attach" in config_name
+            if is_attach:
+                self.assertEqual(config["request"], "attach",
+                                 f"Configuration '{config_name}' should be attach type")
+                self.assertNotIn("cwd", config,
+                                 f"Configuration '{config_name}' should not set cwd in attach mode")
+                self.assertIn("postDebugTask", config,
+                              f"attach configuration '{config_name}' should have postDebugTask "
+                              "to stop the lldb-server platform instance afterwards")
+            else:
+                self.assertEqual(config["request"], "launch",
+                                 f"Configuration '{config_name}' should be launch type")
+                self.assertEqual(config["cwd"], "/tmp",
+                                 f"Configuration '{config_name}' cwd should be /tmp (writable on target)")
 
             # Verify initCommands contain the platform connect sequence
             init_commands = config.get("initCommands", [])
