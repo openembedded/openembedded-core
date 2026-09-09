@@ -3312,8 +3312,8 @@ class DevtoolIdeSdkTests(DevtoolBase):
             cpp_code = file.read()
             cpp_code = cpp_code.replace(DevtoolIdeSdkTests.MAGIC_STRING_ORIG, MAGIC_STRING_NEW)
             cpp_code = cpp_code.replace(
-                "    inline static int scale_number(int n)",
-                extra_lines + "    inline static int scale_number(int n)")
+                "    static int scale_number(int n)",
+                extra_lines + "    static int scale_number(int n)")
         with open(cpp_example_lib_hpp, 'w') as file:
             file.write(cpp_code)
 
@@ -3362,8 +3362,8 @@ class DevtoolIdeSdkTests(DevtoolBase):
         # the first _gdb_cross_debugging_multi call above.
         self._gdb_cross_debugging_multi(
             qemu, recipe_name, example_exe, MAGIC_STRING_NEW,
-            exe_break_line=136 + LINE_SHIFT, exe_list_line=128 + LINE_SHIFT,
-            hpp_break_line=21 + LINE_SHIFT, lib_break_line=31 + LINE_SHIFT)
+            exe_break_line=136 + LINE_SHIFT, exe_list_line=129 + LINE_SHIFT,
+            hpp_break_line=24 + LINE_SHIFT, lib_break_line=31 + LINE_SHIFT)
 
     def _verify_cmake_preset(self, tempdir):
         """Verify the generated cmake preset works as expected
@@ -3532,14 +3532,14 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
         self.assertIn("GNU gdb", r.output)
 
     def _gdb_debug_cpp_example(self, magic_string, gdb_start_cmd="run",
-                              exe_break_line=136, exe_list_line=128, hpp_break_line=21,
+                              exe_break_line=136, exe_list_line=129, hpp_break_line=24,
                               lib_break_line=31):
         """Get a series of gdb commands to debug the cpp-example-lib example"""
         gdb_batch_cmd = " -ex 'break main' -ex '%s'" % gdb_start_cmd
         gdb_batch_cmd += " -ex 'break CppExample::print_json()' -ex 'continue'"
         gdb_batch_cmd += " -ex 'print CppExample::test_string.compare(\"cpp-example-lib %s\")'" % magic_string
         gdb_batch_cmd += " -ex 'print CppExample::test_string.compare(\"cpp-example-lib %saaa\")'" % magic_string
-        gdb_batch_cmd += " -ex 'list cpp-example-lib.hpp:15,15'"
+        gdb_batch_cmd += " -ex 'list cpp-example-lib.hpp:16,16'"
 
         # Break inside the library's own .cpp file by file:line (not by
         # symbol), while still inside the print_json() call reached above.
@@ -3578,7 +3578,7 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
         gdb_batch_cmd += " -ex 'continue'"
         return gdb_batch_cmd
 
-    def _gdb_debug_cpp_example_check(self, gdb_output, magic_string, exe_list_line=128, lib_break_line=31):
+    def _gdb_debug_cpp_example_check(self, gdb_output, magic_string, exe_list_line=129, lib_break_line=31):
         self.assertIn("Breakpoint 1, main", gdb_output)
         self.assertIn("$1 = 0", gdb_output)  # test.string.compare equal
         self.assertIn("$2 = -3", gdb_output)  # test.string.compare longer
@@ -3606,7 +3606,7 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
         self.assertIn("exited normally", gdb_output)
 
     def _gdb_cross_debugging_multi(self, qemu, recipe_name, example_exe, magic_string,
-                                   exe_break_line=136, exe_list_line=128, hpp_break_line=21,
+                                   exe_break_line=136, exe_list_line=129, hpp_break_line=24,
                                    lib_break_line=31):
         """Verify gdb-cross is working
 
@@ -4814,8 +4814,8 @@ class DevtoolIdeSdkClangTests(DevtoolIdeSdkTests):
             cpp_code = file.read()
         cpp_code = cpp_code.replace(DevtoolIdeSdkTests.MAGIC_STRING_ORIG, magic_string_new)
         cpp_code = cpp_code.replace(
-            "    inline static int scale_number(int n)",
-            extra_lines + "    inline static int scale_number(int n)")
+            "    static int scale_number(int n)",
+            extra_lines + "    static int scale_number(int n)")
         with open(cpp_example_lib_hpp, 'w') as file:
             file.write(cpp_code)
 

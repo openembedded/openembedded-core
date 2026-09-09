@@ -113,6 +113,7 @@ int main(int argc, char *argv[])
     log_info(std::string("Linking json-c version ") + cpp_example.get_json_c_version());
     cpp_example.print_json();
 
+    // NOLINTNEXTLINE(bugprone-infinite-loop) -- intentionally endless when requested; stopped externally (e.g. systemd stop/SIGTERM)
     do {
         // Read and print message from config file
         std::string config_message = cpp_example.read_config_message();
