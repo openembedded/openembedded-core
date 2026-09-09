@@ -3627,8 +3627,17 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
         r = runCmd(gdbserver_script, output_log=self._cmd_logger)
         self.assertEqual(r.status, 0)
 
+        # The start script waits for gdbserver's port before returning, but on
+        # an NFS-root target (--nfs=rootfs-dbg) the pid file it wrote has been
+        # observed to become readable over the next SSH connection only a
+        # moment later, so poll for it.
         pid_file = '/tmp/gdbserver_1234_usr-bin-%s_multi/gdbserver.pid' % example_exe
         status, output = qemu.run('cat %s' % pid_file)
+        for _ in range(10):
+            if status == 0:
+                break
+            time.sleep(1)
+            status, output = qemu.run('cat %s' % pid_file)
         self.assertEqual(status, 0)
         gdbserver_pid = output.strip()
         self.assertRegex(gdbserver_pid, r'^\d+$')
@@ -4067,6 +4076,117 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
                 self.logger.debug("%s %s returned: %s", debugger_path, gdb_batch_cmd, r.output)
                 self.assertEqual(r.status, 0)
                 debug_check_func(r.output, DevtoolIdeSdkTests.MAGIC_STRING_ORIG)
+
+    def test_devtool_ide_sdk_code_nfs_debug_rootfs(self):
+        """Verify ide-sdk extracts an NFS debug rootfs for VS Code debugging."""
+        recipe_name = "cmake-example"
+        build_file = "CMakeLists.txt"
+        testimage = "oe-selftest-image"
+
+        self._check_workspace()
+        self._write_bb_config()
+        tempdir = self._devtool_ide_sdk_recipe(
+            recipe_name, build_file, testimage)
+        runCmd('devtool ide-sdk %s %s -c --ide=code --nfs=rootfs-dbg' %
+               (recipe_name, testimage), output_log=self._cmd_logger)
+
+        nfs_rootfs = os.path.join(
+            self.workspacedir, 'nfs-exports', testimage, 'rootfs-dbg')
+        self.assertExists(nfs_rootfs)
+        self.assertExists(nfs_rootfs + '.pseudo_state')
+        self.assertExists(os.path.join(nfs_rootfs, 'usr', 'bin', recipe_name))
+        runqemu_helper = os.path.join(
+            self.workspacedir, 'nfs-exports', testimage,
+            'runqemu-rootfs-dbg')
+        self.assertExists(runqemu_helper)
+        self.assertTrue(os.access(runqemu_helper, os.X_OK))
+        with open(runqemu_helper) as helper_file:
+            helper = helper_file.read()
+        self.assertIn('exec runqemu ', helper)
+        self.assertIn(nfs_rootfs, helper)
+
+        bbappend = os.path.join(
+            self.workspacedir, 'appends', testimage + '.bbappend')
+        with open(bbappend) as append_file:
+            self.assertRegex(
+                append_file.read(),
+                r'IMAGE_FSTYPES_DEBUGFS(?::append)? = " ?tar"')
+
+        with open(os.path.join(tempdir, '.vscode', 'launch.json')) as launch_file:
+            launch_configurations = json.load(launch_file)['configurations']
+        for configuration in launch_configurations:
+            self.assertIn(
+                nfs_rootfs, configuration['additionalSOLibSearchPath'])
+            self.assertEqual(
+                os.path.join(nfs_rootfs, 'usr', 'src', 'debug'),
+                configuration['sourceFileMap']['/usr/src/debug'])
+
+    def _test_devtool_ide_sdk_nfs_debug_rootfs_qemu(self, slirp=False):
+        """Boot the extracted NFS debug rootfs and exercise remote GDB."""
+        recipe_name = "cmake-example"
+        build_file = "CMakeLists.txt"
+        testimage = "oe-selftest-image"
+
+        self._check_workspace()
+        self._write_bb_config()
+        if not slirp:
+            self._check_runqemu_prerequisites()
+
+        tempdir = self._devtool_ide_sdk_recipe(
+            recipe_name, build_file, testimage)
+        runCmd('devtool ide-sdk %s %s -c --ide=none --nfs=rootfs-dbg' %
+               (recipe_name, testimage),
+               output_log=self._cmd_logger)
+
+        nfs_rootfs = os.path.join(
+            self.workspacedir, 'nfs-exports', testimage, 'rootfs-dbg')
+        runqemu_helper = os.path.join(
+            self.workspacedir, 'nfs-exports', testimage,
+            'runqemu-rootfs-dbg')
+        self.assertExists(nfs_rootfs)
+        self.assertExists(runqemu_helper)
+
+        launch_cmd = '%s nographic' % shlex.quote(runqemu_helper)
+        runqemuparams = ''
+        if slirp:
+            launch_cmd += ' slirp'
+            # QemuTarget uses this only to select its localhost SSH endpoint;
+            # launch_cmd supplies the actual runqemu option.
+            runqemuparams = 'slirp'
+
+        with runqemu(testimage, runqemuparams=runqemuparams,
+                     launch_cmd=launch_cmd) as qemu:
+            status, output = qemu.run(
+                "awk '$2 == \"/\" {print $3}' /proc/mounts")
+            self.assertEqual(status, 0)
+            self.assertEqual(output.strip(), 'nfs')
+
+            # Re-run with the real QEMU target address, instead of 192.168.7.2 IP.
+            # --skip-bitbake also skips the rootfs extraction, which would
+            # otherwise wipe the directory the target has mounted right now.
+            if slirp:
+                self.assertIsNotNone(qemu.port, 'No SSH port for the slirp target')
+                target_options = '-t root@%s -P %s ' % (qemu.ip, qemu.port)
+            else:
+                target_options = '-t root@%s -c ' % qemu.ip
+            runCmd('devtool ide-sdk %s %s %s--skip-bitbake --ide=none --nfs=rootfs-dbg' %
+                   (recipe_name, testimage, target_options),
+                   output_log=self._cmd_logger)
+
+            self._gdb_cross()
+            compile_cmd = self._verify_cmake_preset(tempdir)
+            self._devtool_ide_sdk_qemu(
+                tempdir, qemu, recipe_name, recipe_name, compile_cmd)
+
+    @OETestTag("runqemu")
+    def test_devtool_ide_sdk_none_nfs_qemu(self):
+        """Verify remote GDB debugging through an NFS-root QEMU target."""
+        self._test_devtool_ide_sdk_nfs_debug_rootfs_qemu()
+
+    @OETestTag("runqemu")
+    def test_devtool_ide_sdk_none_nfs_qemu_slirp(self):
+        """Verify remote GDB debugging through an NFS-root slirp target."""
+        self._test_devtool_ide_sdk_nfs_debug_rootfs_qemu(slirp=True)
 
     @OETestTag("runqemu")
     def test_devtool_ide_sdk_code_cmake(self):
