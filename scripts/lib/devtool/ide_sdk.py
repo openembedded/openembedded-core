@@ -27,6 +27,7 @@ from devtool.standard import get_real_srctree
 from devtool.deploy import parse_packages_arg
 from devtool.ide_plugins import BuildTool, DebuggerCrossConfig
 from oe.kernel_module import kernel_module_os_env
+from pseudo_rootfs_utils import PseudoRootfsError, extract_sdk_rootfs, pseudo_state_dir
 
 
 logger = logging.getLogger('devtool')
@@ -441,66 +442,6 @@ class RecipeImage:
         slirp_changed = self.update_qb_slirp_opt()
         return image_changed or slirp_changed
 
-    @staticmethod
-    def _tar_options(rootfs_tarball):
-        tar_extract_options = {
-            '.tar.xz': '-xJf',
-            '.tar.bz2': '-xjf',
-            '.tar.gz': '-xzf',
-            '.tar.zst': '--zstd -xf',
-            '.tar': '-xf',
-        }
-        for extension, option in tar_extract_options.items():
-            if rootfs_tarball.endswith(extension):
-                return ['--numeric-owner', *option.split()]
-        raise DevtoolError(
-            'Unable to determine sdk tarball format\n'
-            'Accepted types: .tar / .tar.gz / .tar.bz2 / .tar.xz / .tar.zst')
-
-    @staticmethod
-    def pseudo_state_dir(rootfs_dir):
-        """Return the pseudo database location associated with an extracted rootfs."""
-        return os.path.realpath(rootfs_dir) + '.pseudo_state'
-
-    def extract_sdk_rootfs(self, rootfs_tarball, rootfs_dir):
-        """Extract a rootfs tarball under pseudo and return its absolute directory."""
-        if not os.path.exists(rootfs_tarball):
-            raise DevtoolError("sdk tarball '%s' does not exist" % rootfs_tarball)
-        if not os.path.exists(self.fakerootcmd):
-            raise DevtoolError('%s does not exist' % self.fakerootcmd)
-
-        rootfs_tarball = os.path.realpath(rootfs_tarball)
-        rootfs_dir = os.path.realpath(rootfs_dir)
-        tar_options = self._tar_options(rootfs_tarball)
-        state_dir = self.pseudo_state_dir(rootfs_dir)
-
-        os.makedirs(rootfs_dir, exist_ok=True)
-        os.makedirs(state_dir, exist_ok=True)
-        Path(state_dir, 'pseudo.pid').touch()
-
-        environment = dict(os.environ)
-        for varvalue in (self.fakerootenv or '').split():
-            if '=' in varvalue:
-                key, value = varvalue.split('=', 1)
-                environment[key] = value
-        command = [self.fakerootcmd, 'tar', '-C', rootfs_dir]
-
-        environment['PSEUDO_LOCALSTATEDIR'] = state_dir
-        environment['PSEUDO_INCLUDE_PATHS'] = rootfs_dir
-        command.extend(tar_options)
-        command.append(rootfs_tarball)
-        logger.info('Extracting rootfs tarball using pseudo: %s', ' '.join(command))
-        try:
-            subprocess.run(command, env=environment, check=True)
-        except subprocess.CalledProcessError as exc:
-            raise DevtoolError('Failed to extract %s' % rootfs_tarball) from exc
-
-        if len(os.listdir(rootfs_dir)) < 4:
-            logger.warning(
-                "Only few files in %s, please double-check the extraction "
-                "worked as intended", rootfs_dir)
-        return rootfs_dir
-
     def extract_nfs_rootfs(self, nfs_export_base_dir, nfs, target):
         """Refresh the selected rootfs below nfs_export_base_dir."""
         if not self.image_link_name:
@@ -511,7 +452,7 @@ class RecipeImage:
         rootfs_tarball = os.path.join(
             self.deploy_dir_image, self.image_link_name + suffix + '.tar')
         rootfs_dir = self.nfs_rootfs_dir(nfs_export_base_dir, nfs)
-        state_dir = self.pseudo_state_dir(rootfs_dir)
+        state_dir = pseudo_state_dir(rootfs_dir)
 
         if os.path.exists(rootfs_dir):
             logger.warning(
@@ -521,7 +462,20 @@ class RecipeImage:
             if os.path.exists(stale_dir):
                 shutil.rmtree(stale_dir)
 
-        self.extract_sdk_rootfs(rootfs_tarball, rootfs_dir)
+        if not os.path.exists(self.fakerootcmd):
+            raise DevtoolError('%s does not exist' % self.fakerootcmd)
+        # Reuse the image's own pseudo instead of qemu-helper-native's, so
+        # extraction does not depend on a recipe devtool ide-sdk never builds.
+        pseudo_cmd = [self.fakerootcmd]
+        environment = dict(os.environ)
+        for varvalue in (self.fakerootenv or '').split():
+            if '=' in varvalue:
+                key, value = varvalue.split('=', 1)
+                environment[key] = value
+        try:
+            extract_sdk_rootfs(rootfs_tarball, rootfs_dir, pseudo_cmd, environment)
+        except PseudoRootfsError as exc:
+            raise DevtoolError('Unable to prepare NFS rootfs: %s' % exc) from exc
 
         logger.info('NFS rootfs extracted to %s', rootfs_dir)
         helper = self.nfs_runqemu_helper(nfs_export_base_dir, nfs)
