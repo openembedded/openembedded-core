@@ -752,9 +752,12 @@ class RecipeModified:
 
     VALID_BASH_ENV_NAME_CHARS = re.compile(r"^[a-zA-Z0-9_]*$")
 
-    def __init__(self, name):
+    MARKER = '# devtool ide-sdk: clangd toolchain support'
+
+    def __init__(self, name, orig_bbappend_content=None):
         self.name = name
         self.bootstrap_tasks = [name + ':do_install']
+        self._orig_bbappend_content = orig_bbappend_content
         self.debugger_cross = None
         # workspace
         self.real_srctree = None
@@ -829,6 +832,73 @@ class RecipeModified:
         self._installed_binaries = None
         self._gdb_pretty_print_scripts = None
 
+    @staticmethod
+    def _strip_marker_section(content, marker):
+        """Remove one devtool ide-sdk marker section, if present"""
+        return re.sub(
+            r'^' + re.escape(marker) + r'\n(?:[^\n]+\n)*',
+            '', content, flags=re.MULTILINE)
+
+    @classmethod
+    def strip_bbappend_sections(cls, config, recipe_names):
+        """Remove devtool ide-sdk's own bbappend section from earlier runs
+
+        Runs before setup_tinfoil() so that every parse in this session sees the
+        original recipe content and only non standard flags can be bbappended later.
+        """
+        originals = {}
+        appends_dir = os.path.join(config.workspace_path, 'appends')
+        for name in recipe_names:
+            bbappend = os.path.join(appends_dir, name + '.bbappend')
+            if not os.path.exists(bbappend):
+                continue
+            with open(bbappend, 'r') as f:
+                content = f.read()
+            originals[name] = content
+            stripped = cls._strip_marker_section(content, cls.MARKER)
+            if stripped != content:
+                with open(bbappend, 'w') as f:
+                    f.write(stripped)
+        return originals
+
+    def update_bbappend(self):
+        """Add DEPENDS on clang-native when clangd is used as only the IntelliSense engine"""
+        wants_clang_native = (
+            self.build_tool.is_c_cpp
+            and self.ide_sdk_intellisense == 'clangd'
+            and self.toolchain != 'clang')
+
+        original_content = self._orig_bbappend_content or ''
+        if os.path.exists(self.bbappend):
+            with open(self.bbappend, 'r') as f:
+                parsed_content = f.read()
+        else:
+            parsed_content = ''
+
+        if not wants_clang_native:
+            if self.MARKER in original_content:
+                logger.info(
+                    "Removed clangd toolchain support from %s: no longer needed", self.bbappend)
+            return False
+
+        new_section = self.MARKER + '\nDEPENDS:append = " clang-native"\n'
+        new_content = parsed_content
+        if new_content and not new_content.endswith('\n'):
+            new_content += '\n'
+        new_content += new_section
+
+        if new_content == original_content:
+            return False
+
+        appends_dir = os.path.dirname(self.bbappend)
+        os.makedirs(appends_dir, exist_ok=True)
+        with open(self.bbappend, 'w') as f:
+            f.write(new_content)
+        logger.info(
+            "Updated %s: added DEPENDS on clang-native, needed to stage clangd "
+            "for IDE_SDK_INTELLISENSE=\"clangd\"", self.bbappend)
+        return True
+
     def initialize(self, config, workspace, tinfoil):
         recipe_d = parse_recipe(
             config, tinfoil, self.name, appends=True, filter_workspace=False)
@@ -885,7 +955,8 @@ class RecipeModified:
         self.target_arch = recipe_d.getVar('TARGET_ARCH')
         self.tmpdir = os.path.realpath(recipe_d.getVar('TMPDIR'))
         self.toolchain = recipe_d.getVar('TOOLCHAIN')
-        self.ide_sdk_intellisense = 'clangd' if self.toolchain == 'clang' else 'cpptools'
+        self.ide_sdk_intellisense = recipe_d.getVar('IDE_SDK_INTELLISENSE') or (
+            'clangd' if self.toolchain == 'clang' else 'cpptools')
         self.topdir = recipe_d.getVar('TOPDIR')
         self.workdir = os.path.realpath(recipe_d.getVar('WORKDIR'))
 
@@ -1650,6 +1721,8 @@ def ide_setup(args, config, basepath, workspace):
     # ide-sdk section it is a no-op.
     orig_bbappend_contents = RecipeImage.strip_bbappend_sections(
         config, args.recipenames)
+    orig_recipe_bbappend_contents = RecipeModified.strip_bbappend_sections(
+        config, args.recipenames)
     tinfoil = setup_tinfoil(config_only=False, basepath=basepath)
     try:
         # define mode depending on recipes which need to be processed
@@ -1769,7 +1842,8 @@ def ide_setup(args, config, basepath, workspace):
                         str(recipes_modified_names))
             debuggers = {}
             for recipe_name in recipes_modified_names:
-                recipe_modified = RecipeModified(recipe_name)
+                recipe_modified = RecipeModified(
+                    recipe_name, orig_recipe_bbappend_contents.get(recipe_name))
                 recipe_modified.initialize(config, workspace, tinfoil)
                 bootstrap_tasks += recipe_modified.bootstrap_tasks
                 recipes_modified.append(recipe_modified)
@@ -1797,7 +1871,26 @@ def ide_setup(args, config, basepath, workspace):
     if args.bitbake_k:
         bb_cmd += "-k "
 
+    # Add back the clangd toolchain support section stripped above, if still
+    # needed. Runs even with --skip-bitbake, otherwise it would be lost (see
+    # RecipeModified.strip_bbappend_sections()).
+    recipe_bbappend_changed = False
+    for recipe_modified in recipes_modified:
+        if recipe_modified.update_bbappend():
+            recipe_bbappend_changed = True
+
     if not args.skip_bitbake:
+        if recipe_bbappend_changed:
+            # The bbappend content just written differs from the one bitbake
+            # parsed during the tinfoil session above. See update_image_bbappend()'s
+            # matching reset for phase 2 for why this is needed.
+            reparse_tinfoil = setup_tinfoil(config_only=True, basepath=basepath)
+            try:
+                reparse_tinfoil.run_command('resetCooker')
+                reparse_tinfoil.parse_recipes()
+            finally:
+                reparse_tinfoil.shutdown()
+
         # Phase 1: build modified recipes and debug tools so that
         # installed_binaries is populated and port numbers can be assigned.
         # The image is built in phase 2, after the complete bbappend is written.

@@ -291,7 +291,8 @@ class IdeVSCode(IdeBase):
         recommendations = []
         # clangd (matched to the recipe's real cross compiler via
         # compile_commands.json) replaces cpptools as the IntelliSense provider
-        # if toolchain is clang. CodeLLDB/GDB debugging is unaffected either way.
+        # when selected via IDE_SDK_INTELLISENSE (defaults to clangd for the
+        # clang toolchain). CodeLLDB/GDB debugging is unaffected either way.
         use_clangd = (modified_recipe.ide_sdk_intellisense == 'clangd'
                       and modified_recipe.build_tool.is_c_cpp)
         if use_clangd:
