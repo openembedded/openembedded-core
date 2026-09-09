@@ -41,6 +41,7 @@ SRC_URI = "https://www.gnupg.org/ftp/gcrypt/gnutls/v${SHRT_VER}/gnutls-${PV}.tar
            file://CVE-2026-42011_p2.patch \
            file://CVE-2026-42010.patch \
            file://CVE-2026-33845.patch \
+           file://CVE-2026-5419.patch \
            "
 
 SRC_URI[sha256sum] = "a7b341421bfd459acf7a374ca4af3b9e06608dcd7bd792b2bf470bea012b8e51"
