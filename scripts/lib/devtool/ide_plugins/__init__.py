@@ -411,11 +411,22 @@ class IdeBase:
                 raise err
 
 
-def get_devtool_deploy_opts(args):
+def resolve_deploy_target(args, target_override=None):
+    """Resolve the effective devtool deploy-target destination.
+
+    target_override, e.g. the local NFS rootfs directory when --nfs was used
+    (see devtool.deploy for how a directory target is handled without ssh),
+    always takes precedence over the ssh target from -t/--target.
+    """
+    target = target_override or args.target
+    if not target:
+        raise DevtoolError('No deploy target, pass -t/--target or --nfs')
+    return target
+
+
+def get_devtool_deploy_opts(args, target_override=None):
     """Filter args for devtool deploy-target args"""
-    if not args.target:
-        return None
-    devtool_deploy_opts = [args.target]
+    devtool_deploy_opts = [resolve_deploy_target(args, target_override)]
     if args.no_host_check:
         devtool_deploy_opts += ["-c"]
     if args.show_status:

@@ -9,7 +9,7 @@ import json
 import logging
 import os
 import shutil
-from devtool.ide_plugins import BuildTool, IdeBase, GdbCrossConfig, DebuggerServerModes, LldbServerConfig, get_devtool_deploy_opts
+from devtool.ide_plugins import BuildTool, IdeBase, GdbCrossConfig, DebuggerServerModes, LldbServerConfig, get_devtool_deploy_opts, resolve_deploy_target
 
 logger = logging.getLogger('devtool')
 
@@ -594,10 +594,10 @@ class IdeVSCode(IdeBase):
         IdeBase.update_json_file(
             self.dot_code_dir(modified_recipe), launch_file, launch_dict)
 
-    def vscode_tasks_cpp(self, args, modified_recipe):
-        run_install_deploy = modified_recipe.gen_install_deploy_script(args)
+    def vscode_tasks_cpp(self, args, image_recipe, modified_recipe):
+        run_install_deploy = modified_recipe.gen_install_deploy_script(args, image_recipe.nfs_deploy_dir)
         install_task_name = "install && deploy-target %s" % modified_recipe.recipe_id_pretty
-        deploy_args = ["--target", args.target]
+        deploy_args = ["--target", resolve_deploy_target(args, image_recipe.nfs_deploy_dir)]
         if args.port:
             deploy_args += ["--port", args.port]
         for package in args.package or []:
@@ -694,7 +694,7 @@ class IdeVSCode(IdeBase):
         args += [target_device.target, remote_cmd]
         return args
 
-    def vscode_tasks_kernel_module(self, args, modified_recipe):
+    def vscode_tasks_kernel_module(self, args, image_recipe, modified_recipe):
         """Generate tasks.json for kernel module recipes.
 
         Three tasks are generated and chained in sequence:
@@ -717,8 +717,9 @@ class IdeVSCode(IdeBase):
         install_task_name = "install && deploy-target %s" % modified_recipe.recipe_id_pretty
         reload_task_name = "reload module %s" % modified_recipe.recipe_id_pretty
         verify_task_name = "verify module %s" % modified_recipe.recipe_id_pretty
-        run_install_deploy = modified_recipe.gen_install_deploy_script(args)
-        deploy_args = ["--target", args.target]
+        run_install_deploy = modified_recipe.gen_install_deploy_script(args, image_recipe.nfs_deploy_dir)
+        # Redundant with the default baked into the script, but keeps the task self-contained.
+        deploy_args = ["--target", resolve_deploy_target(args, image_recipe.nfs_deploy_dir)]
         if args.port:
             deploy_args += ["--port", args.port]
         for package in args.package or []:
@@ -760,7 +761,7 @@ class IdeVSCode(IdeBase):
         IdeBase.update_json_file(
             self.dot_code_dir(modified_recipe), tasks_file, tasks_dict)
 
-    def vscode_tasks_fallback(self, args, modified_recipe):
+    def vscode_tasks_fallback(self, args, image_recipe, modified_recipe):
         oe_init_dir = modified_recipe.oe_init_dir
         oe_init = ". %s %s > /dev/null && " % (modified_recipe.oe_init_build_env, modified_recipe.topdir)
         dt_build = "devtool build "
@@ -773,7 +774,7 @@ class IdeVSCode(IdeBase):
         dt_deploy_label = dt_deploy + modified_recipe.recipe_id_pretty
         dt_deploy_cmd = dt_deploy + modified_recipe.bpn
         dt_build_deploy_label = "devtool build & deploy-target %s" % modified_recipe.recipe_id_pretty
-        deploy_opts = ' '.join(get_devtool_deploy_opts(args))
+        deploy_opts = ' '.join(get_devtool_deploy_opts(args, image_recipe.nfs_deploy_dir))
         tasks_dict = {
             "version": "2.0.0",
             "tasks": [
@@ -893,13 +894,13 @@ class IdeVSCode(IdeBase):
         IdeBase.update_json_file(
             self.dot_code_dir(modified_recipe), tasks_file, tasks_dict)
 
-    def vscode_tasks(self, args, modified_recipe):
+    def vscode_tasks(self, args, image_recipe, modified_recipe):
         if modified_recipe.build_tool.is_c_cpp:
-            self.vscode_tasks_cpp(args, modified_recipe)
+            self.vscode_tasks_cpp(args, image_recipe, modified_recipe)
         elif modified_recipe.build_tool == BuildTool.KERNEL_MODULE:
-            self.vscode_tasks_kernel_module(args, modified_recipe)
+            self.vscode_tasks_kernel_module(args, image_recipe, modified_recipe)
         else:
-            self.vscode_tasks_fallback(args, modified_recipe)
+            self.vscode_tasks_fallback(args, image_recipe, modified_recipe)
 
     def setup_modified_recipe(self, args, image_recipe, modified_recipe):
         self.vscode_settings(modified_recipe, image_recipe)
@@ -913,7 +914,7 @@ class IdeVSCode(IdeBase):
                 self.initialize_cross_debug_configs(
                     image_recipe, modified_recipe, GdbCrossConfigVSCode)
             self.vscode_launch(args, modified_recipe)
-            self.vscode_tasks(args, modified_recipe)
+            self.vscode_tasks(args, image_recipe, modified_recipe)
 
 
 def register_ide_plugin(ide_plugins):

@@ -312,7 +312,7 @@ class IdeNone(IdeBase):
         - Generate a gdbinit file per executable
         - Generate the oe-scripts sym-link
         """
-        script_path = modified_recipe.gen_install_deploy_script(args)
+        script_path = modified_recipe.gen_install_deploy_script(args, image_recipe.nfs_deploy_dir)
         logger.info("Created: %s" % script_path)
 
         if modified_recipe.toolchain == 'clang':

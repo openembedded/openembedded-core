@@ -18,6 +18,7 @@ import shlex
 import glob
 from argparse import RawTextHelpFormatter
 from enum import Enum
+from pathlib import Path
 
 import scriptutils
 import bb
@@ -212,15 +213,24 @@ class RecipeImage:
 
     def __init__(self, name, orig_bbappend_content=None):
         self.name = name
-        self.rootfs = None
+        self.pn = None
+        self.__rootfs = None
         self.__rootfs_dbg = None
+        self.__nfs_rootfs = None
+        self.__nfs_rootfs_dbg = None
+        self.nfs_deploy_dir = None
+        self.deploy_dir_image = None
+        self.image_link_name = None
         self.qb_slirp_opt = ''
+        self.fakerootcmd = None
+        self.fakerootenv = None
         self.bootstrap_tasks = [self.name + ':do_build']
         # Debug settings already provided by the base configuration (e.g.
         # local.conf, MACHINE, DISTRO, the recipe itself) plus any bbappend
         # content other than devtool ide-sdk's own sections (see
         # strip_bbappend_sections()). Populated by initialize().
         self.base_image_gen_debugfs = False
+        self.base_image_fstypes = set()
         self.base_image_fstypes_debugfs = ''
         self.base_has_combined_dbg = False
         self.base_image_install = set()
@@ -271,8 +281,11 @@ class RecipeImage:
             raise DevtoolError(
                 "Parsing image recipe %s failed" % self.name)
 
+        self.pn = image_d.getVar('PN')
         self.base_image_gen_debugfs = image_d.getVar(
             'IMAGE_GEN_DEBUGFS') == '1'
+        self.base_image_fstypes = set(
+            (image_d.getVar('IMAGE_FSTYPES') or '').split())
         self.base_image_fstypes_debugfs = image_d.getVar(
             'IMAGE_FSTYPES_DEBUGFS') or ''
         self.base_has_combined_dbg = bb.data.inherits_class(
@@ -281,22 +294,72 @@ class RecipeImage:
             (image_d.getVar('IMAGE_INSTALL') or '').split())
 
         workdir = image_d.getVar('WORKDIR')
-        self.rootfs = os.path.join(workdir, 'rootfs')
+        self.__rootfs = os.path.join(workdir, 'rootfs')
         self.__rootfs_dbg = os.path.join(workdir, 'rootfs-dbg')
 
+        self.deploy_dir_image = image_d.getVar('DEPLOY_DIR_IMAGE')
+        self.image_link_name = image_d.getVar('IMAGE_LINK_NAME')
         self.qb_slirp_opt = image_d.getVar('QB_SLIRP_OPT') or ''
+        self.fakerootcmd = image_d.getVar('FAKEROOTCMD')
+        self.fakerootenv = image_d.getVar('FAKEROOTENV')
 
     @property
     def debug_support(self):
         return bool(self.rootfs_dbg)
 
     @property
+    def rootfs(self):
+        """Prefer the live NFS-exported rootfs (if --nfs=rootfs is used) over the
+        static WORKDIR/rootfs left over from the image build, so solib_search_path()
+        finds files as devtool deploy-target actually updates them."""
+        if self.__nfs_rootfs:
+            return self.__nfs_rootfs
+        return self.__rootfs
+
+    @property
     def rootfs_dbg(self):
+        if self.__nfs_rootfs_dbg:
+            return self.__nfs_rootfs_dbg
         if self.__rootfs_dbg and os.path.isdir(self.__rootfs_dbg):
             return self.__rootfs_dbg
         return None
 
-    def update_image_bbappend(self, recipes_modified):
+    def set_nfs_rootfs(self, nfs_export_base_dir, nfs):
+        """Select the NFS rootfs for generated debugger paths and deploys."""
+        if not nfs:
+            return
+        self.nfs_deploy_dir = self.nfs_rootfs_dir(nfs_export_base_dir, nfs)
+        if nfs == 'rootfs-dbg':
+            self.__nfs_rootfs_dbg = self.nfs_deploy_dir
+        elif nfs == 'rootfs':
+            self.__nfs_rootfs = self.nfs_deploy_dir
+
+    def nfs_rootfs_dir(self, nfs_export_base_dir, nfs):
+        """Return the directory for the selected NFS rootfs, below nfs_export_base_dir."""
+        return os.path.join(nfs_export_base_dir, self.pn, nfs)
+
+    def nfs_runqemu_helper(self, nfs_export_base_dir, nfs):
+        """Create a helper that boots the selected rootfs through runqemu."""
+        export_dir = os.path.join(nfs_export_base_dir, self.pn)
+        rootfs_dir = self.nfs_rootfs_dir(nfs_export_base_dir, nfs)
+        qemuboot = os.path.join(
+            self.deploy_dir_image, self.image_link_name + '.qemuboot.conf')
+        if not os.path.exists(qemuboot):
+            logger.info(
+                'No qemuboot configuration was generated for %s; '
+                'not creating a runqemu helper.', self.name)
+            return None
+
+        helper = os.path.join(export_dir, 'runqemu-' + nfs)
+        with open(helper, 'w') as helper_file:
+            helper_file.write('#!/bin/sh\n')
+            helper_file.write(
+                'exec runqemu %s %s "$@"\n' % (
+                    shlex.quote(qemuboot), shlex.quote(rootfs_dir)))
+        os.chmod(helper, os.stat(helper).st_mode | stat.S_IEXEC)
+        return helper
+
+    def update_image_bbappend(self, recipes_modified, nfs=None):
         """Write debug settings for modified-mode recipes into the image bbappend.
 
         Writes IMAGE_GEN_DEBUGFS, IMAGE_FSTYPES_DEBUGFS, IMAGE_CLASSES for
@@ -323,7 +386,17 @@ class RecipeImage:
         lines = []
         if not self.base_image_gen_debugfs:
             lines.append('IMAGE_GEN_DEBUGFS = "1"')
-        if self.base_image_fstypes_debugfs != '':
+        if nfs == 'rootfs':
+            if 'tar' not in self.base_image_fstypes:
+                lines.append('IMAGE_FSTYPES:append = " tar"')
+        elif nfs == 'rootfs-dbg':
+            if self.base_image_fstypes_debugfs:
+                if 'tar' not in self.base_image_fstypes_debugfs.split():
+                    lines.append('IMAGE_FSTYPES_DEBUGFS:append = " tar"')
+            else:
+                lines.append('IMAGE_FSTYPES_DEBUGFS = "tar"')
+        elif self.base_image_fstypes_debugfs != '':
+            # Without --nfs no debug filesystem image is needed at all.
             lines.append('IMAGE_FSTYPES_DEBUGFS = ""')
         if not self.base_has_combined_dbg:
             lines.append('IMAGE_CLASSES += "image-combined-dbg"')
@@ -367,6 +440,98 @@ class RecipeImage:
 
         slirp_changed = self.update_qb_slirp_opt()
         return image_changed or slirp_changed
+
+    @staticmethod
+    def _tar_options(rootfs_tarball):
+        tar_extract_options = {
+            '.tar.xz': '-xJf',
+            '.tar.bz2': '-xjf',
+            '.tar.gz': '-xzf',
+            '.tar.zst': '--zstd -xf',
+            '.tar': '-xf',
+        }
+        for extension, option in tar_extract_options.items():
+            if rootfs_tarball.endswith(extension):
+                return ['--numeric-owner', *option.split()]
+        raise DevtoolError(
+            'Unable to determine sdk tarball format\n'
+            'Accepted types: .tar / .tar.gz / .tar.bz2 / .tar.xz / .tar.zst')
+
+    @staticmethod
+    def pseudo_state_dir(rootfs_dir):
+        """Return the pseudo database location associated with an extracted rootfs."""
+        return os.path.realpath(rootfs_dir) + '.pseudo_state'
+
+    def extract_sdk_rootfs(self, rootfs_tarball, rootfs_dir):
+        """Extract a rootfs tarball under pseudo and return its absolute directory."""
+        if not os.path.exists(rootfs_tarball):
+            raise DevtoolError("sdk tarball '%s' does not exist" % rootfs_tarball)
+        if not os.path.exists(self.fakerootcmd):
+            raise DevtoolError('%s does not exist' % self.fakerootcmd)
+
+        rootfs_tarball = os.path.realpath(rootfs_tarball)
+        rootfs_dir = os.path.realpath(rootfs_dir)
+        tar_options = self._tar_options(rootfs_tarball)
+        state_dir = self.pseudo_state_dir(rootfs_dir)
+
+        os.makedirs(rootfs_dir, exist_ok=True)
+        os.makedirs(state_dir, exist_ok=True)
+        Path(state_dir, 'pseudo.pid').touch()
+
+        environment = dict(os.environ)
+        for varvalue in (self.fakerootenv or '').split():
+            if '=' in varvalue:
+                key, value = varvalue.split('=', 1)
+                environment[key] = value
+        command = [self.fakerootcmd, 'tar', '-C', rootfs_dir]
+
+        environment['PSEUDO_LOCALSTATEDIR'] = state_dir
+        environment['PSEUDO_INCLUDE_PATHS'] = rootfs_dir
+        command.extend(tar_options)
+        command.append(rootfs_tarball)
+        logger.info('Extracting rootfs tarball using pseudo: %s', ' '.join(command))
+        try:
+            subprocess.run(command, env=environment, check=True)
+        except subprocess.CalledProcessError as exc:
+            raise DevtoolError('Failed to extract %s' % rootfs_tarball) from exc
+
+        if len(os.listdir(rootfs_dir)) < 4:
+            logger.warning(
+                "Only few files in %s, please double-check the extraction "
+                "worked as intended", rootfs_dir)
+        return rootfs_dir
+
+    def extract_nfs_rootfs(self, nfs_export_base_dir, nfs, target):
+        """Refresh the selected rootfs below nfs_export_base_dir."""
+        if not self.image_link_name:
+            raise DevtoolError(
+                'IMAGE_LINK_NAME is empty for %s, --nfs cannot locate the '
+                'rootfs tarball without it.' % self.name)
+        suffix = '-dbg' if nfs == 'rootfs-dbg' else ''
+        rootfs_tarball = os.path.join(
+            self.deploy_dir_image, self.image_link_name + suffix + '.tar')
+        rootfs_dir = self.nfs_rootfs_dir(nfs_export_base_dir, nfs)
+        state_dir = self.pseudo_state_dir(rootfs_dir)
+
+        if os.path.exists(rootfs_dir):
+            logger.warning(
+                'Re-extracting %s: files deployed into it are lost and a '
+                'target currently booted from it will break.', rootfs_dir)
+        for stale_dir in (rootfs_dir, state_dir):
+            if os.path.exists(stale_dir):
+                shutil.rmtree(stale_dir)
+
+        self.extract_sdk_rootfs(rootfs_tarball, rootfs_dir)
+
+        logger.info('NFS rootfs extracted to %s', rootfs_dir)
+        helper = self.nfs_runqemu_helper(nfs_export_base_dir, nfs)
+        if helper:
+            opts = 'slirp' if is_loopback_target(target) else ''
+            logger.info(
+                'With the build environment sourced, start QEMU with NFS rootfs:\n'
+                '  %s %s\n'
+                'Pass any additional runqemu options to this helper.',
+                helper, opts)
 
     def update_qb_slirp_opt(self):
         """Update QB_SLIRP_OPT in the image bbappend
@@ -1363,12 +1528,17 @@ class RecipeModified:
                                 'by the %s recipe (PACKAGES: %s)' %
                                 (package, self.pn, ' '.join(self.packages_files.keys())))
 
-    def gen_deploy_target_script(self, args):
+    def gen_deploy_target_script(self, args, deploy_target=None):
         """Generate a script which does what devtool deploy-target does
 
         This script is much quicker than devtool target-deploy. Because it
         does not need to start a bitbake server. All information from tinfoil
         is hard-coded in the generated script.
+
+        deploy_target overrides args.target as the baked-in default, e.g. with
+        the local NFS rootfs directory when --nfs was used (see devtool.deploy
+        for how a directory target is handled without ssh). A runtime -t/--target
+        can still override this default, same as without --nfs.
         """
         self._validate_requested_packages(args)
         cmd_lines = ['#!%s' % str(sys.executable)]
@@ -1383,6 +1553,8 @@ class RecipeModified:
                        'no_preserve', 'port', 'show_status', 'ssh_exec', 'strip', 'target']
         filtered_args_dict = {key: value for key, value in vars(
             args).items() if key in args_filter}
+        if deploy_target:
+            filtered_args_dict['target'] = deploy_target
         if is_loopback_target(filtered_args_dict['target']):
             filtered_args_dict['no_host_check'] = True
         cmd_lines.append('filtered_args_dict = %s' % str(filtered_args_dict))
@@ -1442,11 +1614,11 @@ class RecipeModified:
                       '    tinfoil.shutdown()']
         return self.write_script(cmd_lines, 'bb_run_do_install')
 
-    def gen_install_deploy_script(self, args):
+    def gen_install_deploy_script(self, args, deploy_target=None):
         """Generate a script which does install and deploy"""
         cmd_lines = ['#!/bin/sh -e']
         cmd_lines.append(self.gen_install_task_script())
-        cmd_lines.append(self.gen_deploy_target_script(args) + ' "$@"')
+        cmd_lines.append(self.gen_deploy_target_script(args, deploy_target) + ' "$@"')
 
         return self.write_script(cmd_lines, 'install_and_deploy')
 
@@ -1549,6 +1721,12 @@ def ide_setup(args, config, basepath, workspace):
                 logger.error("In shared sysroots mode modified recipes %s cannot be handled." % str(
                     recipes_modified_names))
                 invalid_params = True
+            if args.nfs:
+                logger.error("--nfs is only supported in modified mode.")
+                invalid_params = True
+        if args.nfs_extract_dir and not args.nfs:
+            logger.error("--nfs-extract-dir requires --nfs.")
+            invalid_params = True
         if args.mode == DevtoolIdeMode.modified:
             if not recipes_modified_names:
                 appends_dir = os.path.join(config.workspace_path, 'appends')
@@ -1584,6 +1762,8 @@ def ide_setup(args, config, basepath, workspace):
 
         # For the shared sysroots mode, add all dependencies of all the images to the sysroots
         # For the modified mode provide one rootfs and the corresponding debug symbols via rootfs-dbg
+        nfs_export_base_dir = args.nfs_extract_dir or os.path.join(
+            config.workspace_path, 'nfs-exports')
         recipes_images = []
         for recipes_image_name in recipes_image_names:
             logger.info("Using image: %s" % recipes_image_name)
@@ -1591,6 +1771,13 @@ def ide_setup(args, config, basepath, workspace):
                 recipes_image_name,
                 orig_bbappend_contents.get(recipes_image_name))
             recipe_image.initialize(config, tinfoil)
+            recipe_image.set_nfs_rootfs(nfs_export_base_dir, args.nfs)
+            # With --skip-bitbake nothing is extracted, so the generated IDE
+            # configuration would point at a directory that never appears.
+            if args.nfs and args.skip_bitbake and not os.path.isdir(recipe_image.nfs_deploy_dir):
+                raise DevtoolError(
+                    "%s does not exist. Run devtool ide-sdk --nfs=%s without "
+                    "--skip-bitbake first." % (recipe_image.nfs_deploy_dir, args.nfs))
             if args.mode == DevtoolIdeMode.modified:
                 # Keep the image build separate so that the complete bbappend
                 # (IMAGE_ vars + QB_SLIRP_OPT) can be written in one step
@@ -1696,7 +1883,7 @@ def ide_setup(args, config, basepath, workspace):
         # removed by strip_bbappend_sections() would be lost.
         bbappend_changed = False
         for ri in recipes_images:
-            if ri.update_image_bbappend(recipes_modified):
+            if ri.update_image_bbappend(recipes_modified, args.nfs):
                 bbappend_changed = True
 
         if not args.skip_bitbake:
@@ -1722,6 +1909,10 @@ def ide_setup(args, config, basepath, workspace):
                 exec_build_env_command(
                     config.init_path, basepath,
                     bb_cmd + ' '.join(image_bootstrap_tasks), watch=True)
+
+        if args.nfs and not args.skip_bitbake:
+            for ri in recipes_images:
+                ri.extract_nfs_rootfs(nfs_export_base_dir, args.nfs, args.target)
     else:
         raise DevtoolError("Must not end up here.")
 
@@ -1796,6 +1987,16 @@ def register_commands(subparsers, context):
         '-P', '--port', help='Specify ssh port to use for connection to the target')
     parser_ide_sdk.add_argument(
         '-I', '--key', help='Specify ssh private key for connection to the target')
+    parser_ide_sdk.add_argument(
+        '--nfs', choices=('rootfs', 'rootfs-dbg'),
+        help='Build and extract the selected image rootfs below '
+        '<workspace>/nfs-exports/<image-PN>/ '
+        'for NFS booting.')
+    parser_ide_sdk.add_argument(
+        '--nfs-extract-dir', metavar='DIR',
+        help='Extract the --nfs rootfs below DIR/<image-PN>/ instead of the default '
+        '<workspace>/nfs-exports/<image-PN>/, regardless of whether --nfs=rootfs '
+        'or --nfs=rootfs-dbg is selected. Requires --nfs.')
     parser_ide_sdk.add_argument(
         '--skip-bitbake', help='Skip the bitbake builds which update the SDK. The recipes are still parsed, '
         'the IDE configuration is generated from their metadata', action='store_true')
