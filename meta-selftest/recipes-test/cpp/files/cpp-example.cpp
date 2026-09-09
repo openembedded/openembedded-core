@@ -28,7 +28,7 @@ bool g_use_syslog = false;
 // Prints an informational message. Under systemd, stdout is already captured
 // by the journal. Otherwise, use stdout until daemonized (stdio is then
 // redirected to /dev/null), and syslog afterwards so messages aren't lost.
-void log_info(const std::string& msg)
+void log_info(const std::string &msg)
 {
 #ifndef WITH_SYSTEMD
     if (g_use_syslog) {
@@ -41,7 +41,7 @@ void log_info(const std::string& msg)
 
 } // namespace
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
     bool endless_mode = false;
 #ifndef WITH_SYSTEMD

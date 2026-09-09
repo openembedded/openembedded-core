@@ -22,6 +22,7 @@ SRC_URI = "\
     file://config.h.in \
     file://cpp-example.service \
     file://cpp-example.init \
+    file://.clang-format \
     file://run-ptest \
 "
 

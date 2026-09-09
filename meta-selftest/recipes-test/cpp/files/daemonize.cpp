@@ -38,7 +38,7 @@ void daemonize()
     }
 }
 
-void write_pidfile(const std::string& path)
+void write_pidfile(const std::string &path)
 {
     std::ofstream pidfile(path, std::ios::trunc);
     pidfile << getpid() << std::endl;

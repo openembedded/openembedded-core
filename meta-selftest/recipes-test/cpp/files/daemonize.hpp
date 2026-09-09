@@ -20,7 +20,7 @@
 void daemonize();
 
 // Writes the current process's pid to the given path.
-void write_pidfile(const std::string& path);
+void write_pidfile(const std::string &path);
 
 // Permanently drops from root to the given group/user. Must run gid before
 // uid: once uid is dropped, the process no longer has permission to setgid.
