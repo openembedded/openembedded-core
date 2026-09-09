@@ -77,6 +77,18 @@ def exec_watch(cmd, **options):
 
     return buf, None
 
+def build_fakeroot_env_no_d(fakerootenv, path, env_overrides=None):
+    """Build the environment for running a command under pseudo (see exec_fakeroot_no_d)."""
+    newenv = dict(os.environ)
+    newenv['PATH'] = path
+    for varvalue in fakerootenv.split():
+        if '=' in varvalue:
+            splitval = varvalue.split('=', 1)
+            newenv[splitval[0]] = splitval[1]
+    if env_overrides:
+        newenv.update(env_overrides)
+    return newenv
+
 def exec_fakeroot_no_d(fakerootcmd, fakerootenv, path, cmd, env_overrides=None, **kwargs):
     """Run cmd under pseudo using a recipe's own FAKEROOTCMD/FAKEROOTENV.
 
@@ -88,15 +100,7 @@ def exec_fakeroot_no_d(fakerootcmd, fakerootenv, path, cmd, env_overrides=None, 
     if not os.path.exists(fakerootcmd):
         logger.error('pseudo executable %s could not be found - have you run a build yet? pseudo-native should install this and if you have run any build then that should have been built')
         return 2
-    # Set up the appropriate environment
-    newenv = dict(os.environ)
-    newenv['PATH'] = path
-    for varvalue in fakerootenv.split():
-        if '=' in varvalue:
-            splitval = varvalue.split('=', 1)
-            newenv[splitval[0]] = splitval[1]
-    if env_overrides:
-        newenv.update(env_overrides)
+    newenv = build_fakeroot_env_no_d(fakerootenv, path, env_overrides)
     return subprocess.call("%s %s" % (fakerootcmd, cmd), env=newenv, **kwargs)
 
 def setup_tinfoil(config_only=False, basepath=None, tracking=False):
