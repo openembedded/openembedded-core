@@ -9,6 +9,7 @@ RDEPENDS:${PN} = "nativesdk-qemu nativesdk-unfs3 nativesdk-pseudo \
 LIC_FILES_CHKSUM = "file://${COREBASE}/scripts/runqemu;beginline=5;endline=10;md5=ac2b489a58739c7628a2604698db5e7f"
 
 SRC_URI = "file://${COREBASE}/scripts/runqemu \
+           file://${COREBASE}/scripts/lib/pseudo_rootfs_utils.py \
            file://${COREBASE}/scripts/runqemu-addptable2image \
            file://${COREBASE}/scripts/runqemu-gen-tapdevs \
            file://${COREBASE}/scripts/runqemu-ifup \
@@ -30,4 +31,6 @@ do_install() {
 	install -d ${D}${bindir}
 	install -m 0755 ${S}${COREBASE}/scripts/oe-* ${D}${bindir}/
 	install -m 0755 ${S}${COREBASE}/scripts/runqemu* ${D}${bindir}/
+	# The runqemu-* wrappers import this module from their own directory.
+	install -m 0644 ${S}${COREBASE}/scripts/lib/pseudo_rootfs_utils.py ${D}${bindir}/
 }
