@@ -239,6 +239,7 @@ SRC_URI += "\
            file://CVE-2026-58016-1.patch \
            file://CVE-2026-58016-2.patch \
            file://0001-gio-tests-services-Fix-installed-service-file-using-.patch \
+           file://0001-gtype-Mark-the-G_DEFINE_TYPE-parent_class-variable-a.patch \
            "
 SRC_URI:append:class-native = " file://relocate-modules.patch \
                                 file://0001-meson.build-do-not-enable-pidfd-features-on-native-g.patch \
