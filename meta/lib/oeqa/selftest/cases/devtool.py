@@ -2171,6 +2171,167 @@ class DevtoolDeployTargetTests(DevtoolBase):
                     extra_args = ' '.join(a for a in (strip_opt, filter_args) if a)
                     _deploy_and_check(extra_args, check_full_filelist=not filter_args, expected_files=expected_files)
 
+    @OETestTag("runqemu")
+    def test_devtool_deploy_target_path(self):
+        """Verify 'devtool deploy-target/undeploy-target <recipe> <path>' deploy/remove straight into
+        a local pseudo-managed rootfs directory (no ssh), and that a target
+        booting that same directory via NFS immediately sees the change.
+        """
+        self._check_runqemu_prerequisites()
+        self.assertTrue(not os.path.exists(self.workspacedir), 'This test cannot be run with a workspace directory under the build directory')
+        testrecipe = 'mdadm'
+        testfile = '/sbin/mdadm'
+        # mdmon is installed by the same do_install, used to check --file-glob filtering
+        otherfile = '/sbin/mdmon'
+        if "usrmerge" in get_bb_var('DISTRO_FEATURES'):
+            testfile = '/usr/sbin/mdadm'
+            otherfile = '/usr/sbin/mdmon'
+        testcommand = '/sbin/mdadm --help'
+        testimage = 'oe-selftest-image'
+        # Use the mdadm-doc package to check --package filtering excludes it
+        mandir = get_bb_var('mandir', testrecipe)
+        docfile = os.path.join(mandir, 'man8', '%s.8' % testrecipe)
+
+        # A tar rootfs is needed both to extract a local copy of it (below)
+        # and for runqemu to NFS-boot straight from that extracted directory.
+        self.append_config('IMAGE_FSTYPES:append = " tar"\n')
+        bitbake("%s qemu-native qemu-helper-native" % testimage)
+        bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'IMAGE_LINK_NAME'], testimage)
+        deploy_dir_image = bb_vars['DEPLOY_DIR_IMAGE']
+        image_link_name = bb_vars['IMAGE_LINK_NAME']
+        self.add_command_to_tearDown('bitbake -c clean %s' % testimage)
+        self.add_command_to_tearDown('rm -f %s/%s*' % (deploy_dir_image, testimage))
+
+        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(tempdir)
+        self.track_for_cleanup(self.workspacedir)
+        self.add_command_to_tearDown('bitbake -c clean %s' % testrecipe)
+        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
+        runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
+        runCmd('devtool build %s' % testrecipe)
+
+        # Extract a local pseudo-managed rootfs the same way
+        rootfs_tarball = os.path.join(deploy_dir_image, image_link_name + '.tar')
+        self.assertExists(rootfs_tarball)
+        extractdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(extractdir)
+        nfs_rootfs = os.path.join(extractdir, 'rootfs')
+        runCmd('runqemu-extract-sdk %s %s' % (rootfs_tarball, nfs_rootfs))
+        self.assertExists(nfs_rootfs)
+        self.assertExists(nfs_rootfs + '.pseudo_state')
+
+        # oe-selftest-image does not install mdadm by default, so the target must not see it yet.
+        self.assertNotExists(os.path.join(nfs_rootfs, testfile.lstrip('/')))
+
+        qemuboot = os.path.join(deploy_dir_image, image_link_name + '.qemuboot.conf')
+        self.assertExists(qemuboot)
+        launch_cmd = 'runqemu %s %s nographic' % (shlex.quote(qemuboot), shlex.quote(nfs_rootfs))
+        with runqemu(testimage, launch_cmd=launch_cmd) as qemu:
+            status, output = qemu.run("awk '$2 == \"/\" {print $3}' /proc/mounts")
+            self.assertEqual(status, 0)
+            self.assertEqual(output.strip(), 'nfs')
+
+            status, _ = qemu.run(testcommand)
+            self.assertNotEqual(status, 0, '%s should not be deployed yet' % testfile)
+
+            # Deploy directly into the local rootfs path (no ssh) while the target has it NFS-mounted live
+            deploy_cmd = 'devtool deploy-target %s %s' % (testrecipe, nfs_rootfs)
+            if self.logger.isEnabledFor(logging.DEBUG):
+                deploy_cmd += ' -s'
+            result = runCmd(deploy_cmd)
+            self.assertEqual(result.status, 0)
+            self.assertExists(os.path.join(nfs_rootfs, testfile.lstrip('/')))
+            self.assertExists(os.path.join(nfs_rootfs, otherfile.lstrip('/')))
+
+            status, _ = qemu.run(testcommand)
+            self.assertEqual(status, 0, '%s was not deployed' % testfile)
+
+            # Deploying again while the target still has this directory NFS-mounted live must still succeed.
+            result = runCmd(deploy_cmd)
+            self.assertEqual(result.status, 0)
+
+            # Undeploy directly from the local rootfs path (no ssh) while the target still has it NFS-mounted live
+            undeploy_cmd = 'devtool undeploy-target %s %s' % (testrecipe, nfs_rootfs)
+            if self.logger.isEnabledFor(logging.DEBUG):
+                undeploy_cmd += ' -s'
+            result = runCmd(undeploy_cmd)
+            self.assertEqual(result.status, 0)
+            self.assertNotExists(os.path.join(nfs_rootfs, testfile.lstrip('/')))
+
+            status, _ = qemu.run(testcommand)
+            self.assertNotEqual(status, 0, 'undeploy-target did not remove %s as it should have' % testfile)
+
+            # Confirm the local-path deploy (dual-pseudo pipe) and the ssh deploy
+            # (tar over ssh) land identical files with identical ownership/perms
+            # into the very same live NFS-exported directory, for both an
+            # unfiltered deploy and a --package filtered one.
+            bb_vars = get_bb_vars(['FAKEROOTENV', 'FAKEROOTCMD', 'PATH'], testrecipe)
+            fakerootenv = bb_vars['FAKEROOTENV']
+            fakerootcmd = bb_vars['FAKEROOTCMD']
+            path = bb_vars['PATH']
+            state_dir = nfs_rootfs + '.pseudo_state'
+
+            def _get_rootfs_filelist():
+                # nfs_rootfs has its own pseudo database, distinct from the one
+                # FAKEROOTENV points at, so override it for this inspection.
+                cmd = 'PATH="%s" %s PSEUDO_LOCALSTATEDIR=%s PSEUDO_INCLUDE_PATHS=%s %s find . -type f -exec ls -l {} \\;' % (
+                    path, fakerootenv, shlex.quote(state_dir), shlex.quote(nfs_rootfs), fakerootcmd)
+                result = runCmd(cmd, cwd=nfs_rootfs)
+                filelist = self._process_ls_output(result.output)
+                filelist.sort(key=lambda item: item.split()[-1])
+                return filelist
+
+            def _compare_local_and_ssh_deploy(extra_args, expected_files):
+                """Deploy extra_args once locally and once over ssh into the same
+                live directory, and assert both leave identical files with
+                identical ownership/permissions (expected_files checks each path
+                was/wasn't deployed, on both sides)."""
+                local_cmd = ('%s %s' % (deploy_cmd, extra_args)).strip()
+                result = runCmd(local_cmd)
+                self.assertEqual(result.status, 0)
+                for filepath, expected in expected_files.items():
+                    exists = os.path.exists(os.path.join(nfs_rootfs, filepath.lstrip('/')))
+                    self.assertEqual(exists, expected, '%s: %s exists=%s after local deploy' % (extra_args, filepath, exists))
+                local_filelist = _get_rootfs_filelist()
+
+                result = runCmd(undeploy_cmd)
+                self.assertEqual(result.status, 0)
+                self.assertNotExists(os.path.join(nfs_rootfs, testfile.lstrip('/')))
+
+                ssh_cmd = ('devtool deploy-target -c %s root@%s %s' % (testrecipe, qemu.ip, extra_args)).strip()
+                result = runCmd(ssh_cmd)
+                self.assertEqual(result.status, 0)
+                for filepath, expected in expected_files.items():
+                    exists = os.path.exists(os.path.join(nfs_rootfs, filepath.lstrip('/')))
+                    self.assertEqual(exists, expected, '%s: %s exists=%s after ssh deploy' % (extra_args, filepath, exists))
+                ssh_filelist = _get_rootfs_filelist()
+
+                self.assertEqual(local_filelist, ssh_filelist,
+                                '%s: local-path deploy and ssh deploy produced different file ownership/permissions' % extra_args)
+
+                result = runCmd('devtool undeploy-target -c %s root@%s' % (testrecipe, qemu.ip))
+                self.assertEqual(result.status, 0)
+                self.assertNotExists(os.path.join(nfs_rootfs, testfile.lstrip('/')))
+
+            _compare_local_and_ssh_deploy('', {testfile: True, otherfile: True, docfile: True})
+            _compare_local_and_ssh_deploy('--package %s' % testrecipe, {testfile: True, otherfile: True, docfile: False})
+
+            # A --package/--file-glob filtered deploy hands tar an explicit file
+            # list instead of packing the whole tree, so cover that path as well.
+            filtered_deploy_cmd = deploy_cmd + ' --file-glob %s' % testfile
+            result = runCmd(filtered_deploy_cmd)
+            self.assertEqual(result.status, 0)
+            self.assertExists(os.path.join(nfs_rootfs, testfile.lstrip('/')))
+            self.assertNotExists(os.path.join(nfs_rootfs, otherfile.lstrip('/')))
+
+            status, _ = qemu.run(testcommand)
+            self.assertEqual(status, 0, '%s was not deployed' % testfile)
+
+            result = runCmd(undeploy_cmd)
+            self.assertEqual(result.status, 0)
+            self.assertNotExists(os.path.join(nfs_rootfs, testfile.lstrip('/')))
+
+
 class DevtoolBuildImageTests(DevtoolBase):
 
     def test_devtool_build_image(self):
