@@ -90,6 +90,7 @@ PTESTS_FAST = "\
     python3-pytz \
     python3-pyyaml \
     python3-rpds-py \
+    python3-six \
     python3-trove-classifiers \
     python3-vcs-versioning \
     python3-uritools \
