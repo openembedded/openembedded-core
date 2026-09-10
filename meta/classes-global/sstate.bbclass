@@ -699,15 +699,7 @@ def sstate_package(ss, d):
     if not os.path.exists(siginfo):
         bb.siggen.dump_this_task(siginfo, d)
     else:
-        try:
-            os.utime(siginfo, None)
-        except PermissionError:
-            pass
-        except OSError as e:
-            # Handle read-only file systems gracefully
-            import errno
-            if e.errno != errno.EROFS:
-                raise e
+        sstate_touch_atime(siginfo)
 
     return
 
@@ -802,7 +794,10 @@ python sstate_create_and_sign_package () {
     # Best effort touch
     def touch(file):
         try:
-            file.touch()
+            if file.exists():
+                sstate_touch_atime(file)
+            else:
+                file.touch()
         except:
             pass
 
@@ -936,12 +931,21 @@ sstate_unpack_package () {
 	# Update both any file and any symlink pointing to the file for sigs as well as the file
 	for file in ${SSTATE_PKG} ${SSTATE_PKG}.sig ${SSTATE_PKG}.siginfo
 	do
-		[ ! -e $file ] || touch $file 2>/dev/null || true
-		[ ! -e $file ] || touch --no-dereference $file 2>/dev/null || true
+		[ ! -e $file ] || touch -a $file 2>/dev/null || true
+		[ ! -e $file ] || touch -a --no-dereference $file 2>/dev/null || true
 	done
 }
 
 BB_HASHCHECK_FUNCTION = "sstate_checkhashes"
+
+def sstate_touch_atime(path):
+    # Refresh the access time and leave the modification time alone.
+    import time
+    try:
+        stat_info = os.stat(path)
+        os.utime(path, (time.time(), stat_info.st_mtime))
+    except OSError:
+        pass
 
 def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, **kwargs):
     import itertools
@@ -978,10 +982,10 @@ def sstate_checkhashes(sq_data, d, siginfo=False, currentcount=0, summary=True, 
         sstatefile = d.expand("${SSTATE_DIR}/" + getsstatefile(tid, siginfo, d))
 
         if os.path.exists(sstatefile):
-            oe.utils.touch(sstatefile)
+            sstate_touch_atime(sstatefile)
             for ext in ['.sig', '.siginfo']:
                 if os.path.exists(sstatefile + ext):
-                    oe.utils.touch(sstatefile + ext)
+                    sstate_touch_atime(sstatefile + ext)
             found.add(tid)
             bb.debug(2, "SState: Found valid sstate file %s" % sstatefile)
         else:
@@ -1223,7 +1227,7 @@ python sstate_eventhandler() {
         if not os.path.exists(siginfo):
             bb.siggen.dump_this_task(siginfo, d)
         else:
-            oe.utils.touch(siginfo)
+            sstate_touch_atime(siginfo)
 }
 
 SSTATE_PRUNE_OBSOLETEWORKDIR ?= "1"
