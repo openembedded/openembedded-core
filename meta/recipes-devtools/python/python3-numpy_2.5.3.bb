@@ -26,20 +26,17 @@ PACKAGECONFIG[svml] = "-Ddisable-svml=false,-Ddisable-svml=true"
 # the overflow tests fail with compiler-rt on aarch64
 LDFLAGS:append:toolchain-clang:aarch64 = " -rtlib=libgcc -unwindlib=libgcc"
 
-# Remove references to buildpaths from numpy's __config__.py
-do_install:append() {
+# To ensure reproducibility, remove entries from __config__ which expose build
+# machine details, such as build paths, host paths, and hardware configuration.
+strip_build_info() {
     sed -i \
-        -e 's|${S}=||g' \
-        -e 's|${B}=||g' \
-        -e 's|${HOSTTOOLS_DIR}||g' \
-        -e 's|${RECIPE_SYSROOT_NATIVE}=||g' \
-        -e 's|${RECIPE_SYSROOT_NATIVE}||g' \
-        -e 's|${RECIPE_SYSROOT}=||g' \
-        -e 's|${RECIPE_SYSROOT}||g' \
-        ${D}${PYTHON_SITEPACKAGES_DIR}/numpy/__config__.py
-
-    nativepython3 -mcompileall -s ${D} ${D}${PYTHON_SITEPACKAGES_DIR}/numpy/__config__.py
+        -e 's/@.*_ARGS@//' \
+        -e 's/@.*_CMD_ARRAY@//' \
+        -e 's/@BUILD_CPU.*@//' \
+        -e 's/@PYTHON_PATH@//' \
+        ${S}/numpy/__config__.py.in
 }
+do_patch[postfuncs] += "strip_build_info"
 
 do_install_ptest:append() {
     sed -i \
