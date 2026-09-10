@@ -15,8 +15,9 @@ SRC_URI = "git://salsa.debian.org/dpkg-team/dpkg.git;protocol=https;branch=main;
            file://0001-dpkg-Support-muslx32-build.patch \
            file://0001-Add-support-for-riscv32-CPU.patch \
            file://0001-lib-dpkg-options-dirs.c-set_rootfs-was-not-checking-.patch \
+           file://0001-pkg-log.c-Add-missing-header.patch \
            "
 
 SRC_URI:append:class-native = " file://0001-build.c-ignore-return-of-1-from-tar-cf.patch"
 
-SRCREV = "ef4d59f5925661818484ac666014ee3e665aadcf"
+SRCREV = "c32c7e899b28627a2b2e9aa260ff09ca585141c3"
