@@ -1,4 +1,5 @@
 require automake.inc
+
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 DEPENDS:class-native = "autoconf-native"
@@ -24,7 +25,7 @@ SRC_URI += "\
            file://0006-automake-Remove-delays-in-configure-scripts-using-au.patch \
            "
 
-SRC_URI[sha256sum] = "63e585246d0fc8772dffdee0724f2f988146d1a3f1c756a3dc5cfbefa3c01915"
+SRC_URI[sha256sum] = "79e8b1f7a967e87ce8a9ded76bee7f793d0ce1886ab2002feb1b0510f578b75a"
 
 PERL = "${USRBINPATH}/perl"
 PERL:class-native = "${USRBINPATH}/env perl"
