@@ -22,6 +22,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
            file://0003-mount-fix-grammar-and-typo-in-X-mount.idmap-document.patch \
            file://0004-libmount-use-USE_LIBMOUNT_MOUNTFD_SUPPORT-for-idmap-h.patch \
            file://0005-tools-add-non-newmount.conf-config-gen-profile.patch \
+           file://0006-tests-lsfd-accept-rw-mode-for-mmap-ed-packet-socket-.patch \
            "
 
 SRC_URI[sha256sum] = "66ac7c0e725278eb2b039e3104f2c91119341d941b41bac7a285c695f940bd57"
