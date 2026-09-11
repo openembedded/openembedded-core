@@ -27,8 +27,7 @@ CONFLICT_DISTRO_FEATURES += "sysvinit"
 # so that systemctl can be used in postinst scripts
 PACKAGE_WRITE_DEPS += "systemd-tools-native"
 
-SRC_URI += " \
-           file://touchscreen.rules \
+SRC_URI += "file://touchscreen.rules \
            file://00-create-volatile.conf \
            file://org.freedesktop.hostname1_no_polkit.conf \
            file://00-hostnamed-network-user.conf \
@@ -37,7 +36,6 @@ SRC_URI += " \
            file://systemd-pager.sh \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0003-Do-not-create-var-log-README.patch \
-           file://a019396d2c5bc1adb6b044e7784a30b7187f6fbd.patch \
            "
 
 PAM_PLUGINS = " \
