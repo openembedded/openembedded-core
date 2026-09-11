@@ -8,7 +8,7 @@ SRC_URI[sha256sum] = "5e0811a4383b21dc5838069f801c4fb62113b7447663d2530d2bd6e77b
 inherit pypi python_flit_core ptest-python-pytest
 
 RDEPENDS:${PN} += "python3-codecs"
-RDEPENDS:${PN}-ptest += "python3-unittest-automake-output python3-hypothesis"
+RDEPENDS:${PN}-ptest += "python3-hypothesis"
 
 CVE_PRODUCT = "kjd:idna kjd:internationalized_domain_names_in_applications"
 
