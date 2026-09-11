@@ -33,7 +33,7 @@ LIC_FILES_CHKSUM = " \
     file://tests/testgtk.c;endline=25;md5=49d06770681b8322466b52ed19d29fb2 \
 "
 
-SRC_URI[archive.sha256sum] = "51bd9f60c7d23a665a556c7364c21fb2e4e282566b3e7e092455e8f910330893"
+SRC_URI[archive.sha256sum] = "7fd725deb2cb3f8dc218ad862c5056ff8548f49d3b0e4081796e444c22d19686"
 
 S = "${UNPACKDIR}/${GNOMEBN}-${PV}"
 
