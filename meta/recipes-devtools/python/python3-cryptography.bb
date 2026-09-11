@@ -16,6 +16,7 @@ SRC_URI[sha256sum] = "e4cfd68c5f3e0bfdad0d38e023239b96a2fe84146481852dffbcca442c
 SRC_URI += "file://0001-pyproject.toml-remove-benchmark-disable-option.patch \
             file://0002-Fix-installing-stray-files-into-site-packages.patch \
             file://CVE-2026-69248.patch \
+            file://CVE-2026-69249.patch \
             file://check-memfree.py \
             file://run-ptest \
            "
