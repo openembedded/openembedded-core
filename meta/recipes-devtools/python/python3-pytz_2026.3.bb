@@ -20,11 +20,6 @@ RDEPENDS:${PN}:class-target += "\
 
 BBCLASSEXTEND = "native nativesdk"
 
-RDEPENDS:${PN}-ptest += " \
-	python3-pytest \
-	python3-unittest-automake-output \
-"
-
 do_install_ptest:append() {
 	cp -f ${S}/README.rst ${D}${PTEST_PATH}/
 }
