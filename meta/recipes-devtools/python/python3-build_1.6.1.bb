@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=310439af287b0fb4780b2ad6907c256c"
 
 SRC_URI += "file://check-valid-dist.patch"
 
-SRC_URI[sha256sum] = "bd2c8afc603e7a2e0ce70e2ea85f0a6d02043bafbd307f5bada0f98669eca5af"
+SRC_URI[sha256sum] = "51cc11666391ab6f092070437ac747002ff46f3e4113a3622177ee6b488bfc53"
 
 inherit pypi python_flit_core
 
