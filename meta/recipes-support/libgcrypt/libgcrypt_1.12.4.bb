@@ -26,7 +26,7 @@ SRC_URI = "${GNUPG_MIRROR}/libgcrypt/libgcrypt-${PV}.tar.bz2 \
            file://no-bench-slope.patch \
            file://run-ptest \
            "
-SRC_URI[sha256sum] = "98d1b0b3202d2b03fa754a35aa3cbbfcf526a3260d8d2ee213748001b1043006"
+SRC_URI[sha256sum] = "d77f68f48879510e79a2f65977ccc68981781ea0923e5bdffac2a193ea3d660e"
 
 BINCONFIG = "${bindir}/libgcrypt-config"
 
