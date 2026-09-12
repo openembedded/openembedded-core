@@ -154,11 +154,15 @@ mkdir $ROOTFS_DIR
 # Load and run modules
 for m in $MODULES_DIR/*; do
 	# Skip backup files
-	if [ "`echo $m | sed -e 's/\~$//'`" != "$m" ]; then
-		continue
-	fi
+	case "$m" in
+		*~)
+			continue
+			;;
+	esac
 
-	module=`basename $m | cut -d'-' -f 2`
+	module=${m##*/}
+	module=${module#*-}
+	module=${module%%-*}
 	debug "Loading module $module"
 
 	# pre hooks
