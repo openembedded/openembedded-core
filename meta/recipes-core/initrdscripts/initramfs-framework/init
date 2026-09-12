@@ -100,13 +100,20 @@ for p in `cat /proc/cmdline`; do
 		continue
 	fi
 
-	opt=`echo $p | cut -d'=' -f1`
-	opt=`echo $opt | sed -e 'y/.-/__/'`
-	if [ "`echo $p | cut -d'=' -f1`" = "$p" ]; then
+	key=${p%%=*}
+	opt=$key
+	while :; do
+		case "$opt" in
+			*.*) opt=${opt%%.*}_${opt#*.} ;;
+			*-*) opt=${opt%%-*}_${opt#*-} ;;
+			*) break ;;
+		esac
+	done
+	if [ "$key" = "$p" ]; then
 		# opt parameter
 		eval "bootparam_${opt}=true"
 	else
-		value="`echo $p | cut -d'=' -f2-`"	# Option value
+		value=${p#*=}	# Option value
 		value_lstripped=${value#\"}
 		value_rstripped=${value%\"}
 
