@@ -13,7 +13,7 @@ DEPENDS = " \
 PYPI_PACKAGE = "meson_python"
 
 inherit pypi python_mesonpy
-SRC_URI[sha256sum] = "595c2f40b76692c78274c87b733379d86562583e9ffb975487b9eafada03055b"
+SRC_URI[sha256sum] = "78b3345dcbc0fed7b939e7e37a9faab35bddaae07bf62e7542c8ad479c395af5"
 
 DEPENDS:remove:class-native = "python3-meson-python-native"
 
