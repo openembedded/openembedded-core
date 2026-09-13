@@ -1169,61 +1169,29 @@ class RecipeModified:
         return mappings
 
     def _add_broken_srctree_prefix_map(self, mappings):
-        """Work around a -f*-prefix-map / DWARF path resolution issue affecting
-        out-of-tree devtool workspaces (e.g. meson recipes built via 'devtool modify'
-        with the clang toolchain).
+        """Work around broken DWARF paths for out-of-tree meson+clang workspaces.
 
-        meson/ninja may invoke the compiler with a *relative* source file path
-        when the build directory B (under WORKDIR) and the source directory S
-        (relocated outside WORKDIR by 'devtool modify') only share a distant
-        common ancestor. -fdebug-prefix-map/-ffile-prefix-map only rewrite
-        paths that literally start with the mapped host prefix, so a relative
-        path argument is never rewritten: only DW_AT_comp_dir (which is
-        absolute) gets rewritten, DW_AT_name stays relative and unrewritten.
-
-        This has only been observed to actually happen with the clang
-        toolchain: clang's meson/ninja invocation embeds a relative DW_AT_name
-        for out-of-tree sources, while gcc, even via meson/ninja, embeds an
-        absolute (and correctly -fdebug-prefix-map-rewritten) DW_AT_name, so
-        no underflow can happen there - confirmed empirically:
-        oe-selftest's test_devtool_ide_sdk_none_qemu (gcc toolchain, covering
-        both cmake-example and meson-example) fails when this workaround is
-        applied unconditionally to meson, while the dedicated clang tests
-        (test_devtool_ide_sdk_{code,none}_meson_clang) require it. cmake
-        (with the Ninja or Makefiles generators used here) always passes
-        absolute source paths to the compiler regardless of toolchain, so it
-        never needs this workaround either. Applying this workaround outside
-        of the meson+clang combination would incorrectly discard the correct
-        (and, for gcc/cmake, already working) comp_dir-based mapping - see the
-        'del mappings[target_path]' below - falling back to the generic
-        '/usr/src/debug' mapping to the image's (stale, whole-image-build-time)
-        rootfs-dbg instead of the live source tree.
+        meson/ninja invoke clang with a *relative* source path when B (under
+        WORKDIR) and S (relocated by 'devtool modify') only share a distant
+        common ancestor. -f*-prefix-map only rewrites paths starting with the
+        mapped host prefix, so only DW_AT_comp_dir (absolute) gets rewritten;
+        DW_AT_name stays relative. gcc always emits an absolute DW_AT_name
+        here, and cmake always passes absolute source paths regardless of
+        toolchain, so neither needs this workaround (verified by
+        oe-selftest's DevtoolIdeSdkGccTests/DevtoolIdeSdkClangTests).
 
         Debuggers resolve the compile unit path by joining DW_AT_comp_dir with
-        the relative DW_AT_name, popping one path component per leading "..".
-        If DW_AT_name contains more ".." components than DW_AT_comp_dir has
-        path components, the extra ".." are no-ops once the root is reached
-        (they can't go above "/"), so the final resolved path becomes "/"
-        followed by the leftover (non-"..") components of DW_AT_name - i.e. a
-        suffix of the real, absolute source directory rather than the
-        "/usr/src/debug/<pn>/<pv>" prefix that DEBUG_PREFIX_MAP and the
-        generated sourceMap/sourceFileMap assume.
+        DW_AT_name, popping one path component per leading "..". Once DW_AT_name
+        has more ".." than DW_AT_comp_dir has components, the extra ".." are
+        no-ops at "/", leaving a suffix of the real source directory instead of
+        the expected "/usr/src/debug/<pn>/<pv>" prefix.
 
-        This computes that resolved suffix for the recipe's own source
-        directory (S) and replaces the (now dead, since every file under S is
-        affected the same way) comp_dir-based mapping with it, so debuggers
-        relying on prefix matching (e.g. CodeLLDB, GDB) can still locate the
-        sources.
-
-        Note: the original comp_dir-based target_path is removed rather than
-        kept alongside the new one. Keeping both would mean two different
-        target paths map to the same host path (S), which is ambiguous when a
-        debugger needs to go the other way round: translating a local file
-        (opened from the host/workspace) back into a debug-info path in order
-        to resolve a source breakpoint. CodeLLDB in particular appears to
-        pick the first-registered ("normal", comp_dir-based) mapping in that
-        case, which never matches any real compile unit here, leaving the
-        breakpoint pending with 0 locations.
+        This computes that resolved suffix for S and replaces the (now dead)
+        comp_dir-based mapping with it, so prefix-matching debuggers (CodeLLDB,
+        GDB) can still find the sources. The old target_path is removed rather
+        than kept alongside: keeping both would let a debugger's reverse
+        lookup (host file -> debug-info path, e.g. to resolve a breakpoint)
+        pick the comp_dir-based one, which never matches any compile unit.
         """
         if self.build_tool is not BuildTool.MESON or self.toolchain != "clang":
             return
