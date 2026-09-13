@@ -1746,7 +1746,7 @@ def ide_setup(args, config, basepath, workspace):
         config, args.recipenames)
     orig_recipe_bbappend_contents = RecipeModified.strip_bbappend_sections(
         config, args.recipenames)
-    ide = ide_plugins[args.ide]()
+    ides = [ide_plugins[name]() for name in args.ide]
     tinfoil = setup_tinfoil(config_only=False, basepath=basepath)
     try:
         # define mode depending on recipes which need to be processed
@@ -1869,7 +1869,8 @@ def ide_setup(args, config, basepath, workspace):
                 recipe_modified = RecipeModified(
                     recipe_name, orig_recipe_bbappend_contents.get(recipe_name))
                 recipe_modified.initialize(config, workspace, tinfoil)
-                ide.initialize_modified_recipe(config, tinfoil, recipe_modified)
+                for ide in ides:
+                    ide.initialize_modified_recipe(config, tinfoil, recipe_modified)
                 bootstrap_tasks += recipe_modified.bootstrap_tasks
                 recipes_modified.append(recipe_modified)
 
@@ -1929,15 +1930,17 @@ def ide_setup(args, config, basepath, workspace):
                 bb_cmd + ' '.join(bootstrap_tasks_late), watch=True)
 
     if args.mode == DevtoolIdeMode.shared:
-        ide.setup_shared_sysroots(shared_env)
+        for ide in ides:
+            ide.setup_shared_sysroots(shared_env)
     elif args.mode == DevtoolIdeMode.modified:
         for recipe_modified in recipes_modified:
             if recipe_modified.build_tool is BuildTool.CMAKE:
                 recipe_modified.cmake_preset()
             if recipe_modified.build_tool is BuildTool.MESON:
                 recipe_modified.gen_meson_wrapper()
-            ide.setup_modified_recipe(
-                args, recipe_image, recipe_modified)
+            for ide in ides:
+                ide.setup_modified_recipe(
+                    args, recipe_image, recipe_modified)
 
             if recipe_modified.wants_debug_build and recipe_modified.debug_build != '1':
                 logger.warn(
@@ -2043,9 +2046,21 @@ def register_commands(subparsers, context):
         '  To use this tool-chain the environment-* file found in the deploy..image folder needs to be sourced into a shell.\n'
         '  In case of VSCode and cmake the tool-chain is also exposed as a cmake-kit')
     default_ide = list(ide_plugins.keys())[0]
+
+    def ide_list(value):
+        """argparse type: comma separated list of IDE plugin names"""
+        names = value.split(',')
+        for name in names:
+            if name not in ide_plugins:
+                raise ValueError(
+                    "invalid choice: %r (choose from %s)" % (
+                        name, ', '.join(sorted(ide_plugins.keys()))))
+        return names
     parser_ide_sdk.add_argument(
-        '-i', '--ide', choices=ide_plugins.keys(), default=default_ide,
-        help='Setup the configuration for this IDE (default: %s)' % default_ide)
+        '-i', '--ide', type=ide_list, default=[default_ide],
+        metavar='{%s}' % ','.join(ide_plugins.keys()),
+        help='Comma separated list of IDEs to setup the configuration for '
+        '(choices: %s, default: %s)' % (', '.join(ide_plugins.keys()), default_ide))
     parser_ide_sdk.add_argument(
         '-t', '--target', default='root@192.168.7.2',
         help='Live target machine running an ssh server: user@hostname.')
