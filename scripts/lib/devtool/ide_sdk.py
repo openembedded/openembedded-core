@@ -1746,6 +1746,7 @@ def ide_setup(args, config, basepath, workspace):
         config, args.recipenames)
     orig_recipe_bbappend_contents = RecipeModified.strip_bbappend_sections(
         config, args.recipenames)
+    ide = ide_plugins[args.ide]()
     tinfoil = setup_tinfoil(config_only=False, basepath=basepath)
     try:
         # define mode depending on recipes which need to be processed
@@ -1868,6 +1869,7 @@ def ide_setup(args, config, basepath, workspace):
                 recipe_modified = RecipeModified(
                     recipe_name, orig_recipe_bbappend_contents.get(recipe_name))
                 recipe_modified.initialize(config, workspace, tinfoil)
+                ide.initialize_modified_recipe(config, tinfoil, recipe_modified)
                 bootstrap_tasks += recipe_modified.bootstrap_tasks
                 recipes_modified.append(recipe_modified)
 
@@ -1926,8 +1928,6 @@ def ide_setup(args, config, basepath, workspace):
                 config.init_path, basepath,
                 bb_cmd + ' '.join(bootstrap_tasks_late), watch=True)
 
-    # Instantiate the active IDE plugin
-    ide = ide_plugins[args.ide]()
     if args.mode == DevtoolIdeMode.shared:
         ide.setup_shared_sysroots(shared_env)
     elif args.mode == DevtoolIdeMode.modified:
