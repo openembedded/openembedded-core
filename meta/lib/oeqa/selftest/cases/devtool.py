@@ -1685,46 +1685,6 @@ class DevtoolUpdateTests(DevtoolBase):
         self.assertExists(local_file, 'File makedevs.c not created')
         self.assertExists(patchfile, 'File new_local not created')
 
-    def _test_devtool_update_recipe_local_files_2(self):
-        """Check local source files support when editing local files in Git"""
-        testrecipe = 'devtool-test-local'
-        recipefile = get_bb_var('FILE', testrecipe)
-        recipedir = os.path.dirname(recipefile)
-        result = runCmd('git status --porcelain .', cwd=recipedir)
-        if result.output.strip():
-            self.fail('Recipe directory for %s contains uncommitted changes' % testrecipe)
-        # Setup srctree for modifying the recipe
-        tempdir = tempfile.mkdtemp(prefix='devtoolqa')
-        self.track_for_cleanup(tempdir)
-        self.track_for_cleanup(self.workspacedir)
-        self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
-        result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
-        # Check git repo
-        self._check_src_repo(tempdir)
-        # Edit / commit local sources
-        runCmd('echo "# Foobar" >> file1', cwd=tempdir)
-        runCmd('git commit -am "Edit existing file"', cwd=tempdir)
-        runCmd('git rm file2', cwd=tempdir)
-        runCmd('git commit -m"Remove file"', cwd=tempdir)
-        runCmd('echo "Foo" > new-local', cwd=tempdir)
-        runCmd('git add new-local', cwd=tempdir)
-        runCmd('git commit -m "Add new local file"', cwd=tempdir)
-        runCmd('echo "Gar" > new-file', cwd=tempdir)
-        runCmd('git add new-file', cwd=tempdir)
-        runCmd('git commit -m "Add new file"', cwd=tempdir)
-        self.add_command_to_tearDown('cd %s; git clean -fd .; git checkout .' %
-                                     os.path.dirname(recipefile))
-        # Checkout unmodified file to working copy -> devtool should still pick
-        # the modified version from HEAD
-        runCmd('git checkout HEAD^ -- file1', cwd=tempdir)
-        runCmd('devtool update-recipe %s' % testrecipe)
-        expected_status = [(' M', '.*/%s$' % os.path.basename(recipefile)),
-                           (' M', '.*/file1$'),
-                           (' D', '.*/file2$'),
-                           ('??', '.*/new-local$'),
-                           ('??', '.*/0001-Add-new-file.patch$')]
-        self._check_repo_status(os.path.dirname(recipefile), expected_status)
-
     def test_devtool_update_recipe_with_gitignore(self):
         # First, modify the recipe
         testrecipe = 'devtool-test-ignored'
