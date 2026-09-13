@@ -406,6 +406,8 @@ class RecipeImage:
         if wants_lldb_server and 'lldb-server' not in self.base_image_install:
             lines.append('IMAGE_INSTALL:append = " lldb-server"')
         for r in recipes_modified:
+            if not r.wants_image_install:
+                continue
             if r.name not in self.base_image_install:
                 lines.append('IMAGE_INSTALL:append = " %s"' % r.name)
             if r.has_ptest and (r.name + '-ptest') not in self.base_image_install:
@@ -754,6 +756,11 @@ class RecipeModified:
 
     MARKER = '# devtool ide-sdk: clangd toolchain support'
 
+    # PROVIDES of recipes that are deployed via do_deploy (e.g. to
+    # DEPLOY_DIR_IMAGE) rather than installed into the rootfs, so adding them
+    # to IMAGE_INSTALL or attaching a userspace gdbserver does not make sense.
+    NON_IMAGE_INSTALL_PROVIDES = {'virtual/kernel', 'virtual/bootloader'}
+
     def __init__(self, name, orig_bbappend_content=None):
         self.name = name
         self.bootstrap_tasks = [name + ':do_install']
@@ -783,6 +790,7 @@ class RecipeModified:
         self.package_debug_split_style = None
         self.path = None
         self.pn = None
+        self.provides = []
         self.recipe_id = None
         self.recipe_sysroot = None
         self.recipe_sysroot_native = None
@@ -808,6 +816,8 @@ class RecipeModified:
         self.build_tool = BuildTool.UNDEFINED
         # Whether this recipe benefits from gdbserver and rootfs-dbg in the image.
         self.wants_gdbserver = True
+        # Whether this recipe should be added to IMAGE_INSTALL automatically
+        self.wants_image_install = True
         # Whether to warn when DEBUG_BUILD is not set.  Kernel modules are built
         # by the kernel's build system and DEBUG_BUILD does not influence them.
         self.wants_debug_build = True
@@ -942,6 +952,14 @@ class RecipeModified:
             self.packages_files[package] = recipe_d.getVar('FILES:' + package) or ''
         self.path = recipe_d.getVar('PATH')
         self.pn = recipe_d.getVar('PN')
+        self.provides = (recipe_d.getVar('PROVIDES') or '').split()
+        if self.NON_IMAGE_INSTALL_PROVIDES.intersection(self.provides):
+            self.wants_image_install = False
+            self.wants_gdbserver = False
+        ide_sdk_auto_image_install = recipe_d.getVar('IDE_SDK_AUTO_IMAGE_INSTALL')
+        if ide_sdk_auto_image_install is not None:
+            self.wants_image_install = bb.utils.to_boolean(
+                ide_sdk_auto_image_install)
         self.recipe_sysroot = os.path.realpath(
             recipe_d.getVar('RECIPE_SYSROOT'))
         self.recipe_sysroot_native = os.path.realpath(
