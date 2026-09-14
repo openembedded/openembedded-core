@@ -8,7 +8,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=a5367a90934098d6b05af3b746405014"
 SRC_URI = "git://gitlab.freedesktop.org/xdg/xdg-utils.git;protocol=https;branch=master;tag=v${PV} \
            file://0001-Reinstate-xdg-terminal.patch \
            file://0001-Don-t-build-the-in-script-manual.patch \
-           file://1f199813e0eb0246f63b54e9e154970e609575af.patch \
            file://CVE-2022-4055.patch \
           "
 
