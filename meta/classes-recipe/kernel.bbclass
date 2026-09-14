@@ -136,17 +136,17 @@ python __anonymous () {
 if [ -n "$D" ]; then
     ln -sf %s-${KERNEL_VERSION} $D/${KERNEL_IMAGEDEST}/%s > /dev/null 2>&1
 else
-    ln -sf %s-${KERNEL_VERSION} ${KERNEL_IMAGEDEST}/%s > /dev/null 2>&1
+    ln -sf %s-${KERNEL_VERSION} /${KERNEL_IMAGEDEST}/%s > /dev/null 2>&1
     if [ $? -ne 0 ]; then
-        echo "Filesystem on ${KERNEL_IMAGEDEST}/ doesn't support symlinks, falling back to copied image (%s)."
-        install -m 0644 ${KERNEL_IMAGEDEST}/%s-${KERNEL_VERSION} ${KERNEL_IMAGEDEST}/%s
+        echo "Filesystem on /${KERNEL_IMAGEDEST}/ doesn't support symlinks, falling back to copied image (%s)."
+        install -m 0644 /${KERNEL_IMAGEDEST}/%s-${KERNEL_VERSION} /${KERNEL_IMAGEDEST}/%s
     fi
 fi
 set -e
 """ % (type, type, type, type, type, type, type))
             d.setVar('pkg_postrm:%s-image-%s' % (kname,typelower), """set +e
-if [ -f "${KERNEL_IMAGEDEST}/%s" -o -L "${KERNEL_IMAGEDEST}/%s" ]; then
-    rm -f ${KERNEL_IMAGEDEST}/%s  > /dev/null 2>&1
+if [ -f "/${KERNEL_IMAGEDEST}/%s" -o -L "/${KERNEL_IMAGEDEST}/%s" ]; then
+    rm -f /${KERNEL_IMAGEDEST}/%s  > /dev/null 2>&1
 fi
 set -e
 """ % (type, type, type))
