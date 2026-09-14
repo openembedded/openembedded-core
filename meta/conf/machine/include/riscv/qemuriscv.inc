@@ -3,7 +3,7 @@ PREFERRED_PROVIDER_virtual/bootloader ?= "u-boot"
 require conf/machine/include/qemu.inc
 require conf/machine/include/riscv/tune-riscv.inc
 
-MACHINE_FEATURES += "keyboard ext2 ext3 serial"
+MACHINE_FEATURES += "keyboard ext2 serial"
 
 KERNEL_IMAGETYPE = "Image"
 KERNEL_IMAGETYPES += "uImage"
