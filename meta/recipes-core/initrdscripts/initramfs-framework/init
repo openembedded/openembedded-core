@@ -87,10 +87,6 @@ mount -t sysfs sysfs /sys
 mount -t tmpfs tmpfs /run
 mkdir -p /run/lock
 
-if [ -d $EFI_DIR ];then
-	mount -t efivarfs none /sys/firmware/efi/efivars
-fi
-
 # populate bootparam environment
 for p in `cat /proc/cmdline`; do
 	if [ -n "$quoted" ]; then
@@ -129,6 +125,12 @@ for p in `cat /proc/cmdline`; do
 		eval "bootparam_${opt}=\"${value}\""
 	fi
 done
+
+# Keep efivarfs available in the initramfs by default.  Systems which
+# provide it from the real root filesystem can opt out of the early mount.
+if [ "${bootparam_initramfs_efivarfs:-1}" != "0" ] && [ -d "$EFI_DIR" ]; then
+	mount -t efivarfs none /sys/firmware/efi/efivars
+fi
 
 # use /dev with devtmpfs
 if grep -q devtmpfs /proc/filesystems; then
