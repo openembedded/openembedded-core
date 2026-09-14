@@ -3,7 +3,7 @@ HOMEPAGE = "http://tcl.sourceforge.net"
 DESCRIPTION = "Tool Command Language, is an open-source multi-purpose C library which includes a powerful dynamic scripting language. Together they provide ideal cross-platform development environment for any programming project."
 SECTION = "devel/tcltk"
 
-# http://www.tcl.tk/software/tcltk/license.html
+# http://www.tcl-lang.org/software/tcltk/license.html
 LICENSE = "BSD-3-Clause AND TCL"
 LIC_FILES_CHKSUM = "file://license.terms;md5=058f6229798281bbcac4239c788cfa38 \
     file://compat/license.terms;md5=058f6229798281bbcac4239c788cfa38 \
@@ -24,7 +24,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/tcl-core${PV}-src.tar.gz \
            "
 SRC_URI[sha256sum] = "5d265f3499b588681825d8093177830707b7035ad866b17189a3a6ab6dade0ff"
 
-UPSTREAM_CHECK_URI = "https://www.tcl.tk/software/tcltk/download.html"
+UPSTREAM_CHECK_URI = "https://www.tcl-lang.org/software/tcltk/download.html"
 UPSTREAM_CHECK_REGEX = "tcl(?P<pver>\d+(\.\d+)+)-src"
 
 S = "${UNPACKDIR}/${BPN}${PV}"
