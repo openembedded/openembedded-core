@@ -10,10 +10,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=5eb289217c160e2920d2e35bddc36453 \
                     file://pcap.h;beginline=1;endline=32;md5=39af3510e011f34b8872f120b1dc31d2"
 DEPENDS = "flex-native bison-native"
 
-SRC_URI = "https://www.tcpdump.org/release/${BP}.tar.xz \
-	   file://0001-Fix-error-messages-about-32-bit-integer-overflow.patch \
-          "
-SRC_URI[sha256sum] = "68fa62cffb974f4275641ce14c2e2d75739251f30e00e6a0900903b247d76a03"
+SRC_URI = "https://www.tcpdump.org/release/${BP}.tar.xz"
+SRC_URI[sha256sum] = "9237f5bae9dcf3a91823d9963ec43b7c0e2e3374ef2ad57d92c8cd39530f4723"
 
 inherit autotools binconfig-disabled pkgconfig
 
@@ -21,19 +19,16 @@ BINCONFIG = "${bindir}/pcap-config"
 
 # Explicitly disable dag support. We don't have recipe for it and if enabled here,
 # configure script poisons the include dirs with /usr/local/include even when the
-# support hasn't been detected. Do the same thing for DPDK.
+# support hasn't been detected.
 EXTRA_OECONF = " \
                  --with-pcap=linux \
                  --without-dag \
-                 --without-dpdk \
                  "
 
 PACKAGECONFIG ??= "${@bb.utils.contains('DISTRO_FEATURES', 'bluetooth', 'bluez5', '', d)} \
-                   ${@bb.utils.filter('DISTRO_FEATURES', 'ipv6', d)} \
 "
 PACKAGECONFIG[bluez5] = "--enable-bluetooth,--disable-bluetooth,bluez5"
 PACKAGECONFIG[dbus] = "--enable-dbus,--disable-dbus,dbus"
-PACKAGECONFIG[ipv6] = "--enable-ipv6,--disable-ipv6,"
 PACKAGECONFIG[libnl] = "--with-libnl,--without-libnl,libnl"
 
 do_configure:prepend () {
