@@ -4,18 +4,19 @@ HOMEPAGE = "https://lame.sourceforge.io/"
 BUGTRACKER = "http://sourceforge.net/tracker/?group_id=290&atid=100290"
 SECTION = "console/utils"
 LICENSE = "LGPL-2.0-or-later"
-LIC_FILES_CHKSUM = "file://COPYING;md5=c46bda00ffbb0ba1dac22f8d087f54d9 \
+LIC_FILES_CHKSUM = "file://COPYING;md5=a03aed0afc52dd24ed99db06d64a9fa3 \
                     file://include/lame.h;beginline=1;endline=20;md5=a2258182c593c398d15a48262130a92b \
 "
 
-DEPENDS = "ncurses gettext-native"
+DEPENDS = "ncurses mpg123 gettext-native"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/lame/lame-${PV}.tar.gz \
            file://no-gtk1.patch \
            file://clang.patch \
+           file://id3tags.patch \
            "
 
-SRC_URI[sha256sum] = "ddfe36cab873794038ae2c1210557ad34857a4b6bdc515785d1da9e175b1da1e"
+SRC_URI[sha256sum] = "3df5124d5ad3a98312ffd7ba6a9b36230e4f8a3e66d3ce0f425e336c32d216eb"
 
 inherit autotools pkgconfig sourceforge-releases
 
