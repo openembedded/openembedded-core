@@ -7,7 +7,7 @@ SECTION = "devel/python"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=61c3ee8961575861fa86c7e62bc9f69c"
 
-SRC_URI[sha256sum] = "d249c9022ab13286b17bd66f30609e800c5f95efeecb06168990c7a66cecde6c"
+SRC_URI[sha256sum] = "eed0d93fbca7087f143b42c34b05a825849bdf17f101572c2105acfa49aa88b8"
 
 inherit pypi setuptools3 cython
 
@@ -44,3 +44,7 @@ RDEPENDS:${PN}:class-nativesdk += "\
 "
 
 BBCLASSEXTEND = "native nativesdk"
+
+# Disable parallel builds for now as there's a build race in 3.3.0:
+# https://github.com/cython/cython/issues/7997
+PARALLEL_MAKE = ""
