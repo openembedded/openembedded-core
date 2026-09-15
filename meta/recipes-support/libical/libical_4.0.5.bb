@@ -19,11 +19,14 @@ inherit cmake pkgconfig gobject-introspection vala github-releases
 
 DEPENDS += "libical-native"
 
-PACKAGECONFIG ??= "icu glib"
+PACKAGECONFIG ??= "icu glib \
+                   ${@bb.utils.contains('GI_DATA_ENABLED', 'True', 'introspection vala', '', d)}"
 PACKAGECONFIG[bdb] = ",-DCMAKE_DISABLE_FIND_PACKAGE_BDB=True,db"
 PACKAGECONFIG[glib] = "-DLIBICAL_GLIB=True,-DLIBICAL_GLIB=False,glib-2.0-native libxml2-native glib-2.0 libxml2"
 # ICU is used for RSCALE (RFC7529) support
 PACKAGECONFIG[icu] = ",-DCMAKE_DISABLE_FIND_PACKAGE_ICU=True,icu"
+PACKAGECONFIG[introspection] = "-DLIBICAL_GOBJECT_INTROSPECTION=ON,-DLIBICAL_GOBJECT_INTROSPECTION=OFF"
+PACKAGECONFIG[vala] = "-DLIBICAL_GLIB_VAPI=ON,-DLIBICAL_GLIB_VAPI=OFF"
 
 # No need to use perl-native, the host perl is sufficient.
 EXTRA_OECMAKE += "-DPERL_EXECUTABLE=${HOSTTOOLS_DIR}/perl"
@@ -32,11 +35,8 @@ EXTRA_OECMAKE += "-DLIBICAL_BUILD_TESTING=false"
 # doc build fails with linker error (??) for libical-glib so disable it
 EXTRA_OECMAKE += "-DLIBICAL_GLIB_BUILD_DOCS=false"
 # gobject-introspection
-EXTRA_OECMAKE:append:class-target = " -DGObjectIntrospection_COMPILER=${STAGING_BINDIR}/g-ir-compiler-wrapper"
-EXTRA_OECMAKE:append:class-target = " -DGObjectIntrospection_SCANNER=${STAGING_BINDIR}/g-ir-scanner-wrapper"
-EXTRA_OECMAKE += "-DVAPIGEN=${STAGING_BINDIR_NATIVE}/vapigen"
-EXTRA_OECMAKE += "${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-DLIBICAL_GOBJECT_INTROSPECTION=ON -DLIBICAL_GLIB_VAPI=ON', '-DLIBICAL_GOBJECT_INTROSPECTION=OFF -DLIBICAL_GLIB_VAPI=OFF', d)}"
-EXTRA_OECMAKE:append:class-native = " -DLIBICAL_GOBJECT_INTROSPECTION=OFF -DLIBICAL_GLIB_VAPI=OFF"
+EXTRA_OECMAKE += "-DGObjectIntrospection_COMPILER=${STAGING_BINDIR}/g-ir-compiler-wrapper"
+EXTRA_OECMAKE += "-DGObjectIntrospection_SCANNER=${STAGING_BINDIR}/g-ir-scanner-wrapper"
 # no java
 EXTRA_OECMAKE += "-DLIBICAL_JAVA_BINDINGS=False"
 
