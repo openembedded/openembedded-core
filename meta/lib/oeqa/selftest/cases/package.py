@@ -5,10 +5,12 @@
 #
 
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import bitbake, get_bb_vars, get_bb_var, runqemu
+from oeqa.utils.commands import bitbake, get_bb_vars, get_bb_var, runqemu, runCmd
 import subprocess, os
 import oe.path
 import re
+import tempfile
+import tarfile
 
 class VersionOrdering(OESelftestTestCase):
     # version1, version2, sort order
@@ -208,3 +210,52 @@ class PackageTests(OESelftestTestCase):
                           sysconfdir + "/selftest-chown/symlink",
                           sysconfdir + "/selftest-chown/fifotest/fifo"]:
                 check_ownership(qemu, "test", "test", path)
+
+class PackageKeepSections(OESelftestTestCase):
+    def test_package_keep_sections(self):
+        """
+        Verify that PACKAGE_KEEP_SECTIONS prevents 'strip' from removing the
+        listed ELF sections, and that they are removed as usual when the
+        variable isn't set.
+        """
+        # GCC only emits .debug_frame on targets that don't already rely on
+        # .eh_frame for unwinding, which in practice means 32-bit Arm: use
+        # qemuarm so the section actually exists before strip runs. Do this
+        # before querying any other variable below, as they all depend on
+        # MACHINE.
+        self.write_config("""
+MACHINE = "qemuarm"
+IMAGE_FSTYPES = "tar.bz2"
+""")
+
+        target_sys = get_bb_var("TARGET_SYS")
+        bb_vars = get_bb_vars(['DEPLOY_DIR_IMAGE', 'IMAGE_LINK_NAME', 'READELF', 'base_bindir'], 'core-image-minimal')
+        binutils = "binutils-cross-{}".format(get_bb_var("TARGET_ARCH"))
+        bitbake("{}:do_addto_recipe_sysroot".format(binutils))
+        native_sysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", binutils)
+        busybox_path = os.path.join(bb_vars['base_bindir'].lstrip("/"), "busybox.nosuid")
+
+        def has_section(section):
+            with tempfile.TemporaryDirectory(prefix = "unpackfs-") as unpackedfs:
+                filename = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'], "{}.tar.bz2".format(bb_vars['IMAGE_LINK_NAME']))
+                with tarfile.open(filename) as tar:
+                    tar.extract("./" + busybox_path, path=unpackedfs)
+
+                r = runCmd([bb_vars['READELF'], "-W", "-S", os.path.join(unpackedfs, busybox_path)],
+                        native_sysroot = native_sysroot, target_sys = target_sys)
+                return section in r.output
+
+        bitbake("core-image-minimal")
+        self.assertFalse(has_section(".debug_frame"),
+                          "busybox should not carry a .debug_frame section by default")
+
+        self.write_config("""
+MACHINE = "qemuarm"
+IMAGE_FSTYPES = "tar.bz2"
+PACKAGE_KEEP_SECTIONS:pn-busybox = ".debug_frame"
+""")
+        bitbake("busybox -c package -f")
+        bitbake("core-image-minimal")
+        self.assertTrue(has_section(".debug_frame"),
+                         "busybox should carry a .debug_frame section when "
+                         "PACKAGE_KEEP_SECTIONS is set")
