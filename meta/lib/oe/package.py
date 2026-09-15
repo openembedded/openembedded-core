@@ -19,7 +19,7 @@ import shutil
 import bb.parse
 import oe.cachedpath
 
-def runstrip(file, elftype, strip, extra_strip_sections=''):
+def runstrip(file, elftype, strip, extra_strip_sections='', keep_sections=''):
     # Function to strip a single file, called from split_and_strip_files below
     # A working 'file' (one which works on the target architecture)
     #
@@ -48,6 +48,10 @@ def runstrip(file, elftype, strip, extra_strip_sections=''):
         if extra_strip_sections != '':
             for section in extra_strip_sections.split():
                 stripcmd.extend(["--remove-section=" + section])
+
+    if keep_sections != '' and not elftype & 16:
+        for section in keep_sections.split():
+            stripcmd.extend(["--keep-section=" + section])
 
     stripcmd.append(file)
     bb.debug(1, "runstrip: %s" % stripcmd)
@@ -96,7 +100,8 @@ def is_static_lib(path):
             return start == magic
     return False
 
-def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, max_process, qa_already_stripped=False):
+def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, max_process,
+                qa_already_stripped=False, keep_sections=''):
     """
     Strip executable code (like executables, shared libraries) _in_place_
     - Based on sysroot_strip in staging.bbclass
@@ -107,6 +112,9 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, max_process, qa_alre
     :param max_process: number of stripping processes started in parallel
     :param qa_already_stripped: Set to True if already-stripped' in ${INSANE_SKIP}
     This is for proper logging and messages only.
+    :param keep_sections: Space separated list of ELF sections to keep even
+    though the file is being stripped, for example ".debug_frame" so that
+    libunwind can use it to generate backtraces.
     """
     import stat, errno, oe.path, oe.utils
 
@@ -175,7 +183,8 @@ def strip_execs(pn, dstdir, strip_cmd, libdir, base_libdir, max_process, qa_alre
         elf_file = int(elffiles[file])
         sfiles.append((file, elf_file, strip_cmd))
 
-    oe.utils.multiprocess_launch_mp(runstrip, sfiles, max_process)
+    oe.utils.multiprocess_launch_mp(runstrip, sfiles, max_process,
+                                    extraargs=('', keep_sections))
 
 TRANSLATE = (
     ("@", "@at@"),
@@ -1359,7 +1368,9 @@ def process_split_and_strip_files(d):
             for f in staticlibs:
                 sfiles.append((f, 16, strip))
 
-        oe.utils.multiprocess_launch(oe.package.runstrip, sfiles, d)
+        keep_sections = d.getVar('PACKAGE_KEEP_SECTIONS') or ""
+        oe.utils.multiprocess_launch(oe.package.runstrip, sfiles, d,
+                                     extraargs=('', keep_sections))
 
     # Build "minidebuginfo" and reinject it back into the stripped binaries
     if bb.utils.contains('DISTRO_FEATURES', 'minidebuginfo', True, False, d):
