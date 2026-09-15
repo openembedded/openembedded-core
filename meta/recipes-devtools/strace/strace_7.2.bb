@@ -29,7 +29,9 @@ COMPATIBLE_HOST:riscv32 = "null"
 # bluez is not enabled by default due to build dependency creep in smaller builds
 # like core-image-minimal leading to significantly more tasks being executed
 PACKAGECONFIG[bluez] = "ac_cv_header_bluetooth_bluetooth_h=yes,ac_cv_header_bluetooth_bluetooth_h=no,bluez5"
-PACKAGECONFIG[libunwind] = "--with-libunwind,--without-libunwind,libunwind"
+# Stack unwinders - mutually exclusive
+PACKAGECONFIG[libdw]     = "--with-libdw,--without-libdw,elfutils,,,libunwind"
+PACKAGECONFIG[libunwind] = "--with-libunwind,--without-libunwind,libunwind,,,libdw"
 
 EXTRA_OECONF += "--enable-mpers=no --disable-gcc-Werror"
 
