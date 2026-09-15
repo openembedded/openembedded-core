@@ -89,7 +89,6 @@ EXTRA_OECONF = " \
     --enable-optimize \
     --with-ca-bundle=${CURL_CA_BUNDLE_BASE_DIR}/ssl/certs/ca-certificates.crt \
     ${@'--without-ssl' if (bb.utils.filter('PACKAGECONFIG', 'gnutls mbedtls openssl schannel', d) == '') else ''} \
-    WATT_ROOT=${STAGING_DIR_TARGET}${prefix} \
 "
 
 fix_absolute_paths () {
