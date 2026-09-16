@@ -33,7 +33,7 @@ LIC_FILES_CHKSUM = " \
     file://tests/testgtk.c;endline=25;md5=49d06770681b8322466b52ed19d29fb2 \
 "
 
-SRC_URI[archive.sha256sum] = "7fd725deb2cb3f8dc218ad862c5056ff8548f49d3b0e4081796e444c22d19686"
+SRC_URI[archive.sha256sum] = "28ba4ac1c04f86eac09b79a163cb163a4c2b54442d9f7eccc04679062a581044"
 
 S = "${UNPACKDIR}/${GNOMEBN}-${PV}"
 
@@ -79,6 +79,16 @@ PACKAGECONFIG[vulkan] = "-Dvulkan=enabled,-Dvulkan=disabled, vulkan-loader vulka
 CFLAGS += "-Wno-error=int-conversion"
 
 LIBV = "4.0.0"
+
+# gtk/svg is built as a unity target, and meson implements that by generating a
+# source file that #includes the real sources by absolute path. That generated
+# file is part of the debug information and lands in the -src package, so give
+# it the same rewriting that -ffile-prefix-map does for the compiler. Otherwise
+# the build directory leaks into the package and buildpaths QA rejects it.
+gtk4_rewrite_unity_sources() {
+	find ${B} -name '*-unity*.c' -exec sed -i -e 's|${B}|${TARGET_DBGSRC_DIR}|g' -e 's|${S}|${TARGET_DBGSRC_DIR}|g' {} +
+}
+PACKAGE_PREPROCESS_FUNCS += "gtk4_rewrite_unity_sources"
 
 FILES:${PN}:append = " \
     ${datadir}/bash-completion \
