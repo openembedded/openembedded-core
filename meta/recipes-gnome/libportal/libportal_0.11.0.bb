@@ -22,7 +22,8 @@ PACKAGECONFIG ??= "${@oe.utils.vartrue('CAN_GTK', 'gtk3', '', d)} \
 PACKAGECONFIG[gtk3] = "-Dbackend-gtk3=enabled,-Dbackend-gtk3=disabled,gtk+3"
 PACKAGECONFIG[gtk4] = "-Dbackend-gtk4=enabled,-Dbackend-gtk4=disabled,gtk4"
 
-EXTRA_OEMESON = "${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-Dvapi=true', '-Dvapi=false', d)} -Dbackend-qt5=disabled"
+EXTRA_OEMESON = "${@bb.utils.contains('GI_DATA_ENABLED', 'True', '-Dvapi=true', '-Dvapi=false', d)} \
+                 -Dbackend-qt5=disabled -Dbackend-qt6=disabled"
 
 PACKAGES =+ "${PN}-gtk3 ${PN}-gtk4"
 
