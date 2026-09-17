@@ -25,7 +25,7 @@ import bb
 from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, DevtoolError, parse_recipe
 from devtool.standard import get_real_srctree
 from devtool.deploy import parse_packages_arg
-from devtool.ide_plugins import BuildTool, DebuggerCrossConfig
+from devtool.ide_plugins import BuildTool, DebuggerCrossConfig, LOOPBACK_HOSTS, is_loopback_target
 from oe.kernel_module import kernel_module_os_env
 from pseudo_rootfs_utils import PseudoRootfsError, extract_sdk_rootfs, pseudo_state_dir
 
@@ -46,20 +46,6 @@ class DevtoolIdeMode(Enum):
 
     modified = 'modified'
     shared = 'shared'
-
-
-# Hosts a ssh target is considered to loop back to the local machine, e.g. a
-# QEMU instance reached through slirp/hostfwd port forwarding (root@localhost)
-# which has an ephemeral ssh host key that changes on every boot.
-LOOPBACK_HOSTS = ('localhost', '127.0.0.1', '::1')
-
-
-def target_host(target):
-    return target.split('@')[-1]
-
-
-def is_loopback_target(target):
-    return target_host(target) in LOOPBACK_HOSTS
 
 
 class TargetDevice:

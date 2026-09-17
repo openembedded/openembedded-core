@@ -15,6 +15,20 @@ from devtool import DevtoolError
 logger = logging.getLogger('devtool')
 
 
+# Hosts a ssh target is considered to loop back to the local machine, e.g. a
+# QEMU instance reached through slirp/hostfwd port forwarding (root@localhost)
+# which has an ephemeral ssh host key that changes on every boot.
+LOOPBACK_HOSTS = ('localhost', '127.0.0.1', '::1')
+
+
+def target_host(target):
+    return target.split('@')[-1]
+
+
+def is_loopback_target(target):
+    return target_host(target) in LOOPBACK_HOSTS
+
+
 class BuildTool(Enum):
     UNDEFINED = auto()
     CMAKE = auto()
