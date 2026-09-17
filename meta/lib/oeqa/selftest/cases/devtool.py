@@ -5,9 +5,11 @@
 #
 
 import errno
+import fcntl
 import os
 import re
 import shutil
+import socket
 import subprocess
 import tempfile
 import threading
@@ -3066,6 +3068,12 @@ class RunCmdBackground:
 class DevtoolIdeSdkTests(DevtoolBase):
 
     MAGIC_STRING_ORIG = "Magic: 123456789"
+    SLIRP_PORT_BLOCK_SIZE = 32
+    # runqemu locks /tmp/qemu-port-locks itself while picking the slirp host
+    # ports, so the reservation below needs a lock directory of its own:
+    # holding runqemu's locks would make it consider the reserved ports taken
+    # and move the forwards away again.
+    SLIRP_PORT_LOCK_DIR = '/tmp/oe-selftest-ide-sdk-port-locks'
 
     def setUp(self):
         super().setUp()
@@ -3520,6 +3528,50 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertIn('hostfwd=tcp:127.0.0.1:2222-:22', bbappend_content,
                       'SSH slirp port forward missing from QB_SLIRP_OPT')
 
+    def _reserve_slirp_port_block(self):
+        """Reserve a block of host ports for this test's debug servers and return its first port.
+
+        runqemu moves a QB_SLIRP_OPT forward to the next host port whenever the
+        wished-for one is already taken, and lldb-server's spawned gdbserver
+        has no way to tell its client about a remapped host port, so the wishes
+        have to be granted 1:1. Every parallel oe-selftest worker otherwise
+        starts from the same default port, so claim a block that is free right
+        now and hold it for the rest of the test.
+        """
+        os.makedirs(self.SLIRP_PORT_LOCK_DIR, exist_ok=True)
+        for start in range(1234, 20000, self.SLIRP_PORT_BLOCK_SIZE):
+            block = range(start, start + self.SLIRP_PORT_BLOCK_SIZE)
+            # runqemu forwards these for ssh/telnet, handing one of them to a
+            # debug server as well would collide.
+            if 2222 in block or 2323 in block:
+                continue
+            locks = []
+            for port in block:
+                lock = open(os.path.join(self.SLIRP_PORT_LOCK_DIR, '%d.lock' % port), 'w')
+                try:
+                    fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except OSError:
+                    lock.close()
+                    break
+                locks.append(lock)
+                # The lock only coordinates with other ide-sdk selftests, so
+                # confirm nothing unrelated is holding the port either.
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
+                    try:
+                        probe.bind(('127.0.0.1', port))
+                    except OSError:
+                        break
+            else:
+                for lock in locks:
+                    self.addCleanup(lock.close)
+                self.logger.debug('Reserved slirp host ports %d-%d',
+                                  start, start + self.SLIRP_PORT_BLOCK_SIZE - 1)
+                return start
+            for lock in locks:
+                lock.close()
+        self.fail('Could not reserve %d consecutive free host ports'
+                  % self.SLIRP_PORT_BLOCK_SIZE)
+
     def _verify_nfs_debug_rootfs(self, testimage, nfs):
         """Verify the NFS debug rootfs was extracted and its runqemu launch helper generated."""
         nfs_rootfs = os.path.join(self.workspacedir, 'nfs-exports', testimage, nfs)
@@ -3607,7 +3659,13 @@ class DevtoolIdeSdkTests(DevtoolBase):
             self._meson_recipe_name, "meson.build", testimage)
         package_opts = self._ide_sdk_package_opts()
         nfs_opts = ' --nfs=%s' % nfs_export if nfs else ''
-        runCmd('devtool ide-sdk %s -c --ide=code --ide=none %s%s' % (testimage, package_opts, nfs_opts),
+        # runqemu only grants a QB_SLIRP_OPT wish while the host port is free,
+        # and lldb-server's spawned gdbserver needs host == target, so give the
+        # debug servers a block no parallel worker uses (see
+        # _reserve_slirp_port_block); both invocations must agree on it.
+        port_opts = ' -G %d' % self._reserve_slirp_port_block() if slirp else ''
+        runCmd('devtool ide-sdk %s -c --ide=code --ide=none %s%s%s' % (
+            testimage, package_opts, nfs_opts, port_opts),
                output_log=self._cmd_logger)
 
         if slirp:
@@ -3651,8 +3709,8 @@ class DevtoolIdeSdkTests(DevtoolBase):
             # not known at the time of the initial ide-sdk invocation.
             # --skip-bitbake also skips the NFS rootfs (re-)extraction, which
             # would otherwise wipe the directory the target has mounted.
-            bitbake_sdk_cmd = 'devtool ide-sdk %s %s --skip-bitbake --ide=code --ide=none %s%s' % (
-                testimage, target_options, package_opts, nfs_opts)
+            bitbake_sdk_cmd = 'devtool ide-sdk %s %s --skip-bitbake --ide=code --ide=none %s%s%s' % (
+                testimage, target_options, package_opts, nfs_opts, port_opts)
             runCmd(bitbake_sdk_cmd, output_log=self._cmd_logger)
 
             # Verify the debugger is available and functional on host
