@@ -9,6 +9,7 @@ SECTION = "libs"
 LICENSE = "BSD-3-Clause AND GPL-2.0-or-later AND LGPL-2.1-or-later"
 LICENSE:${PN} = "BSD-3-Clause AND LGPL-2.1-or-later"
 LICENSE:${PN}-dev = "GPL-2.0-or-later AND LGPL-2.1-or-later"
+LICENSE:${PN}-dbg = "LGPL-2.1-or-later"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=570a9b3749dd0463a1778803b12a6dce \
                     file://COPYING.LIB;md5=4bf661c1e3793e55c8d1051bc5e0ae21 \
