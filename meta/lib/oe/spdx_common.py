@@ -172,50 +172,47 @@ def get_patched_src(d):
     Save patched source of the recipe in SPDX_WORKDIR.
     """
     spdx_workdir = d.getVar("SPDXWORK")
-    spdx_sysroot_native = d.getVar("STAGING_DIR_NATIVE")
 
-    workdir = d.getVar("WORKDIR")
+    # The kernel class functions require it to be on work-shared, so we don't change WORKDIR
+    if not is_work_shared_spdx(d):
+        spdx_sysroot_native = d.getVar("STAGING_DIR_NATIVE")
+        localdata = d.createCopy()
 
-    try:
-        # The kernel class functions require it to be on work-shared, so we dont change WORKDIR
-        if not is_work_shared_spdx(d):
-            # Change the WORKDIR to make do_unpack do_patch run in another dir.
-            d.setVar("WORKDIR", spdx_workdir)
-            # Restore the original path to recipe's native sysroot (it's relative to WORKDIR).
-            d.setVar("STAGING_DIR_NATIVE", spdx_sysroot_native)
+        # Change the WORKDIR to make do_unpack do_patch run in another dir.
+        localdata.setVar("WORKDIR", spdx_workdir)
+        # Restore the original path to recipe's native sysroot (it's relative to WORKDIR).
+        localdata.setVar("STAGING_DIR_NATIVE", spdx_sysroot_native)
 
-            # The changed 'WORKDIR' also caused 'B' changed, create dir 'B' for the
-            # possibly requiring of the following tasks (such as some recipes's
-            # do_patch required 'B' existed).
-            bb.utils.mkdirhier(d.getVar("B"))
+        # The changed 'WORKDIR' also caused 'B' changed, create dir 'B' for the
+        # possibly requiring of the following tasks (such as some recipe's
+        # do_patch required 'B' existed).
+        bb.utils.mkdirhier(localdata.getVar("B"))
 
-            bb.build.exec_func("do_unpack", d)
+        bb.build.exec_func("do_unpack", localdata)
 
-            if d.getVar("SRC_URI") != "":
-                if bb.data.inherits_class("dos2unix", d):
-                    bb.build.exec_func("do_convert_crlf_to_lf", d)
-                bb.build.exec_func("do_patch", d)
+        if localdata.getVar("SRC_URI") != "":
+            if bb.data.inherits_class("dos2unix", localdata):
+                bb.build.exec_func("do_convert_crlf_to_lf", localdata)
+            bb.build.exec_func("do_patch", localdata)
 
-        # Copy source from work-share to spdx_workdir
-        if is_work_shared_spdx(d):
-            share_src = d.getVar("S")
-            d.setVar("WORKDIR", spdx_workdir)
-            d.setVar("STAGING_DIR_NATIVE", spdx_sysroot_native)
-            # Copy source to ${SPDXWORK}, same basename dir of ${S};
-            src_dir = spdx_workdir + "/" + os.path.basename(share_src)
-            # For kernel souce, rename suffix dir 'kernel-source'
-            # to ${BP} (${BPN}-${PV})
-            if bb.data.inherits_class("kernel", d):
-                src_dir = spdx_workdir + "/" + d.getVar("BP")
+    # Copy source from work-shared to spdx_workdir
+    else:
+        share_src = d.getVar("S")
 
-            bb.note(f"copyhardlinktree {share_src} to {src_dir}")
-            oe.path.copyhardlinktree(share_src, src_dir)
+        if bb.data.inherits_class("kernel", d):
+            # For kernel source, rename suffix dir 'kernel-source' to ${BP} (${BPN}-${PV})
+            dir_name = d.getVar("BP")
+        else:
+            # Copy source to ${SPDXWORK}, same basename dir of ${S}
+            dir_name = os.path.basename(share_src)
 
-        # Some userland has no source.
-        if not os.path.exists(spdx_workdir):
-            bb.utils.mkdirhier(spdx_workdir)
-    finally:
-        d.setVar("WORKDIR", workdir)
+        src_dir = f"{spdx_workdir}/{dir_name}"
+        bb.note(f"copyhardlinktree {share_src} to {src_dir}")
+        oe.path.copyhardlinktree(share_src, src_dir)
+
+    # Some userland has no source.
+    if not os.path.exists(spdx_workdir):
+        bb.utils.mkdirhier(spdx_workdir)
 
 
 def has_task(d, task):
