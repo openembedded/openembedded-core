@@ -3620,7 +3620,8 @@ class DevtoolIdeSdkTests(DevtoolBase):
             self._verify_nfs_launch_json(tempdir_cmake, nfs_rootfs)
             self._verify_nfs_launch_json(tempdir_meson, nfs_rootfs)
 
-            launch_cmd = '%s nographic' % shlex.quote(runqemu_helper)
+            qemu_debug_opt = ' -d' if self.logger.isEnabledFor(logging.DEBUG) else ''
+            launch_cmd = '%s nographic%s' % (shlex.quote(runqemu_helper), qemu_debug_opt)
             runqemuparams = ''
             if slirp:
                 launch_cmd += ' slirp'
@@ -3629,7 +3630,8 @@ class DevtoolIdeSdkTests(DevtoolBase):
                 runqemuparams = 'slirp'
             qemu_cm = runqemu(testimage, runqemuparams=runqemuparams, launch_cmd=launch_cmd)
         else:
-            runqemuparams = "nographic slirp" if slirp else "nographic"
+            qemu_debug_opt = ' -d' if self.logger.isEnabledFor(logging.DEBUG) else ''
+            runqemuparams = ("nographic slirp" if slirp else "nographic") + qemu_debug_opt
             qemu_cm = runqemu(testimage, runqemuparams=runqemuparams)
 
         with qemu_cm as qemu:
