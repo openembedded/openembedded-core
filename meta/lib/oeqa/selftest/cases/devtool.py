@@ -3547,7 +3547,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         """Verify a recipe's binary was extracted into the NFS debug rootfs."""
         self.assertExists(os.path.join(nfs_rootfs, 'usr', 'bin', example_exe))
 
-    def _test_devtool_ide_sdk_code_nfs_debug_rootfs(self):
+    def _test_code_nfs_debug_rootfs(self):
         """Verify ide-sdk extracts an NFS debug rootfs for VS Code debugging."""
         recipe_name = self._cmake_recipe_name
         build_file = "CMakeLists.txt"
@@ -3564,7 +3564,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self._verify_nfs_binary_deployed(nfs_rootfs, recipe_name)
         self._verify_nfs_launch_json(tempdir, nfs_rootfs)
 
-    def _test_devtool_ide_sdk_code_and_none_qemu(self, nfs=False, slirp=False):
+    def _test_code_and_none_qemu(self, nfs=False, slirp=False):
         """Verify devtool ide-sdk --ide=code --ide=none for cmake, meson and the target toolchain.
 
         Generating the VS Code (ide=code) and generic (ide=none) IDE
@@ -4225,27 +4225,27 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
                 os.path.join(nfs_rootfs, 'usr', 'src', 'debug'),
                 configuration['sourceFileMap']['/usr/src/debug'])
 
-    def test_devtool_ide_sdk_code_nfs_debug_rootfs(self):
+    def test_code_nfs_debug_rootfs(self):
         """Verify ide-sdk extracts an NFS debug rootfs for VS Code debugging."""
-        self._test_devtool_ide_sdk_code_nfs_debug_rootfs()
+        self._test_code_nfs_debug_rootfs()
 
     @OETestTag("runqemu")
-    def test_devtool_ide_sdk_code_and_none_qemu(self):
+    def test_code_and_none_qemu(self):
         """Verify devtool ide-sdk --ide=code --ide=none for cmake-example/meson-example with GCC and GDB."""
-        self._test_devtool_ide_sdk_code_and_none_qemu()
+        self._test_code_and_none_qemu()
 
     @OETestTag("runqemu")
-    def test_devtool_ide_sdk_none_nfs_qemu(self):
+    def test_code_and_none_nfs_qemu(self):
         """Verify the full ide=code,none workflow through an NFS-root QEMU target."""
-        self._test_devtool_ide_sdk_code_and_none_qemu(nfs=True)
+        self._test_code_and_none_qemu(nfs=True)
 
     @OETestTag("runqemu")
-    def test_devtool_ide_sdk_none_nfs_qemu_slirp(self):
+    def test_code_and_none_nfs_qemu_slirp(self):
         """Verify the full ide=code,none workflow through an NFS-root slirp target."""
-        self._test_devtool_ide_sdk_code_and_none_qemu(nfs=True, slirp=True)
+        self._test_code_and_none_qemu(nfs=True, slirp=True)
 
     @OETestTag("runqemu")
-    def test_devtool_ide_sdk_none_qemu_slirp(self):
+    def test_code_and_none_qemu_slirp(self):
         """Verify devtool ide-sdk works with runqemu slirp networking.
 
         Slirp mode uses SSH port forwarding (default: localhost:2222 -> guest:22).
@@ -4255,13 +4255,13 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
           - runqemu boots the image in slirp mode.
           - devtool deploy-target reaches the target via localhost:2222.
         """
-        self._test_devtool_ide_sdk_code_and_none_qemu(slirp=True)
+        self._test_code_and_none_qemu(slirp=True)
 
 
 class DevtoolIdeSdkKernelTests(DevtoolIdeSdkTests):
 
     @OETestTag("runqemu")
-    def test_devtool_ide_sdk_code_kernel_module(self):
+    def test_code_kernel_module(self):
         """Verify a kernel module recipe works with ide=code mode
 
         Test flow:
@@ -4477,7 +4477,7 @@ class DevtoolIdeSdkKernelTests(DevtoolIdeSdkTests):
 
 class DevtoolIdeSdkSharedTests(DevtoolIdeSdkTests):
 
-    def test_devtool_ide_sdk_shared_sysroots(self):
+    def test_shared_sysroots(self):
         """Verify the shared sysroot SDK"""
 
         # Handle the workspace (which is not needed by this test case)
@@ -5045,15 +5045,15 @@ class DevtoolIdeSdkClangTests(DevtoolIdeSdkTests):
             lldb_server_pid, pid_file))
         self.assertEqual(status, 0)
 
-    def test_devtool_ide_sdk_code_nfs_debug_rootfs(self):
+    def test_sdk_code_nfs_debug_rootfs(self):
         """Verify ide-sdk extracts an NFS debug rootfs for VS Code (CodeLLDB) debugging."""
-        self._test_devtool_ide_sdk_code_nfs_debug_rootfs()
+        self._test_code_nfs_debug_rootfs()
 
     @OETestTag("runqemu")
-    def test_devtool_ide_sdk_code_and_none_qemu(self):
+    def test_code_and_none_qemu(self):
         """Verify devtool ide-sdk --ide=code --ide=none for cmake/meson-example-clang with Clang and LLDB.
 
-        See DevtoolIdeSdkTests._test_devtool_ide_sdk_code_and_none_qemu for
+        See DevtoolIdeSdkTests._test_code_and_none_qemu for
         the shared workflow. Clang-specific here: the generated configs
         select lldb-native/lldb-server instead of gdb-cross/gdbserver
         (extensions.json recommends vadimcn.vscode-lldb, launch.json uses
@@ -5066,31 +5066,31 @@ class DevtoolIdeSdkClangTests(DevtoolIdeSdkTests):
         -fdebug-prefix-map/-ffile-prefix-map underflow breaking
         source-level breakpoint resolution in CodeLLDB.
         """
-        self._test_devtool_ide_sdk_code_and_none_qemu()
+        self._test_code_and_none_qemu()
 
     @OETestTag("runqemu")
-    def test_devtool_ide_sdk_none_nfs_qemu(self):
+    def test_sdk_none_nfs_qemu(self):
         """Verify the full ide=code,none workflow through an NFS-root QEMU target."""
-        self._test_devtool_ide_sdk_code_and_none_qemu(nfs=True)
+        self._test_code_and_none_qemu(nfs=True)
 
     @OETestTag("runqemu")
-    def test_devtool_ide_sdk_none_nfs_qemu_slirp(self):
+    def test_sdk_none_nfs_qemu_slirp(self):
         """Verify the full ide=code,none workflow through an NFS-root slirp target."""
-        self._test_devtool_ide_sdk_code_and_none_qemu(nfs=True, slirp=True)
+        self._test_code_and_none_qemu(nfs=True, slirp=True)
 
     @OETestTag("runqemu")
-    def test_devtool_ide_sdk_none_qemu_slirp(self):
+    def test_sdk_none_qemu_slirp(self):
         """Verify devtool ide-sdk works with runqemu slirp networking.
 
         Slirp mode uses SSH port forwarding (default: localhost:2222 -> guest:22).
         """
-        self._test_devtool_ide_sdk_code_and_none_qemu(slirp=True)
+        self._test_code_and_none_qemu(slirp=True)
 
 
 class DevtoolIdeSdkMiscTests(DevtoolIdeSdkTests):
 
-    def test_devtool_ide_sdk_plugins(self):
-        """Test that devtool ide-sdk can use plugins from other layers."""
+    def test_plugins(self):
+        """Test that plugins from other layers can be used by devtool ide-sdk."""
 
         # We need a workspace layer and a modified recipe (but no image)
         modified_recipe_name = "meson-example"
