@@ -123,7 +123,6 @@ class RecipeGdbCross(RecipeNative):
         super().__init__('gdb-cross-' + target_arch, target_arch)
         self.target_device = target_device
         self.gdb = None
-        self.gdbserver_port_next = int(args.gdbserver_port_start)
         self.config_db = {}
 
     def __find_gdbserver(self, config, tinfoil):
@@ -1856,6 +1855,7 @@ def ide_setup(args, config, basepath, workspace):
         if args.mode == DevtoolIdeMode.modified:
             logger.info("Setting up workspaces for modified recipe: %s" %
                         str(recipes_modified_names))
+            DebuggerCrossConfig._port_next = int(args.gdbserver_port_start)
             debuggers = {}
             for recipe_name in recipes_modified_names:
                 recipe_modified = RecipeModified(
@@ -2049,7 +2049,9 @@ def register_commands(subparsers, context):
         '-t', '--target', default='root@192.168.7.2',
         help='Live target machine running an ssh server: user@hostname.')
     parser_ide_sdk.add_argument(
-        '-G', '--gdbserver-port-start', default="1234", help='port where gdbserver is listening.')
+        '-G', '--gdbserver-port-start', default="1234",
+        help='First port used by the debug servers on the target. Each debug '
+             'configuration consumes one port, counting up from here.')
     parser_ide_sdk.add_argument(
         '-c', '--no-host-check', help='Disable ssh host key checking', action='store_true')
     parser_ide_sdk.add_argument(
