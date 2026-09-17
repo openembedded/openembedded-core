@@ -169,28 +169,20 @@ def collect_package_providers(d, direct_deps):
 
 def get_patched_src(d):
     """
-    Save patched source of the recipe in SPDX_WORKDIR.
+    Save patched source of the recipe in SPDXWORK.
     """
     spdx_workdir = d.getVar("SPDXWORK")
 
-    # The kernel class functions require it to be on work-shared, so we don't change WORKDIR
+    # Do not unpack the sources again for the recipe using work-shared
     if not is_work_shared_spdx(d):
-        spdx_sysroot_native = d.getVar("STAGING_DIR_NATIVE")
         localdata = d.createCopy()
 
-        # Change the WORKDIR to make do_unpack do_patch run in another dir.
-        localdata.setVar("WORKDIR", spdx_workdir)
-        # Restore the original path to recipe's native sysroot (it's relative to WORKDIR).
-        localdata.setVar("STAGING_DIR_NATIVE", spdx_sysroot_native)
-
-        # The changed 'WORKDIR' also caused 'B' changed, create dir 'B' for the
-        # possibly requiring of the following tasks (such as some recipe's
-        # do_patch required 'B' existed).
-        bb.utils.mkdirhier(localdata.getVar("B"))
+        # Change the UNPACKDIR to make do_unpack do_patch run in another dir.
+        localdata.setVar("UNPACKDIR", spdx_workdir)
 
         bb.build.exec_func("do_unpack", localdata)
 
-        if localdata.getVar("SRC_URI") != "":
+        if localdata.getVar("SRC_URI"):
             if bb.data.inherits_class("dos2unix", localdata):
                 bb.build.exec_func("do_convert_crlf_to_lf", localdata)
             bb.build.exec_func("do_patch", localdata)
