@@ -360,6 +360,33 @@ class RecipeImage:
         os.chmod(helper, os.stat(helper).st_mode | stat.S_IEXEC)
         return helper
 
+    def nfs_hw_helper(self, nfs_export_base_dir, nfs):
+        """Create a helper that exports the selected rootfs and the kernel to a target.
+
+        The rootfs is exported over NFS with runqemu-export-rootfs
+        The deploy directory (fitImage/kernel) is served over plain
+        HTTP, e.g. for a U-Boot 'wget' in recovery/netboot mode.
+        """
+        export_dir = os.path.join(nfs_export_base_dir, self.pn)
+        rootfs_dir = self.nfs_rootfs_dir(nfs_export_base_dir, nfs)
+
+        helper = os.path.join(export_dir, 'export-hw-' + nfs)
+        with open(helper, 'w') as helper_file:
+            helper_file.write('#!/bin/sh\n')
+            helper_file.write('set -e\n')
+            helper_file.write(
+                'runqemu-export-rootfs start %s\n' % shlex.quote(rootfs_dir))
+            helper_file.write(
+                'trap \'runqemu-export-rootfs stop %s\' EXIT INT TERM\n' %
+                shlex.quote(rootfs_dir))
+            helper_file.write('cd %s\n' % shlex.quote(self.deploy_dir_image))
+            helper_file.write(
+                'echo "Serving %s over HTTP on port ${PORT:-8080}"\n' %
+                self.deploy_dir_image)
+            helper_file.write('python3 -m http.server "${PORT:-8080}"\n')
+        os.chmod(helper, os.stat(helper).st_mode | stat.S_IEXEC)
+        return helper
+
     def update_image_bbappend(self, recipes_modified, nfs=None):
         """Write debug settings for modified-mode recipes into the image bbappend.
 
@@ -488,6 +515,14 @@ class RecipeImage:
                 '  %s %s\n'
                 'Pass any additional runqemu options to this helper.',
                 helper, opts)
+
+        hw_helper = self.nfs_hw_helper(nfs_export_base_dir, nfs)
+        logger.info(
+            'With the build environment sourced, export the rootfs (NFS) and '
+            'the kernel (HTTP) for a real hardware target instead of QEMU:\n'
+            '  %s\n'
+            'Set PORT to override the HTTP port (default: 8080).',
+            hw_helper)
 
     def update_qb_slirp_opt(self):
         """Update QB_SLIRP_OPT in the image bbappend
