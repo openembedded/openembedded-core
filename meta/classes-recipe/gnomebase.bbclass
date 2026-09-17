@@ -5,7 +5,9 @@
 #
 
 def gnome_verdir(v):
-    return ".".join(v.split(".")[:-1]) or v
+    # GNOME dirs use the first two version components, e.g. 0.21.8.2 -> 0.21
+    parts = v.split(".")
+    return ".".join(parts[:2] if len(parts) >= 3 else parts[:-1]) or v
 
 
 GNOME_COMPRESS_TYPE ?= "xz"
