@@ -1714,7 +1714,10 @@ def ide_setup(args, config, basepath, workspace):
         config, args.recipenames)
     orig_recipe_bbappend_contents = RecipeModified.strip_bbappend_sections(
         config, args.recipenames)
-    ides = [ide_plugins[name]() for name in args.ide]
+    ide_names = args.ide or [list(ide_plugins.keys())[0]]
+    if 'all' in ide_names:
+        ide_names = list(ide_plugins.keys())
+    ides = [ide_plugins[name]() for name in ide_names]
     tinfoil = setup_tinfoil(config_only=False, basepath=basepath)
     try:
         # define mode depending on recipes which need to be processed
@@ -2014,21 +2017,13 @@ def register_commands(subparsers, context):
         '  To use this tool-chain the environment-* file found in the deploy..image folder needs to be sourced into a shell.\n'
         '  In case of VSCode and cmake the tool-chain is also exposed as a cmake-kit')
     default_ide = list(ide_plugins.keys())[0]
-
-    def ide_list(value):
-        """argparse type: comma separated list of IDE plugin names"""
-        names = value.split(',')
-        for name in names:
-            if name not in ide_plugins:
-                raise ValueError(
-                    "invalid choice: %r (choose from %s)" % (
-                        name, ', '.join(sorted(ide_plugins.keys()))))
-        return names
+    ide_choices = list(ide_plugins.keys()) + ['all']
     parser_ide_sdk.add_argument(
-        '-i', '--ide', type=ide_list, default=[default_ide],
-        metavar='{%s}' % ','.join(ide_plugins.keys()),
-        help='Comma separated list of IDEs to setup the configuration for '
-        '(choices: %s, default: %s)' % (', '.join(ide_plugins.keys()), default_ide))
+        '-i', '--ide', action='append', choices=ide_choices,
+        metavar='{%s}' % ','.join(ide_choices),
+        help='IDE to setup the configuration for. May be specified multiple times '
+        'to set up more than one IDE. "all" sets up every supported IDE '
+        '(choices: %s, default: %s)' % (', '.join(ide_choices), default_ide))
     parser_ide_sdk.add_argument(
         '-t', '--target', default='root@192.168.7.2',
         help='Live target machine running an ssh server: user@hostname.')

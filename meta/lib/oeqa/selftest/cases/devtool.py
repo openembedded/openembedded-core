@@ -3565,7 +3565,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self._verify_nfs_launch_json(tempdir, nfs_rootfs)
 
     def _test_devtool_ide_sdk_code_and_none_qemu(self, nfs=False, slirp=False):
-        """Verify devtool ide-sdk --ide=code,none for cmake, meson and the target toolchain.
+        """Verify devtool ide-sdk --ide=code --ide=none for cmake, meson and the target toolchain.
 
         Generating the VS Code (ide=code) and generic (ide=none) IDE
         configurations from a SINGLE devtool ide-sdk invocation and check
@@ -3607,7 +3607,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
             self._meson_recipe_name, "meson.build", testimage)
         package_opts = self._ide_sdk_package_opts()
         nfs_opts = ' --nfs=%s' % nfs_export if nfs else ''
-        runCmd('devtool ide-sdk %s -c --ide=code,none %s%s' % (testimage, package_opts, nfs_opts),
+        runCmd('devtool ide-sdk %s -c --ide=code --ide=none %s%s' % (testimage, package_opts, nfs_opts),
                output_log=self._cmd_logger)
 
         if slirp:
@@ -3649,7 +3649,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
             # not known at the time of the initial ide-sdk invocation.
             # --skip-bitbake also skips the NFS rootfs (re-)extraction, which
             # would otherwise wipe the directory the target has mounted.
-            bitbake_sdk_cmd = 'devtool ide-sdk %s %s --skip-bitbake --ide=code,none %s%s' % (
+            bitbake_sdk_cmd = 'devtool ide-sdk %s %s --skip-bitbake --ide=code --ide=none %s%s' % (
                 testimage, target_options, package_opts, nfs_opts)
             runCmd(bitbake_sdk_cmd, output_log=self._cmd_logger)
 
@@ -4231,7 +4231,7 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
 
     @OETestTag("runqemu")
     def test_devtool_ide_sdk_code_and_none_qemu(self):
-        """Verify devtool ide-sdk --ide=code,none for cmake-example/meson-example with GCC and GDB."""
+        """Verify devtool ide-sdk --ide=code --ide=none for cmake-example/meson-example with GCC and GDB."""
         self._test_devtool_ide_sdk_code_and_none_qemu()
 
     @OETestTag("runqemu")
@@ -5051,7 +5051,7 @@ class DevtoolIdeSdkClangTests(DevtoolIdeSdkTests):
 
     @OETestTag("runqemu")
     def test_devtool_ide_sdk_code_and_none_qemu(self):
-        """Verify devtool ide-sdk --ide=code,none for cmake/meson-example-clang with Clang and LLDB.
+        """Verify devtool ide-sdk --ide=code --ide=none for cmake/meson-example-clang with Clang and LLDB.
 
         See DevtoolIdeSdkTests._test_devtool_ide_sdk_code_and_none_qemu for
         the shared workflow. Clang-specific here: the generated configs
