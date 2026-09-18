@@ -2339,21 +2339,33 @@ class DevtoolUpgradeTests(DevtoolBase):
         except:
             self.skip("Git user.name and user.email must be set")
 
-    def _check_changelog(self, recipe, oldrecipefile):
+    def _check_changelog(self, recipe, oldrecipefile, old_ver=None, new_ver=None):
         """Compare extracted changelog against reference data."""
         changelog_ref = oldrecipefile + '.changelog'
         self.assertExists(changelog_ref, 'Changelog reference file must exist for %s' % recipe)
         changelog_file = os.path.join(self.workspacedir, 'changelogs', '%s.txt' % recipe)
+        metadata_file = os.path.join(self.workspacedir, 'changelogs', '%s.json' % recipe)
         with open(changelog_ref, 'r') as f:
             expected = f.read()
         if not expected:
             self.assertNotExists(changelog_file,
                 'Changelog file should not exist when reference is empty')
+            self.assertNotExists(metadata_file,
+                'Changelog metadata file should not exist when reference is empty')
         else:
             self.assertExists(changelog_file, 'Changelog file should exist after upgrade')
             with open(changelog_file, 'r') as f:
                 actual = f.read()
             self.assertEqual(expected, actual)
+            self.assertExists(metadata_file, 'Changelog metadata file should exist after upgrade')
+            with open(metadata_file, 'r') as f:
+                metadata = json.load(f)
+            self.assertEqual(metadata.get('package'), recipe)
+            if old_ver:
+                self.assertEqual(metadata.get('old_version'), old_ver)
+            if new_ver:
+                self.assertEqual(metadata.get('new_version'), new_ver)
+            self.assertEqual(metadata.get('changelog_file'), '%s.txt' % recipe)
 
     def test_devtool_upgrade(self):
         # Check preconditions
@@ -2366,6 +2378,7 @@ class DevtoolUpgradeTests(DevtoolBase):
             self.assertIn(param, result.output)
         # For the moment, we are using a real recipe.
         recipe = 'devtool-upgrade-test1'
+        old_version = '1.5.3'
         version = '1.6.0'
         oldrecipefile = get_bb_var('FILE', recipe)
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
@@ -2394,7 +2407,7 @@ class DevtoolUpgradeTests(DevtoolBase):
             newlines = f.readlines()
         self.assertEqual(desiredlines, newlines)
         # Check changelog
-        self._check_changelog(recipe, oldrecipefile)
+        self._check_changelog(recipe, oldrecipefile, old_version, version)
         # Check devtool reset recipe
         result = runCmd('devtool reset %s -n' % recipe)
         result = runCmd('devtool status')

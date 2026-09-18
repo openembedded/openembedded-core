@@ -9,6 +9,7 @@
 import os
 import sys
 import re
+import json
 import shlex
 import shutil
 import subprocess
@@ -730,11 +731,21 @@ def _extract_changelog(srctree, pn, old_ver, new_ver, old_tag, new_tag, workspac
     bb.utils.mkdirhier(changelog_dir)
     changelog_path = os.path.join(changelog_dir, '%s.txt' % pn)
     with open(changelog_path, 'w') as f:
-        f.write('Changelog for %s: %s -> %s\n' % (pn, old_ver, new_ver))
-        if changelog_fname:
-            f.write('Source: %s\n' % changelog_fname)
-        f.write('\n')
         f.write(changelog_content)
+        f.write('\n')
+
+    # Metadata sidecar file: keeps upgrade/changelog details machine-readable
+    # while the changelog text itself stays in the .txt file.
+    metadata = {
+        'package': pn,
+        'old_version': old_ver,
+        'new_version': new_ver,
+        'changelog_file': os.path.basename(changelog_path),
+        'changelog_source': changelog_fname.split(', ') if changelog_fname else None,
+    }
+    metadata_path = os.path.join(changelog_dir, '%s.json' % pn)
+    with open(metadata_path, 'w') as f:
+        json.dump(metadata, f, indent=4)
         f.write('\n')
 
     return changelog_path
@@ -831,6 +842,8 @@ def upgrade(args, config, basepath, workspace):
                                             config.workspace_path, is_git)
         if changelog_file:
             logger.info('Changelog extracted to %s' % changelog_file)
+            metadata_file = os.path.join(os.path.dirname(changelog_file), '%s.json' % pn)
+            logger.info('Changelog metadata written to %s' % metadata_file)
 
         if license_diff:
             logger.info('License checksums have been updated in the new recipe; please refer to it for the difference between the old and the new license texts.')
