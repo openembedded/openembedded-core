@@ -14,6 +14,7 @@ import shlex
 import shutil
 import subprocess
 import tempfile
+import textwrap
 import logging
 import argparse
 import scriptutils
@@ -634,6 +635,66 @@ def _diff_git_log_changelog(old_content, new_content):
     return '\n'.join(subjects) if subjects else None
 
 
+# GitHub PR references: trailing (#123) at end of line, or full URLs
+_GITHUB_PR_RE = re.compile(r'\s*\(#[0-9]+\)\s*$|\s*https?://github\.com/[^/]+/[^/]+/(pull|issues)/[0-9]+\s*')
+# Commit hash prefixes from git log --oneline: "abc1234 "
+_COMMIT_HASH_RE = re.compile(r'^[0-9a-f]{7,40}\s+')
+# A GNU ChangeLog entry: starts at either an entry header
+# ("2026-08-24  Werner Koch  <wk@gnupg.org>") or a technical bullet
+# ("* file.c (func): text" or "+ commit <hash>"), and extends through all
+# wrapped continuation lines up to (but not including) the next blank line.
+_GNU_CHANGELOG_ENTRY_RE = re.compile(
+    r'^(?:\d{4}-\d{2}-\d{2}\s+.+<.+@.+>|\s*(?:\*\s|\+ commit [0-9a-f]{7,40}).*)'
+    r'(?:\n(?!\s*$).*)*\n?',
+    re.MULTILINE)
+# NEWS-style release header + underline (glib/gtk family):
+# "Changes in 0.11.0, 2026-09-12\n===============================\n"
+_NEWS_RELEASE_HEADER_RE = re.compile(r'^Changes in .+,\s*\d{4}-\d{2}-\d{2}\s*\n=+\s*$', re.MULTILINE)
+
+def _join_single_line_paragraphs(text):
+    """Drop the blank line between two adjacent one-line paragraphs (each
+    surrounded by blank lines), so lines left behind by GNU ChangeLog entry
+    stripping read as one entry per line instead of double-spaced."""
+    paragraphs = text.split('\n\n')
+    out = [paragraphs[0]]
+    prev_is_single_line = '\n' not in paragraphs[0]
+    for para in paragraphs[1:]:
+        this_is_single_line = '\n' not in para
+        if prev_is_single_line and this_is_single_line:
+            out[-1] += '\n' + para
+        else:
+            out.append(para)
+        prev_is_single_line = this_is_single_line
+    return '\n\n'.join(out)
+
+
+def _cleanup_changelog(content):
+    """Strip GitHub PR refs, commit hashes, GNU ChangeLog entries (headers
+    and file/function bullets, plus their wrapped continuation lines) and
+    NEWS-style 'Changes in X.Y.Z, DATE' release headers with their
+    underline. Wrap lines over 80 chars, preserving indentation."""
+    content = _NEWS_RELEASE_HEADER_RE.sub('', content)
+    content = _GNU_CHANGELOG_ENTRY_RE.sub('', content)
+    out = []
+    for line in content.splitlines():
+        line = _GITHUB_PR_RE.sub(' ', line)
+        line = _COMMIT_HASH_RE.sub('', line)
+        line = line.replace('\t', '').rstrip()
+        stripped = line.lstrip()
+        indent = line[:len(line) - len(stripped)]
+        if len(line) > 80:
+            if stripped.startswith('- '):
+                indent += '  '
+            line = textwrap.fill(line, width=80, subsequent_indent=indent)
+        out.append(line)
+    text = '\n'.join(out)
+    # Entries removed above can leave 3+ blank newlines where a blank-line
+    # separator butted up against a removed entry's own blank line;
+    # collapse any such run down to a single blank line (2 newlines).
+    text = re.sub(r'\n{3,}', '\n\n', text).strip()
+    return _join_single_line_paragraphs(text)
+
+
 def _extract_changelog(srctree, pn, old_ver, new_ver, old_tag, new_tag, workspace_path, is_git_source):
     """Extract changelog between old and new version using devtool git tags."""
     changelog_content = None
@@ -723,7 +784,7 @@ def _extract_changelog(srctree, pn, old_ver, new_ver, old_tag, new_tag, workspac
         changelog_content = ''.join(filtered)
 
     # Clean up content for readability and commit message use
-    changelog_content = re.sub(r'\n{3,}', '\n\n', changelog_content).strip()
+    changelog_content = _cleanup_changelog(changelog_content)
     if not changelog_content:
         return None
 
