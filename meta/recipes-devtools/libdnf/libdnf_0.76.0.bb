@@ -2,7 +2,7 @@ SUMMARY = "Library providing simplified C and Python API to libsolv"
 HOMEPAGE = "https://github.com/rpm-software-management/libdnf"
 DESCRIPTION = "This library provides a high level package-manager. It's core library of dnf, PackageKit and rpm-ostree. It's replacement for deprecated hawkey library which it contains inside and uses librepo under the hood."
 LICENSE = "LGPL-2.1-or-later"
-LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
+LIC_FILES_CHKSUM = "file://COPYING;md5=4bf661c1e3793e55c8d1051bc5e0ae21"
 
 SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=dnf-4-master;protocol=https;tag=${PV} \
            file://0004-Set-libsolv-variables-with-pkg-config-cmake-s-own-mo.patch \
@@ -13,7 +13,7 @@ SRC_URI = "git://github.com/rpm-software-management/libdnf;branch=dnf-4-master;p
            file://0001-utils-utils.cpp-fix-compilation-with-musl.patch \
            "
 
-SRCREV = "d39573195e24b43687587a8d83b9f6ac274e2412"
+SRCREV = "56370b044f6efdfd14240e3dccac62b833dbe027"
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(?!4\.90)\d+(\.\d+)+)"
 
 DEPENDS = "glib-2.0 libsolv librepo rpm libmodulemd json-c swig-native util-linux"
