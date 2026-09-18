@@ -230,7 +230,7 @@ python do_ar_original() {
                     else:
                         bb.fatal("Cannot determine archive names for original source because 'name=' URL parameter '%s' is used twice. Make it unique in: %s %s" % (tarball_suffix[name], url))
             tarball_suffix[name] = url
-            create_tarball(d, tmpdir + '/.', name, ar_outdir)
+            create_tarball(d, os.path.join(tmpdir, d.getVar('BP'), '.'), name, ar_outdir)
 
     # Emit patch series files for 'original'
     bb.note('Writing patch series files...')
