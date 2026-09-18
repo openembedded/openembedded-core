@@ -23,3 +23,6 @@ DEV_PKG_DEPENDENCY = ""
 RRECOMMENDS:${PN}-dbg = "${PN}-dev (= ${EXTENDPKGV})"
 
 BBCLASSEXTEND = "native nativesdk"
+
+# This is a header only library - thus everything lands in the -dev package
+ALLOW_EMPTY:${PN} = "1"
