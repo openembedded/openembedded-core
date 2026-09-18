@@ -640,6 +640,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-iwlwifi-7265d ${PN}-iwlwifi-8000c ${PN}-iwlwifi-8265 \
              ${PN}-iwlwifi-9000 \
              ${PN}-iwlwifi-9260 \
+             ${PN}-iwlwifi-ty \
              ${PN}-iwlwifi-misc \
              ${PN}-ibt-license ${PN}-ibt \
              ${PN}-ibt-11-5 ${PN}-ibt-12-16 ${PN}-ibt-hw-37-7 ${PN}-ibt-hw-37-8 \
@@ -2191,6 +2192,7 @@ LICENSE:${PN}-iwlwifi-8000c     = "LicenseRef-Firmware-iwlwifi-firmware"
 LICENSE:${PN}-iwlwifi-8265      = "LicenseRef-Firmware-iwlwifi-firmware"
 LICENSE:${PN}-iwlwifi-9000      = "LicenseRef-Firmware-iwlwifi-firmware"
 LICENSE:${PN}-iwlwifi-9260      = "LicenseRef-Firmware-iwlwifi-firmware"
+LICENSE:${PN}-iwlwifi-ty        = "LicenseRef-Firmware-iwlwifi-firmware"
 LICENSE:${PN}-iwlwifi-misc      = "LicenseRef-Firmware-iwlwifi-firmware"
 LICENSE:${PN}-iwlwifi-license   = "LicenseRef-Firmware-iwlwifi-firmware"
 
@@ -2219,6 +2221,10 @@ FILES:${PN}-iwlwifi-8000c   = "${firmwaredir}/iwlwifi-8000C-*.ucode* ${firmwared
 FILES:${PN}-iwlwifi-8265   = "${firmwaredir}/iwlwifi-8265-*.ucode* ${firmwaredir}/intel/iwlwifi/iwlwifi-8265-*.ucode*"
 FILES:${PN}-iwlwifi-9000   = "${firmwaredir}/iwlwifi-9000-*.ucode* ${firmwaredir}/intel/iwlwifi/iwlwifi-9000-*.ucode*"
 FILES:${PN}-iwlwifi-9260   = "${firmwaredir}/iwlwifi-9260-*.ucode* ${firmwaredir}/intel/iwlwifi/iwlwifi-9260-*.ucode*"
+FILES:${PN}-iwlwifi-ty     = " \
+    ${firmwaredir}/iwlwifi-ty-*.ucode* ${firmwaredir}/intel/iwlwifi/iwlwifi-ty-*.ucode* \
+    ${firmwaredir}/iwlwifi-ty-*.pnvm* ${firmwaredir}/intel/iwlwifi/iwlwifi-ty-*.pnvm* \
+"
 FILES:${PN}-iwlwifi-misc   = " \
     ${firmwaredir}/iwlwifi-*.ucode* ${firmwaredir}/intel/iwlwifi/iwlwifi-*.ucode* \
     ${firmwaredir}/iwlwifi-*.pnvm* ${firmwaredir}/intel/iwlwifi/iwlwifi-*.pnvm* \
@@ -2248,6 +2254,7 @@ RDEPENDS:${PN}-iwlwifi-8000c     = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-8265      = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-9000      = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-9260      = "${PN}-iwlwifi-license"
+RDEPENDS:${PN}-iwlwifi-ty        = "${PN}-iwlwifi-license"
 RDEPENDS:${PN}-iwlwifi-misc      = "${PN}-iwlwifi-license"
 
 # -iwlwifi-misc is a "catch all" package that includes all the iwlwifi
