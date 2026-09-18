@@ -245,7 +245,7 @@ do_install_ptest() {
 	install -m755 ${S}/test/smcont*.txt ${D}${PTEST_PATH}/test/
 	install -m755 ${S}/test/ssl_test.tmpl ${D}${PTEST_PATH}/test/
 
-	sed 's|${S}|${PTEST_PATH}|g' -i ${D}${PTEST_PATH}/configdata.pm ${D}${PTEST_PATH}/util/wrap.pl
+	sed -e 's|${S}|${PTEST_PATH}|g' -e 's|${BUILD_ARCH}-${BUILD_OS}|${TARGET_SYS}|g' -i ${D}${PTEST_PATH}/configdata.pm ${D}${PTEST_PATH}/util/wrap.pl
 
 	ln -s ${libdir}/ossl-modules/ ${D}${PTEST_PATH}/providers
 }
