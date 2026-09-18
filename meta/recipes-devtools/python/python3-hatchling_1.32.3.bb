@@ -7,6 +7,6 @@ inherit pypi python_hatchling
 
 DEPENDS += "python3-packaging-native python3-pathspec-native python3-pluggy-native python3-tomlkit-native python3-trove-classifiers-native"
 
-SRC_URI[sha256sum] = "0bdbde4a52b06c37e3eca395f85a762bf0ef06fe374fd8ae429dc6be10230f5f"
+SRC_URI[sha256sum] = "acdd4436d84d829c6e7ae6df723241d8f0bca9c5bad5a6148bd41f2ea6b8a792"
 
 BBCLASSEXTEND = "native nativesdk"
