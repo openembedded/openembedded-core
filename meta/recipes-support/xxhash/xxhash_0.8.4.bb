@@ -10,7 +10,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=13be6b481ff5616f77dda971191bb29b \
 SRC_URI = "git://github.com/Cyan4973/xxHash.git;branch=release;protocol=https;tag=v${PV}"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
-SRCREV = "e626a72bc2321cd320e953a0ccf1584cad60f363"
+SRCREV = "c87183a77d67f7d37e3d2d1b7eaac5e7c695e4f0"
 
 CFLAGS += "${@bb.utils.contains('SELECTED_OPTIMIZATION', '-Og', '-DXXH_NO_INLINE_HINTS', '', d)}"
 
