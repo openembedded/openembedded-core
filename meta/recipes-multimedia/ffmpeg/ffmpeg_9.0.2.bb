@@ -27,7 +27,7 @@ SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz \
            file://makerace.patch \
            "
 
-SRC_URI[sha256sum] = "cf38e0e28c7e5605942c4a77755349b0145804a397af37eb1fb4c77cb237f635"
+SRC_URI[sha256sum] = "8c3850283eb25fa026482078a04051e0be17347b09ef81a0849bec15a96e002e"
 
 # Build fails when thumb is enabled: https://bugzilla.yoctoproject.org/show_bug.cgi?id=7717
 ARM_INSTRUCTION_SET:armv4 = "arm"
