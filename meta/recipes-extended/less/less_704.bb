@@ -29,19 +29,21 @@ SRC_URI = "http://www.greenwoodsoftware.com/${BPN}/${BPN}-${PV}.tar.gz \
            file://run-ptest \
            "
 
-SRC_URI[sha256sum] = "d1008fb78dcae1323ddab664bcb352a61f022b1b131bd8018548e021d975ec7a"
+SRC_URI[sha256sum] = "20a0b0a2bb2525fa53c7eee9beb854b4c9cf172eabb209af7020743547bfe9fb"
 
 UPSTREAM_CHECK_URI = "http://www.greenwoodsoftware.com/less/download.html"
 
 inherit autotools ptest update-alternatives
 
+EXTRA_OEMAKE += "LESSTEST=1"
+
+inherit autotools update-alternatives
+
 do_compile_ptest () {
-        oe_runmake LESSTEST=1
-        oe_runmake LESSTEST=1 -C ${S}/lesstest
+        oe_runmake -C ${S}/lesstest
 }
 
 do_install_ptest () {
-        cp ${B}/less_t ${D}${PTEST_PATH}
         cp ${S}/lesstest/lesstest ${D}${PTEST_PATH}
         cp ${S}/lesstest/runtest ${D}${PTEST_PATH}
         cp ${S}/lesstest/lt_screen ${D}${PTEST_PATH}
