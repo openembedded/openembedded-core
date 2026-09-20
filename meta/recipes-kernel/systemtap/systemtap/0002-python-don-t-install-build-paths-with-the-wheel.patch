@@ -1,0 +1,61 @@
+From 3f34320eb37bb583b7bbcec01347a52527991391 Mon Sep 17 00:00:00 2001
+From: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
+Date: Sun, 20 Sep 2026 08:12:00 +0000
+Subject: [PATCH 2/2] python: don't install build paths with the wheel
+
+pip byte-compiles the module it installs using the paths it writes to, so
+with DESTDIR set every .pyc in HelperSDT/__pycache__ records a
+$(DESTDIR)-prefixed source file name, and PEP 610 direct_url.json records
+the file:// URL of the wheel in the build tree.  Neither names anything
+that exists on the installed system, and both make the install
+unreproducible; distro QA checks reject them (OpenEmbedded's buildpaths
+test fails the build on all four files).
+
+Pass --no-compile, so the bytecode is generated on first import in the
+right place, and delete direct_url.json after installing.  Its line in
+RECORD has to go as well: the line holds a sha256 of the file, and thus of
+the build directory the wheel sat in, so leaving it in place keeps RECORD
+differing between two builds of the same source in different directories
+-- and describes a file that is no longer installed.
+
+Upstream-Status: Submitted [https://inbox.sourceware.org/systemtap/20260919135744.78642-3-jaipaul.cheernam@est.tech/]
+Signed-off-by: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
+---
+ python/Makefile.am | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/python/Makefile.am b/python/Makefile.am
+index 0cb608d..ebd1465 100644
+--- a/python/Makefile.am
++++ b/python/Makefile.am
+@@ -36,12 +36,29 @@ endif
+ 
+ 
+ # Note that we're installing from the wheel we just built.
++#
++# --no-compile: pip byte-compiles with the paths it writes to, so with
++# DESTDIR set the .pyc files record $(DESTDIR)-prefixed source names, which
++# are wrong on the installed system (and defeat reproducible builds).  The
++# bytecode is regenerated on first import instead.
++#
++# PEP 610 direct_url.json records the file:// URL of the wheel in the build
++# tree, which is likewise meaningless once installed.  Delete it, and drop
++# its line from RECORD too: that line holds a hash of the file, and so of
++# the build directory, which would keep RECORD varying between builds and
++# would describe a file that is not installed.
+ install-exec-local:
+ if HAVE_PYTHON3_PROBES
+ 	$(PYTHON3) -m pip install $(shell readlink -f $(builddir))/py3build/*.whl \
+ 		 $(if $(DESTDIR),--root $(DESTDIR)) --prefix $(prefix) \
+-		 --no-deps --no-index --no-build-isolation \
++		 --no-deps --no-index --no-build-isolation --no-compile \
+ 		 --ignore-installed --verbose
++	rm -f $(DESTDIR)$(python3dir)/*.dist-info/direct_url.json
++	for r in $(DESTDIR)$(python3dir)/*.dist-info/RECORD; do \
++	  if test -f "$$r"; then \
++	    sed -i '\|/direct_url\.json,|d' "$$r"; \
++	  fi; \
++	done
+ endif
+ 
+ clean-local:

@@ -9,6 +9,8 @@ require systemtap_git.inc
 SRC_URI += " \
            file://0001-improve-reproducibility-for-c-compiling.patch \
            file://0001-staprun-address-ncurses-6.3-failures.patch \
+           file://0001-python3.stpm-record-the-installed-libpython-path.patch \
+           file://0002-python-don-t-install-build-paths-with-the-wheel.patch \
            "
 
 DEPENDS = "elfutils"
@@ -16,7 +18,7 @@ DEPENDS = "elfutils"
 EXTRA_OECONF += "--with-libelf=${STAGING_DIR_TARGET} --without-rpm \
             --without-nss --without-avahi --without-dyninst \
             --disable-server --disable-grapher --enable-prologues \
-            --with-python3 --without-python2-probes \
+            --with-python3 \
             --with-extra-version="oe" \
             ac_cv_prog_have_javac=no \
             ac_cv_prog_have_jar=no "
@@ -30,7 +32,7 @@ PACKAGECONFIG[translator] = "--enable-translator,--disable-translator,boost,bash
 PACKAGECONFIG[libvirt] = "--enable-libvirt,--disable-libvirt,libvirt"
 PACKAGECONFIG[sqlite] = "--enable-sqlite,--disable-sqlite,sqlite3"
 PACKAGECONFIG[monitor] = "--enable-monitor,--disable-monitor,ncurses json-c"
-PACKAGECONFIG[python3-probes] = "--with-python3-probes,--without-python3-probes,python3-setuptools-native"
+PACKAGECONFIG[python3-probes] = "--with-python3-probes,--without-python3-probes,python3-setuptools-native python3-pip-native python3-wheel-native"
 PACKAGECONFIG[debuginfod] = "--with-debuginfod, --without-debuginfod"
 PACKAGECONFIG[readline] = "--with-readline,--without-readline,readline"
 
