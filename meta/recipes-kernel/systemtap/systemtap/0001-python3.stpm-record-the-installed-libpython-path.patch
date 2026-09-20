@@ -1,0 +1,58 @@
+From 0387b9416ad7c25d71685441e1046f1c72cb1d42 Mon Sep 17 00:00:00 2001
+From: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
+Date: Sat, 19 Sep 2026 13:12:44 +0000
+Subject: [PATCH 1/2] python3.stpm: record the installed libpython path
+
+tapset/python3.stpm is generated at build time and installed, and its
+stap_python3_libpython macro is the module argument of the @cast()s in
+tapset/python3.stp:
+
+    @cast(@object, "PyFrameObject", @stap_python3_libpython)
+
+@cast module names are taken literally -- dwarf_cast_expanding_visitor
+resolves them with find_executable(module, "", sess.sysenv), i.e. with no
+sysroot translation -- so the macro has to name libpython as it exists on
+the machine stap is tracing.
+
+configure instead derives it from sysconfig's LIBDIR for the interpreter
+that built HelperSDT.  When cross compiling that is a directory in the
+build host's staging area, which exists on no machine but the builder, so
+every python3 probe on the installed system fails to resolve
+PyFrameObject.  The installed file also ends up carrying a build
+directory, which distro QA checks reject (OpenEmbedded's buildpaths test
+flags it as a packaging error).
+
+Keep only the library soname from sysconfig and anchor it at the $(libdir)
+being installed into, so the macro names the installed library.  For a
+native build where the interpreter's LIBDIR is $(libdir) -- the usual case
+-- the generated value is unchanged.
+
+Upstream-Status: Submitted [https://inbox.sourceware.org/systemtap/20260919135744.78642-2-jaipaul.cheernam@est.tech/]
+Signed-off-by: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
+---
+ Makefile.am | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 1f668df..4d255dd 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -140,9 +140,17 @@ $(TAPSET_PYTHON3_STP): $(srcdir)/$(TAPSET_PYTHON3_CANDIDATE)
+ 	mkdir -p tapset # create build-tree tapset/ dir if needed
+ 	cp $< $@
+ 
++# The libpython path baked into python3.stpm is resolved at run time on the
++# machine being probed, so it has to be the installed location.  configure
++# gets PYTHON3_LIBPYTHON from sysconfig, whose LIBDIR points at the python
++# build/staging area; when cross compiling that is a build host directory
++# which does not exist on the target.  Keep only the library soname from
++# sysconfig and anchor it at the $(libdir) we are installing against.
++PYTHON3_LIBPYTHON_INSTALLED = $(libdir)/$(notdir $(PYTHON3_LIBPYTHON))
++
+ $(TAPSET_PYTHON3_STPM):
+ 	mkdir -p tapset # create build-tree tapset/ dir if needed
+-	@echo '@define stap_python3_libpython %("$(PYTHON3_LIBPYTHON)" %)' > $@
++	@echo '@define stap_python3_libpython %("$(PYTHON3_LIBPYTHON_INSTALLED)" %)' > $@
+ 
+ install: all
+ 	$(MAKE) $(AM_MAKEFLAGS) install-recursive
