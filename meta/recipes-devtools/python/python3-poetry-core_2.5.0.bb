@@ -15,7 +15,7 @@ LIC_FILES_CHKSUM = "\
     file://src/poetry/core/_vendor/tomli/LICENSE;md5=aaaaf0879d17df0110d1aa8c8c9f46f5 \
 "
 
-SRC_URI[sha256sum] = "89dceb6c10e9c6d8650a16183400e3c9ff9ddee13b0a81023b5575334a2b3744"
+SRC_URI[sha256sum] = "81d04c9253b19d0604718268d781867c8f7b2128e5b25bbf1e84141eec6b89c4"
 
 inherit python_poetry_core pypi
 
