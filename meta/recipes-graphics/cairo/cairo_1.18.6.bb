@@ -31,7 +31,7 @@ SRC_URI = "http://cairographics.org/releases/cairo-${PV}.tar.xz \
            file://cairo-get_bitmap_surface-bsc1036789-CVE-2017-7475.diff \
           "
 
-SRC_URI[sha256sum] = "445ed8208a6e4823de1226a74ca319d3600e83f6369f99b14265006599c32ccb"
+SRC_URI[sha256sum] = "1c767308174337a74694da0f3ec069c271452163a1ef4540964c50c301f157d4"
 
 inherit meson pkgconfig upstream-version-is-even gtk-doc multilib_script
 
