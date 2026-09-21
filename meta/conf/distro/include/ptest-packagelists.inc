@@ -5,6 +5,7 @@
 #
 PTESTS_FAST = "\
     acl \
+    alsa-lib \
     apr-util \
     attr \
     babeltrace2 \
