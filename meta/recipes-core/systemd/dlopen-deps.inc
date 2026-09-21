@@ -77,7 +77,13 @@ python package_generate_dlopen_deps() {
                                 found = True
                                 break
                         if not found:
-                            bb.warn(f"cannot find any provider for dlopen dependency: {dep['soname']}")
+                            # Optional (recommended/suggested) dlopen deps may have
+                            # no provider on some configs, so only warn for required ones.
+                            msg = f"cannot find any provider for dlopen dependency: {dep['soname']}"
+                            if dep["priority"] == "required":
+                                bb.warn(msg)
+                            else:
+                                bb.note(msg)
                 except oe.qa.NotELFFileError as e:
                     bb.note(f"Cannot extract ELF notes: {e}")
                     pass
