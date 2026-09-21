@@ -70,6 +70,7 @@ PTESTS_FAST = "\
     opkg \
     popt \
     procps \
+    psmisc \
     python3-atomicwrites \
     python3-attrs \
     python3-bcrypt \
