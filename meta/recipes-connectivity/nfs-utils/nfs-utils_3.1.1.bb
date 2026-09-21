@@ -23,11 +23,9 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://nfscommon \
            file://0004-Use-nogroup-for-nobody-group.patch \
            file://0005-find-OE-provided-Kerberos.patch \
-           file://0006-configure.ac-gate-HAVE_NFSD_NETLINK-on-enable-nfsdct.patch \
-           file://0001-getport-fix-missing-stddef.h-inclusion.patch \
            "
 
-SRC_URI[sha256sum] = "e1dd8a9c95af15492065942cc3b52b1339ffd586baa2280ed86c9d3dc4097e8c"
+SRC_URI[sha256sum] = "7dbc05eb8b32828b322872b759a62cb3979cb4118f344dd8616813d1390e84e0"
 
 # Only kernel-module-nfsd is required here (but can be built-in)  - the nfsd module will
 # pull in the remainder of the dependencies.
