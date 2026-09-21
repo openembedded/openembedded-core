@@ -260,6 +260,12 @@ SKIPPED_TESTS = " \
     --ignore test.test_tracemalloc.TestCAPI.test_tracemalloc_track_race \
 "
 
+# With ptest-runner >= 2.5.0, ptests run with PYTHONUNBUFFERED="1" envvar.
+# test_cmd_line.test_non_interactive_output_buffering expects buffered ouput,
+# skip it.
+# See: https://github.com/python/cpython/issues/128377
+SKIPPED_TESTS += "--ignore test.test_cmd_line.CmdLineTest.test_non_interactive_output_buffering"
+
 SKIPPED_TESTS:append:class-target:libc-musl = " \
     -x test__locale \
     -x test_c_locale_coercion \
