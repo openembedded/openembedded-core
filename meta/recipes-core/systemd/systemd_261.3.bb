@@ -38,6 +38,8 @@ SRC_URI += "file://touchscreen.rules \
            file://0003-Do-not-create-var-log-README.patch \
            "
 
+SRC_URI:append:libc-musl = " file://0001-include-fix-limits.h-override.patch"
+
 PAM_PLUGINS = " \
     pam-plugin-unix \
     pam-plugin-loginuid \
