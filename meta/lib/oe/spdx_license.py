@@ -240,6 +240,10 @@ class Identifier(Node):
 
 
 class UnknownId(Identifier):
+    @property
+    def name(self):
+        return self.ident
+
     @classmethod
     def reduce(cls, stack, lookahead):
         if not check_stack_types(stack, [Token]):
