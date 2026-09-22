@@ -14,6 +14,7 @@ SRC_URI += "file://0001-pyproject.toml-remove-benchmark-disable-option.patch \
             file://CVE-2026-26007.patch \
             file://CVE-2026-34073.patch \
             file://CVE-2026-69248.patch \
+            file://CVE-2026-69249.patch \
             file://check-memfree.py \
             file://run-ptest \
            "
