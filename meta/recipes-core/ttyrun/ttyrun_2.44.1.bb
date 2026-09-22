@@ -7,7 +7,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=f5118f167b055bfd7c3450803f1847af"
 
 SRC_URI = "git://github.com/ibm-s390-linux/s390-tools;protocol=https;branch=master;tag=v${PV}"
-SRCREV = "03f7566436b42c2f1a4ad717dcf610c1f926b8f4"
+SRCREV = "8840053a7bbaeea1de3834fbc7f84b16813fc409"
 
 CVE_PRODUCT = "s390-tools"
 
