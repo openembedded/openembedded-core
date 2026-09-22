@@ -6,8 +6,7 @@ LICENSE = "GPL-3.0-or-later"
 
 SRC_URI = "${GNU_MIRROR}/gzip/${BP}.tar.gz \
            file://run-ptest \
-           file://CVE-2026-41992.patch \
-           file://CVE-2026-41991.patch \
+           file://0001-build-avoid-failure-to-build-on-linux-aarch64.patch \
            "
 SRC_URI:append:class-target = " file://wrong-path-fix.patch"
 
@@ -42,4 +41,4 @@ do_install_ptest() {
             ${B}/tests/Makefile > ${D}${PTEST_PATH}/src/tests/Makefile
 }
 
-SRC_URI[sha256sum] = "613d6ea44f1248d7370c7ccdeee0dd0017a09e6c39de894b3c6f03f981191c6b"
+SRC_URI[sha256sum] = "545886cf57fa88a65e967fbf705903d7fcb2567c82c7342493e82e8d7b1a210b"
