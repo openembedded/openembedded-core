@@ -277,7 +277,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/LICENCE.Abilis;md5=b5ee3f410780e56711ad48ead
                     "
 # WHENCE checksum is defined separately to ease overriding it if
 # class-devupstream is selected.
-WHENCE_CHKSUM  = "fe7960bbe2eb0922168c3434c8d125d0"
+WHENCE_CHKSUM  = "286b10e604dec1e5d49c4ac688f65a2e"
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
 # so that the license files will be copied from fetched source
@@ -416,7 +416,7 @@ SRC_URI:class-devupstream = "git://git.kernel.org/pub/scm/linux/kernel/git/firmw
 # Pin this to the 20220509 release, override this in local.conf
 SRCREV:class-devupstream ?= "b19cbdca78ab2adfd210c91be15a22568e8b8cae"
 
-SRC_URI[sha256sum] = "f3937ca282ba256242e2b6dbe523df8a80007d29ffd61f56d270190865492ea8"
+SRC_URI[sha256sum] = "f80dcb757a623deda62200c08e0e1a88c76fb6b54964f31b35fa74da1c90ccc5"
 
 inherit allarch
 
@@ -533,7 +533,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-vt6656-license ${PN}-vt6656 \
              ${PN}-rs9113 ${PN}-rs9116 ${PN}-rsi-91x \
              ${PN}-rtl-license ${PN}-rtl8188 ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su \
-             ${PN}-rtl8261c ${PN}-rtl8723 ${PN}-rtl8821 \
+             ${PN}-rtl8261c ${PN}-rtl8261d ${PN}-rtl8723 ${PN}-rtl8821 \
              ${PN}-rtl8761 \
              ${PN}-rtl8168 \
              ${PN}-rtl8822 \
@@ -699,6 +699,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-qcom-hawi-audio \
              ${PN}-qcom-kaanapali-adreno ${PN}-qcom-kaanapali-audio \
              ${PN}-qcom-kaanapali-compute ${PN}-qcom-kaanapali-soccp \
+             ${PN}-qcom-maili-audio \
              ${PN}-qcom-nord-audio ${PN}-qcom-nord-compute ${PN}-qcom-nord-qupv3fw \
              ${PN}-qcom-qcm2290-adreno ${PN}-qcom-qcm2290-audio ${PN}-qcom-qcm2290-modem \
              ${PN}-qcom-qcm6490-adreno ${PN}-qcom-qcm6490-audio ${PN}-qcom-qcm6490-compute \
@@ -721,7 +722,8 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-qcom-sc8280xp-lenovo-x13s-vpu \
              ${PN}-qcom-sc8280xp-radxa-dragon-q8b-audio \
              ${PN}-qcom-sdm845-adreno ${PN}-qcom-sdm845-audio ${PN}-qcom-sdm845-compute \
-             ${PN}-qcom-sdm845-shift6mq-adreno ${PN}-qcom-sdm845-thundercomm-db845c-sensors \
+             ${PN}-qcom-sdm845-shift6mq-adreno ${PN}-qcom-sdm845-shift6mq-modem ${PN}-qcom-sdm845-shift6mq-wifi \
+             ${PN}-qcom-sdm845-thundercomm-db845c-sensors \
              ${PN}-qcom-sdx35-foxconn-firehose ${PN}-qcom-sdx61-foxconn-firehose \
              ${PN}-qcom-shikra-adreno ${PN}-qcom-shikra-compute ${PN}-qcom-shikra-audio \
              ${PN}-qcom-shikra-modem ${PN}-qcom-shikra-qupv3fw \
@@ -1647,6 +1649,7 @@ LICENSE:${PN}-rtl8192cu = "LicenseRef-Firmware-rtlwifi-firmware"
 LICENSE:${PN}-rtl8192ce = "LicenseRef-Firmware-rtlwifi-firmware"
 LICENSE:${PN}-rtl8192su = "LicenseRef-Firmware-rtlwifi-firmware"
 LICENSE:${PN}-rtl8261c = "LicenseRef-Firmware-rtlwifi-firmware"
+LICENSE:${PN}-rtl8261d = "LicenseRef-Firmware-rtlwifi-firmware"
 LICENSE:${PN}-rtl8723 = "LicenseRef-Firmware-rtlwifi-firmware"
 LICENSE:${PN}-rtl8761 = "LicenseRef-Firmware-rtlwifi-firmware"
 LICENSE:${PN}-rtl8821 = "LicenseRef-Firmware-rtlwifi-firmware"
@@ -1680,6 +1683,9 @@ FILES:${PN}-rtl8192su = " \
 "
 FILES:${PN}-rtl8261c = " \
   ${firmwaredir}/rtl_nic/rtl8261c.bin* \
+"
+FILES:${PN}-rtl8261d = " \
+  ${firmwaredir}/rtl_nic/rtl8261d.bin* \
 "
 FILES:${PN}-rtl8723 = " \
   ${firmwaredir}/rtlwifi/rtl8723*.bin* \
@@ -1736,6 +1742,7 @@ RDEPENDS:${PN}-rtl8192ce += "${PN}-rtl-license"
 RDEPENDS:${PN}-rtl8192cu += "${PN}-rtl-license"
 RDEPENDS:${PN}-rtl8192su = "${PN}-rtl-license"
 RDEPENDS:${PN}-rtl8261c = "${PN}-rtl-license"
+RDEPENDS:${PN}-rtl8261d = "${PN}-rtl-license"
 RDEPENDS:${PN}-rtl8723 += "${PN}-rtl-license"
 RDEPENDS:${PN}-rtl8821 += "${PN}-rtl-license"
 RDEPENDS:${PN}-rtl8761 += "${PN}-rtl-license"
@@ -2410,6 +2417,7 @@ LICENSE:${PN}-qcom-kaanapali-adreno = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-kaanapali-audio = "LicenseRef-Firmware-qcom-2 AND LicenseRef-Firmware-linaro"
 LICENSE:${PN}-qcom-kaanapali-compute = "LicenseRef-Firmware-qcom-2"
 LICENSE:${PN}-qcom-kaanapali-soccp = "LicenseRef-Firmware-qcom-2"
+LICENSE:${PN}-qcom-maili-audio = "LicenseRef-Firmware-qcom-2"
 LICENSE:${PN}-qcom-nord-audio = "LicenseRef-Firmware-qcom-2"
 LICENSE:${PN}-qcom-nord-compute = "LicenseRef-Firmware-qcom-2"
 LICENSE:${PN}-qcom-nord-qupv3fw = "LicenseRef-Firmware-qcom"
@@ -2456,6 +2464,8 @@ LICENSE:${PN}-qcom-sdm845-adreno = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-sdm845-compute = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-sdm845-modem = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-sdm845-shift6mq-adreno = "LicenseRef-Firmware-qcom"
+LICENSE:${PN}-qcom-sdm845-shift6mq-modem = "LicenseRef-Firmware-qcom"
+LICENSE:${PN}-qcom-sdm845-shift6mq-wifi = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-sdm845-thundercomm-db845c-sensors = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-sdx35-foxconn-firehose = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-sdx61-foxconn-firehose = "LicenseRef-Firmware-qcom"
@@ -2561,6 +2571,7 @@ FILES:${PN}-qcom-kaanapali-audio = " \
 "
 FILES:${PN}-qcom-kaanapali-compute = "${firmwaredir}/qcom/kaanapali/cdsp*.*"
 FILES:${PN}-qcom-kaanapali-soccp = "${firmwaredir}/qcom/kaanapali/soccp*.*"
+FILES:${PN}-qcom-maili-audio = "${firmwaredir}/qcom/maili/adsp*.*"
 FILES:${PN}-qcom-nord-audio = "${firmwaredir}/qcom/nord/adsp*.*"
 FILES:${PN}-qcom-nord-compute = "${firmwaredir}/qcom/nord/cdsp*.*"
 FILES:${PN}-qcom-nord-qupv3fw = "${firmwaredir}/qcom/nord/qupv3fw.elf*"
@@ -2633,6 +2644,8 @@ FILES:${PN}-qcom-sdm845-compute = "${firmwaredir}/qcom/sdm845/cdsp*.*"
 FILES:${PN}-qcom-sdm845-modem = "${firmwaredir}/qcom/sdm845/mba.mbn* ${firmwaredir}/qcom/sdm845/modem*.* ${firmwaredir}/qcom/sdm845/wlanmdsp.mbn* ${firmwaredir}/qcom/sdm845/notice.txt_wlanmdsp* \
                                  ${firmwaredir}/ath10k/WCN3990/hw1.0/wlanmdsp.mbn* ${firmwaredir}/ath10k/WCN3990/hw1.0/notice.txt_wlanmdsp"
 FILES:${PN}-qcom-sdm845-shift6mq-adreno = "${firmwaredir}/qcom/sdm845/SHIFT/axolotl/a630_zap.mbn*"
+FILES:${PN}-qcom-sdm845-shift6mq-modem = "${firmwaredir}/qcom/sdm845/SHIFT/axolotl/mba.mbn*"
+FILES:${PN}-qcom-sdm845-shift6mq-wifi = "${firmwaredir}/qcom/sdm845/SHIFT/axolotl/wlanmdsp.mbn*"
 FILES:${PN}-qcom-sdm845-thundercomm-db845c-sensors = "${firmwaredir}/qcom/sdm845/Thundercomm/db845c/slpi*.*"
 FILES:${PN}-qcom-sdx35-foxconn-firehose = "${firmwaredir}/qcom/sdx35/foxconn/xbl_s_devprg_ns.melf*"
 FILES:${PN}-qcom-sdx61-foxconn-firehose = "${firmwaredir}/qcom/sdx61/foxconn/prog_firehose_lite.elf*"
@@ -2759,6 +2772,7 @@ RDEPENDS:${PN}-qcom-kaanapali-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-kaanapali-audio = "${PN}-qcom-2-license ${PN}-linaro-license"
 RDEPENDS:${PN}-qcom-kaanapali-compute = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-kaanapali-soccp = "${PN}-qcom-2-license"
+RDEPENDS:${PN}-qcom-maili-audio = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-nord-audio = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-nord-compute = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-nord-qupv3fw = "${PN}-qcom-license"
@@ -2811,6 +2825,8 @@ RDEPENDS:${PN}-qcom-sdm845-audio = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-sdm845-compute = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-sdm845-modem = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-sdm845-shift6mq-adreno = "${PN}-qcom-license"
+RDEPENDS:${PN}-qcom-sdm845-shift6mq-modem = "${PN}-qcom-license ${PN}-qcom-sdm845-modem"
+RDEPENDS:${PN}-qcom-sdm845-shift6mq-wifi = "${PN}-qcom-license ${PN}-qcom-sdm845-modem"
 RDEPENDS:${PN}-qcom-sdm845-thundercomm-db845c-sensors = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-sdx35-foxconn-firehose = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-sdx61-foxconn-firehose = "${PN}-qcom-license"
