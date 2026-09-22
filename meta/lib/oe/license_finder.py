@@ -46,40 +46,52 @@ def _crunch_known_licenses(d):
 
     lic_dirs = [d.getVar('COMMON_LICENSE_DIR')] + (d.getVar('LICENSE_PATH') or "").split()
     for lic_dir in lic_dirs:
-        for fn in os.listdir(lic_dir):
+        for fn in sorted(os.listdir(lic_dir)):
             path = os.path.join(lic_dir, fn)
             if not os.path.isfile(path):
                 continue
             # Hash the exact contents
             md5value = bb.utils.md5_file(path)
-            md5sums[md5value] = fn
-            # Also hash a "crunched" version
+            md5sums.setdefault(md5value, fn)
+            # Also hash a "crunched" version. Some licenses only differ
+            # in formatting, the first name in sort order wins for those.
             md5value = _crunch_license(path)
-            md5sums[md5value] = fn
+            md5sums.setdefault(md5value, fn)
 
     return md5sums
 
 
-def _crunch_license(licfile):
+def _crunch_license(licfile, legacy=False):
     '''
     Remove non-material text from a license file and then calculate its
     md5sum. This works well for licenses that contain a copyright statement,
     but is also a useful way to handle people's insistence upon reformatting
     the license text slightly (with no material difference to the text of the
     license).
+
+    With legacy set, the text is crunched the way it was before the word
+    stream normalisation, which is what the hashes in license-hashes.csv
+    were made with.
     '''
 
     import oe.utils
 
     # Note: these are carefully constructed!
-    license_title_re = re.compile(r'^#*\(? *(This is )?([Tt]he )?.{0,15} ?[Ll]icen[sc]e( \(.{1,10}\))?\)?[:\.]? ?#*$')
+    if legacy:
+        license_title_re = re.compile(r'^#*\(? *(This is )?([Tt]he )?.{0,15} ?[Ll]icen[sc]e( \(.{1,10}\))?\)?[:\.]? ?#*$')
+    else:
+        license_title_re = re.compile(r'^#*\(? *(This is )?([Tt]he )?([A-Z0-9].{0,14})? ?[Ll]icen[sc]e( \(.{1,10}\))?\)?[:\.]? ?#*$')
     license_statement_re = re.compile(r'^((This (project|software)|.{1,10}) is( free software)? (released|licen[sc]ed)|(Released|Licen[cs]ed)) under the .{1,10} [Ll]icen[sc]e:?$')
     copyright_re = re.compile(r'^ *[#\*]* *(Modified work |MIT LICENSED )?Copyright ?(\([cC]\))? .*$')
     disclaimer_re = re.compile(r'^ *\*? ?All [Rr]ights [Rr]eserved\.$')
     email_re = re.compile(r'^.*<[\w\.-]*@[\w\.\-]*>$')
     header_re = re.compile(r'^(\/\**!?)? ?[\-=\*]* ?(\*\/)?$')
     tag_re = re.compile(r'^ *@?\(?([Ll]icense|MIT)\)?$')
-    url_re = re.compile(r'^ *[#\*]* *https?:\/\/[\w\.\/\-]+$')
+    if legacy:
+        url_re = re.compile(r'^ *[#\*]* *https?:\/\/[\w\.\/\-]+$')
+    else:
+        url_re = re.compile(r'^ *[#\*]* *https?:\/\/[\w\.\/\-]+\.?$')
+    list_marker_re = re.compile(r'^(\(?[0-9a-zA-Z]{1,2}[\.\)]|[\*\-•o]) +')
 
     lictext = []
     with open(licfile, 'r', errors='surrogateescape') as f:
@@ -97,9 +109,11 @@ def _crunch_license(licfile):
                 continue
             elif url_re.match(line):
                 continue
-            elif license_title_re.match(line):
+            # Titles and statements are only dropped at the top of the
+            # file, further down they are wrapped sentences of the text
+            elif (legacy or len(lictext) < 3) and license_title_re.match(line):
                 continue
-            elif license_statement_re.match(line):
+            elif (legacy or len(lictext) < 3) and license_statement_re.match(line):
                 continue
             # Strip comment symbols
             line = line.replace('*', '') \
@@ -108,6 +122,9 @@ def _crunch_license(licfile):
             line = line.replace('sub-license', 'sublicense')
             # Squash spaces
             line = oe.utils.squashspaces(line.strip())
+            # Drop list markers, "1." and "*" are used interchangeably
+            if not legacy:
+                line = list_marker_re.sub('', line)
             # Replace smart quotes, double quotes and backticks with single quotes
             line = line.replace(u"\u2018", "'").replace(u"\u2019", "'").replace(u"\u201c","'").replace(u"\u201d", "'").replace('"', '\'').replace('`', '\'')
             # Unify brackets
@@ -115,9 +132,30 @@ def _crunch_license(licfile):
             if line:
                 lictext.append(line)
 
+    text = ' '.join(lictext)
+    if legacy:
+        return hashlib.md5(text.encode('utf-8', errors='ignore')).hexdigest()
+
+    # Only the words matter, not case or punctuation
+    text = text.lower()
+    text = text.replace('and/or', 'and')
+    text = re.sub(r'https?://\S+', ' ', text)
+    text = re.sub(r'[^a-z0-9]+', ' ', text).strip()
+    # The Apache-2.0 appendix is instructions, not license terms, and
+    # the end marker is often left out
+    text = re.sub(r' appendix how to apply the apache license to your work.*? limitations under the license', '', text)
+    text = text.replace(' end of terms and conditions', '')
+    # Names of copyright holders in the BSD advertising clause and the
+    # ISC disclaimer, and the extra paragraph reference in X11-style MIT
+    text = re.sub(r'neither the name of .*? nor the names of', 'neither the name of nor the names of', text)
+    text = text.replace('copyright owner', 'copyright holder')
+    text = re.sub(r'\b(the authors?|isc|the copyright holders?) disclaims?\b', 'the author disclaims', text)
+    text = re.sub(r'shall (the authors?|isc|the copyright holders?) be liable', 'shall the author be liable', text)
+    text = text.replace('permission notice including the next paragraph shall', 'permission notice shall')
+
     m = hashlib.md5()
     try:
-        m.update(' '.join(lictext).encode('utf-8'))
+        m.update(text.encode('utf-8'))
         md5val = m.hexdigest()
     except UnicodeEncodeError:
         md5val = None
@@ -182,6 +220,9 @@ def match_licenses(licfiles, srctree, d, extra_hashes={}):
         license = md5sums.get(md5value, None)
         if not license:
             crunched_md5 = _crunch_license(resolved_licfile)
+            license = md5sums.get(crunched_md5, None)
+        if not license:
+            crunched_md5 = _crunch_license(resolved_licfile, legacy=True)
             license = md5sums.get(crunched_md5, None)
             if not license:
                 rel_fn = os.path.relpath(licfile, srctree + "/..")
