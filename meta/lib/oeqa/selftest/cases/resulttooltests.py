@@ -11,6 +11,7 @@ lib_path = basepath + '/scripts/lib'
 sys.path = sys.path + [lib_path]
 from resulttool.report import ResultsTextReport
 from resulttool import regression as regression
+from resulttool import durations as durations
 from resulttool import resultutils as resultutils
 from oeqa.selftest.case import OESelftestTestCase
 
@@ -18,6 +19,8 @@ from resulttool.junit import junit_tree, PtestSummary
 import xml.etree.ElementTree as ET
 import logging
 import json
+import tempfile
+from types import SimpleNamespace
 
 
 class ResultToolTests(OESelftestTestCase):
@@ -669,3 +672,28 @@ class ResultToolTests(OESelftestTestCase):
         # Package testsuite should not exist (no ptestresult.sections)
         package_suite = testsuites_node.find(".//testsuite[@name='Package Tests']")
         self.assertIsNone(package_suite)
+
+    def test_durations_get_durations_extracts_testcase_and_suite_durations(self):
+        results_data = {'result1': {'configuration': {"TEST_TYPE": "runtime",
+                                                       "TESTSERIES": "series1",
+                                                       "IMAGE_BASENAME": "image",
+                                                       "IMAGE_PKGTYPE": "ipk",
+                                                       "DISTRO": "mydistro",
+                                                       "MACHINE": "qemux86"},
+                                    'result': {
+                                        'test.Foo.test_bar': {'status': 'PASSED', 'duration': 12.345},
+                                        'test.Foo.test_no_duration': {'status': 'PASSED'},
+                                        'ptestresult.sections': {
+                                            'bash': {'duration': '5', 'log': 'xxx'},
+                                            # a timed-out suite has " T" appended to its duration
+                                            'timedout': {'duration': '30 T'},
+                                        },
+                                    }}}
+        results = {}
+        resultutils.append_resultsdata(results, results_data)
+        flattened = durations.get_durations(results)
+        path = 'runtime/mydistro/qemux86/image'
+        self.assertEqual(flattened[path]['test.Foo.test_bar'], 12.345)
+        self.assertNotIn('test.Foo.test_no_duration', flattened[path])
+        self.assertEqual(flattened[path]['ptestresult.sections.bash'], 5.0)
+        self.assertEqual(flattened[path]['ptestresult.sections.timedout'], 30.0)
