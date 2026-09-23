@@ -35,6 +35,31 @@ udev_enabled() {
 	return 0
 }
 
+udev_resolve_root_label() {
+	udev_root_label=$1
+	udev_root_label_retries_left=5
+	udev_root_partuuid=
+
+	# The block device may still be registering when initramfs starts.
+	# Retry up to five times after the initial lookup, with a 10 ms delay,
+	# before falling back to a full udev coldplug.
+	while :; do
+		udev_root_dev=$(findfs "LABEL=$udev_root_label" 2>/dev/null)
+		if [ -n "$udev_root_dev" ]; then
+			udev_root_partuuid=$(sed -n 's/^PARTUUID=//p' \
+				"/sys/class/block/${udev_root_dev#/dev/}/uevent" 2>/dev/null)
+			[ -n "$udev_root_partuuid" ] && break
+		fi
+		[ "$udev_root_label_retries_left" -eq 0 ] && break
+		udev_root_label_retries_left=$((udev_root_label_retries_left - 1))
+		sleep 0.01
+	done
+
+	[ -n "$udev_root_partuuid" ] || return 1
+	root_match="PARTUUID=$udev_root_partuuid"
+	return 0
+}
+
 udev_trigger_root_device() {
 	case "${bootparam_root:-}" in
 		PARTLABEL=?*)
@@ -47,13 +72,7 @@ udev_trigger_root_device() {
 			# The kernel does not export the filesystem LABEL in the
 			# uevent, so resolve it to a device node with findfs and
 			# match on that device's kernel-provided PARTUUID.
-			root_label="${bootparam_root#LABEL=}"
-			root_dev=$(findfs "LABEL=$root_label" 2>/dev/null) || return 1
-			[ -n "$root_dev" ] || return 1
-			root_partuuid=$(sed -n 's/^PARTUUID=//p' \
-				"/sys/class/block/${root_dev#/dev/}/uevent" 2>/dev/null)
-			[ -n "$root_partuuid" ] || return 1
-			root_match="PARTUUID=$root_partuuid"
+			udev_resolve_root_label "${bootparam_root#LABEL=}" || return 1
 			;;
 		*)
 			return 1
