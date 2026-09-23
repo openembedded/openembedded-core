@@ -762,3 +762,12 @@ class ResultToolTests(OESelftestTestCase):
         args = SimpleNamespace(threshold=50.0, sort_by_delta=False, limit=0)
         kept = [k for k, vals, deltas in durations.filter_sort_rows(rows, args)]
         self.assertEqual(kept, ['big_change'])
+
+    def test_durations_filter_sort_rows_threshold_zero_disables_filtering(self):
+        rows = [
+            ('big_change', [10.0, 20.0], [(10.0, 100.0)]),
+            ('no_change', [10.0, 10.0], [(0.0, 0.0)]),
+        ]
+        args = SimpleNamespace(threshold=0.0, sort_by_delta=False, limit=0)
+        kept = [k for k, vals, deltas in durations.filter_sort_rows(rows, args)]
+        self.assertEqual(sorted(kept), ['big_change', 'no_change'])
