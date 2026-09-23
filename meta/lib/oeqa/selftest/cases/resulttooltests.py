@@ -730,3 +730,15 @@ class ResultToolTests(OESelftestTestCase):
         self.assertEqual(parsed[section]['timedout-suite'], 30.0)
         # the status-summary table above (percentages, not a Time(s) table) must not be picked up
         self.assertNotIn('someresultid', str(parsed))
+
+    def test_durations_build_rows_suppresses_pct_when_both_runs_round_to_zero(self):
+        alldurations = [
+            {'path': {'tiny': 0.2, 'big': 100.0}},
+            {'path': {'tiny': 0.4, 'big': 150.0}},
+        ]
+        rows = durations.build_rows(['tiny', 'big'], 'path', alldurations)
+        rowmap = {k: deltas for k, vals, deltas in rows}
+        # both runs round to 0s: no meaningful percentage to report
+        self.assertEqual(rowmap['tiny'], [(0.2, None)])
+        # normal case: delta and percentage both reported
+        self.assertEqual(rowmap['big'], [(50.0, 50.0)])
