@@ -771,3 +771,10 @@ class ResultToolTests(OESelftestTestCase):
         args = SimpleNamespace(threshold=0.0, sort_by_delta=False, limit=0)
         kept = [k for k, vals, deltas in durations.filter_sort_rows(rows, args)]
         self.assertEqual(sorted(kept), ['big_change', 'no_change'])
+
+    def test_durations_filter_sort_rows_threshold_checks_every_pair_not_just_first(self):
+        # 3 sources: only the 2nd pair crosses the threshold, the 1st doesn't
+        rows = [('t', [10.0, 11.0, 100.0], [(1.0, 10.0), (89.0, 809.0)])]
+        args = SimpleNamespace(threshold=50.0, sort_by_delta=False, limit=0)
+        kept = [k for k, vals, deltas in durations.filter_sort_rows(rows, args)]
+        self.assertEqual(kept, ['t'])
