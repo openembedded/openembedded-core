@@ -44,6 +44,7 @@ import resulttool.merge
 import resulttool.store
 import resulttool.regression
 import resulttool.report
+import resulttool.durations
 import resulttool.manualexecution
 import resulttool.log
 import resulttool.junit
@@ -64,6 +65,7 @@ def main():
     subparsers.add_subparser_group('analysis', 'analysis', 100)
     resulttool.regression.register_commands(subparsers)
     resulttool.report.register_commands(subparsers)
+    resulttool.durations.register_commands(subparsers)
     resulttool.log.register_commands(subparsers)
     resulttool.junit.register_commands(subparsers)
 
