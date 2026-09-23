@@ -788,3 +788,13 @@ class ResultToolTests(OESelftestTestCase):
         args = SimpleNamespace(threshold=1.0, sort_by_delta=False, limit=0)
         kept = [k for k, vals, deltas in durations.filter_sort_rows(rows, args)]
         self.assertEqual(kept, ['big'])
+
+    def test_durations_filter_sort_rows_sort_by_delta_orders_by_largest_change(self):
+        rows = [
+            ('small', [10.0, 11.0], [(1.0, 10.0)]),
+            ('big', [10.0, 30.0], [(20.0, 200.0)]),
+            ('medium', [10.0, 15.0], [(5.0, 50.0)]),
+        ]
+        args = SimpleNamespace(threshold=0.0, sort_by_delta=True, limit=0)
+        ordered = [k for k, vals, deltas in durations.filter_sort_rows(rows, args)]
+        self.assertEqual(ordered, ['big', 'medium', 'small'])
