@@ -855,3 +855,18 @@ class ResultToolTests(OESelftestTestCase):
             self.assertEqual([k for k, vals, deltas in rows], ['ptestresult.sections.longsuite'])
         for title, rows in tables[2:]:
             self.assertEqual([k for k, vals, deltas in rows], ['ptestresult.sections.shortsuite'])
+
+    def test_durations_build_tables_hides_short_tests_by_default(self):
+        run1 = self._write_json({'result': self._duration_result('qemux86', 50, 2)})
+        run2 = self._write_json({'result': self._duration_result('qemux86', 80, 3)})
+        try:
+            args = SimpleNamespace(sources=[run1, run2], labels='', sort_by_delta=False,
+                                   threshold=0.0, limit=0, min_duration=10.0, show_short=False)
+            labels, tables = durations.build_tables(args, self.logger)
+        finally:
+            os.remove(run1)
+            os.remove(run2)
+
+        self.assertEqual(len(tables), 1)
+        title, rows = tables[0]
+        self.assertEqual([k for k, vals, deltas in rows], ['ptestresult.sections.longsuite'])
