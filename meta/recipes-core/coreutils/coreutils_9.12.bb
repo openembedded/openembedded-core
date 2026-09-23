@@ -16,11 +16,8 @@ inherit autotools gettext texinfo
 SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
            file://remove-usr-local-lib-from-m4.patch \
            file://run-ptest \
-           file://CVE-2026-56391.patch \
-           file://CVE-2026-56392.patch \
-           file://0d6fcb99d691d920961938e61c43478566ef626e.patch \
            "
-SRC_URI[sha256sum] = "394024eda0a5955217ceda9cd1201e65dc8fa3aa29c2951135a49521d57c3cc3"
+SRC_URI[sha256sum] = "a480198559733e9b3da999e90543ac6f888a2caa544d8d664c5a1f17e528e210"
 
 CVE_PRODUCT = "gnu:coreutils"
 
