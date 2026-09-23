@@ -752,3 +752,13 @@ class ResultToolTests(OESelftestTestCase):
         self.assertEqual(len(deltas), 2)
         self.assertEqual(deltas[0], (90.0, 900.0))
         self.assertEqual(deltas[1][0], -89.0)
+
+    def test_durations_filter_sort_rows_threshold_keeps_rows_above_it(self):
+        rows = [
+            ('big_change', [10.0, 20.0], [(10.0, 100.0)]),
+            ('small_change', [10.0, 11.0], [(1.0, 10.0)]),
+            ('no_change', [10.0, 10.0], [(0.0, 0.0)]),
+        ]
+        args = SimpleNamespace(threshold=50.0, sort_by_delta=False, limit=0)
+        kept = [k for k, vals, deltas in durations.filter_sort_rows(rows, args)]
+        self.assertEqual(kept, ['big_change'])
