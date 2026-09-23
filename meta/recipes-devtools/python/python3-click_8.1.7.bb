@@ -12,7 +12,10 @@ SRC_URI[sha256sum] = "ca9853ad459e787e2192211578cc907e7594e294c7ccc834310722b41b
 
 inherit pypi setuptools3 ptest
 
-SRC_URI += "file://run-ptest"
+SRC_URI += "file://run-ptest \
+            file://CVE-2026-7246.patch \
+            file://CVE-2026-7246-regression.patch \
+           "
 
 CVE_PRODUCT = "palletsprojects:click"
 
@@ -36,6 +39,7 @@ CLEANBROKEN = "1"
 RDEPENDS:${PN} += "\
     python3-io \
     python3-threading \
+    python3-shell \
     "
 
 BBCLASSEXTEND = "native nativesdk"
