@@ -24,7 +24,7 @@ SRC_URI = "${GNUPG_MIRROR}/gpgme/${BP}.tar.bz2 \
            file://0001-autogen.sh-remove-unknown-in-version.patch \
            "
 
-SRC_URI[sha256sum] = "0687a95b299871c4141f507c0f740de6b429c9ac067d0fa4e062e3264df5fb77"
+SRC_URI[sha256sum] = "7160e80e84dafd00d956c84891c533bb7ab16a6a54fbe1574b2f3acf0496977b"
 
 DEPENDS = "libgpg-error-native libgpg-error libassuan"
 
