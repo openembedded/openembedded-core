@@ -742,3 +742,13 @@ class ResultToolTests(OESelftestTestCase):
         self.assertEqual(rowmap['tiny'], [(0.2, None)])
         # normal case: delta and percentage both reported
         self.assertEqual(rowmap['big'], [(50.0, 50.0)])
+
+    def test_durations_build_rows_computes_consecutive_pairs_only(self):
+        # 3 sources: deltas should be (run1,run2) and (run2,run3), never (run1,run3)
+        alldurations = [{'path': {'t': 10.0}}, {'path': {'t': 100.0}}, {'path': {'t': 11.0}}]
+        rows = durations.build_rows(['t'], 'path', alldurations)
+        k, vals, deltas = rows[0]
+        self.assertEqual(vals, [10.0, 100.0, 11.0])
+        self.assertEqual(len(deltas), 2)
+        self.assertEqual(deltas[0], (90.0, 900.0))
+        self.assertEqual(deltas[1][0], -89.0)
