@@ -808,3 +808,50 @@ class ResultToolTests(OESelftestTestCase):
         args = SimpleNamespace(threshold=0.0, sort_by_delta=True, limit=2)
         ordered = [k for k, vals, deltas in durations.filter_sort_rows(rows, args)]
         self.assertEqual(ordered, ['big', 'medium'])
+
+    def _duration_result(self, machine, long_duration, short_duration):
+        return {'configuration': {"TEST_TYPE": "runtime",
+                                  "TESTSERIES": "series1",
+                                  "IMAGE_BASENAME": "image",
+                                  "IMAGE_PKGTYPE": "ipk",
+                                  "DISTRO": "mydistro",
+                                  "MACHINE": machine},
+                'result': {
+                    'ptestresult.sections': {
+                        'longsuite': {'duration': str(long_duration)},
+                        'shortsuite': {'duration': str(short_duration)},
+                    },
+                }}
+
+    def _write_json(self, data):
+        f = tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False)
+        json.dump(data, f)
+        f.close()
+        return f.name
+
+    def test_durations_build_tables_orders_short_tables_after_all_main_tables(self):
+        # Two machines, each with one test >= min_duration and one under it
+        run1 = self._write_json({'qemux86_result': self._duration_result('qemux86', 50, 2),
+                                 'qemux86-64_result': self._duration_result('qemux86-64', 50, 2)})
+        run2 = self._write_json({'qemux86_result': self._duration_result('qemux86', 80, 3),
+                                 'qemux86-64_result': self._duration_result('qemux86-64', 80, 3)})
+        try:
+            args = SimpleNamespace(sources=[run1, run2], labels='', sort_by_delta=False,
+                                   threshold=0.0, limit=0, min_duration=10.0, show_short=True)
+            result = durations.build_tables(args, self.logger)
+        finally:
+            os.remove(run1)
+            os.remove(run2)
+
+        self.assertIsNotNone(result)
+        labels, tables = result
+        titles = [title for title, rows in tables]
+        self.assertEqual(len(titles), 4, msg="expected one main and one short table per machine: %s" % titles)
+        main_titles, short_titles = titles[:2], titles[2:]
+        self.assertTrue(all("under" not in t for t in main_titles), msg=titles)
+        self.assertTrue(all("under" in t for t in short_titles), msg=titles)
+        # the main tables only contain the long test, the short tables only the short one
+        for title, rows in tables[:2]:
+            self.assertEqual([k for k, vals, deltas in rows], ['ptestresult.sections.longsuite'])
+        for title, rows in tables[2:]:
+            self.assertEqual([k for k, vals, deltas in rows], ['ptestresult.sections.shortsuite'])
