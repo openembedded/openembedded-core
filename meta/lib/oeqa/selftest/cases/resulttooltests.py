@@ -697,3 +697,36 @@ class ResultToolTests(OESelftestTestCase):
         self.assertNotIn('test.Foo.test_no_duration', flattened[path])
         self.assertEqual(flattened[path]['ptestresult.sections.bash'], 5.0)
         self.assertEqual(flattened[path]['ptestresult.sections.timedout'], 30.0)
+
+    def test_durations_parse_report_log_extracts_time_column(self):
+        content = (
+            "==============================================================================================================\n"
+            "Test Result Status Summary (Counts/Percentages sorted by testseries, ID)\n"
+            "==============================================================================================================\n"
+            "qemux86 | someresultid | 6 (86%) | 0 (0%) | 1 (14%)\n"
+            "\n"
+            "==============================================================================================================\n"
+            "qemux86 PTest Result Summary (Libc: glibc)\n"
+            "==============================================================================================================\n"
+            "--------------------------------------------------------------------------------------------------------------\n"
+            "Recipe                       | Passed       | Failed | Skipped   | Time(s)   \n"
+            "--------------------------------------------------------------------------------------------------------------\n"
+            "acl                          | 1            | 0      | 0         | 1\n"
+            "bash                         | 43           | 0      | 0         | 48\n"
+            "timedout-suite               | 1            | 0      | 0         | 30 T\n"
+            "--------------------------------------------------------------------------------------------------------------\n"
+        )
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.log', delete=False) as f:
+            f.write(content)
+            logpath = f.name
+        try:
+            parsed = durations.parse_report_log(logpath)
+        finally:
+            os.remove(logpath)
+        section = 'qemux86 PTest Result Summary (Libc: glibc)'
+        self.assertIn(section, parsed)
+        self.assertEqual(parsed[section]['acl'], 1.0)
+        self.assertEqual(parsed[section]['bash'], 48.0)
+        self.assertEqual(parsed[section]['timedout-suite'], 30.0)
+        # the status-summary table above (percentages, not a Time(s) table) must not be picked up
+        self.assertNotIn('someresultid', str(parsed))
