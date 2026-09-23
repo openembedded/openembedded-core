@@ -17,12 +17,13 @@ class FakeDataStore:
     def __init__(self, values):
         self.values = values
 
-    def getVar(self, name):
+    def getVar(self, name, expand=True):
         return self.values.get(name)
 
     def expand(self, value):
         for name, replacement in self.values.items():
-            value = value.replace("${%s}" % name, replacement)
+            if isinstance(replacement, str):
+                value = value.replace("${%s}" % name, replacement)
         return value
 
 
@@ -270,3 +271,72 @@ class TestCopyDebugSources(TestCase):
             with open(copied_source) as f:
                 self.assertEqual(f.read(), "real\n")
             self.assertFalse(os.path.exists(relocation))
+
+    def test_copydebugsources_recovers_kernel_source_files(self):
+        """Recovers kernel-arch source files recorded outside debugsrcdir.
+
+        kernel-arch recipes remap STAGING_KERNEL_DIR/BUILDDIR to
+        KERNEL_SRC_PATH (typically "/usr/src/kernel") via KERNEL_CC, bypassing
+        CFLAGS entirely, so debugsources.list records kernel files under
+        KERNEL_SRC_PATH rather than under debugsrcdir (typically
+        "/usr/src/debug/...") like every other CFLAGS-derived entry.
+
+        Simulates a kernel-arch recipe with one file coming from each of the
+        two remapped directories (a source file under STAGING_KERNEL_DIR and a
+        generated header under STAGING_KERNEL_BUILDDIR) and asserts
+        copydebugsources() recovers both into the normal debugsrcdir, proving
+        the dedicated kernel-arch prefixmap entries are used instead of (or in
+        addition to) the plain CFLAGS-derived ones.
+        """
+        with tempfile.TemporaryDirectory(prefix="oe-test-package-") as tmpdir:
+            kernel_src_dir = os.path.join(tmpdir, "kernel-source")
+            kernel_build_dir = os.path.join(tmpdir, "kernel-build-artifacts")
+            workdir = os.path.join(tmpdir, "work")
+            pkgd = os.path.join(tmpdir, "pkgd")
+            debugsrcdir = "/usr/src/debug/kernel/1.0"
+            kernel_src_path = "/usr/src/kernel"
+
+            src_rel = os.path.join("arch", "main.c")
+            build_rel = os.path.join("include", "generated", "autoconf.h")
+
+            os.makedirs(os.path.dirname(os.path.join(kernel_src_dir, src_rel)))
+            os.makedirs(os.path.dirname(os.path.join(kernel_build_dir, build_rel)))
+            os.makedirs(workdir)
+            os.makedirs(pkgd)
+
+            src_file = os.path.join(kernel_src_dir, src_rel)
+            build_file = os.path.join(kernel_build_dir, build_rel)
+            with open(src_file, "w") as f:
+                f.write("main\n")
+            with open(build_file, "w") as f:
+                f.write("autoconf\n")
+
+            sources = [
+                os.path.join(kernel_src_path, src_rel),
+                os.path.join(kernel_src_path, build_rel),
+            ]
+            d = FakeDataStore({
+                "WORKDIR": workdir,
+                "PKGD": pkgd,
+                "STRIP": "strip",
+                "OBJCOPY": "objcopy",
+                "S": kernel_src_dir,
+                # KERNEL_CC's own -ffile-prefix-map overrides this for the
+                # kernel, so CFLAGS carries no entry for kernel_src_path.
+                "CFLAGS": "",
+                "__inherit_cache": ["/layer/classes-recipe/kernel-arch.bbclass"],
+                "STAGING_KERNEL_DIR": kernel_src_dir,
+                "STAGING_KERNEL_BUILDDIR": kernel_build_dir,
+                "KERNEL_SRC_PATH": kernel_src_path,
+                "TARGET_DBGSRC_DIR": debugsrcdir,
+            })
+
+            copydebugsources(debugsrcdir, sources, d)
+
+            copied_src = oe.path.join(pkgd, debugsrcdir, src_rel)
+            copied_build = oe.path.join(pkgd, debugsrcdir, build_rel)
+
+            with open(copied_src) as f:
+                self.assertEqual(f.read(), "main\n")
+            with open(copied_build) as f:
+                self.assertEqual(f.read(), "autoconf\n")

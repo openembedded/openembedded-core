@@ -988,6 +988,10 @@ def copydebugsources(debugsrcdir, sources, d):
         sdir = d.getVar("S")
         cflags = d.expand("${CFLAGS}")
 
+        # prefixmap maps a host directory to a (match, dest) pair: "match" is
+        # the DWARF-recorded path prefix to select from debugsources.list,
+        # "dest" is the subdirectory under PKGD to copy matches to. For plain
+        # ${CFLAGS}-derived entries these are the same string.
         prefixmap = {}
         for flag in cflags.split():
             if not flag.startswith("-ffile-prefix-map"):
@@ -995,7 +999,20 @@ def copydebugsources(debugsrcdir, sources, d):
             if "recipe-sysroot" in flag:
                 continue
             flag = flag.split("=")
-            prefixmap[flag[1]] = flag[2]
+            prefixmap[flag[1]] = (flag[2], flag[2])
+
+        # kernel-arch.bbclass's KERNEL_CC remaps STAGING_KERNEL_DIR and
+        # STAGING_KERNEL_BUILDDIR to KERNEL_SRC_PATH ("/usr/src/kernel"),
+        # overriding CFLAGS' own mapping for the kernel, so its source files
+        # need a dedicated prefixmap entry to be found, still destined for
+        # TARGET_DBGSRC_DIR like everything else.
+        if bb.data.inherits_class('kernel-arch', d):
+            kernel_src_path = d.getVar('KERNEL_SRC_PATH')
+            target_dbgsrc_dir = d.getVar('TARGET_DBGSRC_DIR')
+            for kernel_dir_var in ('STAGING_KERNEL_DIR', 'STAGING_KERNEL_BUILDDIR'):
+                kernel_dir = d.getVar(kernel_dir_var)
+                if kernel_dir and kernel_src_path and target_dbgsrc_dir:
+                    prefixmap[kernel_dir] = (kernel_src_path, target_dbgsrc_dir)
 
         nosuchdir = []
         basepath = dvar
@@ -1017,9 +1034,9 @@ def copydebugsources(debugsrcdir, sources, d):
                        and not path.endswith((b"<internal>", b"<built-in>"))
                        and b"recipe-sysroot" not in os.path.dirname(path)}
 
-        for pmap, prefix in prefixmap.items():
-            dstroot = dvar + prefix
-            prefix_slash = os.fsencode(prefix) + b"/"
+        for pmap, (match, dest) in prefixmap.items():
+            dstroot = dvar + dest
+            prefix_slash = os.fsencode(match) + b"/"
             relpaths = [path.removeprefix(prefix_slash) for path in sourcepaths
                         if path.startswith(prefix_slash)]
 
