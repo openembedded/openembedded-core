@@ -778,3 +778,13 @@ class ResultToolTests(OESelftestTestCase):
         args = SimpleNamespace(threshold=50.0, sort_by_delta=False, limit=0)
         kept = [k for k, vals, deltas in durations.filter_sort_rows(rows, args)]
         self.assertEqual(kept, ['t'])
+
+    def test_durations_filter_sort_rows_threshold_ignores_suppressed_none_pct(self):
+        # a None pct (both runs round to 0s, see build_rows) must never satisfy a threshold
+        rows = [
+            ('tiny', [0.2, 0.4], [(0.2, None)]),
+            ('big', [10.0, 20.0], [(10.0, 100.0)]),
+        ]
+        args = SimpleNamespace(threshold=1.0, sort_by_delta=False, limit=0)
+        kept = [k for k, vals, deltas in durations.filter_sort_rows(rows, args)]
+        self.assertEqual(kept, ['big'])
