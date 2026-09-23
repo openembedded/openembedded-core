@@ -11,6 +11,7 @@ PROVIDES = "virtual/librpc"
 
 SRC_URI = "${SOURCEFORGE_MIRROR}/${BPN}/${BP}.tar.bz2 \
            file://0001-libtirpc-fix-bindresvport-build-with-clang-22-C23.patch \
+           file://0001-Make-the-TIRPC_1.3.7-symbol-version-conditional.patch \
           "
 UPSTREAM_CHECK_URI = "https://sourceforge.net/projects/libtirpc/files/libtirpc/"
 UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)/"
