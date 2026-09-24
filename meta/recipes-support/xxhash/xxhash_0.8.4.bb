@@ -12,6 +12,8 @@ UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
 SRCREV = "c87183a77d67f7d37e3d2d1b7eaac5e7c695e4f0"
 
+inherit lib_package
+
 CFLAGS += "${@bb.utils.contains('SELECTED_OPTIMIZATION', '-Og', '-DXXH_NO_INLINE_HINTS', '', d)}"
 
 do_compile () {
