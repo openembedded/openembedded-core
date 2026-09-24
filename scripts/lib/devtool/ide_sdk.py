@@ -221,6 +221,9 @@ class RecipeImage:
         self.base_image_fstypes_debugfs = ''
         self.base_has_combined_dbg = False
         self.base_image_install = set()
+        self.base_image_install_debugfs = set()
+        # Packages IDE plugins want added to IMAGE_INSTALL_DEBUGFS
+        self.extra_image_install_debugfs = set()
         self._bbappend = None
         # Content of the bbappend before strip_bbappend_sections() ran.
         self._orig_bbappend_content = orig_bbappend_content
@@ -279,6 +282,8 @@ class RecipeImage:
             'image-combined-dbg', image_d)
         self.base_image_install = set(
             (image_d.getVar('IMAGE_INSTALL') or '').split())
+        self.base_image_install_debugfs = set(
+            (image_d.getVar('IMAGE_INSTALL_DEBUGFS') or '').split())
 
         workdir = image_d.getVar('WORKDIR')
         self.__rootfs = os.path.join(workdir, 'rootfs')
@@ -437,6 +442,8 @@ class RecipeImage:
                 lines.append('IMAGE_INSTALL:append = " %s"' % r.name)
             if r.has_ptest and (r.name + '-ptest') not in self.base_image_install:
                 lines.append('IMAGE_INSTALL:append = " %s-ptest"' % r.name)
+        for pkg in sorted(self.extra_image_install_debugfs - self.base_image_install_debugfs):
+            lines.append('IMAGE_INSTALL_DEBUGFS:append = " %s"' % pkg)
 
         original_content = self._orig_bbappend_content or ''
         # strip_bbappend_sections() left this on disk, and it is what bitbake
