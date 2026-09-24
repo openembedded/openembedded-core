@@ -755,15 +755,6 @@ def package_debug_vars(d):
     return debug_vars
 
 
-def parse_debugsources_from_dwarfsrcfiles_output(dwarfsrcfiles_output):
-    debugfiles = {}
-
-    for line in dwarfsrcfiles_output.splitlines():
-        if line.startswith("\t"):
-            debugfiles[os.path.normpath(line.split()[0])] = ""
-
-    return debugfiles.keys()
-
 def source_info(file, d):
     # Skip static libraries when using Clang toolchain with LTO enabled.
     # In this case, .a files contain LLVM bitcode instead of ELF objects,
@@ -773,22 +764,9 @@ def source_info(file, d):
             bb.debug(1, "Skipping dwarfsrcfiles for Clang LTO archive: %s" % file)
             return []
 
-    cmd = ["dwarfsrcfiles", file]
-    try:
-        output = subprocess.check_output(cmd, universal_newlines=True, stderr=subprocess.STDOUT)
-        retval = 0
-    except subprocess.CalledProcessError as exc:
-        output = exc.output
-        retval = exc.returncode
-
-    # 255 means a specific file wasn't fully parsed to get the debug file list, which is not a fatal failure
-    if retval != 0 and retval != 255:
-        msg = "dwarfsrcfiles failed with exit code %s (cmd was %s)%s" % (retval, cmd, ":\n%s" % output if output else "")
-        bb.fatal(msg)
-
-    debugsources = parse_debugsources_from_dwarfsrcfiles_output(output)
-
-    return list(debugsources)
+    cmd = ["eu-srcfiles", "--null", "--debuginfo-path=/not/exist", "--executable", file]
+    output = subprocess.check_output(cmd, text=True, stderr=subprocess.STDOUT)
+    return output.split("\0")
 
 def splitdebuginfo(file, dvar, dv, d):
     # Function to split a single file into two components, one is the stripped
