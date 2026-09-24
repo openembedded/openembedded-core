@@ -210,6 +210,7 @@ class RecipeImage:
         self.qb_slirp_opt = ''
         self.fakerootcmd = None
         self.fakerootenv = None
+        self.staging_dir_native_qemu_helper = None
         self.bootstrap_tasks = [self.name + ':do_build']
         # Debug settings already provided by the base configuration (e.g.
         # local.conf, MACHINE, DISTRO, the recipe itself) plus any bbappend
@@ -254,7 +255,7 @@ class RecipeImage:
                     f.write(stripped)
         return originals
 
-    def initialize(self, config, tinfoil):
+    def initialize(self, config, tinfoil, nfs=None):
         appends_dir = os.path.join(config.workspace_path, 'appends')
         self._bbappend = os.path.join(appends_dir, self.name + '.bbappend')
 
@@ -288,6 +289,13 @@ class RecipeImage:
         self.qb_slirp_opt = image_d.getVar('QB_SLIRP_OPT') or ''
         self.fakerootcmd = image_d.getVar('FAKEROOTCMD')
         self.fakerootenv = image_d.getVar('FAKEROOTENV')
+
+        # Only needed by nfs_hw_helper()
+        if nfs:
+            qemu_helper_native_d = parse_recipe(
+                config, tinfoil, 'qemu-helper-native', appends=True, filter_workspace=False)
+            self.staging_dir_native_qemu_helper = (
+                qemu_helper_native_d.getVar('STAGING_DIR_NATIVE') if qemu_helper_native_d else None)
 
     @property
     def debug_support(self):
@@ -359,6 +367,11 @@ class RecipeImage:
         with open(helper, 'w') as helper_file:
             helper_file.write('#!/bin/sh\n')
             helper_file.write('set -e\n')
+            if self.staging_dir_native_qemu_helper:
+                # Skips oe-find-native-sysroot's own bitbake-getvar call, see
+                # the comment on staging_dir_native's resolution in initialize().
+                helper_file.write(
+                    'export OECORE_NATIVE_SYSROOT=%s\n' % shlex.quote(self.staging_dir_native_qemu_helper))
             helper_file.write(
                 'runqemu-export-rootfs start %s\n' % shlex.quote(rootfs_dir))
             helper_file.write(
@@ -1814,7 +1827,7 @@ def ide_setup(args, config, basepath, workspace):
             recipe_image = RecipeImage(
                 recipes_image_name,
                 orig_bbappend_contents.get(recipes_image_name))
-            recipe_image.initialize(config, tinfoil)
+            recipe_image.initialize(config, tinfoil, args.nfs)
             recipe_image.set_nfs_rootfs(nfs_export_base_dir, args.nfs)
             # With --skip-bitbake nothing is extracted, so the generated IDE
             # configuration would point at a directory that never appears.
