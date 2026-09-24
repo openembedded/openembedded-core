@@ -36,6 +36,7 @@ SRC_URI += "file://touchscreen.rules \
            file://systemd-pager.sh \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0003-Do-not-create-var-log-README.patch \
+           file://0001-include-fix-limits.h-override.patch \
            "
 
 PAM_PLUGINS = " \
