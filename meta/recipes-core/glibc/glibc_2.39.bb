@@ -57,6 +57,12 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0023-qemu-stale-process.patch \
            file://0001-stdlib-Add-single-threaded-fast-path-to-rand.patch \
            file://0024-CVE-2026-5435.patch \
+           file://0025-CVE-2026-6238-0001.patch \
+           file://0026-CVE-2026-6238-0002.patch \
+           file://0027-CVE-2026-6238-0003.patch \
+           file://0028-CVE-2026-6238-0004.patch \
+           file://0029-CVE-2026-6238-0005.patch \
+           file://0030-CVE-2026-6238-0006.patch \
 "
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build-${TARGET_SYS}"
