@@ -764,7 +764,7 @@ def parse_debugsources_from_dwarfsrcfiles_output(dwarfsrcfiles_output):
 
     return debugfiles.keys()
 
-def source_info(file, d, fatal=True):
+def source_info(file, d):
     # Skip static libraries when using Clang toolchain with LTO enabled.
     # In this case, .a files contain LLVM bitcode instead of ELF objects,
     # and dwarfsrcfiles cannot process them.
@@ -784,9 +784,7 @@ def source_info(file, d, fatal=True):
     # 255 means a specific file wasn't fully parsed to get the debug file list, which is not a fatal failure
     if retval != 0 and retval != 255:
         msg = "dwarfsrcfiles failed with exit code %s (cmd was %s)%s" % (retval, cmd, ":\n%s" % output if output else "")
-        if fatal:
-            bb.fatal(msg)
-        bb.note(msg)
+        bb.fatal(msg)
 
     debugsources = parse_debugsources_from_dwarfsrcfiles_output(output)
 
