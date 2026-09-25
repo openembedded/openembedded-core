@@ -1,4 +1,4 @@
-From e336c2dd1368aff496a6ba01e2ca9ca7e88860a2 Mon Sep 17 00:00:00 2001
+From 84c26f054ab3520d06febc2e8a99502d2cff98cf Mon Sep 17 00:00:00 2001
 From: Richard Purdie <richard.purdie@linuxfoundation.org>
 Date: Thu, 25 Feb 2021 14:52:32 +0000
 Subject: [PATCH] epiphany: Fix reproducibility issue
