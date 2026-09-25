@@ -92,12 +92,13 @@ EXTRA_OECONF = " \
 "
 
 fix_absolute_paths () {
-	# cleanup buildpaths from curl-config
+	# cleanup buildpaths and --build option from curl-config
 	sed -i \
 	    -e 's,--sysroot=${STAGING_DIR_TARGET},,g' \
 	    -e 's,--with-libtool-sysroot=${STAGING_DIR_TARGET},,g' \
 	    -e 's|${DEBUG_PREFIX_MAP}||g' \
 	    -e 's|${@" ".join(d.getVar("DEBUG_PREFIX_MAP").split())}||g' \
+	    -e "s|'--build=${BUILD_SYS}'||g" \
 	    ${D}${bindir}/curl-config
 }
 
