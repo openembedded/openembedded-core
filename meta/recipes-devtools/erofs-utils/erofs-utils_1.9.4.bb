@@ -17,6 +17,11 @@ PACKAGECONFIG ??= "lz4 zlib"
 PACKAGECONFIG[lz4] = "--enable-lz4,--disable-lz4,lz4"
 PACKAGECONFIG[zlib] = "--with-zlib,--without-zlib,zlib"
 
+# Would otherwise query the build system
+BLOCKSIZE = "4096"
+BLOCKSIZE:aarch64 = "16384"
+CACHED_CONFIGUREVARS += "erofs_cv_max_block_size=${BLOCKSIZE}"
+
 EXTRA_OECONF = "${PACKAGECONFIG_CONFARGS} --disable-fuse"
 
 CFLAGS:append:powerpc64le = " -D__SANE_USERSPACE_TYPES__"
