@@ -45,12 +45,3 @@ ssh-add = '${bindir}/ssh-add'
 ssh-agent = '${bindir}/ssh-agent'
 EOF
 }
-
-# gnome_verdir is coming from gnomebase.bbclass, which seems to work
-# with gcr as long as its version has 3 sections (x.y.z).
-# This version is 4.4.0.1 - add a custom version parser, otherwise the
-# original parser constructs invalid download URL.
-# It can be removed with the next update, when/if the version has only
-# 3 sections again.
-def gnome_verdir(v):
-    return ".".join(v.split(".")[:2]) or v
