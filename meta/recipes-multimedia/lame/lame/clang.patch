@@ -13,7 +13,8 @@ Move the HAVE_CLANG block up into the FULL_OPTIMIZATION case, alongside
 HAVE_GCC.  This option is never enabled (as it's basically "use native")
 so resolves the build failure.
 
-Upstream-Status: Pending
+Upstream-Status: Inappropriate [obsoleted by "Detect and enable optimization
+                 and hardening flags across the builds" upstream in lame-4.1]
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 
 diff --git i/configure.ac w/configure.ac

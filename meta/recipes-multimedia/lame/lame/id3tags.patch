@@ -7,7 +7,8 @@ https://sourceforge.net/p/lame/mailman/message/59358795/
 This has been also fixed in the dev tree and will be included in
 LAME release 4.1.
 
-Upstream-Status: Pending
+Upstream-Status: Inappropriate [obsoleted by "frontend, libmp3lame: fix ID3v2
+                 UTF-8 tag path" upstream in lame-4.1]
 Signed-off-by: Leon Anavi <leon.anavi@konsulko.com>
 
 diff --git a/frontend/parse.c b/frontend/parse.c
