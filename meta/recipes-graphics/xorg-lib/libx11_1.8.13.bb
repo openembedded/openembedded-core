@@ -39,4 +39,6 @@ FILES:${PN} += "${datadir}/X11/XKeysymDB ${datadir}/X11/XErrorDB ${datadir}/X11/
 FILES:${PN}-xcb += "${libdir}/libX11-xcb.so.*"
 FILES:${PN}-locale += "${datadir}/X11/locale ${libdir}/X11/locale"
 
+SYSROOT_DIRS_IGNORE:remove:class-native = "${datadir}/X11/locale"
+
 BBCLASSEXTEND = "native nativesdk"
