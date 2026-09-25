@@ -31,8 +31,7 @@ CVE_PRODUCT = "sqlite"
 
 inherit pkgconfig siteinfo upstream-stable-release-point
 
-# enable those which are enabled by default in configure
-PACKAGECONFIG ?= "fts4 fts5 rtree dyn_ext"
+PACKAGECONFIG ?= "fts4 fts5 rtree dyn_ext unlock-notify"
 PACKAGECONFIG:class-native ?= "fts4 fts5 rtree dyn_ext"
 
 PACKAGECONFIG[editline] = "--enable-editline --with-readline-header=${includedir}/editline/readline.h,--disable-editline,libedit ncurses"
@@ -44,6 +43,7 @@ PACKAGECONFIG[rtree] = "--enable-rtree,--disable-rtree"
 PACKAGECONFIG[session] = "--enable-session,--disable-session"
 PACKAGECONFIG[zlib] = "--enable-zlib,--disable-zlib,zlib"
 PACKAGECONFIG[dyn_ext] = "--enable-load-extension,--disable-load-extension"
+PACKAGECONFIG[unlock-notify] = ""
 
 EXTRA_OECONF = " \
     --enable-shared \
@@ -58,6 +58,9 @@ CFLAGS += "-DUSE_PREAD"
 
 # Provide column meta-data API
 CFLAGS += "-DSQLITE_ENABLE_COLUMN_METADATA"
+
+# Provide the unlock_notify API
+CFLAGS += "${@bb.utils.contains('PACKAGECONFIG', 'unlock-notify', '-DSQLITE_ENABLE_UNLOCK_NOTIFY', '', d)}"
 
 # Unless SQLITE_BYTEORDER is predefined, the code falls back to build time
 # heuristics, which are not always correct
