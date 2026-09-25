@@ -1,4 +1,5 @@
-Upstream-Status: Inappropriate [configuration]
+Upstream-Status: Inappropriate [obsoleted by "frontend: replace the mp3x frame
+                 analyzer with a GTK4 implementation" upstream in lame-4.1]
 
 # Acquired from OpenEmbedded
 
