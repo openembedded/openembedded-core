@@ -91,6 +91,15 @@ ruby_scrub_rbconfig () {
            -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
         $rbconfig_rb
 
+    # Remove the build host triplet (build_os is the same on every host)
+    sed -i -e "s|'--build=${BUILD_SYS}' ||g" \
+           -e "s|'build_alias=${BUILD_SYS}' ||g" \
+           -e 's|^\([[:space:]]*CONFIG\["build_vendor"\] = \).*|\1""|' \
+           -e 's|^\([[:space:]]*CONFIG\["build_cpu"\] = \).*|\1""|' \
+           -e 's|^\([[:space:]]*CONFIG\["build"\] = \).*|\1""|' \
+           -e 's|^\([[:space:]]*CONFIG\["build_alias"\] = \).*|\1""|' \
+        $rbconfig_rb
+
     sed -i -e 's|${DEBUG_PREFIX_MAP}||g' \
         ${D}${libdir}/pkgconfig/*.pc
 
