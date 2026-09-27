@@ -391,7 +391,7 @@ class RecipeImage:
         return helper
 
     def update_image_bbappend(self, recipes_modified, nfs=None):
-        """Write debug settings for modified-mode recipes into the image bbappend.
+        """Write debug and NFS settings for the selected image into its bbappend.
 
         Writes IMAGE_GEN_DEBUGFS, IMAGE_FSTYPES_DEBUGFS, IMAGE_CLASSES for
         image-combined-dbg, the appropriate debug server (gdbserver or
@@ -1785,8 +1785,8 @@ def ide_setup(args, config, basepath, workspace):
                 logger.error("In shared sysroots mode modified recipes %s cannot be handled." % str(
                     recipes_modified_names))
                 invalid_params = True
-            if args.nfs:
-                logger.error("--nfs is only supported in modified mode.")
+            if args.nfs and not recipes_image_names:
+                logger.error("--nfs requires an image recipe.")
                 invalid_params = True
         if args.nfs_extract_dir and not args.nfs:
             logger.error("--nfs-extract-dir requires --nfs.")
@@ -1922,8 +1922,8 @@ def ide_setup(args, config, basepath, workspace):
     shared_bbappend_changed = False
     if args.mode == DevtoolIdeMode.shared:
         for image in recipes_images:
-            if image.extra_image_install_debugfs:
-                if image.update_image_bbappend([], None):
+            if image.extra_image_install_debugfs or args.nfs:
+                if image.update_image_bbappend([], args.nfs):
                     shared_bbappend_changed = True
 
     if not args.skip_bitbake:
@@ -1955,6 +1955,9 @@ def ide_setup(args, config, basepath, workspace):
                 bb_cmd + ' '.join(bootstrap_tasks_late), watch=True)
 
     if args.mode == DevtoolIdeMode.shared:
+        if args.nfs and not args.skip_bitbake:
+            for image in recipes_images:
+                image.extract_nfs_rootfs(nfs_export_base_dir, args.nfs, args.target)
         for ide in ides:
             ide.setup_shared_sysroots(shared_env)
             for image in recipes_images:
@@ -2074,6 +2077,8 @@ def register_commands(subparsers, context):
         '  Usage example:\n'
         '    devtool ide-sdk -m ' + DevtoolIdeMode.shared.name + ' recipe(s)\n'
         '  This command generates a cross-toolchain as well as the corresponding shared sysroot directories.\n'
+        '  An image recipe may also be supplied to build a target image and generate image-based IDE configurations.\n'
+        '  With an image recipe, --nfs exports its rootfs for NFS booting.\n'
         '  To use this tool-chain the environment-* file found in the deploy..image folder needs to be sourced into a shell.\n'
         '  In case of VSCode and cmake the tool-chain is also exposed as a cmake-kit')
     default_ide = list(ide_plugins.keys())[0]
