@@ -1842,13 +1842,9 @@ def ide_setup(args, config, basepath, workspace):
                 raise DevtoolError(
                     "%s does not exist. Run devtool ide-sdk --nfs=%s without "
                     "--skip-bitbake first." % (recipe_image.nfs_deploy_dir, args.nfs))
-            if args.mode == DevtoolIdeMode.modified:
-                # Keep the image build separate so that the complete bbappend
-                # (IMAGE_ vars + QB_SLIRP_OPT) can be written in one step
-                # before the image is built, avoiding sstate hash mismatches.
-                image_bootstrap_tasks += recipe_image.bootstrap_tasks
-            else:
-                bootstrap_tasks += recipe_image.bootstrap_tasks
+            # Build images only after the complete bbappend has been written,
+            # so the build never sees changing image task hashes.
+            image_bootstrap_tasks += recipe_image.bootstrap_tasks
             recipes_images.append(recipe_image)
 
         # Provide a Direct SDK with shared sysroots
@@ -1870,6 +1866,9 @@ def ide_setup(args, config, basepath, workspace):
             bootstrap_tasks_late += build_sysroots.bootstrap_tasks
             shared_env = SharedSysrootsEnv()
             shared_env.initialize(ide_support, build_sysroots)
+            for image in recipes_images:
+                for ide in ides:
+                    bootstrap_tasks += ide.initialize_shared_image(config, tinfoil, image)
             for recipe_name in recipes_other_names:
                 for ide in ides:
                     bootstrap_tasks += ide.initialize_shared_recipe(
@@ -1924,9 +1923,6 @@ def ide_setup(args, config, basepath, workspace):
     if args.mode == DevtoolIdeMode.shared:
         for image in recipes_images:
             if image.extra_image_install_debugfs:
-                bootstrap_tasks = [task for task in bootstrap_tasks
-                                   if task not in image.bootstrap_tasks]
-                image_bootstrap_tasks += image.bootstrap_tasks
                 if image.update_image_bbappend([], None):
                     shared_bbappend_changed = True
 
@@ -1949,18 +1945,20 @@ def ide_setup(args, config, basepath, workspace):
             exec_build_env_command(
                 config.init_path, basepath,
                 bb_cmd + ' '.join(bootstrap_tasks), watch=True)
-        if bootstrap_tasks_late:
-            exec_build_env_command(
-                config.init_path, basepath,
-                bb_cmd + ' '.join(bootstrap_tasks_late), watch=True)
         if args.mode == DevtoolIdeMode.shared and image_bootstrap_tasks:
             exec_build_env_command(
                 config.init_path, basepath,
                 bb_cmd + ' '.join(image_bootstrap_tasks), watch=True)
+        if bootstrap_tasks_late:
+            exec_build_env_command(
+                config.init_path, basepath,
+                bb_cmd + ' '.join(bootstrap_tasks_late), watch=True)
 
     if args.mode == DevtoolIdeMode.shared:
         for ide in ides:
             ide.setup_shared_sysroots(shared_env)
+            for image in recipes_images:
+                ide.setup_shared_image(args, shared_env, image, config.workspace_path)
             for recipe_name in recipes_other_names:
                 ide.setup_shared_recipe(
                     args, shared_env, recipes_images[0] if recipes_images else None,

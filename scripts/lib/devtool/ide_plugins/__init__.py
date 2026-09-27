@@ -367,6 +367,12 @@ class IdeBase:
         logger.warn("Shared sysroot mode is not supported for IDE %s" %
                     self.ide_name)
 
+    def initialize_shared_image(self, config, tinfoil, image):
+        return []
+
+    def setup_shared_image(self, args, shared_env, image, workspace_path):
+        pass
+
     def initialize_shared_recipe(self, config, tinfoil, images, recipe_name):
         return []
 
