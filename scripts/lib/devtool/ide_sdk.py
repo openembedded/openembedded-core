@@ -1870,6 +1870,10 @@ def ide_setup(args, config, basepath, workspace):
             bootstrap_tasks_late += build_sysroots.bootstrap_tasks
             shared_env = SharedSysrootsEnv()
             shared_env.initialize(ide_support, build_sysroots)
+            for recipe_name in recipes_other_names:
+                for ide in ides:
+                    bootstrap_tasks += ide.initialize_shared_recipe(
+                        config, tinfoil, recipes_images, recipe_name)
 
         recipes_modified = []
         if args.mode == DevtoolIdeMode.modified:
@@ -1916,9 +1920,18 @@ def ide_setup(args, config, basepath, workspace):
     for recipe_modified in recipes_modified:
         if recipe_modified.update_bbappend():
             recipe_bbappend_changed = True
+    shared_bbappend_changed = False
+    if args.mode == DevtoolIdeMode.shared:
+        for image in recipes_images:
+            if image.extra_image_install_debugfs:
+                bootstrap_tasks = [task for task in bootstrap_tasks
+                                   if task not in image.bootstrap_tasks]
+                image_bootstrap_tasks += image.bootstrap_tasks
+                if image.update_image_bbappend([], None):
+                    shared_bbappend_changed = True
 
     if not args.skip_bitbake:
-        if recipe_bbappend_changed:
+        if recipe_bbappend_changed or shared_bbappend_changed:
             # The bbappend content just written differs from the one bitbake
             # parsed during the tinfoil session above. See update_image_bbappend()'s
             # matching reset for phase 2 for why this is needed.
@@ -1940,10 +1953,18 @@ def ide_setup(args, config, basepath, workspace):
             exec_build_env_command(
                 config.init_path, basepath,
                 bb_cmd + ' '.join(bootstrap_tasks_late), watch=True)
+        if args.mode == DevtoolIdeMode.shared and image_bootstrap_tasks:
+            exec_build_env_command(
+                config.init_path, basepath,
+                bb_cmd + ' '.join(image_bootstrap_tasks), watch=True)
 
     if args.mode == DevtoolIdeMode.shared:
         for ide in ides:
             ide.setup_shared_sysroots(shared_env)
+            for recipe_name in recipes_other_names:
+                ide.setup_shared_recipe(
+                    args, shared_env, recipes_images[0] if recipes_images else None,
+                    config.workspace_path, recipe_name)
     elif args.mode == DevtoolIdeMode.modified:
         for recipe_modified in recipes_modified:
             if recipe_modified.build_tool is BuildTool.CMAKE:
