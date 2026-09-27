@@ -3612,7 +3612,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         """Verify a recipe's binary was extracted into the NFS debug rootfs."""
         self.assertExists(os.path.join(nfs_rootfs, 'usr', 'bin', example_exe))
 
-    def _test_code_nfs_debug_rootfs(self):
+    def _test_code_nfs_debug_rootfs(self, shared=False):
         """Verify ide-sdk extracts an NFS debug rootfs for VS Code debugging."""
         recipe_name = self._cmake_recipe_name
         build_file = "CMakeLists.txt"
@@ -3622,12 +3622,20 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self._write_bb_config()
         tempdir = self._devtool_ide_sdk_recipe(
             recipe_name, build_file, testimage)
-        runCmd('devtool ide-sdk %s %s -c --ide=code --nfs=rootfs-dbg' %
-               (recipe_name, testimage), output_log=self._cmd_logger)
+        mode_opts = '-m modified -m shared ' if shared else ''
+        runCmd('devtool ide-sdk %s%s %s -c --ide=code --nfs=rootfs-dbg' %
+               (mode_opts, recipe_name, testimage), output_log=self._cmd_logger)
 
         nfs_rootfs, _ = self._verify_nfs_debug_rootfs(testimage, 'rootfs-dbg')
         self._verify_nfs_binary_deployed(nfs_rootfs, recipe_name)
         self._verify_nfs_launch_json(tempdir, nfs_rootfs)
+        if shared:
+            bb_vars = get_bb_vars(
+                ['REAL_MULTIMACH_TARGET_SYS', 'DEPLOY_DIR_IMAGE'], 'meta-ide-support')
+            self.assertExists(os.path.join(
+                bb_vars['DEPLOY_DIR_IMAGE'],
+                'environment-setup-%s' % bb_vars['REAL_MULTIMACH_TARGET_SYS']))
+            self.assertExists(get_bb_var('STANDALONE_SYSROOT', 'build-sysroots'))
 
     def _test_code_and_none_qemu(self, nfs=False, slirp=False):
         """Verify devtool ide-sdk --ide=code --ide=none for cmake, meson and the target toolchain.
@@ -4300,7 +4308,7 @@ class DevtoolIdeSdkGccTests(DevtoolIdeSdkTests):
 
     def test_code_nfs_debug_rootfs(self):
         """Verify ide-sdk extracts an NFS debug rootfs for VS Code debugging."""
-        self._test_code_nfs_debug_rootfs()
+        self._test_code_nfs_debug_rootfs(shared=True)
 
     @OETestTag("runqemu")
     def test_code_and_none_qemu(self):
