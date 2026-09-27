@@ -22,7 +22,7 @@ CVE_STATUS[CVE-2025-0577] = "not-applicable-platform: specific to RHEL patches"
 # when upgrading, clear CVE list but keep the variables
 CVE_STATUS_GROUPS += "CVE_STATUS_STABLE_BACKPORTS"
 CVE_STATUS_STABLE_BACKPORTS = "\
-    CVE-2026-5435 \
+    CVE-2026-5435 CVE-2026-19542 \
 "
 CVE_STATUS_STABLE_BACKPORTS[status] = "cpe-stable-backport: fix available in used git hash"
 
