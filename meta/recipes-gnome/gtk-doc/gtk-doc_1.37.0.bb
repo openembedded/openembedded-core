@@ -15,10 +15,9 @@ PACKAGECONFIG[tests] = "-Dtests=true,-Dtests=false,glib-2.0"
 
 EXTRA_OEMESON = "-Dyelp_manual=false -Dcheck_runtime_deps=false"
 
-SRC_URI[archive.sha256sum] = "0e517a5f97069831181be177516bde8aa8b3922398f2bdb09e265d22aecadbc5"
+SRC_URI[archive.sha256sum] = "2facfb530ddcd20c03ed4758ef934e832626c393e2cacd23fc1249b7ed0e4246"
 SRC_URI += "file://0001-Do-not-hardocode-paths-to-perl-python-in-scripts.patch \
            file://no-clobber.patch \
-           file://0001-meson.build-add-an-option-to-not-check-for-runtime-d.patch \
            "
 SRC_URI:append:class-native = " file://pkg-config-native.patch"
 
