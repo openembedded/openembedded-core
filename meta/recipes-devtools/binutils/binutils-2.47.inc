@@ -18,6 +18,8 @@ SRCBRANCH ?= "binutils-2_47-branch"
 
 UPSTREAM_CHECK_GITTAGREGEX = "binutils-(?P<pver>\d+_(\d_?)*)"
 
+CVE_STATUS[CVE-2026-3441] = "fixed-version: fixed-version: Fixed from version 2.47"
+CVE_STATUS[CVE-2026-3442] = "fixed-version: fixed-version: Fixed from version 2.47"
 CVE_STATUS[CVE-2026-4647] = "fixed-version: fixed-version: Fixed from version 2.47"
 
 GIT_TAG = "binutils-${@d.getVar('PV').replace('.', '_')}"
