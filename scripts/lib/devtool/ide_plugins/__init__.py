@@ -367,6 +367,12 @@ class IdeBase:
         logger.warn("Shared sysroot mode is not supported for IDE %s" %
                     self.ide_name)
 
+    def initialize_shared_recipe(self, config, tinfoil, images, recipe_name):
+        return []
+
+    def setup_shared_recipe(self, args, shared_env, image, workspace_path, recipe_name):
+        pass
+
     def initialize_modified_recipe(self, config, tinfoil, recipe_modified):
         """Hook called once per modified recipe, inside the shared tinfoil session"""
         pass
