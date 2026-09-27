@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=6bd2f1386df813a459a0c34fde676fc2"
 
 DEPENDS = "cracklib"
 
-SRC_URI = "git://github.com/libpwquality/libpwquality;branch=master;protocol=https \
+SRC_URI = "git://github.com/libpwquality/libpwquality;branch=master;protocol=https;tag=${BPN}-${PV} \
     file://0001-Use-setuptools-instead-of-distutils.patch \
     file://0002-Makefile.am-respect-PYTHONSITEDIR.patch \
 "
