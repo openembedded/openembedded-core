@@ -238,7 +238,7 @@ class PythonRecipeHandler(RecipeHandler):
             if bbvar == "PN":
                 # by convention python recipes start with "python3-"
                 if not value.startswith('python'):
-                    value = 'python3-' + value
+                    value = 'python3-' + self.pypi_normalise(value)
 
             if bbvar not in extravalues and value:
                 extravalues[bbvar] = value
