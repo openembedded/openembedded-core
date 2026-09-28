@@ -218,6 +218,9 @@ def reset_alternative_priority(d):
 PACKAGESPLITFUNCS:append = " do_rename_package_variables"
 
 python do_rename_package_variables() {
+    if bb.data.inherits_class('cross-canadian', d):
+        return
+
     variant = d.getVar("BBEXTENDVARIANT")
     prefixes = (d.getVar("MULTILIB_VARIANTS") or "").split()
     if variant and prefixes:
