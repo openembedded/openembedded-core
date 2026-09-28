@@ -194,8 +194,8 @@ python () {
 # sstate isn't path specific
 SITEINFO_PATHVARS = "COREBASE"
 
-def siteinfo_get_files(d, sysrootcache=False):
-    sitedata = siteinfo_data(d)
+def siteinfo_get_files_for_machine(arch, osname, d):
+    sitedata = siteinfo_data_for_machine(arch, osname, d)
     sitefiles = []
     searched = []
     for path in d.getVar("BBPATH").split(":"):
@@ -223,4 +223,6 @@ def siteinfo_get_files(d, sysrootcache=False):
 
     return sitefiles, searched
 
+def siteinfo_get_files(d, sysrootcache=False):
+    return siteinfo_get_files_for_machine(d.getVar("HOST_ARCH"), d.getVar("HOST_OS"), d)
 
