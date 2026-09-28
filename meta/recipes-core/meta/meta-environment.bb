@@ -9,8 +9,6 @@ REAL_MULTIMACH_TARGET_SYS = "${TUNE_PKGARCH}${TARGET_VENDOR}-${TARGET_OS}"
 
 inherit toolchain-scripts
 TOOLCHAIN_NEED_CONFIGSITE_CACHE:append = " zlib"
-# Need to expand here before cross-candian changes HOST_ARCH -> SDK_ARCH
-TOOLCHAIN_CONFIGSITE_NOCACHE := "${TOOLCHAIN_CONFIGSITE_NOCACHE}"
 
 SDK_DIR = "${WORKDIR}/sdk"
 SDK_OUTPUT = "${SDK_DIR}/image"
@@ -22,6 +20,8 @@ do_generate_content[cleandirs] = "${SDK_OUTPUT}"
 do_generate_content[dirs] = "${SDK_OUTPUT}/${SDKPATH}"
 # Need to ensure we have the virtual mappings and site files for all multtilib variants
 do_generate_content[depends] = "${@oe.utils.build_depends_string(oe.utils.all_multilib_tune_values(d, 'TOOLCHAIN_NEED_CONFIGSITE_CACHE'), 'do_populate_sysroot')}"
+TOOLCHAIN_CONFIGSITE_SEARCHED = "${@' '.join(siteinfo_get_files_for_machine(d.getVar('TARGET_ARCH'), d.getVar('TARGET_OS'), d)[1])}"
+do_generate_content[file-checksums] += "${@oe.utils.all_multilib_tune_values(d, 'TOOLCHAIN_CONFIGSITE_SEARCHED')}"
 python do_generate_content() {
     # Handle multilibs in the SDK environment, siteconfig, etc files...
     localdata = bb.data.createCopy(d)
@@ -45,11 +45,6 @@ python do_generate_content() {
         bb.build.exec_func("create_sdk_files", localdata)
 }
 addtask generate_content before do_install after do_compile
-
-python () {
-    sitefiles, searched = siteinfo_get_files(d, sysrootcache=False)
-    d.appendVarFlag("do_generate_content", "file-checksums", " " + " ".join(searched))
-}
 
 create_sdk_files() {
 	# Setup site file for external use
