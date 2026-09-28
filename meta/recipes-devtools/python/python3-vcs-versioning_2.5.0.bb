@@ -11,7 +11,6 @@ SRC_URI += "\
     file://run-ptest \
 "
 
-PYPI_PACKAGE = "vcs_versioning"
 PTEST_PYTEST_DIR = "testing_vcs"
 
 inherit pypi python_setuptools_build_meta ptest-python-pytest

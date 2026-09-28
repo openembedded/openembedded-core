@@ -8,8 +8,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=838c366f69b72c5df05c96dff79b35f2"
 
 SRC_URI[sha256sum] = "a69f28bfc245608781205e912faae437c2b2165773afa4e7b979d77447a69dd2"
 
-PYPI_PACKAGE = "setuptools_scm"
-
 inherit pypi python_setuptools_build_meta
 
 DEPENDS += "\

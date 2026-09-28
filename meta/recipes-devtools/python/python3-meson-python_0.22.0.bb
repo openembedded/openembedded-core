@@ -10,8 +10,6 @@ DEPENDS = " \
 	python3-pyproject-metadata-native \
 "
 
-PYPI_PACKAGE = "meson_python"
-
 inherit pypi python_mesonpy
 SRC_URI[sha256sum] = "9c819d0d4efa746edadfaae4663c0e9c75659186ef7e5bab12330bfe22964dfc"
 
