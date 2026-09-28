@@ -7,6 +7,7 @@ PTESTS_FAST = "\
     acl \
     apr-util \
     attr \
+    avahi \
     babeltrace2 \
     bc \
     bluez5 \
