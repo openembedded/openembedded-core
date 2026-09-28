@@ -67,6 +67,7 @@ EXTRA_OECMAKE += "-DLLVM_ENABLE_ASSERTIONS=OFF \
                   -DLLVM_TABLEGEN_EXE=${STAGING_BINDIR_NATIVE}/llvm-tblgen \
                   -DCLANG_TABLEGEN_EXE=${STAGING_BINDIR_NATIVE}/clang-tblgen \
                   -DLLVM_INCLUDE_TESTS=OFF \
+                  -DCLANG_TOOLS_EXTRA_INCLUDE_TESTS=OFF \
                   -DCROSS_TOOLCHAIN_FLAGS_NATIVE='-DCMAKE_TOOLCHAIN_FILE=${WORKDIR}/toolchain-native.cmake' \
                   -DLLVM_LIBDIR_SUFFIX=${LLVM_LIBDIR_SUFFIX} \
                   -DCMAKE_AR=${STAGING_BINDIR_NATIVE}/llvm-ar \

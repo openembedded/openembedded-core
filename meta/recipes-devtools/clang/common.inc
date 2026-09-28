@@ -53,7 +53,7 @@ SRC_URI = "\
     file://0031-Only-build-clang-tblgen-if-it-is-actually-needed.patch \
     file://0032-llvm-libgcc-Fix-symlink-path-for-libcc-when-LLVM_ENA.patch \
     file://0033-Consolidate-and-fix-sysroot-based-compiler-rt-search.patch \
-    file://0034-guard-clang-tools-extra-test.patch \
+    file://0034-clang-tools-extra-Add-separate-CLANG_TOOLS_EXTRA_INC.patch \
 "
 # Fallback to no-PIE if not set
 GCCPIE ??= ""
