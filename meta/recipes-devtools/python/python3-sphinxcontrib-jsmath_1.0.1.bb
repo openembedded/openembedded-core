@@ -7,4 +7,6 @@ SRC_URI[sha256sum] = "a9925e4a4587247ed2191a22df5f6970656cb8ca2bd6284309578f2153
 
 inherit pypi setuptools3
 
+PYPI_PACKAGE_SDIST = "sphinxcontrib-jsmath"
+
 BBCLASSEXTEND = "native nativesdk"

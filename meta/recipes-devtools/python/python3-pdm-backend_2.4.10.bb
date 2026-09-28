@@ -8,6 +8,4 @@ SRC_URI[sha256sum] = "551b049379d4f270cba18f5bf73031cc229a4f883e085265465d326d4a
 
 inherit pypi python_pep517
 
-PYPI_PACKAGE = "pdm_backend"
-
 BBCLASSEXTEND = "native nativesdk"

@@ -19,8 +19,6 @@ SRC_URI[sha256sum] = "81d04c9253b19d0604718268d781867c8f7b2128e5b25bbf1e84141eec
 
 inherit python_poetry_core pypi
 
-PYPI_PACKAGE = "poetry_core"
-
 RDEPENDS:${PN}:append:class-target = "\
     python3-compression \
     python3-core \

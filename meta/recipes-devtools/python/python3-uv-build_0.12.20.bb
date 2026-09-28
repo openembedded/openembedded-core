@@ -19,7 +19,5 @@ inherit pypi python_maturin cargo-update-recipe-crates pkgconfig
 
 DEPENDS += "zstd"
 
-PYPI_PACKAGE = "uv_build"
-
 BBCLASSEXTEND = "native"
 INSANE_SKIP:${PN} = "already-stripped"

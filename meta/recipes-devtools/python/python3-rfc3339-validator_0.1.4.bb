@@ -7,8 +7,6 @@ SRC_URI += "file://0001-Remove-usage-of-six.patch"
 
 SRC_URI[sha256sum] = "138a2abdf93304ad60530167e51d2dfb9549521a836871b88d7f4695d0022f6b"
 
-PYPI_PACKAGE = "rfc3339_validator"
-
 inherit pypi setuptools3
 
 RDEPENDS:${PN} += "\
