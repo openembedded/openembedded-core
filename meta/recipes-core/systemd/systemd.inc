@@ -1,5 +1,5 @@
 SUMMARY = "A System and service manager"
-HOMEPAGE = "http://www.freedesktop.org/wiki/Software/systemd"
+HOMEPAGE = "https://systemd.io"
 
 DESCRIPTION = "systemd is a system and service manager for Linux, compatible with \
 SysV and LSB init scripts. systemd provides aggressive parallelization \
