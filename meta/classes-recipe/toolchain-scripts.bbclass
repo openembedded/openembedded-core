@@ -213,7 +213,8 @@ EOF
 }
 
 #we get the cached site config in the runtime
-TOOLCHAIN_CONFIGSITE_NOCACHE = "${@' '.join(siteinfo_get_files(d)[0])}"
+# cross-canadian changes HOST_ARCH/HOST_OS to the SDK host
+TOOLCHAIN_CONFIGSITE_NOCACHE = "${@' '.join(siteinfo_get_files_for_machine(d.getVar('TARGET_ARCH'), d.getVar('TARGET_OS'), d)[0])}"
 TOOLCHAIN_NEED_CONFIGSITE_CACHE ??= "virtual/${MLPREFIX}libc ncurses"
 DEPENDS += "${TOOLCHAIN_NEED_CONFIGSITE_CACHE}"
 
