@@ -115,6 +115,14 @@ class PythonRecipeHandler(RecipeHandler):
     def __init__(self):
         pass
 
+    @staticmethod
+    def pypi_normalise(s):
+        """
+        Normalize the package names.
+        https://packaging.python.org/en/latest/specifications/name-normalization/
+        """
+        return re.sub(r"[-_.]+", "-", s).lower()
+
     def process_url(self, args, classes, handled, extravalues):
         """
         Convert any pypi url https://pypi.org/project/<package>/<version> into https://files.pythonhosted.org/packages/source/...
@@ -143,6 +151,7 @@ class PythonRecipeHandler(RecipeHandler):
                 for release in reversed(data["releases"][version]):
                     if release["packagetype"] == "sdist":
                         fetch_uri = release["url"]
+                        sdist = release["filename"].rsplit("-")[0]
                         break
             else:
                 logger.warning("Cannot handle pypi url %s: cannot fetch package information using %s", source, json_url)
@@ -152,14 +161,19 @@ class PythonRecipeHandler(RecipeHandler):
             if match:
                 fetch_uri = source
                 pypi_package = match.group(1)
-                _, version = determine_from_url(fetch_uri)
+                sdist, version = determine_from_url(fetch_uri)
 
         if match and not args.no_pypi:
             if required_version and version != required_version:
                 raise Exception("Version specified using --version/-V (%s) and version specified in the url (%s) do not match" % (required_version, version))
-            # This is optionnal if BPN looks like "python-<pypi_package>" or "python3-<pypi_package>" (see pypi.bbclass)
+            # PYPI_PACKAGE is optional if BPN looks like "python-<pypi_package>" or "python3-<pypi_package>" (see pypi.bbclass)
             # but at this point we cannot know because because user can specify the output name of the recipe on the command line
+            pypi_package = self.pypi_normalise(pypi_package)
             extravalues["PYPI_PACKAGE"] = pypi_package
+            # Some sdists don't use normalised names, so check and set PYPI_PACKAGE_SDIST if needed
+            if sdist != pypi_package.replace("-", "_"):
+                extravalues["PYPI_PACKAGE_SDIST"] = sdist
+
             # If the tarball extension is not 'tar.gz' (default value in pypi.bblcass) whe should set PYPI_PACKAGE_EXT in the recipe
             pypi_package_ext = re.match(r'.*%s-%s\.(.*)$' % (pypi_package, version), fetch_uri)
             if pypi_package_ext:
