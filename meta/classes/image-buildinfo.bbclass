@@ -70,12 +70,21 @@ python buildinfo_image () {
     bb.build.exec_func("buildinfo", d)
 }
 
+python buildinfo_deploy() {
+    src = d.expand("${IMAGE_ROOTFS}/${IMAGE_BUILDINFO_FILE}")
+    dst = d.expand("${IMGDEPLOYDIR}/${IMAGE_NAME}.buildinfo")
+    oe.path.copyhardlink(src, dst)
+}
+do_image[postfuncs] += "create_symlinks"
+do_image[subimages] += "buildinfo"
+
+
 python buildinfo_sdk () {
     d.setVar("BUILDINFODEST", "${SDK_OUTPUT}/${SDKPATH}")
     d.setVar("IMAGE_BUILDINFO_FILE", d.getVar("SDK_BUILDINFO_FILE"))
     bb.build.exec_func("buildinfo", d)
 }
 
-IMAGE_PREPROCESS_COMMAND += "buildinfo_image"
+IMAGE_PREPROCESS_COMMAND += "buildinfo_image buildinfo_deploy"
 POPULATE_SDK_PRE_TARGET_COMMAND += "buildinfo_sdk"
 
