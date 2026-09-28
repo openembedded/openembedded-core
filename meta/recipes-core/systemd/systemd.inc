@@ -1,14 +1,12 @@
 SUMMARY = "A System and service manager"
 HOMEPAGE = "https://systemd.io"
 
-DESCRIPTION = "systemd is a system and service manager for Linux, compatible with \
-SysV and LSB init scripts. systemd provides aggressive parallelization \
-capabilities, uses socket and D-Bus activation for starting services, \
-offers on-demand starting of daemons, keeps track of processes using \
-Linux cgroups, supports snapshotting and restoring of the system \
-state, maintains mount and automount points and implements an \
-elaborate transactional dependency-based service control logic. It can \
-work as a drop-in replacement for sysvinit."
+DESCRIPTION = "systemd is a suite of basic building blocks for a Linux system. \
+It provides a system and service manager that runs as PID 1 and starts the rest of the system. \
+systemd provides aggressive parallelization capabilities, uses socket and D-Bus activation for \
+starting services, offers on-demand starting of daemons, keeps track of processes using \
+Linux control groups, maintains mount and automount points, and implements an elaborate \
+transactional dependency-based service control logic."
 
 LICENSE = "GPL-2.0-only AND LGPL-2.1-or-later"
 LICENSE:libsystemd = "LGPL-2.1-or-later"
