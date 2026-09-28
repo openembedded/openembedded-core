@@ -14,6 +14,7 @@ LIC_FILES_CHKSUM = "file://LICENCE.md;md5=6720bf3bcff57543b915c2b22e526df0 \
 
 SRC_URI = "${GITHUB_BASE_URI}/download/pcre2-${PV}/pcre2-${PV}.tar.bz2 \
            file://run-ptest \
+           file://testoutput3C \
 "
 
 GITHUB_BASE_URI = "https://github.com/PCRE2Project/pcre2/releases"
@@ -63,6 +64,7 @@ BBCLASSEXTEND = "native nativesdk"
 do_install_ptest() {
     t=${D}${PTEST_PATH}
     cp -r ${S}/testdata $t
+    cp ${UNPACKDIR}/testoutput3C $t/testdata/testoutput3C
 
     for i in pcre2posix_test pcre2grep pcre2test; do
         "${B}/libtool" --mode=install install "${B}/$i" "$t"
