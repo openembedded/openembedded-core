@@ -15,7 +15,7 @@ Increase the timeout to 30s. The loop exits as soon as the child
 appears, so this does not slow down fast hosts; it only adds headroom on
 slow/emulated targets.
 
-Upstream-Status: Submitted [https://github.com/util-linux/util-linux/pull/4639]
+Upstream-Status: Backport [https://github.com/util-linux/util-linux/commit/ab519f323c620a32b21a0861285f1a4a5591d3dc]
 
 Signed-off-by: Pratik Farkase <pratik.farkase@est.tech>
 ---
