@@ -22,7 +22,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/tcl-core${PV}-src.tar.gz \
            file://0003-tcl-install-tcl-to-lib64-instead-of-lib-on-64bit-tar.patch \
            file://0004-tcl-update-the-header-location.patch \
            "
-SRC_URI[sha256sum] = "5d265f3499b588681825d8093177830707b7035ad866b17189a3a6ab6dade0ff"
+SRC_URI[sha256sum] = "ba11ae7035ec4b0caf2c489b20d5aa2abb1cf001a7e65b0fa2fbac86908c643b"
 
 UPSTREAM_CHECK_URI = "https://www.tcl-lang.org/software/tcltk/download.html"
 UPSTREAM_CHECK_REGEX = "tcl(?P<pver>\d+(\.\d+)+)-src"
@@ -37,6 +37,9 @@ AUTOTOOLS_SCRIPT_PATH = "${S}/unix"
 
 EXTRA_OECONF = "--disable-rpath --enable-man-suffix=tcl9 --disable-zipfs"
 
+# Override some paths to not include TMPDIR into binaries
+EXTRA_OEMAKE = "ABS_BUILD_DIR=/build TCL_BUILDTIME_LIBRARY=/build/lib"
+
 PACKAGECONFIG ??= ""
 # Use of system tzdata is not recommended at present:
 # https://core.tcl-lang.org/tcl/tktview/51aa53616067cb63900b17ca1d71f07b094ffa1a
@@ -46,7 +49,7 @@ do_install() {
 	autotools_do_install
 	oe_runmake 'DESTDIR=${D}' install-private-headers
 	ln -sf ./tclsh${VER} ${D}${bindir}/tclsh
-	ln -sf tclsh9.0 ${D}${bindir}/tclsh${VER}
+	ln -sf tclsh9.1 ${D}${bindir}/tclsh${VER}
 	sed -i "s;-L${B};-L${STAGING_LIBDIR};g" tclConfig.sh
 	sed -i "s;'${UNPACKDIR};'${STAGING_INCDIR};g" tclConfig.sh
 	install -d ${D}${bindir_crossscripts}
@@ -61,8 +64,8 @@ do_install() {
 SYSROOT_DIRS += "${bindir_crossscripts}"
 
 PACKAGES =+ "tcl-lib"
-FILES:tcl-lib = "${libdir}/libtcl9.0.so.*"
-FILES:${PN} += "${libdir}/tcl${VER} ${libdir}/tcl9.0 ${libdir}/tcl9"
+FILES:tcl-lib = "${libdir}/libtcl9.1.so.*"
+FILES:${PN} += "${libdir}/tcl${VER} ${libdir}/tcl9.1 ${libdir}/tcl9"
 FILES:${PN}-dev += "${libdir}/tclConfig.sh ${libdir}/tclooConfig.sh"
 
 # isn't getting picked up by shlibs code
