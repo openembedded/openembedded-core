@@ -10,7 +10,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=cfcbdd69e15396e371f639c69acf40bf"
 
 SRC_URI = "git://github.com/zeux/volk.git;branch=master;protocol=https;tag=vulkan-sdk-${PV}"
-SRCREV = "776893306c5d3b22b6185b5d4a258b81d94572bf"
+SRCREV = "54fc0d7a72887cbfc5b030d26897b2b40ac53fb8"
 
 REQUIRED_DISTRO_FEATURES = "vulkan"
 
