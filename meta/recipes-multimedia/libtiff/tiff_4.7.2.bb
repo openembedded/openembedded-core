@@ -9,6 +9,8 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=4ab490c3088a0acff254eb2f8c577547"
 CVE_PRODUCT = "libtiff"
 
 SRC_URI = "http://download.osgeo.org/libtiff/tiff-${PV}.tar.gz \
+           file://test_ifd_loop_detection-relative-images.patch \
+           file://run-ptest \
 	   "
 
 SRC_URI[sha256sum] = "672bd7d10aee4606171afb864f3570b83340f6a33e2c186dc0512f7145ffdf6a"
@@ -23,7 +25,7 @@ CVE_STATUS[CVE-2023-6277] = "fixed-version: Fixed since 4.7.0, NVD tracks this a
 CVE_STATUS[CVE-2025-8851] = "fixed-version: Fixed since 4.7.0, NVD tracks this as fixed in 2024-08-11 vulnerability"
 CVE_STATUS[CVE-2026-4775] = "fixed-version: Fixed since 4.7.2, NVD tracks this as version-less vulnerability"
 
-inherit autotools multilib_header
+inherit autotools multilib_header ptest
 
 CACHED_CONFIGUREVARS = "ax_cv_check_gl_libgl=no"
 
@@ -64,3 +66,41 @@ do_install:append() {
 }
 
 BBCLASSEXTEND = "native nativesdk"
+
+# C unit-test programs (check_PROGRAMS) built and run by ptest. Defined once
+# here and substituted into run-ptest at install time to avoid duplication.
+TIFF_PTEST_PROGS = "ascii_tag long_tag short_tag strip_rw rewrite custom_dir \
+    custom_dir_EXIF_231 defer_strile_loading defer_strile_writing \
+    test_directory test_IFD_enlargement test_open_options \
+    test_append_to_strip test_ifd_loop_detection testtypes \
+    test_signed_tags raw_decode"
+
+do_compile_ptest() {
+    oe_runmake -C ${B}/test check TESTS=""
+}
+
+do_install_ptest() {
+    install -d ${D}${PTEST_PATH}/test
+    # Compiled C unit-test programs. libtool leaves a wrapper script in test/
+    # and the real ELF binary in test/.libs/; testtypes is static and lives
+    # only in test/.
+    for prog in ${TIFF_PTEST_PROGS}; do
+        if [ -e ${B}/test/.libs/$prog ]; then
+            install -m 0755 ${B}/test/.libs/$prog ${D}${PTEST_PATH}/test/
+        else
+            install -m 0755 ${B}/test/$prog ${D}${PTEST_PATH}/test/
+        fi
+    done
+    # Shell test scripts and the shared helper
+    install ${S}/test/*.sh ${D}${PTEST_PATH}/test/
+    install ${S}/test/common.sh ${D}${PTEST_PATH}/test/
+    # Point the test scripts at the installed tiff tools instead of ../tools
+    sed -i -e "s|^TOOLS=.*|TOOLS=${bindir}|" ${D}${PTEST_PATH}/test/common.sh
+    # Fill in the C test program list from TIFF_PTEST_PROGS.
+    sed -i -e "s|@PROGS@|${TIFF_PTEST_PROGS}|" ${D}${PTEST_PATH}/run-ptest
+    # Input images and reference outputs
+    cp -r ${S}/test/images ${D}${PTEST_PATH}/test/
+    cp -r ${S}/test/refs ${D}${PTEST_PATH}/test/
+}
+
+RDEPENDS:${PN}-ptest += "tiff-utils"
