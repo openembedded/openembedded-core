@@ -1,0 +1,34 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Himani Ramesh Barde <HimaniRamesh.Barde@windriver.com>
+Date: Tue, 22 Sep 2026 00:00:00 +0000
+Subject: [PATCH] test_ifd_loop_detection: find images relative to CWD
+
+test_ifd_loop_detection is the only C test in the suite that references
+its input images through the compile-time SOURCE_DIR macro
+(-DSOURCE_DIR="@srcdir@") instead of opening them relative to the current
+working directory the way every other test does. When the test is run
+from an installed location (for example an OpenEmbedded ptest package)
+the build-time @srcdir@ path no longer exists, so the images are not
+found and the test fails.
+
+Override SOURCE_DIR to "." so the images are resolved relative to the
+directory the test is executed from, matching the behaviour of the other
+tests. In-tree "make check" still works because it runs the test from the
+build test/ directory whose srcdir is already ".".
+
+Upstream-Status: Submitted [libtiff]
+
+Signed-off-by: Himani Ramesh Barde <HimaniRamesh.Barde@windriver.com>
+---
+--- a/test/test_ifd_loop_detection.c
++++ b/test/test_ifd_loop_detection.c
+@@ -46,6 +46,9 @@
+ 
+ #include "tiffio.h"
+ 
++#undef SOURCE_DIR
++#define SOURCE_DIR "."
++
+ // #define DEBUG_TESTING
+ #ifdef DEBUG_TESTING
+ #define GOTOFAILURE                                                            \
