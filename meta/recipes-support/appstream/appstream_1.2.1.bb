@@ -18,13 +18,11 @@ inherit meson gobject-introspection gettext gi-docgen pkgconfig vala bash-comple
 GIR_MESON_OPTION = "gir"
 GIDOCGEN_MESON_OPTION = "apidocs"
 
-SRC_URI = " \
-	https://www.freedesktop.org/software/appstream/releases/AppStream-${PV}.tar.xz \
-	file://0001-remove-hardcoded-path.patch \
-	file://0002-Do-not-build-qt-tests.patch \
-	file://0003-Fix-PACKAGE_PREFIX_DIR-in-qt-cmake-AppStreamQtConfig.patch \
-"
-SRC_URI[sha256sum] = "901919378910550271feb2d826034c9af6522f3ad218de04d3d6d35ddba5cb45"
+SRC_URI = "https://www.freedesktop.org/software/appstream/releases/AppStream-${PV}.tar.xz \
+           file://0002-Do-not-build-qt-tests.patch \
+           file://0003-Fix-PACKAGE_PREFIX_DIR-in-qt-cmake-AppStreamQtConfig.patch \
+           "
+SRC_URI[sha256sum] = "7df664fd3ad3b1640c6a0ff77fa84f9fabe264111bf1fe8f5df3444d6d4caaca"
 
 S = "${UNPACKDIR}/AppStream-${PV}"
 
