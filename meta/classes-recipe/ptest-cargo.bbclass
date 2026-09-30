@@ -11,6 +11,7 @@ CARGO_TEST_BINARIES_FILES ?= "${B}/test_binaries_list"
 python do_compile_ptest_cargo() {
     import subprocess
     import json
+    import shlex
 
     cargo = bb.utils.which(d.getVar("PATH"), d.getVar("CARGO"))
     cargo_build_flags = d.getVar("CARGO_BUILD_FLAGS")
@@ -21,7 +22,7 @@ python do_compile_ptest_cargo() {
     manifest_dir = os.path.dirname(manifest_path)
 
     env = os.environ.copy()
-    env['RUSTFLAGS'] = rust_flags
+    env['RUSTFLAGS'] = ' '.join(shlex.split(rust_flags))
     cmd = f"{cargo} build --tests --message-format json {cargo_build_flags} {packageconfig_confargs}"
     bb.note(f"Building tests with cargo ({cmd})")
 
