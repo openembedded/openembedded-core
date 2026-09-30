@@ -164,11 +164,6 @@ toolchain_shared_env_script () {
     cat >> $script <<EOF
 
 # Append environment subscripts
-if [ -d "\$OECORE_TARGET_SYSROOT/environment-setup.d" ]; then
-    for envfile in \$OECORE_TARGET_SYSROOT/environment-setup.d/*.sh; do
-	    . \$envfile
-    done
-fi
 if [ -d "\$OECORE_NATIVE_SYSROOT/environment-setup.d" ]; then
     for envfile in \$OECORE_NATIVE_SYSROOT/environment-setup.d/*.sh; do
 	    . \$envfile
