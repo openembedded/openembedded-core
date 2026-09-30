@@ -6,7 +6,7 @@ argument or in a SCM managed file."
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=838c366f69b72c5df05c96dff79b35f2"
 
-SRC_URI[sha256sum] = "f179ed3e2a63cf5823e5ee9aa9ca08386219400443a0553224d72dde3f206b44"
+SRC_URI[sha256sum] = "a69f28bfc245608781205e912faae437c2b2165773afa4e7b979d77447a69dd2"
 
 PYPI_PACKAGE = "setuptools_scm"
 
