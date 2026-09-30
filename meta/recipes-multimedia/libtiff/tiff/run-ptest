@@ -1,0 +1,23 @@
+#!/bin/sh
+# Run the libtiff test suite and emit ptest-style PASS/FAIL/SKIP lines.
+cd "$(dirname "$0")/test" || exit 1
+
+
+# @PROGS@ is filled in from TIFF_PTEST_PROGS at install time.
+CPROGS="@PROGS@"
+
+for t in $CPROGS; do
+    if [ -x "./$t" ]; then
+        if ./"$t" >/dev/null 2>&1; then echo "PASS: $t"; else echo "FAIL: $t"; fi
+    fi
+done
+
+for t in *.sh; do
+    [ "$t" = "common.sh" ] && continue
+    case "$t" in
+        *jbig*) echo "SKIP: $t (JBIG support not enabled)"; continue ;;
+        tiffcp-thumbnail.sh)
+            command -v thumbnail >/dev/null 2>&1 || { echo "SKIP: $t (thumbnail tool not built)"; continue; } ;;
+    esac
+    if sh "./$t" >/dev/null 2>&1; then echo "PASS: $t"; else echo "FAIL: $t"; fi
+done
