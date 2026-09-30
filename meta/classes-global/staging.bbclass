@@ -178,16 +178,42 @@ def staging_copydir(c, target, dest, seendirs):
         seendirs.add(dest)
 
 def staging_processfixme(fixme, target, recipesysroot, recipesysrootnative, d):
+    import re
     import subprocess
 
     if not fixme:
         return
-    cmd = "sed -e 's:^[^/]*/:%s/:g' %s | xargs sed -i -e 's:FIXMESTAGINGDIRTARGET:%s:g; s:FIXMESTAGINGDIRHOST:%s:g'" % (target, " ".join(fixme), recipesysroot, recipesysrootnative)
+    files = []
+    for fixmefile in fixme:
+        with open(fixmefile) as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    files.append(re.sub(r"^[^/]*/", target + "/", line))
+    if not files:
+        return
+
+    cmd = ["sed", "-i", "-e", "s:FIXMESTAGINGDIRTARGET:%s:g; s:FIXMESTAGINGDIRHOST:%s:g" % (recipesysroot, recipesysrootnative)]
     for fixmevar in ['PSEUDO_SYSROOT', 'HOSTTOOLS_DIR', 'PKGDATA_DIR', 'PSEUDO_LOCALSTATEDIR', 'LOGFIFO']:
         fixme_path = d.getVar(fixmevar)
-        cmd += " -e 's:FIXME_%s:%s:g'" % (fixmevar, fixme_path)
-    bb.debug(2, cmd)
-    subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
+        cmd += ["-e", "s:FIXME_%s:%s:g" % (fixmevar, fixme_path)]
+
+    # sed -i rewrites the files, which would give them the current time and
+    # make them look newer than anything already built against them. Build
+    # systems that compare timestamps then consider their outputs out of date,
+    # e.g. cpan Makefiles depending on perl's Config.pm. Keep the times the
+    # files had when they were staged.
+    times = {}
+    for f in files:
+        st = os.stat(f)
+        times[f] = (st.st_atime_ns, st.st_mtime_ns)
+
+    bb.debug(2, " ".join(cmd) + " <%d files>" % len(files))
+    for i in range(0, len(files), 1000):
+        subprocess.check_output(cmd + files[i:i + 1000], stderr=subprocess.STDOUT)
+
+    for f, ns in times.items():
+        os.utime(f, ns=ns)
 
 
 def staging_populate_sysroot_dir(targetsysroot, nativesysroot, native, d):
