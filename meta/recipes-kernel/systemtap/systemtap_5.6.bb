@@ -2,11 +2,13 @@ SUMMARY = "Script-directed dynamic tracing and performance analysis tool for Lin
 DESCRIPTION = "It provides free software infrastructure to simplify the \
 gathering of information about the running Linux system. This assists \
 diagnosis of a performance or functional problem."
-HOMEPAGE = "https://sourceware.org/systemtap/"
 
 require systemtap_git.inc
 
 SRC_URI += " \
+           file://0001-Do-not-let-configure-write-a-python-location-into-th.patch \
+           file://0001-staprun-stapbpf-don-t-support-installing-a-non-root.patch \
+           file://readline.patch \
            file://0001-improve-reproducibility-for-c-compiling.patch \
            file://0001-staprun-address-ncurses-6.3-failures.patch \
            file://0001-python3.stpm-record-the-installed-libpython-path.patch \
@@ -112,3 +114,10 @@ BBCLASSEXTEND = "nativesdk"
 # Emits lot of warning which are treated as errors
 # They must be looked into before disabling
 TOOLCHAIN = "gcc"
+
+# systemtap can't be built without optimization, if someone tries to compile an
+# entire image as -O0, break with fatal.
+python () {
+    if bb.utils.contains("SELECTED_OPTIMIZATION", "-O0", "x", "", d) == "x":
+        bb.fatal("systemtap can't be built with -O0, using -O1 -Wno-error or -O1 instead.")
+}
