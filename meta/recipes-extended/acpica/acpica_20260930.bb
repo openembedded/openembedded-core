@@ -9,15 +9,17 @@ ACPI tables."
 HOMEPAGE = "https://www.intel.com/content/www/us/en/developer/topic-technology/open/acpica/overview.html"
 SECTION = "console/tools"
 
-LICENSE = "BSD-3-Clause OR GPL-2.0-only OR Intel"
-LIC_FILES_CHKSUM = "file://source/compiler/aslcompile.c;beginline=7;endline=150;md5=4877caee45a613e9706946c3205a6fb9"
+LICENSE = "BSD-3-Clause OR GPL-2.0-only"
+LIC_FILES_CHKSUM = "file://LICENSE.GPL-2.0-only;md5=570a9b3749dd0463a1778803b12a6dce \
+		    file://LICENSE.BSD-3-Clause;md5=8896f63a9dcbf96114f60d32d38e9169 \
+		    "
 
 COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
 
 DEPENDS = "m4-native flex-native bison-native"
 
 SRC_URI = "git://github.com/acpica/acpica;protocol=https;branch=master;tag=${PV}"
-SRCREV = "232ff3f8ae1a4da11c709f61d9154482cfe8e6df"
+SRCREV = "e85aa3bebaae81ed1e6d163511ac7e1eafe732cf"
 
 inherit update-alternatives
 
