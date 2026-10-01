@@ -34,9 +34,9 @@ SRC_URI += "file://touchscreen.rules \
            file://init \
            file://99-default.preset \
            file://systemd-pager.sh \
+           file://coredumpd-kernel-version.conf \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0003-Do-not-create-var-log-README.patch \
-           file://0001-include-fix-limits.h-override.patch \
            "
 
 PAM_PLUGINS = " \
@@ -144,7 +144,6 @@ PACKAGECONFIG[journal-color] = ",,,less"
 PACKAGECONFIG[journal-upload] = "-Dlibcurl=enabled,-Dlibcurl=disabled,curl"
 PACKAGECONFIG[kmod] = "-Dkmod=enabled,-Dkmod=disabled,kmod,libkmod"
 PACKAGECONFIG[ldconfig] = "-Dldconfig=true,-Dldconfig=false,,ldconfig"
-PACKAGECONFIG[libidn] = "-Dlibidn=enabled,-Dlibidn=disabled,libidn"
 PACKAGECONFIG[libidn2] = "-Dlibidn2=enabled,-Dlibidn2=disabled,libidn2"
 # Link udev shared with systemd helper library.
 # If enabled the udev package depends on the systemd package (which has the needed shared library).
@@ -354,6 +353,15 @@ do_install() {
 	# install default policy for presets
 	# https://www.freedesktop.org/wiki/Software/systemd/Preset/#howto
 	install -Dm 0644 ${UNPACKDIR}/99-default.preset ${D}${systemd_unitdir}/system-preset/99-default.preset
+
+	# Gate the new (v262) kernel coredump socket manager on a kernel
+	# that actually supports it (>= 6.19). See the drop-in for the full rationale.
+	if [ -e ${D}${systemd_system_unitdir}/systemd-coredumpd.service ]; then
+		install -Dm 0644 ${UNPACKDIR}/coredumpd-kernel-version.conf \
+			${D}${systemd_system_unitdir}/systemd-coredumpd.service.d/99-kernel-version.conf
+		install -Dm 0644 ${UNPACKDIR}/coredumpd-kernel-version.conf \
+			${D}${systemd_system_unitdir}/systemd-coredump-register.service.d/99-kernel-version.conf
+	fi
 
 	# add a profile fragment to disable systemd pager with busybox less
 	install -Dm 0644 ${UNPACKDIR}/systemd-pager.sh ${D}${sysconfdir}/profile.d/systemd-pager.sh
@@ -799,6 +807,7 @@ FILES:udev += "${base_sbindir}/udevd \
                ${nonarch_libdir}/udev/rules.d/60-persistent-alsa.rules \
                ${nonarch_libdir}/udev/rules.d/60-persistent-hidraw.rules \
                ${nonarch_libdir}/udev/rules.d/60-persistent-input.rules \
+               ${nonarch_libdir}/udev/rules.d/60-persistent-media-controller.rules \
                ${nonarch_libdir}/udev/rules.d/60-persistent-storage.rules \
                ${nonarch_libdir}/udev/rules.d/60-persistent-storage-mtd.rules \
                ${nonarch_libdir}/udev/rules.d/60-persistent-storage-tape.rules \
