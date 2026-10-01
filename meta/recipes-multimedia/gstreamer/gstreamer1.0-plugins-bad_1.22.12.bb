@@ -12,6 +12,7 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad
            file://0005-v4l2codecs-Always-chain-up-to-parent-decide_allocati.patch \
            file://CVE-2025-3887-1.patch \
            file://CVE-2025-3887-2.patch \
+           file://CVE-2026-3082.patch \
            "
 SRC_URI[sha256sum] = "388b4c4412f42e36a38b17cc34119bc11879bd4d9fbd4ff6d03b2c7fc6b4d494"
 
