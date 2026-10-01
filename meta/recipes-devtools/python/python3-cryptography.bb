@@ -54,7 +54,6 @@ RDEPENDS:${PN}-ptest += " \
     python3-pytest \
     python3-unittest-automake-output \
     python3-pytest-subtests \
-    python3-pytz \
 "
 
 inherit ptest
