@@ -14,6 +14,7 @@ DEPENDS:class-native = ""
 inherit autotools gettext texinfo
 
 SRC_URI = "${GNU_MIRROR}/coreutils/${BP}.tar.xz \
+           file://782a1e5bc2090212273bb731dceee2cc2a071e54.patch \
            file://remove-usr-local-lib-from-m4.patch \
            file://run-ptest \
            "
