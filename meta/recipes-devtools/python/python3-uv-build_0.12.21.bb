@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE-APACHE;md5=86d3f3a95c324c9479bd8986968f4327 \
                     file://crates/uv-pep508/License-Apache;md5=e23fadd6ceef8c618fc1c65191d846fa \
                     file://crates/uv-pep508/License-BSD;md5=ef7a6027dc4c2389b9afad7e690274c7"
 
-SRC_URI[sha256sum] = "1d6906511beb61469ca638e1cd97472c9e887c4d03495eba91bab14fd68920c7"
+SRC_URI[sha256sum] = "616d1ecccca300b240e65a88644f8c2996b858ff039f759d717249d28f94a2a6"
 
 require ${BPN}-crates.inc
 
