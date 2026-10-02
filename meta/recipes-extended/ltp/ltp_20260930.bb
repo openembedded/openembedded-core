@@ -24,7 +24,7 @@ TUNE_CCARGS:remove:x86-64 = "-mfpmath=sse"
 
 CFLAGS:append:powerpc64 = " -D__SANE_USERSPACE_TYPES__"
 CFLAGS:append:mipsarchn64 = " -D__SANE_USERSPACE_TYPES__"
-SRCREV = "3a64d78f58bdceba93ed321e91215fb969a047ed"
+SRCREV = "2279d708c817db657611a30c427c7d06c4360049"
 
 SRC_URI = "git://github.com/linux-test-project/ltp.git;branch=master;protocol=https;tag=${PV} \
            file://0001-Remove-OOM-tests-from-runtest-mm.patch \
