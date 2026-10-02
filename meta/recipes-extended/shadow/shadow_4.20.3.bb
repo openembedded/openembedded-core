@@ -14,6 +14,7 @@ GITHUB_BASE_URI = "https://github.com/shadow-maint/shadow/releases"
 SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BP}.tar.gz \
            ${@bb.utils.contains('PACKAGECONFIG', 'pam', '${PAM_SRC_URI}', '', d)} \
            file://useradd \
+           file://0001-lib-nscd.h-nscd_flush_cache-Fix-type-of-parameter.patch \
            "
 
 SRC_URI:append:class-target = " \
@@ -23,7 +24,7 @@ SRC_URI:append:class-target = " \
 SRC_URI:append:class-native = " \
            file://notallylog.patch \
            "
-SRC_URI[sha256sum] = "e5016b40541ee6fa02ea3d409547cef6e7eea9b31f0e3482e4874f87c1d0c7c5"
+SRC_URI[sha256sum] = "39006c9daf9228ddda9156605201fc9f59c43f9fdecc83c78bbe0e72d9ffd58c"
 UPSTREAM_CHECK_REGEX = "releases/tag/v?(?P<pver>\d+(\.\d+)+)$"
 
 # Additional Policy files for PAM
