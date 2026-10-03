@@ -62,3 +62,5 @@ do_install:append () {
 }
 
 FILES:${PN}-dbg += "${libdir}/dhcpcd/dev/.debug"
+
+CVE_STATUS[CVE-2026-56116] = "fixed-version: vulnerability was only introduced in v10.0.7"
