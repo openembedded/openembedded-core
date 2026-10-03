@@ -11,6 +11,7 @@ DEPENDS = "virtual/libiconv"
 SRC_URI = "http://ftp.rpm.org/popt/releases/popt-1.x/${BP}.tar.gz \
            file://run-ptest \
            file://CVE-2026-18743.patch \
+           file://CVE-2026-18739.patch \
            "
 SRC_URI[sha256sum] = "c25a4838fc8e4c1c8aacb8bd620edb3084a3d63bf8987fdad3ca2758c63240f9"
 
@@ -25,6 +26,7 @@ do_compile_ptest() {
 do_install_ptest() {
     install ${B}/tests/.libs/test* ${D}/${PTEST_PATH}
     install ${B}/tests/.libs/tdict ${D}/${PTEST_PATH}
+    install ${B}/tests/.libs/tstuff ${D}/${PTEST_PATH}
     install ${B}/tests/testit.sh ${D}/${PTEST_PATH}
     install ${B}/tests/test-poptrc ${D}/${PTEST_PATH}
 }
