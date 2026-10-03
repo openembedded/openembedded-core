@@ -20,6 +20,10 @@ SRC_URI = "https://mesa.freedesktop.org/archive/mesa-${PV}.tar.xz \
            file://0002-glxext-don-t-try-zink-if-not-enabled-in-mesa.patch \
            file://0001-Revert-meson-do-not-pull-in-clc-for-clover.patch \
            file://0001-c11-threads-fix-build-on-c23.patch \
+           file://CVE-2026-40393-01.patch \
+           file://CVE-2026-40393-02.patch \
+           file://CVE-2026-40393-03.patch \
+           file://CVE-2026-40393-04.patch \
 "
 
 SRC_URI[sha256sum] = "7454425f1ed4a6f1b5b107e1672b30c88b22ea0efea000ae2c7d96db93f6c26a"
