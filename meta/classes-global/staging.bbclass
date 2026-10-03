@@ -206,6 +206,12 @@ def staging_populate_sysroot_dir(targetsysroot, nativesysroot, native, d):
         pkgarchs = ['${MACHINE_ARCH}']
         pkgarchs = pkgarchs + list(reversed(d.getVar("PACKAGE_EXTRA_ARCHS").split()))
         pkgarchs.append('allarch')
+        multilibs = d.getVar('MULTILIB_VARIANTS').split()
+        if multilibs:
+            for ml in multilibs:
+                mltunes = d.getVar('DEFAULTTUNE:virtclass-multilib-%s' % ml)
+                if mltunes:
+                    pkgarchs.append(mltunes)
         targetdir = targetsysroot
 
     bb.utils.mkdirhier(targetdir)
