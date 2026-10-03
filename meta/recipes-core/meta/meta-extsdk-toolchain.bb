@@ -2,7 +2,23 @@ SUMMARY = "Extensible SDK toolchain meta-recipe"
 DESCRIPTION = "Meta-recipe for ensuring the build directory contains all appropriate toolchain packages for using an IDE"
 LICENSE = "MIT"
 
-DEPENDS = "virtual/libc ${MLPREFIX}gdb-cross-${TARGET_ARCH} qemu-native qemu-helper-native unfs3-native"
+
+def add_multilib_depends(d):
+    mlpkgs = ""
+    for v in d.getVar('MULTILIB_VARIANTS').split():
+        localdata = bb.data.createCopy(d)
+        override = ":virtclass-multilib-" + v
+        localdata.setVar("OVERRIDES", localdata.getVar("OVERRIDES", False) + override)
+        for p in localdata.getVar('BASEDEPENDS').split():
+            pkg = localdata.getVar("PREFERRED_PROVIDER_%s" % p)
+            if pkg:
+                mlpkgs = mlpkgs + ' ' + v + '-' + pkg
+    return mlpkgs
+
+DEPENDS = "virtual/libc ${MLPREFIX}gdb-cross-${TARGET_ARCH} qemu-native qemu-helper-native unfs3-native ${@add_multilib_depends(d)}"
+
+# Search the SPDX document of multilib recipe in multilib tune configuration directory.
+SPDX_MULTILIB_SSTATE_ARCHS = "${@oe.utils.all_multilib_tune_values(d, 'SSTATE_ARCHS')}"
 
 do_populate_sysroot[deptask] = "do_populate_sysroot"
 
