@@ -37,6 +37,7 @@ SRC_URI += " \
            file://CVE-2026-29111-02.patch \
            file://CVE-2026-29111-03.patch \
            file://CVE-2026-29111-04.patch \
+           file://CVE-2026-4105.patch \
            "
 
 # patches needed by musl
