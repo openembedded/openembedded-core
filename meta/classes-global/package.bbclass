@@ -299,7 +299,9 @@ python package_get_auto_pr() {
                 pr = d.getVar('PR')
                 # Strip PR to make AUTOINC can increase when SRCREV is changed
                 base_ver = "AUTOINC-%s" % version[:-len(pr)]
-                srcpv = bb.fetch.get_srcrev(d)
+                srcpv = d.getVar("EXTERNALSRC_PKGV_SUFFIX")
+                if srcpv is None:
+                    srcpv = bb.fetch.get_srcrev(d)
                 value = conn.getPR(base_ver, pkgarch, srcpv)
                 d.setVar("PRSERV_PV_AUTOINC", str(value))
 
@@ -319,7 +321,9 @@ python package_get_auto_pr() {
 python package_setup_pkgv() {
     pkgv = d.getVar("PKGV")
     # Expand SRCPV into PKGV if not present
-    srcpv = bb.fetch.get_pkgv_string(d)
+    srcpv = d.getVar("EXTERNALSRC_PKGV_SUFFIX")
+    if srcpv is None:
+        srcpv = bb.fetch.get_pkgv_string(d)
     if srcpv and "+" in pkgv:
         d.appendVar("PKGV", srcpv)
         pkgv = d.getVar("PKGV")
