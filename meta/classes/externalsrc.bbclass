@@ -78,6 +78,9 @@ python () {
             d.setVar('B', '${WORKDIR}/${BPN}-${PV}')
 
         bb.fetch.get_hashvalue(d)
+        # Keep the source version available for packaging. SCM URLs are removed
+        # below so externalsrc does not fetch or unpack the external source.
+        d.setVar('EXTERNALSRC_PKGV_SUFFIX', bb.fetch.get_pkgv_string(d))
         local_srcuri = []
         fetch = bb.fetch.Fetch((d.getVar('SRC_URI') or '').split(), d)
         for url in fetch.urls:
