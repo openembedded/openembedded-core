@@ -125,6 +125,9 @@ def collect_sstate_paths(args):
 
         except NotADirectoryError:
             pass
+        except PermissionError as e:
+            # e.g. lost+found when the cache is the root of a filesystem
+            print(f"Skipping {path}: {e.strerror}", file=sys.stderr)
 
     paths = set()
     # TODO: parellise scandir
