@@ -8,7 +8,7 @@ SRC_URI[sha256sum] = "221b65e1c2e48de9fd11bf7e8c165adaf91648f49a11f390d086a49838
 
 PYPI_PACKAGE = "python-dbusmock"
 
-inherit pypi python_setuptools_build_meta
+inherit pypi python_setuptools_build_meta gobject-introspection-data
 DEPENDS += "python3-setuptools-scm-native"
 
 CVE_PRODUCT = "python-dbusmock_project:python-dbusmock"
@@ -19,6 +19,6 @@ RDEPENDS:${PN} += "\
     python3-xml \
     "
 
-RRECOMMENDS:${PN} = "${@bb.utils.contains('DISTRO_FEATURES', 'gobject-introspection-data', '${MLPREFIX}python3-pygobject', '', d)}"
+RRECOMMENDS:${PN} = "${@bb.utils.contains('GI_DATA_ENABLED', 'True', '${MLPREFIX}python3-pygobject', '', d)}"
 
 BBCLASSEXTEND = "native"
