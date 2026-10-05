@@ -63,50 +63,6 @@ class SstateEntry:
         return self.match.group(name)
 
 
-# this is what's in the original script; as far as I can tell, it's an
-# implementation artefact which we don't need?
-def find_archs():
-    # all_archs
-    builder_arch = os.uname().machine
-
-    # FIXME
-    layer_paths = [Path("../..")]
-
-    tune_archs = set()
-    re_tune = re.compile(r'AVAILTUNES .*=.*"(.*)"')
-    for path in layer_paths:
-        for tunefile in [
-            p for p in path.glob("meta*/conf/machine/include/**/*") if p.is_file()
-        ]:
-            with open(tunefile) as f:
-                for line in f:
-                    m = re_tune.match(line)
-                    if m:
-                        tune_archs.update(m.group(1).split())
-
-    # all_machines
-    machine_archs = set()
-    for path in layer_paths:
-        for machine_file in path.glob("meta*/conf/machine/*.conf"):
-            machine_archs.add(machine_file.parts[-1][:-5])
-
-    extra_archs = set()
-    all_archs = (
-        set(
-            arch.replace("-", "_")
-            for arch in machine_archs | tune_archs | set(["allarch", builder_arch])
-        )
-        | extra_archs
-    )
-
-    print(all_archs)
-
-
-# again, not needed?
-def find_tasks():
-    print(set([p.bb_task for p in paths]))
-
-
 def collect_sstate_paths(args):
     def scandir(path, paths):
         # Assume everything is a directory; by not checking we avoid needing an
