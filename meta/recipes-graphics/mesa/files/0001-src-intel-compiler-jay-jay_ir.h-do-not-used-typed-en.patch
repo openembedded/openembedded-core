@@ -1,4 +1,4 @@
-From f0c1b4e5480bb4118326a339a3a7084df1a6b0b7 Mon Sep 17 00:00:00 2001
+From ccfa5a6555f6eb035ace12cba1ce3e785a47895f Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex@linutronix.de>
 Date: Sun, 14 Jun 2026 17:42:19 +0200
 Subject: [PATCH] src/intel/compiler/jay/jay_ir.h: do not used typed enum
