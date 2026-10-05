@@ -14,7 +14,7 @@ cross build doesn't set it.
 
 Fixes Bugzilla: #15784
 
-Upstream-Status: Submitted [https://lists.yoctoproject.org/g/opkg/message/218]
+Upstream-Status: Backport [https://git.yoctoproject.org/opkg/commit/?id=0682b36c898fb81a40a068481062512bcea9b66b]
 
 Suggested-by: Alex Stewart <alex.stewart@emerson.com>
 Signed-off-by: Sunil Dora <sunilkumar.dora@windriver.com>
