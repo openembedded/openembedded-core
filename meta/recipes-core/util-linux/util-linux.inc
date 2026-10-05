@@ -50,6 +50,11 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/util-linux/v${MAJOR_VERSION}/util-lin
            file://CVE-2026-13595.patch \
            file://CVE-2026-3184.patch \
            file://CVE-2026-53614.patch \
+           file://0001-lib-fileutils-add-ul_open_no_symlinks.patch \
+           file://0001-lib-fileutils-add-ul_openat_resolve-openat2-wrapper.patch \
+           file://0001-lib-fileutils-fix-unused-parameter-warnings-without-.patch \
+           file://0001-lib-fileutils-fix-RESOLVE_NO_SYMLINKS-fallback-value.patch \
+           file://CVE-2026-53613.patch \
            "
 
 SRC_URI[sha256sum] = "7b6605e48d1a49f43cc4b4cfc59f313d0dd5402fa40b96810bd572e167dfed0f"

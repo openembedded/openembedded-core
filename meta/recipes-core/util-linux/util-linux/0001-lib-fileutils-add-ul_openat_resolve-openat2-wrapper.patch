@@ -1,0 +1,85 @@
+From 4cccf4edc256507734e3484cfaedf5980945c2fa Mon Sep 17 00:00:00 2001
+From: Karel Zak <kzak@redhat.com>
+Date: Mon, 20 Jul 2026 14:36:16 +0200
+Subject: [PATCH] lib/fileutils: add ul_openat_resolve() openat2 wrapper
+
+Add ul_openat_resolve() as a generic openat2(2) wrapper with
+caller-specified resolve flags. No fallback to weaker alternatives --
+returns -1/ENOSYS if openat2 is unavailable.
+
+Rewrite ul_open_no_symlinks() to use ul_openat_resolve() with
+RESOLVE_NO_SYMLINKS, dropping the unsafe O_NOFOLLOW fallback that
+only protected the final path component.
+
+Add fallback defines for RESOLVE_NO_SYMLINKS and RESOLVE_BENEATH
+in fileutils.h.
+
+Signed-off-by: Karel Zak <kzak@redhat.com>
+(cherry picked from commit b9e07ce6f5ad54c38cf3ebc7100101e487be91bd)
+(cherry picked from commit 1426aa06ff2f6a21cba9102c35e3577641b356ff)
+
+Upstream-Status: Backport [https://github.com/util-linux/util-linux/commit/4cccf4edc256507734e3484cfaedf5980945c2fa]
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ include/fileutils.h |  9 +++++++++
+ lib/fileutils.c     | 22 ++++++++++++++--------
+ 2 files changed, 23 insertions(+), 8 deletions(-)
+
+diff --git a/include/fileutils.h b/include/fileutils.h
+index 996e18322..09395620a 100644
+--- a/include/fileutils.h
++++ b/include/fileutils.h
+@@ -62,6 +62,15 @@ static inline int is_same_inode(const int fd, const struct stat *st)
+ }
+ 
+ extern int ul_open_no_symlinks(const char *path, int flags, mode_t mode);
++extern int ul_openat_resolve(int dirfd, const char *path, int flags,
++			     mode_t mode, unsigned long long resolve);
++
++#ifndef RESOLVE_NO_SYMLINKS
++# define RESOLVE_NO_SYMLINKS	0x02
++#endif
++#ifndef RESOLVE_BENEATH
++# define RESOLVE_BENEATH	0x08
++#endif
+ 
+ extern int dup_fd_cloexec(int oldfd, int lowfd);
+ extern unsigned int get_fd_tabsize(void);
+diff --git a/lib/fileutils.c b/lib/fileutils.c
+index a9c2022be..c60070855 100644
+--- a/lib/fileutils.c
++++ b/lib/fileutils.c
+@@ -319,19 +319,25 @@ int ul_reopen(int fd, int flags)
+ 	return open(buf, flags);
+ }
+ 
+-int ul_open_no_symlinks(const char *path, int flags, mode_t mode)
++int ul_openat_resolve(int dirfd, const char *path, int flags,
++		      mode_t mode, unsigned long long resolve)
+ {
+-#if defined(SYS_openat2) && defined(RESOLVE_NO_SYMLINKS)
++#if defined(SYS_openat2)
+ 	struct open_how how = {
+ 		.flags = (__u64) flags,
+ 		.mode = (__u64) mode,
+-		.resolve = RESOLVE_NO_SYMLINKS,
++		.resolve = resolve,
+ 	};
+-	int fd = syscall(SYS_openat2, AT_FDCWD, path, &how, sizeof(how));
+ 
+-	/* only fall back to O_NOFOLLOW if the syscall is unavailable */
+-	if (fd >= 0 || errno != ENOSYS)
+-		return fd;
++	return syscall(SYS_openat2, dirfd, path, &how, sizeof(how));
++#else
++	errno = ENOSYS;
++	return -1;
+ #endif
+-	return open(path, flags | O_NOFOLLOW, mode);
++}
++
++int ul_open_no_symlinks(const char *path, int flags, mode_t mode)
++{
++	return ul_openat_resolve(AT_FDCWD, path, flags, mode,
++				 RESOLVE_NO_SYMLINKS);
+ }
