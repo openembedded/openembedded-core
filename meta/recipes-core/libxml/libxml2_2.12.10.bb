@@ -46,6 +46,11 @@ CVE_STATUS[CVE-2023-45322] = "disputed: issue requires memory allocation to fail
 # https://gitlab.gnome.org/GNOME/libxml2/-/issues/958
 CVE_STATUS[CVE-2025-8732] = "disputed: the code maintainer explains, that the issue can only be triggered with untrusted SGML catalogs and it makes absolutely no sense to use untrusted catalogs. The issue triggers a crash if an invalid file is provided.  https://gitlab.gnome.org/GNOME/libxml2/-/issues/958"
 
+# The Scarthgap 2.12.10 source already contains the equivalent zero-length
+# guard required for the xmlURIEscapeStr integer-overflow issue.
+# https://github.com/GNOME/libxml2/blob/v2.12.10/uri.c#L1689-L1700
+CVE_STATUS[CVE-2026-86139] = "fixed-version: xmlURIEscapeStr returns NULL when xmlStrlen returns zero"
+
 BINCONFIG = "${bindir}/xml2-config"
 
 PACKAGECONFIG ??= "python \
