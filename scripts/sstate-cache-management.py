@@ -142,6 +142,15 @@ def collect_sstate_paths(args):
     return paths
 
 
+# Where stamps live under STAMPS_DIR, each at a fixed depth: globbing those
+# depths exactly, rather than recursively, keeps the walk from stat()ing
+# everything in the tree, which over NFS is slow with a round trip per entry.
+STAMP_LAYOUTS = (
+    "*/*/",  # <arch>/<pn>/<pv>... (bitbake.conf); also externalsrc's work-shared/<pn>/
+    "work-shared/",  # work-shared/<pn>-<pv>-<pr>... (gcc-source, llvm-project-source, rust-source)
+)
+
+
 def remove_by_stamps(args, paths):
     all_sums = set()
     for stamps_dir in args.stamps_dir:
@@ -151,14 +160,16 @@ def remove_by_stamps(args, paths):
         all_sums |= set(
             [
                 re_sigdata.search(x.parts[-1]).group(1)
-                for x in stamps_path.glob("*/*/*.do_*.sigdata.*")
+                for layout in STAMP_LAYOUTS
+                for x in stamps_path.glob(layout + "*.do_*.sigdata.*")
             ]
         )
         re_setscene = re.compile(r"do_.*_setscene\.([^.]*)")
         all_sums |= set(
             [
                 re_setscene.search(x.parts[-1]).group(1)
-                for x in stamps_path.glob("*/*/*.do_*_setscene.*")
+                for layout in STAMP_LAYOUTS
+                for x in stamps_path.glob(layout + "*.do_*_setscene.*")
             ]
         )
     return [p for p in paths if p.bb_unihash not in all_sums]
