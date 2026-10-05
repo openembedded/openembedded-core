@@ -23,10 +23,10 @@ Signed-off-by: Sunil Dora <sunilkumar.dora@windriver.com>
  .../core/compiler/build_runner/compilation_files.rs    | 10 ++--------
  1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/src/tools/cargo/src/cargo/core/compiler/build_runner/compilation_files.rs b/src/tools/cargo/src/cargo/core/compiler/build_runner/compilation_files.rs
+diff --git a/src/tools/cargo/src/compiler/build_runner/compilation_files.rs b/src/tools/cargo/src/compiler/build_runner/compilation_files.rs
 index 88cab85..9dbd203 100644
---- a/src/tools/cargo/src/cargo/core/compiler/build_runner/compilation_files.rs
-+++ b/src/tools/cargo/src/cargo/core/compiler/build_runner/compilation_files.rs
+--- a/src/tools/cargo/src/compiler/build_runner/compilation_files.rs
++++ b/src/tools/cargo/src/compiler/build_runner/compilation_files.rs
 @@ -877,7 +877,7 @@ fn has_remap_path_prefix(args: &[String]) -> bool {
  }
  
