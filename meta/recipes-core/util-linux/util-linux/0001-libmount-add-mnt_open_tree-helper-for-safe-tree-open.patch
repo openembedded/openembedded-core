@@ -1,0 +1,85 @@
+From 71ff1c94be2fd2577bf600accb5c6ad2782276ef Mon Sep 17 00:00:00 2001
+From: Karel Zak <kzak@redhat.com>
+Date: Mon, 20 Jul 2026 14:40:16 +0200
+Subject: [PATCH] libmount: add mnt_open_tree() helper for safe tree opening
+
+Add mnt_open_tree() that combines openat2() path pinning with
+open_tree() into a single call. When resolve flags are non-zero,
+the path is first pinned with ul_openat_resolve(), then cloned
+with open_tree(AT_EMPTY_PATH). When resolve is zero, open_tree()
+is called directly.
+
+This consolidates the openat2+open_tree pattern used for symlink
+protection in restricted mount operations.
+
+Signed-off-by: Karel Zak <kzak@redhat.com>
+(cherry picked from commit 37afc15d9e5a0accea94eb067b151e21f8494880)
+(cherry picked from commit 90a1f3b5b134b775dd30a46155064731ba40c519)
+
+Upstream-Status: Backport [https://github.com/util-linux/util-linux/commit/71ff1c94be2fd2577bf600accb5c6ad2782276ef]
+Signed-off-by: Peter Marko <peter.marko@siemens.com>
+---
+ libmount/src/mountP.h |  2 ++
+ libmount/src/utils.c  | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+)
+
+diff --git a/libmount/src/mountP.h b/libmount/src/mountP.h
+index 97d0bf8fa..9d022d14e 100644
+--- a/libmount/src/mountP.h
++++ b/libmount/src/mountP.h
+@@ -687,6 +687,8 @@ static inline struct libmnt_sysapi *mnt_context_get_sysapi(struct libmnt_context
+ {
+ 	return mnt_context_get_hookset_data(cxt, &hookset_mount);
+ }
++int mnt_open_tree(int dirfd, const char *path, unsigned long flags,
++		  unsigned long long resolve);
+ #endif
+ 
+ #endif /* _LIBMOUNT_PRIVATE_H */
+diff --git a/libmount/src/utils.c b/libmount/src/utils.c
+index 4c90c951b..e4301689e 100644
+--- a/libmount/src/utils.c
++++ b/libmount/src/utils.c
+@@ -24,6 +24,7 @@
+ #include "strutils.h"
+ #include "pathnames.h"
+ #include "mountP.h"
++#include "fileutils.h"
+ #include "mangle.h"
+ #include "canonicalize.h"
+ #include "env.h"
+@@ -1286,6 +1287,34 @@ done:
+ 	return 1;
+ }
+ 
++#ifdef USE_LIBMOUNT_MOUNTFD_SUPPORT
++/*
++ * Open a mount tree, optionally pinning the path with openat2() first.
++ *
++ * When @resolve is non-zero, the path is resolved with openat2() using the
++ * given resolve flags, then the tree is opened with open_tree(AT_EMPTY_PATH).
++ * When @resolve is zero, open_tree() is called directly with the path.
++ */
++int mnt_open_tree(int dirfd, const char *path, unsigned long flags,
++		  unsigned long long resolve)
++{
++	if (resolve) {
++		int pin_fd, fd;
++
++		pin_fd = ul_openat_resolve(dirfd, path,
++					O_PATH | O_CLOEXEC, 0, resolve);
++		if (pin_fd < 0)
++			return pin_fd;
++
++		fd = open_tree(pin_fd, "", flags | AT_EMPTY_PATH);
++		close(pin_fd);
++		return fd;
++	}
++
++	return open_tree(dirfd, path, flags);
++}
++#endif /* USE_LIBMOUNT_MOUNTFD_SUPPORT */
++
+ #ifdef TEST_PROGRAM
+ static int test_match_fstype(struct libmnt_test *ts, int argc, char *argv[])
+ {
