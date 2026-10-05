@@ -20,6 +20,7 @@ SRC_URI = "https://archive.mesa3d.org/mesa-${PV}.tar.xz \
            file://0001-src-intel-compiler-jay-jay_ir.h-do-not-used-typed-en.patch \
            file://0001-src-util-u_math.c-do-not-use-arm-fpu-instructions-if.patch \
            file://0001-addrlib-avoid-builtin_cpu_supports-for-avx2-detecti.patch \
+           file://0001-gallivm-adapt-for-JITLink-in-LLVM-23.patch \
            "
 
 SRC_URI[sha256sum] = "bce5f7fbebb934373b86c999a064d52fb5065878dc57f287f95346648ec832e9"
