@@ -1289,7 +1289,7 @@ to your build configuration.
         rootfs_format = self.fstype if self.fstype in ('vmdk', 'vhd', 'vhdx', 'qcow2', 'vdi') else 'raw'
 
         tmpfsdir = os.environ.get("RUNQEMU_TMPFS_DIR", None)
-        if self.snapshot and tmpfsdir:
+        if self.snapshot and tmpfsdir and self.fstype != 'nfs':
             newrootfs = os.path.join(tmpfsdir, os.path.basename(self.rootfs)) + "." + str(os.getpid())
             logger.info("Copying rootfs to %s" % newrootfs)
             copy_start = time.time()

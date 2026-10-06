@@ -166,6 +166,10 @@ class QemuRunner:
         if self.tmpfsdir:
             env["RUNQEMU_TMPFS_DIR"] = self.tmpfsdir
 
+        if self.native_sysroot:
+            # Needed by runqemu-export-rootfs (avoid a second tinfoil connection)
+            env["OECORE_NATIVE_SYSROOT"] = self.native_sysroot
+
         if not launch_cmd:
             launch_cmd = 'runqemu %s' % ('snapshot' if discard_writes else '')
             if self.use_kvm:
