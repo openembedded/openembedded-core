@@ -197,6 +197,7 @@ class BaseConfig(object):
         self.portlocks = {}
         self.bitbake_e = ''
         self.snapshot = False
+        self.rootfs_dbg = False
         self.wictypes = ('wic.zst', 'wic', 'wic.vmdk', 'wic.qcow2', 'wic.vdi', "wic.vhd", "wic.vhdx")
         self.tartypes = ('tar.zst', 'tar.bz2', 'tar.gz', 'tar.xz', 'tar')
         self.fstypes = ('ext2', 'ext3', 'ext4', 'ext2.zst', 'ext3.zst', 'ext4.zst',
@@ -686,7 +687,7 @@ to your build configuration.
             else:
                 raise RunQemuError("FSTYPE is NULL!")
 
-        # parse QB_FSINFO into dict, e.g. { 'wic': ['no-kernel-in-fs', 'a-flag'], 'ext4': ['another-flag']}
+        # parse QB_FSINFO into dict, e.g. { 'wic': ['no-kernel-in-fs', 'a-flag'], 'tar': ['rootfs-dbg']}
         wic_fs = False
         qb_fsinfo = self.get('QB_FSINFO')
         if qb_fsinfo:
@@ -700,6 +701,12 @@ to your build configuration.
                             wic_fs = True
                         elif fsflag == 'kernel-in-fs':
                             wic_fs = False
+                        else:
+                            logger.warning('Unknown flag "%s:%s" in QB_FSINFO', fstype, fsflag)
+                            continue
+                    elif fstype in ('tar',) + self.tartypes:
+                        if fsflag == 'rootfs-dbg':
+                            self.rootfs_dbg = True
                         else:
                             logger.warning('Unknown flag "%s:%s" in QB_FSINFO', fstype, fsflag)
                             continue
@@ -1079,7 +1086,10 @@ to your build configuration.
 
         # Extract .tar* if no nfs dir
         if not (self.rootfs and os.path.isdir(self.rootfs)):
-            src_prefix = '%s/%s' % (self.get('DEPLOY_DIR_IMAGE'), self.get('IMAGE_LINK_NAME'))
+            image_link_name = self.get('IMAGE_LINK_NAME')
+            if self.rootfs_dbg:
+                image_link_name += '-dbg'
+            src_prefix = '%s/%s' % (self.get('DEPLOY_DIR_IMAGE'), image_link_name)
             dest = "%s-nfsroot" % src_prefix
             if os.path.exists('%s.pseudo_state' % dest):
                 logger.info('Use %s as NFS_DIR' % dest)
