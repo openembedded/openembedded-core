@@ -260,17 +260,21 @@ do_test_compile () {
 ALLOW_EMPTY:${PN} = "1"
 
 PACKAGES =+ "${PN}-rustdoc ${PN}-tools-clippy ${PN}-tools-rustfmt ${PN}-src-lib"
+PACKAGES:prepend:class-nativesdk = "${PN}-tools-analyzer "
 FILES:${PN}-rustdoc = "${bindir}/rustdoc"
 FILES:${PN}-tools-clippy = "${bindir}/cargo-clippy ${bindir}/clippy-driver"
 FILES:${PN}-tools-rustfmt = "${bindir}/rustfmt"
+FILES:${PN}-tools-analyzer = "${bindir}/rust-analyzer ${libexecdir}/rust-analyzer-proc-macro-srv"
 FILES:${PN}-src-lib = "${libdir}/rustlib/src/rust"
 
 RDEPENDS:${PN}-rustdoc = "${PN}"
 RDEPENDS:${PN}-tools-clippy = "${PN}"
 RDEPENDS:${PN}-tools-rustfmt = "${PN}"
+RDEPENDS:${PN}-tools-analyzer = "${PN} ${PN}-src-lib"
 
 SUMMARY:${PN}-tools-clippy = "A collection of lints to catch common mistakes and improve your Rust code"
 SUMMARY:${PN}-tools-rustfmt = "A tool for formatting Rust code according to style guidelines"
+SUMMARY:${PN}-tools-analyzer = "A language server providing IDE features for Rust"
 
 do_install () {
     rust_do_install
@@ -292,13 +296,18 @@ rust_do_install:class-nativesdk() {
     rust_runx install
     rust_runx install clippy
     rust_runx install rustfmt
+    rust_runx install rust-analyzer
     unset PSEUDO_UNLOAD
 
     install -d ${D}${bindir}
-    for i in cargo-clippy clippy-driver rustfmt; do
+    for i in cargo-clippy clippy-driver rustfmt rust-analyzer; do
         cp rust-build/${RUST_BUILD_SYS}/stage2-tools/${RUST_HOST_SYS}/release/$i ${D}${bindir}
         patchelf --set-rpath "\$ORIGIN/../lib" ${D}${bindir}/$i
     done
+
+    install -d ${D}${libexecdir}
+    cp rust-build/${RUST_BUILD_SYS}/stage2-tools/${RUST_HOST_SYS}/release/rust-analyzer-proc-macro-srv ${D}${libexecdir}
+    patchelf --set-rpath "\$ORIGIN/../lib" ${D}${libexecdir}/rust-analyzer-proc-macro-srv
 
     chown root:root ${D}/ -R
     rm ${D}${libdir}/rustlib/uninstall.sh
