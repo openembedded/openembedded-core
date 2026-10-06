@@ -18,9 +18,6 @@ EXTRA_OEMESON += "--auto-features disabled"
 # Link the binaries statically as we don't install libsystemd-shared.so
 EXTRA_OEMESON += "-Dlink-systemctl-shared=false -Dlink-udev-shared=false"
 
-# Ensure unused build paths are not in the binary
-EXTRA_OEMESON += "-Dsysvinit-path= -Dsysvrcnd-path="
-
 # Target-absolute paths that satisfy both tools from one meson configure:
 #  - systemd-hwdb needs prefix=/usr so the compiled-in UDEVLIBEXECDIR
 #    (/usr/lib/udev) matches the target rootfs layout, letting
