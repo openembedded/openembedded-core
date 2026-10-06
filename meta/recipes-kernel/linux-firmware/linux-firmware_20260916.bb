@@ -277,7 +277,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/LICENCE.Abilis;md5=b5ee3f410780e56711ad48ead
                     "
 # WHENCE checksum is defined separately to ease overriding it if
 # class-devupstream is selected.
-WHENCE_CHKSUM  = "286b10e604dec1e5d49c4ac688f65a2e"
+WHENCE_CHKSUM  = "376a71c7f18efcb6e6688a73c2a548c7"
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
 # so that the license files will be copied from fetched source
@@ -409,6 +409,7 @@ PE = "1"
 
 SRC_URI = "\
   ${KERNELORG_MIRROR}/linux/kernel/firmware/${BPN}-${PV}.tar.xz \
+  file://0001-qcom-shikra-link-WiFi-firmware-from-the-ath10k-subdi.patch \
 "
 
 BBCLASSEXTEND = "devupstream:target"
@@ -584,6 +585,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-atheros-license ${PN}-ar5523 ${PN}-ar9170 ${PN}-ath6k ${PN}-ath9k ${PN}-ath3k \
              ${PN}-carl9170 \
              ${PN}-qcom-qcm2290-wifi ${PN}-qcom-qrb4210-wifi ${PN}-qcom-sdm845-modem \
+             ${PN}-qcom-shikra-wifi \
              ${PN}-ar3k-license ${PN}-ar3k \
              ${PN}-ath10k-license ${PN}-ath10k \
              ${PN}-ath10k-qca4019 \
@@ -2474,6 +2476,7 @@ LICENSE:${PN}-qcom-shikra-compute = "LicenseRef-Firmware-qcom-2"
 LICENSE:${PN}-qcom-shikra-audio = "LicenseRef-Firmware-qcom-2"
 LICENSE:${PN}-qcom-shikra-modem = "LicenseRef-Firmware-qcom-2"
 LICENSE:${PN}-qcom-shikra-qupv3fw = "LicenseRef-Firmware-qcom"
+LICENSE:${PN}-qcom-shikra-wifi = "LicenseRef-Firmware-qualcommAthos-ath10k"
 LICENSE:${PN}-qcom-sm8150-adreno = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-sm8250-adreno = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-sm8250-audio = "LicenseRef-Firmware-qcom"
@@ -2654,6 +2657,7 @@ FILES:${PN}-qcom-shikra-compute = "${firmwaredir}/qcom/shikra/cdsp*.*"
 FILES:${PN}-qcom-shikra-audio = "${nonarch_base_libdir}/firmware/qcom/shikra/lpaicp*.*"
 FILES:${PN}-qcom-shikra-modem = "${nonarch_base_libdir}/firmware/qcom/shikra/cqs/qdsp6sw.mbn*"
 FILES:${PN}-qcom-shikra-qupv3fw = "${firmwaredir}/qcom/shikra/qupv3fw.elf*"
+FILES:${PN}-qcom-shikra-wifi = "${firmwaredir}/qcom/shikra/wlanmdsp.mbn* ${firmwaredir}/ath10k/WCN3990/hw1.0/shikra/*"
 FILES:${PN}-qcom-sm8150-adreno = "${firmwaredir}/qcom/sm8150/a640*.*"
 FILES:${PN}-qcom-sm8250-adreno = "${firmwaredir}/qcom/sm8250/a650*.*"
 FILES:${PN}-qcom-sm8250-audio = "${firmwaredir}/qcom/sm8250/adsp*.*"
@@ -2835,6 +2839,7 @@ RDEPENDS:${PN}-qcom-shikra-compute = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-shikra-audio = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-shikra-modem = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-shikra-qupv3fw = "${PN}-qcom-license"
+RDEPENDS:${PN}-qcom-shikra-wifi = "${PN}-ath10k-license"
 RDEPENDS:${PN}-qcom-sm8150-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-sm8250-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-sm8250-audio = "${PN}-qcom-license"
