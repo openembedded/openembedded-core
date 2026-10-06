@@ -97,6 +97,7 @@ def extract_sdk_rootfs(rootfs_tarball, rootfs_dir, pseudo_cmd, environment):
     environment = dict(environment)
     environment['PSEUDO_LOCALSTATEDIR'] = state_dir
     environment['PSEUDO_INCLUDE_PATHS'] = rootfs_dir
+    environment['PSEUDO_DISABLED'] = '0'
 
     command = list(pseudo_cmd) + ['tar', '-C', rootfs_dir] + tar_options + [rootfs_tarball]
     print('Extracting rootfs tarball using pseudo...')
