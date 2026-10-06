@@ -17,5 +17,6 @@ RDEPENDS:${PN} = " \
     nativesdk-cargo \
     nativesdk-rust-tools-clippy \
     nativesdk-rust-tools-rustfmt \
+    nativesdk-rust-tools-analyzer \
 "
 
