@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b98429b8e8e3c2a67cfef01e99e4893d \
                     "
 
 SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BPN}-${PV}.tar.xz"
-SRC_URI[sha256sum] = "7e2fa4e8c7c98e8d8140671f5772542afaaa6acccfbd746506886b6d85f7f8d6"
+SRC_URI[sha256sum] = "d07a007327277708a2a73ae437887cdbaf282937f6d03ca5467723e9099af586"
 
 inherit meson pkgconfig lib_package gtk-doc gobject-introspection github-releases
 
