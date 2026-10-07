@@ -4,7 +4,7 @@ HOMEPAGE = "https://pypi.org/project/rpds-py/"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=7767fa537c4596c54141f32882c4a984"
 
-SRC_URI[sha256sum] = "1cebd1337c242e4ec2293e541f712b2da849b29f48f0c293684b71c0632625d4"
+SRC_URI[sha256sum] = "4793ef7f78268b124b73fa933440f01d258bbae01de9fa53e9080c9ab0425a12"
 
 require ${BPN}-crates.inc
 
