@@ -7,7 +7,7 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e"
 
 SRC_URI = "git://github.com/fenrus75/powertop;protocol=https;branch=master;tag=v${PV}"
-SRCREV = "6147262e506c607036eaca4182ee491b61d06aa3"
+SRCREV = "11db5648c9fdea97d36ce6a11ef282e4e037aa92"
 
 inherit meson gettext pkgconfig bash-completion
 
