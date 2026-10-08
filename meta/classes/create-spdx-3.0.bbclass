@@ -186,6 +186,8 @@ SPDX3_VAR_DEPS = "\
     SPDX_PROFILES \
     SPDX_NAMESPACE_PREFIX \
     SPDX_UUID_NAMESPACE \
+    SPDX_INCLUDE_SOURCES \
+    SPDX_INCLUDE_COMPILED_SOURCES \
     "
 
 python do_create_recipe_spdx() {
