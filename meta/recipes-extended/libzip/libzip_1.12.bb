@@ -8,12 +8,12 @@ BUGTRACKER = "https://github.com/nih-at/libzip/issues"
 SECTION = "libs"
 
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=d8a9d2078f35e61cf1122ccd440687cf"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=e6fcea978dc627f41e0bada0de889ec4"
 
 DEPENDS = "zlib bzip2"
 
 SRC_URI = "https://libzip.org/download/libzip-${PV}.tar.xz"
-SRC_URI[sha256sum] = "8a247f57d1e3e6f6d11413b12a6f28a9d388de110adc0ec608d893180ed7097b"
+SRC_URI[sha256sum] = "376908d0f0fda13180a19fdc4f7062a1abfb59e09ca07a392d361253b8e60c2b"
 
 inherit cmake
 
