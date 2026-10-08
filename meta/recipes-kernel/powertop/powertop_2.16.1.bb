@@ -1,7 +1,7 @@
 SUMMARY = "Power usage tool"
 DESCRIPTION = "Linux tool to diagnose issues with power consumption and power management."
 HOMEPAGE = "https://github.com/fenrus75/powertop"
-BUGTRACKER = "https://app.devzing.com/powertopbugs/bugzilla"
+BUGTRACKER = "https://github.com/fenrus75/powertop/issues"
 DEPENDS = "ncurses libnl pciutils libtracefs"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=12f884d2ae1ff87c09e5b7ccc2c4ca7e"
