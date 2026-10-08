@@ -21,13 +21,13 @@ Signed-off-by: Khem Raj <khem.raj@oss.qualcomm.com>
  1 file changed, 6 insertions(+)
 
 diff --git a/src/internal/cgrouptest/cgrouptest_linux.go b/src/internal/cgrouptest/cgrouptest_linux.go
-index ad9599c..a4b9b52 100644
+index ad9599c9..a4b9b52d 100644
 --- a/src/internal/cgrouptest/cgrouptest_linux.go
 +++ b/src/internal/cgrouptest/cgrouptest_linux.go
 @@ -82,6 +82,12 @@ func InCgroupV2(t *testing.T, fn func(*CgroupV2)) {
  		}
  	}()
-
+ 
 +	// cpu.max only exists when the kernel supports CPU bandwidth control
 +	// (CONFIG_CFS_BANDWIDTH), even if the cpu controller is enabled.
 +	if _, err := os.Stat(filepath.Join(path, "cpu.max")); err != nil {
@@ -36,4 +36,4 @@ index ad9599c..a4b9b52 100644
 +
  	migrateTo(t, path)
  	defer migrateTo(t, orig)
-
+ 
