@@ -10,6 +10,8 @@ HOMEPAGE = "https://www.yoctoproject.org/"
 
 PTESTS = "${PTESTS_SLOW} ${PTESTS_FAST}"
 PTEST_RUNNER_TIMEOUT:virtclass-mcextend-python3-cffi = "600"
+PTEST_RUNNER_TIMEOUT:virtclass-mcextend-python3-more-itertools:riscv64 = "1800"
+PTEST_RUNNER_TIMEOUT:virtclass-mcextend-python3-more-itertools:riscv32 = "1800"
 PTEST_RUNNER_TIMEOUT:virtclass-mcextend-go = "4800"
 
 IMAGE_INSTALL:append = " ${MCNAME}-ptest openssh"
