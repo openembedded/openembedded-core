@@ -3,7 +3,7 @@ HOMEPAGE = "http://subversion.apache.org"
 DESCRIPTION = "Subversion is an open source version control system."
 SECTION = "console/network"
 LICENSE = "Apache-2.0 AND MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=6487ae7094d359fa90fb9c4096e52e2b"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=d9c5b0e279cdb238d735af75554a3902"
 
 DEPENDS = "apr-util serf sqlite3 file lz4 expat"
 DEPENDS:append:class-native = " file-replacement-native"
@@ -14,7 +14,7 @@ SRC_URI = "${APACHE_MIRROR}/${BPN}/${BPN}-${PV}.tar.bz2 \
            file://0001-fix-svn-revision-host-contamination.patch \
            "
 
-SRC_URI[sha256sum] = "e78a29e7766b8b7b354497d08f71a55641abc53675ce1875584781aae35644a1"
+SRC_URI[sha256sum] = "dfb7b1e5270c7def971ccbd5938b0c03b1b5bd60b6674a2d8a74a9560839fb8c"
 
 inherit autotools pkgconfig gettext python3native
 
