@@ -180,6 +180,10 @@ PTESTS_SLOW:remove:libc-musl:qemux86-64 = "perl gnutls"
 PTESTS_FAST:remove:libc-musl:qemux86-64 = "libarchive"
 PTESTS_PROBLEMS:append:libc-musl:qemux86-64 = " perl gnutls libarchive"
 
+# dbus conflicts with dbus-broker
+PTESTS_SLOW:remove = "${@'dbus' if d.getVar('VIRTUAL-RUNTIME_dbus') == 'dbus-broker' else ''}"
+PTESTS_PROBLEMS:append = "${@' dbus' if d.getVar('VIRTUAL-RUNTIME_dbus') == 'dbus-broker' else ''}"
+
 #    ruby \ # Timeout
 #    rt-tests \ # Needs to be checked whether it runs at all
 #    bash \ # Test outcomes are non-deterministic by design
