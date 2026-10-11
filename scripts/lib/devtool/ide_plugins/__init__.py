@@ -163,6 +163,18 @@ class DebuggerCrossConfig:
         """Called after construction to generate any required config files."""
         pass
 
+    def resolve_host_port(self, mode=None):
+        """Return the host port this debug server's target port is reachable on."""
+        target_port = self.port(mode)
+        if not is_loopback_target(self.debugger_cross.target_device.target):
+            return target_port
+        return self.image_recipe.slirp_port_mappings.get(('tcp', target_port), target_port)
+
+    def _resolve_host_port_shell_lines(self, var_name, mode=None):
+        """Shell line assigning $<var_name> to resolve_host_port(), for use in
+        a generated ide=none wrapper script."""
+        return ['%s=%d' % (var_name, self.resolve_host_port(mode))]
+
     # Abstract — subclasses must implement
     def _target_start_cmd(self, mode):
         raise NotImplementedError

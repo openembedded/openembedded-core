@@ -307,6 +307,24 @@ class RecipeImage:
         return bool(self.rootfs_dbg)
 
     @property
+    def slirp_port_mappings(self):
+        """QB_SLIRP_OPT's hostfwd rules as {(protocol, target_port): host_port}.
+
+        QB_SLIRP_OPT is only a wishlist: runqemu moves a forward to another
+        host port whenever qemu cannot bind the wished-for one, so host
+        port == target port cannot be assumed. A caller that knows the
+        effective mapping of a running qemu (see QemuRunner.slirp_port_mappings)
+        can write it back into the bbappend and re-run devtool ide-sdk
+        --skip-bitbake to have the debugger configs regenerated against the
+        ports that really work.
+        """
+        mappings = {}
+        for content in (self.qb_slirp_opt, self._orig_bbappend_content or ''):
+            for m in re.finditer(r'hostfwd=([a-z]+):[^:]*:(\d+)-[^:,]*:(\d+)', content):
+                mappings[(m.group(1), int(m.group(3)))] = int(m.group(2))
+        return mappings
+
+    @property
     def rootfs(self):
         """Prefer the live NFS-exported rootfs (if --nfs=rootfs is used) over the
         static WORKDIR/rootfs left over from the image build, so solib_search_path()
@@ -548,28 +566,39 @@ class RecipeImage:
         if not ports:
             return False
 
-        # Determine which ports are already in the base value
-        already = {int(m.group(1))
-                   for m in re.finditer(r':(\d+)-:\d+', self.qb_slirp_opt)}
-        missing_ports = [p for p in ports if p not in already]
+        # Determine which ports are already in the base value. Match the
+        # target port, not the host port: once the effective mapping is
+        # written back the two differ, and a forward already exists for a
+        # target port regardless of which host port it ended up on.
+        already = {(m.group(1), int(m.group(2)))
+               for m in re.finditer(r'hostfwd=([a-z]+):[^:]*:\d+-[^:,]*:(\d+)', self.qb_slirp_opt)}
+        missing_ports = [p for p in ports if ('tcp', p) not in already]
         if not missing_ports:
             logger.info("QB_SLIRP_OPT already contains all needed port forwards")
             return False
 
+        # Keep any already known effective mapping instead of wishing for
+        # host port == target port again, so re-running does not discard a
+        # mapping written back from a running qemu (see slirp_port_mappings).
+        mappings = self.slirp_port_mappings
+
+        def hostfwd(target_port):
+            return ',hostfwd=tcp:127.0.0.1:%d-:%d' % (
+                mappings.get(('tcp', target_port), target_port), target_port)
+
         if self.qb_slirp_opt:
             # Base value exists: :append only the missing port forwards
-            extra = ''.join(
-                ',hostfwd=tcp:127.0.0.1:%d-:%d' % (p, p) for p in missing_ports)
+            extra = ''.join(hostfwd(p) for p in missing_ports)
             new_line = 'QB_SLIRP_OPT:append = "%s"' % extra
         else:
             # No base value: mirror runqemu's built-in default (SSH 2222, telnet
             # 2323, tftp) and add the debugger ports.
             all_hostfwds = (
-                'hostfwd=tcp:127.0.0.1:2222-:22,'
-                'hostfwd=tcp:127.0.0.1:2323-:23'
+                'hostfwd=tcp:127.0.0.1:%d-:22,'
+                'hostfwd=tcp:127.0.0.1:%d-:23'
+                % (mappings.get(('tcp', 22), 2222), mappings.get(('tcp', 23), 2323))
             )
-            all_hostfwds += ''.join(
-                ',hostfwd=tcp:127.0.0.1:%d-:%d' % (p, p) for p in missing_ports)
+            all_hostfwds += ''.join(hostfwd(p) for p in missing_ports)
             new_line = 'QB_SLIRP_OPT = "-netdev user,id=net0,%s,tftp=${DEPLOY_DIR_IMAGE}"' % all_hostfwds
 
         if os.path.exists(self._bbappend):
