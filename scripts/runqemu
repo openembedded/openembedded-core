@@ -19,6 +19,10 @@ import glob
 import configparser
 import signal
 import time
+import shlex
+import socket
+import traceback
+from contextlib import closing
 
 class RunQemuError(Exception):
     """Custom exception to raise on known errors."""
@@ -258,9 +262,6 @@ class BaseConfig(object):
 
     def check_free_port(self, host, port, lockdir):
         """ Check whether the port is free or not """
-        import socket
-        from contextlib import closing
-
         lockfile = os.path.join(lockdir, str(port) + '.lock')
         if self.acquire_portlock(lockfile):
             with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
@@ -1605,7 +1606,6 @@ to your build configuration.
         self.setup_vga()
 
     def start_qemu(self):
-        import shlex
         if self.kernel:
             kernel_opts = "-kernel %s" % (self.kernel)
             if self.get('QB_KERNEL_CMDLINE') == "none":
@@ -1805,7 +1805,6 @@ def main():
         logger.error(err)
         return 1
     except Exception as err:
-        import traceback
         traceback.print_exc()
         return 1
     finally:
