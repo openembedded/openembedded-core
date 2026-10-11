@@ -19,6 +19,8 @@ import glob
 import configparser
 import signal
 import time
+import json
+import tempfile
 import shlex
 import socket
 import traceback
@@ -224,6 +226,8 @@ class BaseConfig(object):
         # slirp qemus are running.
         self.mac_tap = "52:54:00:12:34:"
         self.mac_slirp = "52:54:00:12:35:"
+        self.slirp_hostfwd_allowlist = []
+        self.internal_qmp_path = None
         # pid of the actual qemu process
         self.qemu_environ = os.environ.copy()
         self.qemuprocess = None
@@ -1168,30 +1172,103 @@ to your build configuration.
         hostfwd = ",hostfwd=tcp:127.0.0.1:2222-:22,hostfwd=tcp:127.0.0.1:2323-:23"
         qb_slirp_opt_default = "-netdev user,id=net0%s,tftp=%s" % (hostfwd, self.get('DEPLOY_DIR_IMAGE'))
         qb_slirp_opt = self.get('QB_SLIRP_OPT') or qb_slirp_opt_default
-        # Figure out the port
-        ports = re.findall('hostfwd=[^-]*:([0-9]+)-[^,-]*', qb_slirp_opt)
-        ports = [int(i) for i in ports]
 
-        lockdir = "/tmp/qemu-port-locks"
-        self.make_lock_dir(lockdir)
+        # Strip hostfwd rules from argv and add them via QMP after startup,
+        # making QEMU's host port binding authoritative.
+        self.slirp_hostfwd_allowlist = [
+            (proto, hostip, int(hostport), guestip, int(targetport)) for
+            proto, hostip, hostport, guestip, targetport in
+            re.findall(r'hostfwd=([a-z]+):([^:]*):([0-9]+)-([^:,]*):([0-9]+)', qb_slirp_opt)
+        ]
+        qb_slirp_opt = re.sub(r',hostfwd=[a-z]+:[^:]*:[0-9]+-[^:,]*:[0-9]+', '', qb_slirp_opt)
 
-        # Find a free port to avoid conflicts
-        for p in ports[:]:
-            p_new = p
-            while not self.check_free_port('localhost', p_new, lockdir):
-                p_new += 1
-                while p_new in ports:
-                        p_new += 1
-            if p != p_new:
-                ports.append(p_new)
-                qb_slirp_opt = re.sub(':%s-' % p, ':%s-' % p_new, qb_slirp_opt)
-                logger.info("Port forward changed: %s -> %s" % (p, p_new))
         mac = "%s%02x" % (self.mac_slirp, self.alloc_mac_slot("/tmp/qemu-mac-locks"))
         self.set('NETWORK_CMD', '%s %s' % (self.network_device.replace('@MAC@', mac), qb_slirp_opt))
-        # Print out port foward
-        hostfwd = re.findall('(hostfwd=[^,]*)', qb_slirp_opt)
-        if hostfwd:
-            logger.info('Port forward: %s' % ' '.join(hostfwd))
+
+    SLIRP_QMP_TIMEOUT = 10
+
+    def add_slirp_hostfwds(self):
+        """Add the slirp hostfwd allowlist to the running qemu via QMP"""
+        # qemu creates/binds this socket itself soon after it starts, so it
+        # may not be ready to accept a connection yet right after Popen().
+        sock = None
+        for _ in range(100):
+            if self.qemuprocess and self.qemuprocess.poll() is not None:
+                raise RunQemuError("Failed to run qemu: %s" % self.qemuprocess.stderr.read().decode())
+            try:
+                sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                sock.settimeout(self.SLIRP_QMP_TIMEOUT)
+                sock.connect(self.internal_qmp_path)
+                break
+            except (FileNotFoundError, ConnectionRefusedError):
+                sock.close()
+                sock = None
+                time.sleep(0.1)
+            except socket.timeout as error:
+                sock.close()
+                raise RunQemuError("Timed out connecting to internal QMP socket %s" % self.internal_qmp_path) from error
+            except OSError:
+                sock.close()
+                raise
+        else:
+            raise RunQemuError("Timed out waiting for internal QMP socket %s" % self.internal_qmp_path)
+        sockf = sock.makefile('rw')
+
+        def read_response():
+            # QMP may interleave asynchronous event messages with command
+            # responses; skip those and return the first actual reply.
+            while True:
+                line = sockf.readline()
+                if not line:
+                    raise RunQemuError("Internal QMP connection closed unexpectedly")
+                msg = json.loads(line)
+                if 'event' not in msg:
+                    return msg
+
+        try:
+            greeting = read_response()
+            if 'QMP' not in greeting:
+                raise RunQemuError("Invalid internal QMP greeting: %s" % greeting)
+            sockf.write(json.dumps({"execute": "qmp_capabilities"}) + '\n')
+            sockf.flush()
+            response = read_response()
+            if 'error' in response or response.get('return') != {}:
+                raise RunQemuError("Internal QMP negotiation failed: %s" % response)
+
+            used_ports = set()
+            hostfwd_added = []
+            for proto, hostip, hostport, guestip, targetport in self.slirp_hostfwd_allowlist:
+                candidate = hostport
+                for _ in range(100):
+                    while (proto, candidate) in used_ports:
+                        candidate += 1
+                    cmdline = 'hostfwd_add %s:%s:%d-%s:%d' % (proto, hostip, candidate, guestip, targetport)
+                    sockf.write(json.dumps({"execute": "human-monitor-command",
+                                            "arguments": {"command-line": cmdline}}) + '\n')
+                    sockf.flush()
+                    response = read_response()
+                    # hostfwd_add prints nothing on success; on failure it
+                    # prints a message like "Could not set up host forwarding
+                    # rule ..." which does NOT contain the word "error", so
+                    # check for empty output rather than absence of that word.
+                    result = response.get('return')
+                    if 'error' not in response and isinstance(result, str) and result.strip() == '':
+                        used_ports.add((proto, candidate))
+                        hostfwd_added.append('hostfwd=%s:%s:%d-%s:%d' % (proto, hostip, candidate, guestip, targetport))
+                        if candidate != hostport:
+                            logger.info("Port forward changed: %s -> %s" % (hostport, candidate))
+                        break
+                    candidate += 1
+                else:
+                    raise RunQemuError("Could not find a free host port for hostfwd target %d after 100 attempts" % targetport)
+        except socket.timeout as error:
+            raise RunQemuError("Timed out communicating with internal QMP socket %s" % self.internal_qmp_path) from error
+        finally:
+            sockf.close()
+            sock.close()
+
+        if hostfwd_added:
+            logger.info('Port forward: %s' % ' '.join(hostfwd_added))
 
     def setup_tap(self):
         """Setup tap"""
@@ -1472,6 +1549,14 @@ to your build configuration.
     def setup_qmp(self):
         if self.qmp:
             self.qemu_opt += " -qmp %s,server,nowait" % self.qmp
+        if self.slirp_hostfwd_allowlist:
+            # A private monitor, in addition to any user-requested self.qmp,
+            # used internally to add the hostfwd allowlist once qemu is up
+            # (see add_slirp_hostfwds()).
+            qmp_dir = tempfile.mkdtemp(prefix='qemu-slirp-qmp-')
+            self.cleanup_files.append(qmp_dir)
+            self.internal_qmp_path = os.path.join(qmp_dir, 'monitor.sock')
+            self.qemu_opt += " -qmp unix:%s,server,nowait" % self.internal_qmp_path
 
     def setup_vga(self):
         if self.nographic == True:
@@ -1657,6 +1742,8 @@ to your build configuration.
                 pass_fds.append(descriptor.fileno())
         process = subprocess.Popen(cmds, stderr=subprocess.PIPE, pass_fds=pass_fds, env=self.qemu_environ)
         self.qemuprocess = process
+        if self.slirp_hostfwd_allowlist:
+            self.add_slirp_hostfwds()
         retcode = process.wait()
         if retcode:
             if retcode == -signal.SIGTERM:
