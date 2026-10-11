@@ -1133,6 +1133,17 @@ to your build configuration.
                 pass
         return
 
+    def alloc_mac_slot(self, lockdir):
+        """MAC address arbitration for slirp addresses: lock the first free
+        numbered lockfile (1-254) to get an octet unique among concurrently
+        running qemu instances on this host."""
+        self.make_lock_dir(lockdir)
+        for slot in range(1, 255):
+            lockfile = os.path.join(lockdir, str(slot) + '.lock')
+            if self.acquire_lock(lockfile):
+                return slot
+        raise RunQemuError("Too many concurrent qemu slirp instances on this host, can't allocate a unique MAC address")
+
     def setup_slirp(self):
         """Setup user networking"""
 
@@ -1148,7 +1159,6 @@ to your build configuration.
         # Figure out the port
         ports = re.findall('hostfwd=[^-]*:([0-9]+)-[^,-]*', qb_slirp_opt)
         ports = [int(i) for i in ports]
-        mac = 2
 
         lockdir = "/tmp/qemu-port-locks"
         self.make_lock_dir(lockdir)
@@ -1158,15 +1168,13 @@ to your build configuration.
             p_new = p
             while not self.check_free_port('localhost', p_new, lockdir):
                 p_new += 1
-                mac += 1
                 while p_new in ports:
                         p_new += 1
-                        mac += 1
             if p != p_new:
                 ports.append(p_new)
                 qb_slirp_opt = re.sub(':%s-' % p, ':%s-' % p_new, qb_slirp_opt)
                 logger.info("Port forward changed: %s -> %s" % (p, p_new))
-        mac = "%s%02x" % (self.mac_slirp, mac)
+        mac = "%s%02x" % (self.mac_slirp, self.alloc_mac_slot("/tmp/qemu-mac-locks"))
         self.set('NETWORK_CMD', '%s %s' % (self.network_device.replace('@MAC@', mac), qb_slirp_opt))
         # Print out port foward
         hostfwd = re.findall('(hostfwd=[^,]*)', qb_slirp_opt)
