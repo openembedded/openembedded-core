@@ -408,6 +408,11 @@ class QemuRunner:
                 # The running qemu is the authoritative source for the
                 # effective hostfwd rules: the host port a rule ends up on is
                 # not necessarily the one that was wished for.
+                # runqemu adds its forwards via QMP shortly after qemu starts.
+                endtime = time.time() + 10
+                while (('tcp', 22) not in self.slirp_port_mappings
+                       and self.is_alive() and time.time() < endtime):
+                    time.sleep(0.1)
                 try:
                     host, port = self._get_slirp_host_endpoint(22)
                     self.ip = "%s:%s" % (host, port)
