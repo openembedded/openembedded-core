@@ -30,10 +30,17 @@ from oeqa.utils.qemurunner import QemuRunner
 
 @OETestTag("runqemu")
 class RunqemuSlirpTests(OESelftestTestCase):
-    """Exercise slirp forwarding without booting a guest."""
+    """Exercise forwarding and legacy arbitration without booting a guest."""
 
     @classmethod
     def setUpClass(cls):
+        """Locate the native QEMU and load the QMP client and runqemu classes.
+
+        Builds qemu-helper-native's sysroot once for the whole class, picks its
+        qemu-system binary, and imports the QMP client shipped with it. runqemu
+        is loaded as a module so its BaseConfig and RunQemuError can be used
+        directly.
+        """
         super().setUpClass()
         bitbake('qemu-helper-native -c addto_recipe_sysroot')
         bindir = get_bb_var('STAGING_BINDIR_NATIVE', 'qemu-helper-native')
@@ -46,15 +53,31 @@ class RunqemuSlirpTests(OESelftestTestCase):
         cls.runqemu_error = runqemu_module['RunQemuError']
 
     def setUpLocal(self):
+        """Start a bare QEMU with a slirp netdev and connect runqemu and the runner to it.
+
+        QEMU runs paused with no machine, so no guest boots. It exposes two QMP
+        sockets: an internal one used by runqemu's BaseConfig and a separate
+        monitor one used by the QemuRunner. Both see the same netdev, so
+        forwards added through either are visible to the other. Everything is
+        cleaned up after each test. Only the port-lock directory is mocked;
+        flock and QEMU's lock descriptor transfer remain real.
+        """
         directory = tempfile.TemporaryDirectory(prefix='slirp-selftest-')
         self.addCleanup(directory.cleanup)
+        self.port_lock_dir = os.path.join(directory.name, 'port-locks')
         self.config = self.base_config()
+        config_lockdir = patch.object(self.config, 'PORT_LOCK_DIR', self.port_lock_dir)
+        config_lockdir.start()
+        self.addCleanup(config_lockdir.stop)
         self.config.internal_qmp_path = os.path.join(directory.name, 'internal.sock')
         self.config.slirp_hostfwd_allowlist = []
         self.addCleanup(self.config.release_lock)
         self.runner = QemuRunner('', '', '', directory.name, directory.name,
                                  None, 30, directory.name, False, self.logger,
                                  use_slirp=True, workdir=directory.name)
+        runner_lockdir = patch.object(self.runner, 'PORT_LOCK_DIR', self.port_lock_dir)
+        runner_lockdir.start()
+        self.addCleanup(runner_lockdir.stop)
         self.addCleanup(self.runner.stop)
         monitor_path = os.path.join(directory.name, 'monitor.sock')
         self.process = subprocess.Popen([
@@ -85,66 +108,156 @@ class RunqemuSlirpTests(OESelftestTestCase):
             probe.listen()
         return probe
 
-    def _free_port(self):
-        probe = self._socket()
-        port = probe.getsockname()[1]
-        probe.close()
-        return port
+    def _occupied_port(self, protocol='tcp'):
+        """Return a port held by this test, so QEMU must reject it as a proposal."""
+        return self._socket(protocol).getsockname()[1]
+
+    # TODO: legacy-slirp-locks
+    def _lock(self, port):
+        lock = open(os.path.join(self.port_lock_dir, '%d.lock' % port), 'w')
+        self.addCleanup(lock.close)
+        fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        return lock
+
+    def _assert_locked(self, port):
+        with open(os.path.join(self.port_lock_dir, '%d.lock' % port), 'w') as lock:
+            with self.assertRaises(BlockingIOError):
+                fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
 
     def _startup_forward(self, port, protocol='tcp', guest_port=1234, host='127.0.0.1'):
         self.config.slirp_hostfwd_allowlist = [(protocol, host, port, '', guest_port)]
         self.config.add_slirp_hostfwds()
         return self.runner.get_host_port(guest_port, protocol=protocol)
 
+    def test_startup_legacy_reservation(self):
+        """Skip a startup port locked by an older runqemu and lock the replacement.
+
+        Older releases (wrynose, blacksail) reserve ports via flock on
+        /tmp/qemu-port-locks/<port>.lock. runqemu must not take a port whose
+        lock is held, must lock the port it picks instead, and the forward on
+        that port must accept connections.
+
+        The port is also occupied, so QEMU would reject it; the lock refusal
+        is checked on runqemu's own lock attempt instead.
+        """
+        port = self._occupied_port()
+        self._lock(port)
+        lockfile = os.path.join(self.port_lock_dir, '%d.lock' % port)
+        results = {}
+        acquire_lock = self.config.acquire_lock
+
+        def spy(path):
+            results.setdefault(path, acquire_lock(path))
+            return results[path]
+        with patch.object(self.config, 'acquire_lock', side_effect=spy):
+            actual = self._startup_forward(port)
+        self.assertIs(results[lockfile], False)
+        self.assertNotEqual(actual, port)
+        self._assert_locked(actual)
+        with socket.create_connection(('127.0.0.1', actual), timeout=5):
+            pass
+
     def test_startup_rejected_candidate(self):
-        """Move a startup forward away from a port QEMU cannot bind."""
+        """Release a rejected startup port's lock and lock the replacement.
+
+        The requested port is bound by another process, so its lock is free
+        but QEMU rejects hostfwd_add. runqemu must release the lock it took
+        for the rejected port (it must be lockable again afterwards), then
+        retry on the next port and keep that port's lock held.
+        """
         busy = self._socket()
         port = busy.getsockname()[1]
         actual = self._startup_forward(port)
         self.assertNotEqual(actual, port)
+        self._lock(port)
+        self._assert_locked(actual)
 
-    def test_protocols_share_owned_reservations(self):
-        """Allow TCP and UDP forwards to share a host port."""
-        for guest_port, owner in ((1234, 'runqemu'), (1235, 'qemurunner'), (1236, 'runqemu-dynamic')):
-            with self.subTest(owner=owner):
-                port = self._free_port()
-                if owner == 'runqemu':
-                    self.config.slirp_hostfwd_allowlist = [
-                        (protocol, '127.0.0.1', port, '', guest_port)
-                        for protocol in ('tcp', 'udp')]
-                    self.config.add_slirp_hostfwds()
-                elif owner == 'runqemu-dynamic':
-                    self.assertEqual(self._startup_forward(port, guest_port=guest_port), port)
-                else:
-                    self.assertEqual(self.runner.add_hostfwd(guest_port, port), port)
-                self.assertEqual(self.runner.get_host_port(guest_port), port)
-                if owner != 'runqemu':
-                    self.assertEqual(self.runner.add_hostfwd(guest_port, port, protocol='udp'), port)
-                self.assertEqual(self.runner.get_host_port(guest_port, protocol='UDP'), port)
+    def test_dynamic_legacy_reservation(self):
+        """Reject explicit legacy-reserved ports and skip them during allocation."""
+        port = self._occupied_port()
+        self._lock(port)
+        self.assertIsNone(self.runner.add_hostfwd(1234, port))
+        with patch('oeqa.utils.qemurunner.socket.socket') as probe, \
+             patch.object(self.runner, 'run_monitor') as monitor:
+            probe.return_value.getsockname.return_value = ('127.0.0.1', port)
+            with self.assertRaises(RuntimeError):
+                self.runner.add_hostfwd(1234, protocol='udp')
+            for call in monitor.call_args_list:
+                self.assertNotIn('hostfwd_add', call.args[1]['command-line'])
 
     def test_dynamic_rejected_candidates(self):
-        """Reject dynamic forwards when binding or monitor commands fail."""
+        """Release dynamic port locks when binding or monitor commands fail."""
         for protocol in ('tcp', 'udp'):
             with self.subTest(protocol=protocol):
                 busy = self._socket(protocol)
                 port = busy.getsockname()[1]
                 self.assertIsNone(self.runner.add_hostfwd(1234, port, protocol=protocol))
-        port = self._free_port()
+                self._lock(port)
+        port = self._occupied_port()
         for failure in (None, {}, {'error': {}}, {'return': '', 'error': {}},
                         {'return': 'Could not set up host forwarding rule'}, {'return': 0}):
             with self.subTest(response=failure):
                 def reply(command, arguments=None):
                     if arguments and arguments['command-line'].startswith('hostfwd_add'):
+                        self._assert_locked(port)
                         return failure
                     return self._monitor(command, arguments)
                 with patch.object(self.runner, 'run_monitor', side_effect=reply):
                     self.assertIsNone(self.runner.add_hostfwd(1234, port))
+                self._lock(port).close()
+        with patch.object(self.runner, 'run_monitor', side_effect=[{'return': ''}, RuntimeError('monitor disconnected')]):
+            with self.assertRaises(RuntimeError):
+                self.runner.add_hostfwd(1234, port)
+        self._lock(port)
+
+    def test_lock_cleanup(self):
+        """Release startup and dynamic port locks after QEMU and its clients stop."""
+        proposed = self._occupied_port()
+        startup_port = self._startup_forward(proposed)
+        self.assertNotEqual(startup_port, proposed)
+        dynamic_port = self.runner.add_hostfwd(4321, protocol='udp')
+        self._assert_locked(startup_port)
+        self._assert_locked(dynamic_port)
+        self._stop_qemu()
+        self.runner.stop()
+        self.config.release_lock()
+        self._lock(startup_port)
+        self._lock(dynamic_port)
+
+    def test_locks_survive_client_exit(self):
+        """Keep port locks in QEMU after runqemu and the runner close their copies.
+
+        Closing the clients' lock descriptors and monitor connection must not
+        release either forward's lock or UDP socket while QEMU is alive.
+        Both locks must become available once QEMU exits.
+        """
+        proposed = self._occupied_port('udp')
+        startup_port = self._startup_forward(proposed, protocol='udp')
+        self.assertNotEqual(startup_port, proposed)
+        dynamic_port = self.runner.add_hostfwd(4321, protocol='udp')
+        # TODO: legacy-slirp-locks: simulate client death.
+        self.config.release_lock()
+        for lock in self.runner._slirp_port_locks.values():
+            lock.close()
+        self.runner._slirp_port_locks.clear()
+        self.runner.qmp.close()
+        self.runner.qmp = None
+        self.assertIsNone(self.process.poll())
+        for port in (startup_port, dynamic_port):
+            self._assert_locked(port)
+            with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
+                with self.assertRaises(OSError):
+                    probe.bind(('127.0.0.1', port))
+        self._stop_qemu()
+        self._lock(startup_port)
+        self._lock(dynamic_port)
 
     def test_internal_monitor_timeouts(self):
-        self.config.SLIRP_QMP_TIMEOUT = 0.1
+        """Report stalled QMP exchanges and release the rejected forward's lock."""
+        self.config.SLIRP_QMP_TIMEOUT = 1
         for phase in ('greeting', 'capabilities', 'hostfwd'):
             with self.subTest(phase=phase), tempfile.TemporaryDirectory() as directory:
-                port = self._free_port()
+                port = self._occupied_port()
                 self.config.internal_qmp_path = os.path.join(directory, 'silent.sock')
                 self.config.slirp_hostfwd_allowlist = [('tcp', '127.0.0.1', port, '', 1234)]
                 with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as listener:
@@ -154,7 +267,7 @@ class RunqemuSlirpTests(OESelftestTestCase):
                     with ThreadPoolExecutor(max_workers=1) as executor:
                         future = executor.submit(self.config.add_slirp_hostfwds)
                         with listener.accept()[0] as peer:
-                            peer.settimeout(2)
+                            peer.settimeout(5)
                             with peer.makefile('rw') as stream:
                                 if phase != 'greeting':
                                     stream.write(json.dumps({'QMP': {}}) + '\n')
@@ -165,7 +278,9 @@ class RunqemuSlirpTests(OESelftestTestCase):
                                     stream.flush()
                                     self.assertEqual(json.loads(stream.readline())['execute'], 'human-monitor-command')
                                 with self.assertRaisesRegex(self.runqemu_error, 'Timed out communicating'):
-                                    future.result(timeout=2)
+                                    future.result(timeout=5)
+                if phase == 'hostfwd':
+                    self._lock(port)
 
     def test_private_internal_monitor(self):
         """Add a private forwarding monitor without replacing the requested monitor.
@@ -215,24 +330,24 @@ class RunqemuSlirpTests(OESelftestTestCase):
         """Preserve explicit bind addresses and resolve wildcard binds to localhost."""
         for guest_port, host, expected in ((1234, '127.0.0.2', '127.0.0.2'), (1235, '0.0.0.0', '127.0.0.1')):
             with self.subTest(host=host):
-                actual = self._startup_forward(self._free_port(), guest_port=guest_port, host=host)
+                actual = self._startup_forward(self._occupied_port(), guest_port=guest_port, host=host)
                 endpoint = self.runner._get_slirp_host_endpoint(guest_port)
                 self.assertEqual(endpoint, (expected, actual))
                 with socket.create_connection(endpoint, timeout=5):
                     pass
 
     def test_unsupported_protocol(self):
-        """Reject unsupported forwarding protocols."""
+        """Reject unsupported forwarding protocols without acquiring port locks."""
         with self.assertRaises(ValueError):
             self.runner.add_hostfwd(1234, protocol='sctp')
+        self.assertFalse(self.runner._slirp_port_locks)
 
     def test_explicit_forward_with_non_slirp_primary(self):
         """Manage slirp forwards independently of the primary networking mode."""
         self.runner.use_slirp = False
         for protocol in ('tcp', 'udp'):
             with self.subTest(protocol=protocol):
-                port = self._free_port()
-                self.assertEqual(self.runner.add_hostfwd(1234, port, protocol=protocol), port)
+                port = self.runner.add_hostfwd(1234, protocol=protocol)
                 self.assertEqual(self.runner.slirp_port_mappings[(protocol, 1234)], port)
                 self.assertEqual(self.runner.get_host_port(1234, protocol=protocol), port)
         port = self.runner.get_host_port(1236)
@@ -241,8 +356,9 @@ class RunqemuSlirpTests(OESelftestTestCase):
             pass
         response = self.runner.run_monitor('netdev_del', {'id': 'net0'})
         self.assertEqual(response, {'return': {}})
-        port = self._free_port()
+        port = self._occupied_port()
         self.assertIsNone(self.runner.add_hostfwd(1235, port))
+        self._lock(port)
         with self.assertRaisesRegex(RuntimeError, 'Failed to add a slirp tcp hostfwd'):
             self.runner.get_host_port(1235)
 

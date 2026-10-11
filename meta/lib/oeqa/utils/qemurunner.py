@@ -16,6 +16,7 @@ import re
 import socket
 import select
 import errno
+import fcntl
 import string
 import threading
 import codecs
@@ -43,6 +44,7 @@ def getOutput(o):
         return ""
 
 class QemuRunner:
+    PORT_LOCK_DIR = '/tmp/qemu-port-locks'
 
     def __init__(self, machine, rootfs, display, tmpdir, deploy_dir_image, logfile, boottime, dump_dir, use_kvm, logger, use_slirp=False,
      serial_ports=2, boot_patterns = defaultdict(str), use_ovmf=False, workdir=None, tmpfsdir=None, native_sysroot=None):
@@ -78,6 +80,8 @@ class QemuRunner:
         self.tmpfsdir = tmpfsdir
         self.native_sysroot = native_sysroot
         self.kernel_messages_disabled = False
+        # TODO: legacy-slirp-locks
+        self._slirp_port_locks = {}
 
         self.runqemutime = 300
         if not workdir:
@@ -594,6 +598,10 @@ class QemuRunner:
             self.runqemu.stdout.close()
             self.runqemu_exited = True
 
+        # TODO: legacy-slirp-locks
+        for lock in self._slirp_port_locks.values():
+            lock.close()
+        self._slirp_port_locks.clear()
         if hasattr(self, 'qmp') and self.qmp:
             self.qmp.close()
             self.qmp = None
@@ -714,21 +722,53 @@ class QemuRunner:
             raise ValueError("Unsupported slirp host forwarding protocol: %s" % protocol)
         candidates = [host_port] if host_port else []
         if not host_port:
-            for _ in range(10):
-                with socket.socket(socket.AF_INET, socket_type) as s:
-                    s.bind(('127.0.0.1', 0))
-                    candidates.append(s.getsockname()[1])
+            # Hold every probe open so the candidates are distinct.
+            probes = []
+            try:
+                for _ in range(10):
+                    probes.append(socket.socket(socket.AF_INET, socket_type))
+                    probes[-1].bind(('127.0.0.1', 0))
+                    candidates.append(probes[-1].getsockname()[1])
+            finally:
+                for probe in probes:
+                    probe.close()
+        forwarded_ports = set(self.slirp_port_mappings.values())
         for candidate in candidates:
-            result = self.run_monitor('human-monitor-command', {
-                'command-line': 'hostfwd_add %s:127.0.0.1:%d-:%d' % (protocol, candidate, target_port)})
-            output = result.get('return') if isinstance(result, dict) else None
-            # hostfwd_add prints nothing on success; on failure it prints a message like
-            # "Could not set up host forwarding rule ...". Check for empty output to determine success.
-            if isinstance(result, dict) and 'error' not in result and isinstance(output, str) and output.strip() == '':
-                self.logger.debug("Added %s hostfwd for target port %d on host port %d"
-                                 % (protocol, target_port, candidate))
-                return candidate
-            self.logger.debug("hostfwd_add for %s host port %d failed: %s" % (protocol, candidate, result))
+            lock = None
+            if candidate not in self._slirp_port_locks and candidate not in forwarded_ports:
+                # TODO: legacy-slirp-locks: wrynose and blacksail still lock ports.
+                lockdir = self.PORT_LOCK_DIR
+                os.makedirs(lockdir, exist_ok=True)
+                lock = open(os.path.join(lockdir, '%d.lock' % candidate), 'w')
+                try:
+                    fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                except OSError as error:
+                    lock.close()
+                    if error.errno not in (errno.EACCES, errno.EAGAIN):
+                        raise
+                    continue
+            accepted = False
+            try:
+                result = self.run_monitor('human-monitor-command', {
+                    'command-line': 'hostfwd_add %s:127.0.0.1:%d-:%d' % (protocol, candidate, target_port)})
+                output = result.get('return') if isinstance(result, dict) else None
+                accepted = isinstance(result, dict) and 'error' not in result and isinstance(output, str) and output.strip() == ''
+                if accepted:
+                    if lock:
+                        self._slirp_port_locks[candidate] = lock
+                        # TODO: legacy-slirp-locks: QEMU keeps the lock if we die.
+                        self.qmp.send_fd_scm(lock.fileno())
+                        response = self.run_monitor('getfd', {
+                            'fdname': 'legacy-slirp-lock-%d' % candidate})
+                        if not isinstance(response, dict) or 'error' in response or response.get('return') != {}:
+                            raise RuntimeError("QEMU could not retain port lock: %s" % response)
+                    self.logger.debug("Added %s hostfwd for target port %d on host port %d"
+                                     % (protocol, target_port, candidate))
+                    return candidate
+                self.logger.debug("hostfwd_add for %s host port %d failed: %s" % (protocol, candidate, result))
+            finally:
+                if lock and not accepted:
+                    lock.close()
         if host_port:
             return None
         raise RuntimeError(

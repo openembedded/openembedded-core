@@ -21,6 +21,7 @@ import signal
 import time
 import json
 import tempfile
+import array
 import shlex
 import socket
 import traceback
@@ -1235,6 +1236,9 @@ to your build configuration.
             if 'error' in response or response.get('return') != {}:
                 raise RunQemuError("Internal QMP negotiation failed: %s" % response)
 
+            # TODO: legacy-slirp-locks: wrynose and blacksail still lock ports.
+            lockdir = self.PORT_LOCK_DIR
+            self.make_lock_dir(lockdir)
             used_ports = set()
             hostfwd_added = []
             for proto, hostip, hostport, guestip, targetport in self.slirp_hostfwd_allowlist:
@@ -1242,17 +1246,36 @@ to your build configuration.
                 for _ in range(100):
                     while (proto, candidate) in used_ports:
                         candidate += 1
+                    lockfile = os.path.join(lockdir, '%d.lock' % candidate)
+                    new_lock = lockfile not in self.locks
+                    if new_lock and not self.acquire_lock(lockfile):
+                        candidate += 1
+                        continue
                     cmdline = 'hostfwd_add %s:%s:%d-%s:%d' % (proto, hostip, candidate, guestip, targetport)
-                    sockf.write(json.dumps({"execute": "human-monitor-command",
-                                            "arguments": {"command-line": cmdline}}) + '\n')
-                    sockf.flush()
-                    response = read_response()
-                    # hostfwd_add prints nothing on success; on failure it
-                    # prints a message like "Could not set up host forwarding
-                    # rule ..." which does NOT contain the word "error", so
-                    # check for empty output rather than absence of that word.
-                    result = response.get('return')
-                    if 'error' not in response and isinstance(result, str) and result.strip() == '':
+                    accepted = False
+                    try:
+                        sockf.write(json.dumps({"execute": "human-monitor-command",
+                                                "arguments": {"command-line": cmdline}}) + '\n')
+                        sockf.flush()
+                        response = read_response()
+                        # hostfwd_add returns empty output on success, and
+                        # diagnostic text or a QMP error on failure.
+                        result = response.get('return')
+                        accepted = 'error' not in response and isinstance(result, str) and result.strip() == ''
+                    finally:
+                        if new_lock and not accepted:
+                            self.release_lock(lockfile)
+                    if accepted:
+                        # TODO: legacy-slirp-locks: QEMU keeps the lock if runqemu dies.
+                        if new_lock:
+                            sock.sendmsg([b' '], [(socket.SOL_SOCKET, socket.SCM_RIGHTS,
+                                                  array.array('i', [self.locks[lockfile].fileno()]))])
+                            sockf.write(json.dumps({"execute": "getfd", "arguments": {
+                                "fdname": "legacy-slirp-lock-%d" % candidate}}) + '\n')
+                            sockf.flush()
+                            response = read_response()
+                            if 'error' in response or response.get('return') != {}:
+                                raise RunQemuError("QEMU could not retain port lock: %s" % response)
                         used_ports.add((proto, candidate))
                         hostfwd_added.append('hostfwd=%s:%s:%d-%s:%d' % (proto, hostip, candidate, guestip, targetport))
                         if candidate != hostport:
