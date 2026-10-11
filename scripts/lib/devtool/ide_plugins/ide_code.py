@@ -423,7 +423,7 @@ class IdeVSCode(IdeBase):
             "MIMode": "gdb",
             "preLaunchTask": cross_debug_config.id_pretty_mode(server_mode),
             "miDebuggerPath": modified_recipe.debugger_cross.gdb,
-            "miDebuggerServerAddress": "%s:%d" % (modified_recipe.debugger_cross.host, cross_debug_config.port(server_mode))
+            "miDebuggerServerAddress": "%s:%d" % (modified_recipe.debugger_cross.host, cross_debug_config.resolve_host_port(server_mode))
         }
 
         if is_attach:
@@ -530,7 +530,7 @@ class IdeVSCode(IdeBase):
 
         init_commands = [
             "platform select remote-linux",
-            "platform connect connect://%s:%d" % (debugger_cross.host, lldb_config.port(server_mode)),
+            "platform connect connect://%s:%d" % (debugger_cross.host, lldb_config.resolve_host_port(server_mode)),
             # Clear the default step-avoid-regexp so std:: and other library
             # namespaces are not silently skipped on step-in. (default is "std::" in LLDB 15+)
             "settings set target.process.thread.step-avoid-regexp \"\"",
