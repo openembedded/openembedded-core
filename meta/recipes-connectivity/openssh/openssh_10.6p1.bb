@@ -58,7 +58,7 @@ inherit autotools-brokensep ptest pkgconfig
 
 # systemd-sshd-socket-mode means installing sshd.socket
 # and systemd-sshd-service-mode corresponding to sshd.service
-PACKAGECONFIG ??= "systemd-sshd-socket-mode hostkey-ecdsa"
+PACKAGECONFIG ??= "systemd-sshd-socket-mode hostkey-ecdsa hostkey-mldsa44-ed25519"
 PACKAGECONFIG[fido2] = "--with-security-key-builtin,--disable-security-key,libfido2"
 PACKAGECONFIG[kerberos] = "--with-kerberos5,--without-kerberos5,krb5"
 PACKAGECONFIG[ldns] = "--with-ldns,--without-ldns,ldns"
@@ -69,6 +69,7 @@ PACKAGECONFIG[systemd-sshd-service-mode] = ""
 PACKAGECONFIG[hostkey-rsa] = ""
 PACKAGECONFIG[hostkey-ecdsa] = ""
 PACKAGECONFIG[hostkey-ed25519] = ""
+PACKAGECONFIG[hostkey-mldsa44-ed25519] = ""
 
 # login path is hardcoded in sshd
 EXTRA_OECONF = "'LOGIN_PROGRAM=${base_bindir}/login' \
@@ -127,6 +128,9 @@ sshd_hostkey_setup() {
 	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-ed25519','true','false',d)}; then
 		echo "HostKey ${OPENSSH_HOST_KEY_DIR}/ssh_host_ed25519_key" >> ${D}${sysconfdir}/ssh/sshd_config
 	fi
+	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-mldsa44-ed25519','true','false',d)}; then
+		echo "HostKey ${OPENSSH_HOST_KEY_DIR}/ssh_host_mldsa44_ed25519_key" >> ${D}${sysconfdir}/ssh/sshd_config
+	fi
 
 	sed -i '/HostKey/d' ${D}${sysconfdir}/ssh/sshd_config_readonly
 	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-rsa','true','false',d)}; then
@@ -137,6 +141,9 @@ sshd_hostkey_setup() {
 	fi
 	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-ed25519','true','false',d)}; then
 		echo "HostKey ${OPENSSH_HOST_KEY_DIR_READONLY_CONFIG}/ssh_host_ed25519_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
+	fi
+	if ${@bb.utils.contains('PACKAGECONFIG','hostkey-mldsa44-ed25519','true','false',d)}; then
+		echo "HostKey ${OPENSSH_HOST_KEY_DIR_READONLY_CONFIG}/ssh_host_mldsa44_ed25519_key" >> ${D}${sysconfdir}/ssh/sshd_config_readonly
 	fi
 }
 
