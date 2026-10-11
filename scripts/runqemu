@@ -198,7 +198,7 @@ class BaseConfig(object):
         self.tcpserial_portnum = ''
         self.taplock = ''
         self.taplock_descriptor = None
-        self.portlocks = {}
+        self.locks = {}
         self.bitbake_e = ''
         self.snapshot = False
         self.wictypes = ('wic.zst', 'wic', 'wic.vmdk', 'wic.qcow2', 'wic.vdi', "wic.vhd", "wic.vhdx")
@@ -263,11 +263,11 @@ class BaseConfig(object):
     def check_free_port(self, host, port, lockdir):
         """ Check whether the port is free or not """
         lockfile = os.path.join(lockdir, str(port) + '.lock')
-        if self.acquire_portlock(lockfile):
+        if self.acquire_lock(lockfile):
             with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
                 if sock.connect_ex((host, port)) == 0:
                     # Port is open, so not free
-                    self.release_portlock(lockfile)
+                    self.release_lock(lockfile)
                     return False
                 else:
                     # Port is not open, so free
@@ -275,33 +275,33 @@ class BaseConfig(object):
         else:
             return False
 
-    def acquire_portlock(self, lockfile):
+    def acquire_lock(self, lockfile):
         logger.debug("Acquiring lockfile %s..." % lockfile)
-        portlock_descriptor = None
+        lock_descriptor = None
         try:
-            portlock_descriptor = open(lockfile, 'w')
-            fcntl.flock(portlock_descriptor, fcntl.LOCK_EX|fcntl.LOCK_NB)
+            lock_descriptor = open(lockfile, 'w')
+            fcntl.flock(lock_descriptor, fcntl.LOCK_EX|fcntl.LOCK_NB)
         except Exception as e:
             msg = "Acquiring lockfile %s failed: %s" % (lockfile, e)
             logger.info(msg)
-            if portlock_descriptor:
-                portlock_descriptor.close()
+            if lock_descriptor:
+                lock_descriptor.close()
             return False
-        self.portlocks[lockfile] = portlock_descriptor
+        self.locks[lockfile] = lock_descriptor
         return True
 
-    def release_portlock(self, lockfile=None):
+    def release_lock(self, lockfile=None):
         if lockfile != None:
             logger.debug("Releasing lockfile '%s'" % lockfile)
             # We pass the fd to the qemu process and if we unlock here, it would unlock for
             # that too. Therefore don't unlock, just close
-            # fcntl.flock(self.portlocks[lockfile], fcntl.LOCK_UN)
-            self.portlocks[lockfile].close()
+            # fcntl.flock(self.locks[lockfile], fcntl.LOCK_UN)
+            self.locks[lockfile].close()
             # Removing the file is a potential race, don't do that either
             # os.remove(lockfile)
-            del self.portlocks[lockfile]
-        elif len(self.portlocks):
-            for lockfile, descriptor in self.portlocks.items():
+            del self.locks[lockfile]
+        elif len(self.locks):
+            for lockfile, descriptor in self.locks.items():
                 logger.debug("Releasing lockfile '%s'" % lockfile)
                 # We pass the fd to the qemu process and if we unlock here, it would unlock for
                 # that too. Therefore don't unlock, just close
@@ -309,7 +309,7 @@ class BaseConfig(object):
                 descriptor.close()
                 # Removing the file is a potential race, don't do that either
                 # os.remove(lockfile)
-            self.portlocks = {}
+            self.locks = {}
 
     def get(self, key):
         if key in self.d:
@@ -1632,8 +1632,8 @@ to your build configuration.
         pass_fds = []
         if self.taplock_descriptor:
             pass_fds = [self.taplock_descriptor.fileno()]
-        if len(self.portlocks):
-            for descriptor in self.portlocks.values():
+        if len(self.locks):
+            for descriptor in self.locks.values():
                 pass_fds.append(descriptor.fileno())
         process = subprocess.Popen(cmds, stderr=subprocess.PIPE, pass_fds=pass_fds, env=self.qemu_environ)
         self.qemuprocess = process
@@ -1682,7 +1682,7 @@ to your build configuration.
             cmd = ("runqemu-export-rootfs", "stop", self.rootfs)
             logger.debug('Running %s' % str(cmd))
             subprocess.check_call(cmd)
-        self.release_portlock()
+        self.release_lock()
 
         if self.saved_stty:
             subprocess.check_call(("stty", self.saved_stty))
