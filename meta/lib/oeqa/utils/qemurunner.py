@@ -404,38 +404,44 @@ class QemuRunner:
                            self.qemupid, time.strftime("%D %H:%M:%S")))
         cmdline = ''
         if get_ip:
-            with open('/proc/%s/cmdline' % self.qemupid) as p:
-                cmdline = p.read()
-                # It is needed to sanitize the data received
-                # because is possible to have control characters
-                cmdline = re_control_char.sub(' ', cmdline)
-            try:
-                if self.use_slirp:
-                    tcp_ports = cmdline.split("hostfwd=tcp:")[1]
-                    ip, tcp_ports = tcp_ports.split(":")[:2]
-                    host_port = tcp_ports[:tcp_ports.find('-')]
-                    self.ip = "%s:%s" % (ip, host_port)
-                else:
+            if self.use_slirp:
+                # The running qemu is the authoritative source for the
+                # effective hostfwd rules: the host port a rule ends up on is
+                # not necessarily the one that was wished for.
+                try:
+                    host, port = self._get_slirp_host_endpoint(22)
+                    self.ip = "%s:%s" % (host, port)
+                except RuntimeError as err:
+                    self.logger.error("Couldn't resolve the ssh host port for slirp qemu: %s" % err)
+                    self.stop()
+                    return False
+            else:
+                with open('/proc/%s/cmdline' % self.qemupid) as p:
+                    cmdline = p.read()
+                    # It is needed to sanitize the data received
+                    # because is possible to have control characters
+                    cmdline = re_control_char.sub(' ', cmdline)
+                try:
                     ips = re.findall(r"((?:[0-9]{1,3}\.){3}[0-9]{1,3})", cmdline.split("ip=")[1])
                     self.ip = ips[0]
                     self.server_ip = ips[1]
-                self.logger.debug("qemu cmdline used:\n{}".format(cmdline))
-            except (IndexError, ValueError):
-                # Try to get network configuration from runqemu output
-                match = re.match(r'.*Network configuration: (?:ip=)*([0-9.]+)::([0-9.]+):([0-9.]+).*',
-                                 out, re.MULTILINE | re.DOTALL)
-                if match:
-                    self.ip, self.server_ip, self.netmask = match.groups()
-                    # network configuration is required as we couldn't get it
-                    # from the runqemu command line, so qemu doesn't run kernel
-                    # and guest networking is not configured
-                    netconf = True
-                else:
-                    self.logger.error("Couldn't get ip from qemu command line and runqemu output! "
-                                 "Here is the qemu command line used:\n%s\n"
-                                 "and output from runqemu:\n%s" % (cmdline, out))
-                    self.stop()
-                    return False
+                    self.logger.debug("qemu cmdline used:\n{}".format(cmdline))
+                except (IndexError, ValueError):
+                    # Try to get network configuration from runqemu output
+                    match = re.match(r'.*Network configuration: (?:ip=)*([0-9.]+)::([0-9.]+):([0-9.]+).*',
+                                     out, re.MULTILINE | re.DOTALL)
+                    if match:
+                        self.ip, self.server_ip, self.netmask = match.groups()
+                        # network configuration is required as we couldn't get it
+                        # from the runqemu command line, so qemu doesn't run kernel
+                        # and guest networking is not configured
+                        netconf = True
+                    else:
+                        self.logger.error("Couldn't get ip from qemu command line and runqemu output! "
+                                     "Here is the qemu command line used:\n%s\n"
+                                     "and output from runqemu:\n%s" % (cmdline, out))
+                        self.stop()
+                        return False
 
         self.logger.debug("Target IP: %s" % self.ip)
         self.logger.debug("Server IP: %s" % self.server_ip)
@@ -652,6 +658,85 @@ class QemuRunner:
                         self.qemupid = int(qemu_pid)
                         return True
         return False
+
+    @property
+    def slirp_port_mappings(self):
+        """Slirp hostfwd rules as {(protocol, target_port): host_port} read from Qemu's monitor."""
+        return {key: endpoint[1]
+            for key, endpoint in self._slirp_hostfwd_mappings.items()}
+
+    @property
+    def _slirp_hostfwd_mappings(self):
+        """Return {(protocol, guest_port): (host_address, host_port)} from QEMU."""
+        result = self.run_monitor('human-monitor-command',
+                                  {'command-line': 'info usernet'})
+        output = (result or {}).get('return', '') if isinstance(result, dict) else ''
+        mappings = {}
+        # Protocol[State]    FD  Source Address  Port   Dest. Address  Port RecvQ SendQ
+        # TCP[HOST_FORWARD]  10       127.0.0.1  2222       10.0.2.15    22     0     0
+        for line in (output or '').splitlines():
+            fields = line.split()
+            if len(fields) < 6:
+                continue
+            protocol, separator, state = fields[0].partition('[')
+            if not protocol or not separator or state != 'HOST_FORWARD]':
+                continue
+            try:
+                mappings[(protocol.lower(), int(fields[5]))] = (fields[2], int(fields[3]))
+            except ValueError:
+                continue
+        return mappings
+
+    def _get_slirp_host_endpoint(self, target_port, protocol='tcp'):
+        protocol = protocol.lower()
+        endpoint = self._slirp_hostfwd_mappings.get((protocol, target_port))
+        if endpoint is None:
+            return '127.0.0.1', self.add_hostfwd(target_port, protocol=protocol)
+        host, port = endpoint
+        if host in ('*', '0.0.0.0'):
+            host = '127.0.0.1'
+        return host, port
+
+    def add_hostfwd(self, target_port, host_port=None, protocol='tcp'):
+        """Add a TCP or UDP slirp hostfwd rule and return the host port.
+
+        Without host_port a free one is picked automatically. Returns None if
+        an explicitly requested host_port is already in use.
+        """
+        protocol = protocol.lower()
+        socket_type = {'tcp': socket.SOCK_STREAM, 'udp': socket.SOCK_DGRAM}.get(protocol)
+        if socket_type is None:
+            raise ValueError("Unsupported slirp host forwarding protocol: %s" % protocol)
+        candidates = [host_port] if host_port else []
+        if not host_port:
+            for _ in range(10):
+                with socket.socket(socket.AF_INET, socket_type) as s:
+                    s.bind(('127.0.0.1', 0))
+                    candidates.append(s.getsockname()[1])
+        for candidate in candidates:
+            result = self.run_monitor('human-monitor-command', {
+                'command-line': 'hostfwd_add %s:127.0.0.1:%d-:%d' % (protocol, candidate, target_port)})
+            output = result.get('return') if isinstance(result, dict) else None
+            # hostfwd_add prints nothing on success; on failure it prints a message like
+            # "Could not set up host forwarding rule ...". Check for empty output to determine success.
+            if isinstance(result, dict) and 'error' not in result and isinstance(output, str) and output.strip() == '':
+                self.logger.debug("Added %s hostfwd for target port %d on host port %d"
+                                 % (protocol, target_port, candidate))
+                return candidate
+            self.logger.debug("hostfwd_add for %s host port %d failed: %s" % (protocol, candidate, result))
+        if host_port:
+            return None
+        raise RuntimeError(
+            "Failed to add a slirp %s hostfwd rule for target port %d" % (protocol, target_port))
+
+    def get_host_port(self, target_port, protocol='tcp'):
+        """Resolve a slirp protocol and target port to the host port qemu
+        forwards it on, adding a rule for it if there is none yet."""
+        protocol = protocol.lower()
+        host_port = self.slirp_port_mappings.get((protocol, target_port))
+        if host_port is None:
+            host_port = self.add_hostfwd(target_port, protocol=protocol)
+        return host_port
 
     def run_monitor(self, command, args=None, timeout=60):
         if hasattr(self, 'qmp') and self.qmp:

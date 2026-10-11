@@ -224,6 +224,16 @@ class QemuTarget(BaseTarget):
     def run_serial(self, command, timeout=60):
         return self.runner.run_serial(command, timeout=timeout)
 
+    def get_host_port(self, target_port, protocol='tcp'):
+        return self.runner.get_host_port(target_port, protocol=protocol)
+
+    @property
+    def slirp_port_mappings(self):
+        return self.runner.slirp_port_mappings
+
+    def add_hostfwd(self, target_port, host_port=None, protocol='tcp'):
+        return self.runner.add_hostfwd(target_port, host_port, protocol=protocol)
+
 
 class SimpleRemoteTarget(BaseTarget):
 
