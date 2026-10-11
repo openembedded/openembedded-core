@@ -3545,7 +3545,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         its client about a remapped host port, so it needs host == target.
         Since every parallel oe-selftest worker otherwise starts from the same
         default port, claim a block that is free right now and hold it for the
-        rest of the test.
+        rest of the test. Separate locks keep runqemu's legacy port locks free.
         """
         os.makedirs(self.SLIRP_PORT_LOCK_DIR, exist_ok=True)
         for start in range(1234, 20000, self.SLIRP_PORT_BLOCK_SIZE):
