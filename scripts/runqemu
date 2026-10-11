@@ -134,6 +134,8 @@ def get_first_file(globs):
     return ''
 
 class BaseConfig(object):
+    PORT_LOCK_DIR = "/tmp/qemu-port-locks"
+
     def __init__(self):
         # The self.d saved vars from self.set(), part of them are from qemuboot.conf
         self.d = {'QB_KERNEL_ROOT': '/dev/vda'}
@@ -1055,7 +1057,7 @@ to your build configuration.
                 self.nfs_server = '192.168.7.@GATEWAY@'
 
         nfsd_port = 3048 + self.nfs_instance
-        lockdir = "/tmp/qemu-port-locks"
+        lockdir = self.PORT_LOCK_DIR
         self.make_lock_dir(lockdir)
         while not self.check_free_port('localhost', nfsd_port, lockdir):
             self.nfs_instance += 1
