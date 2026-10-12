@@ -22,7 +22,7 @@ B = "${WORKDIR}/build"
 SRC_URI = "http://www.sqlite.org/2026/sqlite-autoconf-${SQLITE_PV}.tar.gz"
 SRC_URI += "file://0001-Add-option-to-disable-zlib.patch"
 
-SRC_URI[sha256sum] = "0e9483900e92cd5de8fd48d16bf9200145a61f7fd5be542a5ac81d8a9516eb9c"
+SRC_URI[sha256sum] = "134ec0802dda5795816e25d25872d20b312cb3973438c49b30bc40b7705ea9ed"
 
 UPSTREAM_CHECK_URI = "http://www.sqlite.org/"
 UPSTREAM_CHECK_REGEX = "releaselog/(?P<pver>(\d+[\.\-_]*)+)\.html"
