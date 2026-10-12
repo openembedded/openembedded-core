@@ -249,6 +249,10 @@ do_unpack[postfuncs] += "create_source_date_epoch_stamp"
 def get_source_date_epoch_value(d):
     return oe.reproducible.epochfile_read(d.getVar('SDE_FILE'), d)
 
+# epochfile_read() memoizes into this variable via d.setVar(), so its
+# runtime value must not leak into any task's hash.
+oe.reproducible.epochfile_read[vardepsexclude] = "__CACHED_SOURCE_DATE_EPOCH"
+
 def get_layers_branch_rev(d):
     revisions = oe.buildcfg.get_layer_revisions(d)
     layers_branch_rev = ["%-20s = \"%s:%s\"" % (r[1], r[2], r[3]) for r in revisions]
