@@ -36,6 +36,24 @@ def set_timestamp_now(d, o, prop):
         delattr(o, prop)
 
 
+def get_release_date(d):
+    """Resolve the release date to record in a package's releaseTime property.
+
+    Uses SOURCE_DATE_EPOCH, which by this point (do_create_spdx runs after
+    do_unpack and do_deploy_source_date_epoch) reflects the source mtimes.
+    Omits the fallback value since it is not a meaningful release date.
+
+    Returns a datetime, or None if no release date should be recorded.
+    """
+    source_date_epoch = d.getVar("SOURCE_DATE_EPOCH")
+    if not source_date_epoch or source_date_epoch == d.getVar(
+        "SOURCE_DATE_EPOCH_FALLBACK"
+    ):
+        return None
+
+    return datetime.fromtimestamp(int(source_date_epoch), tz=timezone.utc)
+
+
 def add_license_expression(
     d, objset, license_expression, license_data, search_objsets=[]
 ):
@@ -441,6 +459,7 @@ def _enrich_source_package(d, dl, fd, file_name, primary_purpose):
 
 def add_download_files(d, objset):
     inputs = set()
+    release_date = get_release_date(d)
 
     urls = d.getVar("SRC_URI").split()
     fetch = bb.fetch.Fetch(urls, d)
@@ -503,6 +522,9 @@ def add_download_files(d, objset):
             )
 
             _enrich_source_package(d, dl, fd, file_name, primary_purpose)
+
+            if release_date is not None:
+                dl.releaseTime = release_date
 
             if fd.method.supports_checksum(fd):
                 for checksum_id in bb.fetch.CHECKSUM_LIST:
