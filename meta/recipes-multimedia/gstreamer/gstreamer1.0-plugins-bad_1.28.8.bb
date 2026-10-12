@@ -11,7 +11,7 @@ SRC_URI = "https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad
            file://0004-opencv-resolve-missing-opencv-data-dir-in-yocto-buil.patch \
            file://0005-wayland-handle-padded-buffers-in-wl_shm-buffer-creat.patch \
            "
-SRC_URI[sha256sum] = "dc525383c18b2c265bbe6a43d498656cd918aaa130aa4e3abeabcdaa741c3ffe"
+SRC_URI[sha256sum] = "670d888bde8242579b0d8e91f60cf337aa7be20ca7c315ebfbdd6e5a9218d104"
 
 S = "${UNPACKDIR}/gst-plugins-bad-${PV}"
 
