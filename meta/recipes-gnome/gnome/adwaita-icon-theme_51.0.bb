@@ -14,8 +14,6 @@ inherit gnomebase allarch gtk-icon-cache
 
 SRC_URI[archive.sha256sum] = "ba561cf3c96305a47179fa5605856ad695c9238ea07f7093aebd9ba80c4e323b"
 
-DEPENDS += "librsvg-native"
-
 PACKAGES =+ "${PN}-cursors ${PN}-symbolic"
 
 RREPLACES:${PN} = "gnome-icon-theme"
