@@ -69,8 +69,8 @@ CFLAGS += "${@oe.utils.conditional('SITEINFO_ENDIANNESS', 'le', '-DSQLITE_BYTEOR
 PACKAGES = "lib${BPN} lib${BPN}-dev lib${BPN}-doc ${PN}-dbg lib${BPN}-staticdev ${PN}"
 
 FILES:${PN} = "${bindir}/*"
-FILES:lib${BPN} = "${libdir}/*.so.*"
-FILES:lib${BPN}-dev = "${libdir}/*.la ${libdir}/*.so \
+FILES:lib${BPN} = "${libdir}/*${SOLIBS}"
+FILES:lib${BPN}-dev = "${libdir}/*.la ${libdir}/*${SOLIBSDEV} \
                        ${libdir}/pkgconfig ${includedir}"
 FILES:lib${BPN}-doc = "${docdir} ${mandir} ${infodir}"
 FILES:lib${BPN}-staticdev = "${libdir}/lib*.a"
