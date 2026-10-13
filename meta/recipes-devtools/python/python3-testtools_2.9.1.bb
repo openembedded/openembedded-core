@@ -16,5 +16,4 @@ RDEPENDS:${PN} += "\
     python3-json \
     "
 
-BBCLASSEXTEND = "nativesdk"
-
+BBCLASSEXTEND = "native nativesdk"
