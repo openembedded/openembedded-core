@@ -4,11 +4,11 @@ HOMEPAGE = "https://github.com/rpm-software-management/createrepo_c/wiki"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRC_URI = "git://github.com/rpm-software-management/createrepo_c;branch=master;protocol=https;tag=${PV} \
+SRC_URI = "git://github.com/rpm-software-management/createrepo_c;branch=1.x.x-maint;protocol=https;tag=${PV} \
            file://0001-Do-not-set-PYTHON_INSTALL_DIR-by-running-python.patch \
            "
 
-SRCREV = "47ab8a418fb3abd58ef3760a7eace1481610c659"
+SRCREV = "6a48c5f599d30a20d15ea13b1dea82a86734d3d2"
 
 DEPENDS = "expat curl glib-2.0 libxml2 openssl bzip2 zlib file sqlite3 xz rpm"
 DEPENDS:append:class-native = " file-replacement-native"
