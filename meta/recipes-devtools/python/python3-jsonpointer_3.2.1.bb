@@ -5,14 +5,16 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=32b15c843b7a329130f4e266a281ebb3"
 
 inherit pypi ptest setuptools3
 
-SRC_URI[sha256sum] = "0b801c7db33a904024f6004d526dcc53bbb8a4a0f4e32bfd10beadf60adf1900"
+SRC_URI[sha256sum] = "47c846513b3a4ec46eecef1105207fba075e2a3659048e362bd7daff0fc33342"
 
 SRC_URI += " \
 	file://run-ptest \
 "
 
 do_install_ptest() {
-	cp -f ${S}/tests.py ${D}${PTEST_PATH}/
+	install -m 0644 ${S}/tests.py ${D}${PTEST_PATH}/
+	install -d ${D}${PTEST_PATH}/bin
+	install -m 0755 ${S}/bin/jsonpointer ${D}${PTEST_PATH}/bin/
 }
 
 RDEPENDS:${PN} += " \
