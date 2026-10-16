@@ -10,11 +10,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=5b4be4b2549338526758ef479c040943 \
 
 inherit update-rc.d update-alternatives systemd autotools
 
-SRC_URI = "git://github.com/troglobit/sysklogd.git;branch=master;protocol=https;tag=v${PV} \
+SRC_URI = "git://github.com/troglobit/sysklogd.git;branch=v2.x;protocol=https;tag=v${PV} \
            file://sysklogd \
            "
 
-SRCREV = "5fb314cb9060afa3bd4eed2f0be3200f02f729e9"
+SRCREV = "e2c0c1d9585e88b1a85e3634c4dc230517f68f0e"
 
 EXTRA_OECONF = "--with-systemd=${systemd_system_unitdir} --without-logger"
 
