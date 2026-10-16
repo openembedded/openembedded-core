@@ -10,23 +10,27 @@ SECTION = "devel"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENCE;md5=321a5eb46acae6b6c1ff2c7a866d836a"
 
-SRC_URI = "${GITHUB_BASE_URI}/download/pcre2-${PV}/pcre2-${PV}.tar.bz2"
-
-GITHUB_BASE_URI = "https://github.com/PCRE2Project/pcre2/releases"
-UPSTREAM_CHECK_REGEX = "releases/tag/pcre2-(?P<pver>\d+(\.\d+)+)$"
-
-SRC_URI[sha256sum] = "e2a53984ff0b07dfdb5ae4486bbb9b21cca8e7df2434096cc9bf1b728c350bcb"
+BASE_VER = "${@d.getVar('PV').split('+')[0]}"
+SRC_URI = "git://github.com/PCRE2Project/pcre2;protocol=https;branch=release/pcre2-${BASE_VER}"
+SRCREV = "50b3c0d7ceaf23578d04e644c02781c322ef6cb0"
+PV .= "+git"
 
 CVE_PRODUCT = "pcre2"
 
-S = "${WORKDIR}/pcre2-${PV}"
+CVE_STATUS_GROUPS += "CVE_STATUS_STABLE_BACKPORTS"
+CVE_STATUS_STABLE_BACKPORTS = "CVE-2026-103111 CVE-2026-86145 CVE-2026-89158 CVE-2026-89160 \
+    CVE-2026-89157 CVE-2026-89156 CVE-2026-89161 \
+"
+CVE_STATUS_STABLE_BACKPORTS[status] = "cpe-stable-backport: fix available in used git hash"
+
+S = "${WORKDIR}/git"
 
 PROVIDES += "pcre2"
 DEPENDS += "bzip2 zlib"
 
 BINCONFIG = "${bindir}/pcre2-config"
 
-inherit autotools binconfig-disabled github-releases
+inherit autotools binconfig-disabled
 
 EXTRA_OECONF = "\
     --enable-newline-is-lf \
