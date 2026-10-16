@@ -4963,6 +4963,25 @@ class DevtoolIdeSdkClangTests(DevtoolIdeSdkTests):
         # Second pass: debug again, breakpoints now resolved at shifted line numbers
         lldb_session_func(magic_string_new)
 
+    def _run_lldb_batch(self, qemu, lldb_cmd):
+        """Run an lldb --batch session, retrying once on a gdb-remote handshake timeout.
+
+        lldb hard-codes a 6 s minimum wait for lldb-server's first reply, which
+        can be exceeded on a heavily loaded host (NFS root, emulated target).
+        On such a failure the lldb-server log is fetched from the target for
+        diagnosis. Any other failure is reported unchanged.
+        """
+        handshake_timeout = 'failed to get reply to handshake packet'
+        for attempt in (1, 2):
+            r = runCmd(lldb_cmd, ignore_status=True, output_log=self._cmd_logger)
+            if r.status == 0 or handshake_timeout not in r.output:
+                break
+            _, server_log = qemu.run('tail -n 50 /tmp/lldb_server_*/lldb_server.log')
+            self.logger.warning("lldb handshake timed out (attempt %d), lldb-server log:\n%s",
+                                attempt, server_log)
+        self.assertEqual(r.status, 0, "lldb batch session failed: %s" % r.output)
+        return r
+
     def _lldb_server_debugging_once(self, tempdir, qemu, magic_string):
         """Verify lldb-server (platform mode) + lldb batch debugging works end-to-end.
 
@@ -5050,8 +5069,7 @@ class DevtoolIdeSdkClangTests(DevtoolIdeSdkTests):
                 source_map_args += [k, v_resolved]
             lldb_batch += ["-o", "settings set target.source-map %s" % " ".join(source_map_args)]
         lldb_batch += self._lldb_debug_cpp_example_batch_commands(tempdir)
-        r = runCmd(lldb_batch, output_log=self._cmd_logger)
-        self.assertEqual(r.status, 0, "lldb batch session failed: %s" % r.output)
+        r = self._run_lldb_batch(qemu, lldb_batch)
         self._lldb_debug_cpp_example_check(r.output, magic_string)
 
     def _verify_nfs_launch_json(self, tempdir, nfs_rootfs):
@@ -5111,10 +5129,8 @@ class DevtoolIdeSdkClangTests(DevtoolIdeSdkTests):
         # Run an lldb batch session covering the executable, library and
         # header breakpoints, then continue to completion
         lldb_batch_args = self._lldb_debug_cpp_example_batch_commands(tempdir)
-        r = runCmd([lldb_script, '--batch'] + lldb_batch_args,
-                   output_log=self._cmd_logger)
+        r = self._run_lldb_batch(qemu, [lldb_script, '--batch'] + lldb_batch_args)
         self.logger.debug("lldb batch output: %s", r.output)
-        self.assertEqual(r.status, 0)
         self._lldb_debug_cpp_example_check(r.output, magic_string)
 
         # Stop lldb-server
