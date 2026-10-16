@@ -6,6 +6,7 @@
 
 import textwrap
 import hashlib
+from datetime import datetime, timezone
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake, get_bb_var, get_bb_vars
 import oe.spdx30
@@ -443,3 +444,44 @@ class SPDX30Check(SPDX3CheckBase, OESelftestTestCase):
                 r'\d',
                 f"Version '{version}' for package '{name}' should contain digits"
             )
+
+    def test_release_date_source_date_epoch(self):
+        """releaseTime should be derived from SDE_FILE via epochfile_read().
+
+        This is recorded on the downloaded source software_Package objects
+        produced by do_create_spdx (not the recipe-only do_create_recipe_spdx
+        task), since the release date can only be known once sources are
+        available and SOURCE_DATE_EPOCH has been computed.
+        """
+        objset = self.check_recipe_spdx(
+            "tar",
+            "{DEPLOY_DIR_SPDX}/{SSTATE_PKGARCH}/builds/build-tar.spdx.json",
+        )
+
+        bitbake("tar -c unpack -f")
+        sde_file = get_bb_var("SDE_FILE", "tar")
+        with open(sde_file) as f:
+            source_date_epoch = f.read()
+        expected = datetime.fromtimestamp(int(source_date_epoch), tz=timezone.utc)
+
+        pkg = None
+        for candidate in objset.foreach_type(oe.spdx30.software_Package):
+            if candidate.software_downloadLocation:
+                pkg = candidate
+                break
+
+        self.assertIsNotNone(pkg, "Unable to find downloaded source software_Package")
+        self.assertEqual(pkg.releaseTime, expected)
+
+    def test_release_date_omitted_without_downloaded_source(self):
+        """releaseTime only applies to downloaded source packages; recipes
+        with only local file:// sources have none, and get no releaseTime."""
+        # base-files only has file:// sources, so it has no downloaded
+        # source software_Package and thus no releaseTime anywhere.
+        objset = self.check_recipe_spdx(
+            "base-files",
+            "{DEPLOY_DIR_SPDX}/{MACHINE_ARCH}/builds/build-base-files.spdx.json",
+        )
+
+        for candidate in objset.foreach_type(oe.spdx30.software_Package):
+            self.assertIsNone(candidate.releaseTime)

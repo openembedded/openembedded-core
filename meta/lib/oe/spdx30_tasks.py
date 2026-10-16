@@ -9,6 +9,7 @@ import oe.cve_check
 import oe.license
 import oe.packagedata
 import oe.patch
+import oe.reproducible
 import oe.sbom30
 import oe.sdk
 import oe.spdx30
@@ -34,6 +35,26 @@ def set_timestamp_now(d, o, prop):
         # Doing this helps to validated that the property actually exists, and
         # also that it is not mandatory
         delattr(o, prop)
+
+
+def get_release_date(d):
+    """Resolve the release date to record in a package's releaseTime property.
+
+    Reads SDE_FILE via oe.reproducible.epochfile_read() directly, rather than
+    SOURCE_DATE_EPOCH, since a recipe may set SOURCE_DATE_EPOCH itself to
+    override the computed value, and that override is not a release date.
+
+    Omits the fallback value since it is not a meaningful release date.
+
+    Returns a datetime, or None if no release date should be recorded.
+    """
+    source_date_epoch = oe.reproducible.epochfile_read(d.getVar("SDE_FILE"), d)
+    if not source_date_epoch or source_date_epoch == d.getVar(
+        "SOURCE_DATE_EPOCH_FALLBACK"
+    ):
+        return None
+
+    return datetime.fromtimestamp(int(source_date_epoch), tz=timezone.utc)
 
 
 def add_license_expression(
@@ -441,6 +462,7 @@ def _enrich_source_package(d, dl, fd, file_name, primary_purpose):
 
 def add_download_files(d, objset):
     inputs = set()
+    release_date = get_release_date(d)
 
     urls = d.getVar("SRC_URI").split()
     fetch = bb.fetch.Fetch(urls, d)
@@ -503,6 +525,9 @@ def add_download_files(d, objset):
             )
 
             _enrich_source_package(d, dl, fd, file_name, primary_purpose)
+
+            if release_date is not None:
+                dl.releaseTime = release_date
 
             if fd.method.supports_checksum(fd):
                 for checksum_id in bb.fetch.CHECKSUM_LIST:
