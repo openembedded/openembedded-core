@@ -26,6 +26,11 @@ PACKAGECONFIG[svml] = "-Ddisable-svml=false,-Ddisable-svml=true"
 # the overflow tests fail with compiler-rt on aarch64
 LDFLAGS:append:toolchain-clang:aarch64 = " -rtlib=libgcc -unwindlib=libgcc"
 
+# GCC 15+ inlines ceil/floor/trunc on riscv64 with the fcvt ahead of the range
+# check, so +-inf raises FE_INVALID; call libm instead. GCC PR 127908.
+CFLAGS:append:toolchain-gcc:riscv64 = " -fno-fp-int-builtin-inexact"
+CXXFLAGS:append:toolchain-gcc:riscv64 = " -fno-fp-int-builtin-inexact"
+
 # To ensure reproducibility, remove entries from __config__ which expose build
 # machine details, such as build paths, host paths, and hardware configuration.
 strip_build_info() {
