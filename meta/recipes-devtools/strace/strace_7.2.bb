@@ -57,6 +57,18 @@ do_install_ptest() {
 	    -i ${D}/${PTEST_PATH}/${TESTDIR}/Makefile
 }
 
+# Too long without output for ptest-runner on qemuriscv64. Keyed on riscv64, as
+# strace is not machine-specific, so also skipped on riscv64 hardware.
+STRACE_PTEST_SKIP ?= ""
+STRACE_PTEST_SKIP:riscv64 = "qual_fault-syscall"
+
+do_install_ptest:append() {
+	for t in ${STRACE_PTEST_SKIP}; do
+		sed -i -e '1a . "${srcdir=.}/init.sh"\nskip_ "Too slow under QEMU on riscv64"' \
+		    ${D}${PTEST_PATH}/${TESTDIR}/$t.test
+	done
+}
+
 RDEPENDS:${PN}-ptest += "make coreutils grep gawk sed locale-base-en-us"
 
 BBCLASSEXTEND = "native"
