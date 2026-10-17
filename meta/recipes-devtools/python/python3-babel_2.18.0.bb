@@ -19,6 +19,7 @@ RDEPENDS:${PN} += " \
     python3-pickle \
     python3-shell \
     python3-threading \
+    python3-zoneinfo \
 "
 
 BBCLASSEXTEND = "native nativesdk"
