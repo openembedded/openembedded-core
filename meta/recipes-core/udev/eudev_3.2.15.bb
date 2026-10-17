@@ -10,13 +10,12 @@ DEPENDS = "gperf-native"
 PROVIDES = "udev"
 
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz \
-           file://netifnames.patch \
            file://init \
            file://local.rules \
-           file://0001-random-util.c-sync-dev_urandom-implementation-to-sys.patch \
+           file://0001-udevd-keep-a-copy-of-the-event-devnode.patch \
            "
 
-SRC_URI[sha256sum] = "8da4319102f24abbf7fff5ce9c416af848df163b29590e666d334cc1927f006f"
+SRC_URI[sha256sum] = "eb69809fc0d1187f2463ab2149c53aa9f42a78e59f14ebea68eae6cb6b4fc1c3"
 
 GITHUB_BASE_URI = "https://github.com/eudev-project/eudev/releases"
 

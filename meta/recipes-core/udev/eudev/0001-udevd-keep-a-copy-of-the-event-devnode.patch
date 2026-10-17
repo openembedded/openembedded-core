@@ -1,0 +1,101 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Alex Kiernan <alex.kiernan@gmail.com>
+Date: Sat, 17 Oct 2026 14:23:21 +0100
+Subject: [PATCH] udevd: keep a copy of the event devnode
+
+Commit 4b83740d95be added a devnode check to is_devpath_busy(), caching
+the pointer returned by udev_device_get_devnode() in struct event. That
+string belongs to the udev_device and can be freed while the event is
+still queued: dispatching an event to an idle worker calls
+udev_monitor_send_device(), whose udev_device_get_devtype() re-reads the
+uevent file for devices without DEVTYPE, and the DEVNAME line replaces
+(frees) the devnode string via udev_device_set_devnode().
+
+The next is_devpath_busy() then strcmp()s freed memory. Under musl,
+whose mallocng returns freed memory to the kernel, this segfaults the
+main daemon; elsewhere it silently compares stale data. valgrind
+(qemuarm64, musl) reports it on the first coldplug:
+
+  Invalid read of size 1
+     at strcmp
+     by streq_ptr (util.c:97)
+     by is_devpath_busy (udevd.c:578)
+     by event_queue_start (udevd.c:602)
+   Address 0x54eeaf0 is 0 bytes inside a block of size 10 free'd
+     at free
+     by udev_device_set_devnode (libudev-device.c:1750)
+     by udev_device_read_uevent_file (libudev-device.c:706)
+     by udev_device_get_devtype (libudev-device.c:248)
+     by udev_monitor_send_device (libudev-monitor.c:822)
+     by event_run (udevd.c:462)
+   Block was alloc'd at
+     at malloc
+     by asprintf
+     by udev_device_set_devnode (libudev-device.c:1752)
+     by udev_device_new_from_nulstr (libudev-device.c:2151)
+     by udev_monitor_receive_device (libudev-monitor.c:762)
+
+The systemd code this was ported from is not affected: sd_device seals
+devices received from netlink, so device_read_uevent_file() never
+re-reads them and the cached devname stays the DEVNAME the event arrived
+with for as long as the event is queued.
+
+Store a copy of the devnode in struct event, which keeps those
+semantics. Looking the devnode up from the device at comparison time
+would avoid the allocation, but would compare whatever a later uevent
+re-read left there rather than the event's own DEVNAME, which is what
+the check relies on for a remove and add queued for the same node.
+Stopping udev_device_get_devtype() re-reading the uevent file would
+remove the trigger instead, but changes public libudev behaviour.
+
+Fixes: 4b83740d95be ("udevd: make newer event also blocked by DEVPATH_OLD and by events for the same device node")
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+AI-Generated: Claude Opus 5.5 (Claude Code)
+Signed-off-by: Alex Kiernan <alex.kiernan@gmail.com>
+
+Upstream-Status: Submitted [https://github.com/eudev-project/eudev/pull/304]
+---
+ src/udev/udevd.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
+
+diff --git a/src/udev/udevd.c b/src/udev/udevd.c
+index 93d9466e0d2d..6ba3efa52555 100644
+--- a/src/udev/udevd.c
++++ b/src/udev/udevd.c
+@@ -97,7 +97,7 @@ struct event {
+         unsigned long long int seqnum;
+         const char *devpath;
+         const char *devpath_old;
+-        const char *devnode;
++        char *devnode;
+         dev_t devnum;
+         int ifindex;
+         bool is_block;
+@@ -140,6 +140,7 @@ static void event_free(struct event *event) {
+         udev_list_node_remove(&event->node);
+         udev_device_unref(event->dev);
+         udev_device_unref(event->dev_kernel);
++        free(event->devnode);
+ 
+         if (event->worker)
+                 event->worker->event = NULL;
+@@ -495,7 +496,18 @@ static int event_queue_insert(struct udev_device *dev) {
+         event->seqnum = udev_device_get_seqnum(dev);
+         event->devpath = udev_device_get_devpath(dev);
+         event->devpath_old = udev_device_get_devpath_old(dev);
+-        event->devnode = udev_device_get_devnode(dev);
++        /* Keep our own copy of the DEVNAME the event arrived with: unlike
++         * systemd's sealed sd_device, libudev may re-read the uevent file
++         * later (udev_monitor_send_device() -> udev_device_get_devtype()),
++         * which frees and replaces the device's devnode string. */
++        if (udev_device_get_devnode(dev) != NULL) {
++                event->devnode = strdup(udev_device_get_devnode(dev));
++                if (event->devnode == NULL) {
++                        udev_device_unref(event->dev_kernel);
++                        free(event);
++                        return -1;
++                }
++        }
+         event->devnum = udev_device_get_devnum(dev);
+         event->is_block = streq("block", udev_device_get_subsystem(dev));
+         event->ifindex = udev_device_get_ifindex(dev);
