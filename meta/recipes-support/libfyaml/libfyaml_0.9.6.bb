@@ -13,5 +13,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/libfyaml-${PV}.tar.gz \
 SRC_URI[sha256sum] = "a59cc3331e2eb903ec36933ad52a45888041cac31e44f553a00511131242c483"
 
 inherit autotools pkgconfig github-releases
+# Specify linking with -latomic on architectures missing 64bit atomics.
+LDFLAGS += "${@bb.utils.contains_any('TUNE_FEATURES', '32 armv5 o32 m32', '-latomic', '', d)}"
 
 BBCLASSEXTEND = "native"
