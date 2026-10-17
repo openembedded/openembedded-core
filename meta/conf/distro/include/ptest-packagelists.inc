@@ -159,9 +159,6 @@ PTESTS_SLOW = "\
     zstd \
 "
 
-# python3 ptests hang on qemuriscv64
-PTESTS_SLOW:remove:riscv64 = "python3"
-PTESTS_PROBLEMS:append:riscv64 = " python3"
 PTESTS_SLOW:remove:riscv32 = "lttng-tools strace "
 PTESTS_PROBLEMS:append:riscv32 = " lttng-tools strace"
 PTESTS_SLOW:append:libc-musl = " libc-test"
