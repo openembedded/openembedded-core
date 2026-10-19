@@ -66,6 +66,7 @@ PTESTS_FAST = "\
     lua \
     lzo \
     m4 \
+    mpfr \
     nettle \
     npth \
     opkg \
