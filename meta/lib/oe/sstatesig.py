@@ -550,6 +550,11 @@ def OEOuthashBasic(path, sigfile, task, d):
     import grp
     import re
     import fnmatch
+    import functools
+
+    # Caches to speed lookups
+    lookup_uid = functools.lru_cache(lambda uid: pwd.getpwuid(uid).pw_name)
+    lookup_gid = functools.lru_cache(lambda gid: grp.getgrgid(gid).gr_name)
 
     def update_hash(s):
         s = s.encode('utf-8')
@@ -652,8 +657,8 @@ def OEOuthashBasic(path, sigfile, task, d):
                         add_perm(stat.S_IXOTH, 'x')
 
                     try:
-                        update_hash(" %10s" % pwd.getpwuid(s.st_uid).pw_name)
-                        update_hash(" %10s" % grp.getgrgid(s.st_gid).gr_name)
+                        update_hash(" %10s" % lookup_uid(s.st_uid))
+                        update_hash(" %10s" % lookup_gid(s.st_gid))
                     except KeyError as e:
                         msg = ("KeyError: %s\nPath %s is owned by uid %d, gid %d, which doesn't match "
                             "any user/group on target. This may be due to host contamination." %
