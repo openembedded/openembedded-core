@@ -1780,7 +1780,7 @@ def process_shlibs(pkgfiles, d):
                     darwin_so(file, needed, sonames, pkgver)
                 elif hostos.startswith("mingw"):
                     mingw_dll(file, needed, sonames, pkgver)
-                elif os.access(file, os.X_OK) or lib_re.match(file):
+                elif cpath.is_executable(file) or lib_re.match(file):
                     linuxlist.append(file)
 
         if linuxlist:
