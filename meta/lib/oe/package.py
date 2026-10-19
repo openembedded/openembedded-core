@@ -30,7 +30,7 @@ def runstrip(file, elftype, strip, extra_strip_sections=''):
     # 16 - kernel module
 
     newmode = None
-    if not os.access(file, os.W_OK) or os.access(file, os.R_OK):
+    if not os.access(file, os.R_OK | os.W_OK):
         origmode = os.stat(file)[stat.ST_MODE]
         newmode = origmode | stat.S_IWRITE | stat.S_IREAD
         os.chmod(file, newmode)
@@ -780,7 +780,7 @@ def splitdebuginfo(file, dvar, dv, d):
     objcopy = d.getVar("OBJCOPY")
 
     newmode = None
-    if not os.access(file, os.W_OK) or os.access(file, os.R_OK):
+    if not os.access(file, os.R_OK | os.W_OK):
         origmode = os.stat(file)[stat.ST_MODE]
         newmode = origmode | stat.S_IWRITE | stat.S_IREAD
         os.chmod(file, newmode)
@@ -822,7 +822,7 @@ def splitstaticdebuginfo(file, dvar, dv, d):
     dvar = d.getVar('PKGD')
 
     newmode = None
-    if not os.access(file, os.W_OK) or os.access(file, os.R_OK):
+    if not os.access(file, os.R_OK | os.W_OK):
         origmode = os.stat(file)[stat.ST_MODE]
         newmode = origmode | stat.S_IWRITE | stat.S_IREAD
         os.chmod(file, newmode)
