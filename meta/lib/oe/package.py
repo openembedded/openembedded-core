@@ -1654,23 +1654,24 @@ def process_shlibs(pkgfiles, d):
         needed = set()
         sonames = set()
         ldir = os.path.dirname(file).replace(pkgdest + "/" + pkg, '')
-        cmd = d.getVar('OBJDUMP') + " -p " + shlex.quote(file) + " 2>/dev/null"
-        fd = os.popen(cmd)
-        lines = fd.readlines()
-        fd.close()
         rpath = tuple()
+        cmd = ["eu-readelf", "--dynamic", file]
+        # Don't check for errors as we may be passed non-ELF
+        ret = subprocess.run(cmd, capture_output=True, text=True)
+
+        lines = ret.stdout.splitlines()
         for l in lines:
-            m = re.match(r"\s+RPATH\s+([^\s]*)", l)
+            m = re.match(r"\s+RPATH\s+.+\[(.+)\]", l)
             if m:
                 rpaths = m.group(1).replace("$ORIGIN", ldir).split(":")
                 rpath = tuple(map(os.path.normpath, rpaths))
         for l in lines:
-            m = re.match(r"\s+NEEDED\s+([^\s]*)", l)
+            m = re.match(r"\s+NEEDED\s+.+\[(.+)\]", l)
             if m:
                 dep = m.group(1)
                 if dep not in needed:
                     needed.add((dep, file, rpath))
-            m = re.match(r"\s+SONAME\s+([^\s]*)", l)
+            m = re.match(r"\s+SONAME\s+.+\[(.+)\]", l)
             if m:
                 this_soname = m.group(1)
                 prov = (this_soname, ldir, pkgver)
