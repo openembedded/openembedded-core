@@ -32,14 +32,14 @@ CASES_PATHS = [os.path.join(os.path.abspath(os.path.dirname(__file__)),
                 'lib', 'checklayer', 'cases')]
 logger = scriptutils.logger_create(PROGNAME, stream=sys.stdout)
 
-def test_layer(td, layer, test_software_layer_signatures):
+def test_layer(td, layer, test_software_layer_signatures, run_tests):
     from checklayer.context import CheckLayerTestContext
     logger.info("Starting to analyze: %s" % layer['name'])
     logger.info('Distro: %s' % td['bbvars']["DISTRO"])
     logger.info("----------------------------------------------------------------------")
 
     tc = CheckLayerTestContext(td=td, logger=logger, layer=layer, test_software_layer_signatures=test_software_layer_signatures)
-    tc.loadTests(CASES_PATHS)
+    tc.loadTests(CASES_PATHS, modules=run_tests, modules_required=run_tests)
     return tc.runTests()
 
 def dump_layer_debug(layer):
@@ -70,6 +70,8 @@ def main():
                        help='check that software layers do not change signatures (on by default)')
     group.add_argument('--without-software-layer-signature-check', action='store_false', dest='test_software_layer_signatures',
                        help='disable signature checking for software layers')
+    parser.add_argument('--run-tests', nargs='+', metavar='TEST', default=[],
+            help='Tests to run, as <module>[.<class>[.<name>]] (default: all)')
     parser.add_argument('-n', '--no-auto', help='Disable auto layer discovery',
             action='store_true')
     parser.add_argument('-d', '--debug', help='Enable debug output',
@@ -228,7 +230,7 @@ def main():
             layers_tested = layers_tested + 1
             continue
 
-        result = test_layer(td, layer, args.test_software_layer_signatures)
+        result = test_layer(td, layer, args.test_software_layer_signatures, args.run_tests)
         results[layer['name']] = result
         results_status[layer['name']] = 'PASS' if results[layer['name']].wasSuccessful() else 'FAIL'
         layers_tested = layers_tested + 1
