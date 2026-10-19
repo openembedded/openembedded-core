@@ -69,6 +69,7 @@ PTESTS_FAST = "\
     nettle \
     npth \
     opkg \
+    patch \
     popt \
     procps \
     psmisc \
