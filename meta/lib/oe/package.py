@@ -1619,7 +1619,7 @@ def process_shlibs(pkgfiles, d):
         bb.note("not generating shlibs")
         return
 
-    lib_re = re.compile(r"^.*\.so")
+    lib_re = re.compile(r"\.so(?:\.|$)")
     libdir_re = re.compile(r".*/%s$" % d.getVar('baselib'))
 
     packages = d.getVar('PACKAGES')
@@ -1780,7 +1780,7 @@ def process_shlibs(pkgfiles, d):
                     darwin_so(file, needed, sonames, pkgver)
                 elif hostos.startswith("mingw"):
                     mingw_dll(file, needed, sonames, pkgver)
-                elif cpath.is_executable(file) or lib_re.match(file):
+                elif cpath.is_executable(file) or lib_re.search(file):
                     linuxlist.append(file)
 
         if linuxlist:
