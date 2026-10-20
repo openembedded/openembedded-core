@@ -147,8 +147,11 @@ class ItsNodeConfiguration(ItsNode):
 class ItsNodeRootKernel(ItsNode):
     """Create FIT images for the kernel
 
-    Currently only a single kernel (no less or more) can be added to the FIT
-    image along with 0 or more device trees and 0 or 1 ramdisk.
+    One or more kernels can be added to the FIT image along with 0 or more
+    device trees and 0 or 1 ramdisk. The first kernel added is the default
+    kernel referenced by the automatically generated configurations.
+    Additional configurations referring to other kernels can be added with
+    fitimage_emit_section_config_custom().
 
     If a device tree included in the FIT image, the default configuration is the
     firt DTB. If there is no dtb present than the default configuation the kernel.
@@ -192,6 +195,9 @@ class ItsNodeRootKernel(ItsNode):
 
         self._dtbs = []
         self._dtb_alias = []
+        # DTB ids as passed to fitimage_emit_section_dtb(_alias) mapped to their nodes
+        self._dtbs_by_id = {}
+        self._default_conf = None
         self._kernel = None
         self._kernels = {}
         self._ramdisk = None
@@ -213,11 +219,18 @@ class ItsNodeRootKernel(ItsNode):
                 bb.fatal("FIT image signing is enabled for individual images but no image key name is provided.")
 
     def write_its_file(self, itsfile):
+        if self._default_conf:
+            self.configurations.add_property('default', self._default_conf)
         with open(itsfile, 'w') as f:
             f.write("/dts-v1/;\n\n")
             self.emit(f, 0)
 
+    def _check_image_id_unique(self, image_id):
+        if any(node.name == image_id for node in self.images.sub_nodes):
+            bb.fatal("Image node '%s' already exists in the ITS file." % image_id)
+
     def its_add_node_image(self, image_id, description, image_type, compression, opt_props):
+        self._check_image_id_unique(image_id)
         image_node = ItsNodeImage(
             image_id,
             self.images,
@@ -242,6 +255,7 @@ class ItsNodeRootKernel(ItsNode):
         return image_node
 
     def its_add_node_dtb(self, image_id, description, image_type, compression, opt_props, compatible):
+        self._check_image_id_unique(image_id)
         dtb_node = ItsNodeDtb(
             image_id,
             self.images,
@@ -267,7 +281,7 @@ class ItsNodeRootKernel(ItsNode):
         return dtb_node
 
     def fitimage_emit_section_kernel(self, kernel_id, kernel_path, compression,
-        load, entrypoint, mkimage_kernel_type, entrysymbol=None):
+        load, entrypoint, mkimage_kernel_type, entrysymbol=None, description="Linux kernel"):
         """Emit the fitImage ITS kernel section"""
         if kernel_id in self._kernels:
             bb.fatal("Kernel section '%s' already exists in the ITS file." % kernel_id)
@@ -290,7 +304,7 @@ class ItsNodeRootKernel(ItsNode):
 
         kernel_node = self.its_add_node_image(
             kernel_id,
-            "Linux kernel",
+            description,
             mkimage_kernel_type,
             compression,
             opt_props,
@@ -303,6 +317,8 @@ class ItsNodeRootKernel(ItsNode):
     def fitimage_emit_section_dtb(self, dtb_id, dtb_path, dtb_loadaddress=None,
                                   dtbo_loadaddress=None, add_compatible=False):
         """Emit the fitImage ITS DTB section"""
+        if dtb_id in self._dtbs_by_id:
+            bb.fatal("DTB '%s' already exists in the ITS file." % dtb_id)
         load=None
         dtb_ext = os.path.splitext(dtb_path)[1]
         if dtb_ext == ".dtbo":
@@ -332,9 +348,12 @@ class ItsNodeRootKernel(ItsNode):
             compatible
         )
         self._dtbs.append(dtb_node)
+        self._dtbs_by_id[dtb_id] = dtb_node
 
     def fitimage_emit_section_dtb_alias(self, dtb_alias_id, dtb_path, add_compatible=False):
         """Add a configuration node referring to another DTB"""
+        if dtb_alias_id in self._dtbs_by_id:
+            bb.fatal("DTB '%s' already exists in the ITS file." % dtb_alias_id)
         # Preserve the DTB's compatible string to be added to the configuration node
         compatible = None
         if add_compatible:
@@ -343,6 +362,7 @@ class ItsNodeRootKernel(ItsNode):
         dtb_id = os.path.basename(dtb_path)
         dtb_alias_node = ItsNodeDtbAlias("fdt-" + dtb_id, dtb_alias_id, compatible)
         self._dtb_alias.append(dtb_alias_node)
+        self._dtbs_by_id[dtb_alias_id] = dtb_alias_node
 
     def fitimage_emit_section_boot_script(self, bootscr_id, bootscr_path):
         """Emit the fitImage ITS u-boot script section"""
@@ -567,13 +587,47 @@ class ItsNodeRootKernel(ItsNode):
                 )
                 bb.fatal("FIT configuration mapping(s) not matched with any DTB: %s" % ', '.join(unused_conf))
         else:
-            # Currently exactly one kernel is supported.
+            # Without DTBs, emit one configuration for the default kernel
             self._fitimage_emit_one_section_config(self._conf_prefix + "1")
 
         default_conf = self.configurations.sub_nodes[0].name
         if default_dtb_image and self._dtbs:
             default_conf = self._conf_prefix + default_dtb_image
-        self.configurations.add_property('default', default_conf)
+        self._default_conf = default_conf
+
+    def fitimage_emit_section_config_custom(self, conf_id, kernel_id=None, dtb_id=None):
+        """Emit an additional configuration node for a specific kernel and optional DTB
+
+        kernel_id is the name of a kernel image node, the default kernel is used if not set.
+        dtb_id is the id passed to fitimage_emit_section_dtb or fitimage_emit_section_dtb_alias.
+        """
+        conf_node_name = self._conf_prefix + conf_id
+        if any(conf.name == conf_node_name for conf in self.configurations.sub_nodes):
+            bb.fatal("FIT configuration '%s' already exists in the ITS file." % conf_node_name)
+
+        kernel = None
+        if kernel_id:
+            kernel = self._kernels.get(kernel_id)
+            if not kernel:
+                bb.fatal("FIT configuration '%s' refers to unknown kernel '%s'. Available kernels: %s" %
+                         (conf_node_name, kernel_id, ' '.join(self._kernels)))
+
+        dtb = None
+        if dtb_id:
+            dtb = self._dtbs_by_id.get(dtb_id)
+            if not dtb:
+                bb.fatal("FIT configuration '%s' refers to unknown DTB '%s'. Available DTBs: %s" %
+                         (conf_node_name, dtb_id, ' '.join(self._dtbs_by_id)))
+
+        self._fitimage_emit_one_section_config(conf_node_name, dtb, kernel)
+
+    def fitimage_set_default_config(self, conf_id):
+        """Select the default configuration, overriding the one chosen by fitimage_emit_section_config"""
+        conf_node_name = self._conf_prefix + conf_id
+        if not any(conf.name == conf_node_name for conf in self.configurations.sub_nodes):
+            bb.fatal("FIT default configuration '%s' does not exist. Available configurations: %s" %
+                     (conf_node_name, ' '.join(conf.name for conf in self.configurations.sub_nodes)))
+        self._default_conf = conf_node_name
 
     def run_mkimage_assemble(self, itsfile, fitfile):
         cmd = [

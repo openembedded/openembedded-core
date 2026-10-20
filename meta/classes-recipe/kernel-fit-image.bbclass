@@ -29,20 +29,52 @@ python () {
         d.appendVarFlag('do_compile', 'depends', ' virtual/dtb:do_populate_sysroot')
         d.setVar('EXTERNAL_KERNEL_DEVICETREE', "${RECIPE_SYSROOT}/boot/devicetree")
 
-    # Parse loadables config
-    loadables = d.getVar('FIT_LOADABLES')
-    if loadables:
-        # Check that the loadables configuration variables are not set directly
-        # directly, then assign them a synthetic value for testability purposes
-        for v in ['FIT_LOADABLE_ARCH', 'FIT_LOADABLE_COMPRESSION',
-                  'FIT_LOADABLE_DESCRIPTION', 'FIT_LOADABLE_ENTRYPOINT',
-                  'FIT_LOADABLE_FILENAME', 'FIT_LOADABLE_LOADADDRESS',
-                  'FIT_LOADABLE_OS', 'FIT_LOADABLE_TYPE']:
-            if d.getVar(v):
-                raise bb.parse.SkipRecipe("You cannot use %s as a variable, you can only set flags." % v)
+    # Parse loadables, additional kernels and additional configurations
+    for items_var, flag_vars in (
+            ('FIT_LOADABLES', ['FIT_LOADABLE_ARCH', 'FIT_LOADABLE_COMPRESSION',
+                               'FIT_LOADABLE_DESCRIPTION', 'FIT_LOADABLE_ENTRYPOINT',
+                               'FIT_LOADABLE_FILENAME', 'FIT_LOADABLE_LOADADDRESS',
+                               'FIT_LOADABLE_OS', 'FIT_LOADABLE_TYPE']),
+            ('FIT_KERNELS', ['FIT_KERNEL_COMPRESSION', 'FIT_KERNEL_DEPLOYDIR',
+                             'FIT_KERNEL_DESCRIPTION', 'FIT_KERNEL_ENTRYPOINT',
+                             'FIT_KERNEL_FILENAME', 'FIT_KERNEL_LOADADDRESS',
+                             'FIT_KERNEL_MULTICONFIG', 'FIT_KERNEL_RECIPE',
+                             'FIT_KERNEL_TYPE']),
+            ('FIT_CONFIGS', ['FIT_CONFIG_DTB', 'FIT_CONFIG_KERNEL'])):
+        items = d.getVar(items_var)
+        if items:
+            # Check that the configuration variables are not set directly,
+            # then assign them a synthetic value for testability purposes
+            for v in flag_vars:
+                if d.getVar(v):
+                    raise bb.parse.SkipRecipe("You cannot use %s as a variable, you can only set flags." % v)
 
-            synt_value = " ? ".join([ d.getVarFlag(v, loadable) or "" for loadable in loadables.split() ])
-            d.setVar(v, synt_value)
+                synt_value = " ? ".join([ d.getVarFlag(v, item, False) or "" for item in items.split() ])
+                d.setVar(v, synt_value)
+
+    # Additional kernels may be deployed by another recipe, by a recipe of
+    # another multiconfig or be provided as prebuilt files
+    kernels = (d.getVar('FIT_KERNELS') or "").split()
+    if "kernel-1" in kernels:
+        bb.fatal("FIT_KERNELS must not contain kernel-1, it is reserved for virtual/kernel")
+    duplicates = sorted(set(k for k in kernels if kernels.count(k) > 1))
+    if duplicates:
+        bb.fatal("FIT_KERNELS contains duplicate entries: %s" % ' '.join(duplicates))
+    for kernel in kernels:
+        recipe = d.getVarFlag('FIT_KERNEL_RECIPE', kernel)
+        mc = d.getVarFlag('FIT_KERNEL_MULTICONFIG', kernel)
+        if mc:
+            if not d.getVarFlag('FIT_KERNEL_DEPLOYDIR', kernel):
+                bb.fatal("FIT_KERNEL_DEPLOYDIR[%s] must be set if FIT_KERNEL_MULTICONFIG[%s] is set" % (kernel, kernel))
+            d.appendVarFlag('do_compile', 'mcdepends', ' mc:%s:%s:%s:do_deploy' %
+                            (d.getVar('BB_CURRENT_MC'), mc, recipe or 'virtual/kernel'))
+        elif recipe:
+            d.appendVarFlag('do_compile', 'depends', ' %s:do_deploy' % recipe)
+        else:
+            if not d.getVarFlag('FIT_KERNEL_FILENAME', kernel):
+                bb.fatal("FIT_KERNEL_FILENAME[%s] must be set if neither FIT_KERNEL_RECIPE[%s] nor FIT_KERNEL_MULTICONFIG[%s] is set" % (kernel, kernel, kernel))
+            kernel_path = fit_kernel_path(d, kernel)
+            d.appendVarFlag('do_compile', 'file-checksums', ' %s:%s' % (kernel_path, os.path.exists(kernel_path)))
 }
 
 do_configure[noexec] = "1"
@@ -61,6 +93,30 @@ def apply_dtbvendored(d,dtb):
     else:
         mapped_name = dtb.replace('/', '_')
     return mapped_name
+
+def fit_kernel_path(d, kernel):
+    filename = d.getVarFlag('FIT_KERNEL_FILENAME', kernel) or "linux.bin"
+    deploydir = d.getVarFlag('FIT_KERNEL_DEPLOYDIR', kernel) or d.getVar('DEPLOY_DIR_IMAGE')
+    return os.path.join(deploydir, filename)
+
+def fit_kernel_deployed_files(d, recipe):
+    """Return the real paths of all files deployed by do_deploy of recipe (PN or PROVIDES) in this multiconfig"""
+    import bb.runqueue
+    mc = d.getVar('BB_CURRENT_MC') or ""
+    taskdepdata = d.getVar('BB_TASKDEPDATA', False)
+    pns = set(dep.pn for tid, dep in taskdepdata.items()
+              if dep.taskname == "do_deploy" and bb.runqueue.mc_from_tid(tid) == mc and
+                 (dep.pn == recipe or recipe in dep.provides))
+    if len(pns) != 1:
+        bb.fatal("Could not identify the do_deploy dependency providing %s (found: %s)" % (recipe, ' '.join(sorted(pns)) or "none"))
+    pn = pns.pop()
+    for arch in d.getVar('SSTATE_ARCHS').split():
+        manifest = os.path.join(d.getVar('SSTATE_MANIFESTS'), "manifest-%s-%s.deploy" % (arch, pn))
+        if os.path.exists(manifest):
+            with open(manifest) as f:
+                return set(os.path.realpath(line) for line in f.read().splitlines() if line and not line.endswith('/'))
+    bb.fatal("No deploy manifest found for %s" % pn)
+fit_kernel_deployed_files[vardepsexclude] = "BB_TASKDEPDATA SSTATE_ARCHS"
 
 python do_compile() {
     import shutil
@@ -94,6 +150,39 @@ python do_compile() {
     root_node.fitimage_emit_section_kernel("kernel-1", "linux.bin", linux_comp,
         d.getVar('UBOOT_LOADADDRESS'), d.getVar('UBOOT_ENTRYPOINT'),
         d.getVar('UBOOT_MKIMAGE_KERNEL_TYPE'), d.getVar("UBOOT_ENTRYSYMBOL"))
+
+    # Prepare additional kernel image sections
+    for kernel in d.getVar('FIT_KERNELS').split():
+        recipe = d.getVarFlag('FIT_KERNEL_RECIPE', kernel)
+        mc = d.getVarFlag('FIT_KERNEL_MULTICONFIG', kernel)
+        kernel_path = fit_kernel_path(d, kernel)
+        if not os.path.exists(kernel_path):
+            bb.fatal("File for kernel %s not found at %s" % (kernel, kernel_path))
+        # Artifacts of another multiconfig cannot be verified, its FIT_KERNEL_DEPLOYDIR is trusted
+        deployed = None
+        if recipe and not mc:
+            deployed = fit_kernel_deployed_files(d, recipe)
+            if os.path.realpath(kernel_path) not in deployed:
+                bb.fatal("File for kernel %s at %s is not deployed by %s" % (kernel, kernel_path, recipe))
+        kernel_file = "linux-%s.bin" % kernel
+        shutil.copyfile(kernel_path, kernel_file)
+
+        kernel_comp = d.getVarFlag('FIT_KERNEL_COMPRESSION', kernel)
+        if not kernel_comp:
+            kernel_comp = "none"
+            # linux_comp only describes linux.bin written by kernel-fit-extra-artifacts of the same recipe
+            if (recipe or mc) and os.path.basename(kernel_path) == "linux.bin":
+                kernel_comp_path = os.path.join(os.path.dirname(kernel_path), "linux_comp")
+                if not os.path.exists(kernel_comp_path) or \
+                        (deployed is not None and os.path.realpath(kernel_comp_path) not in deployed):
+                    bb.fatal("%s not found or not deployed by the kernel recipe, set FIT_KERNEL_COMPRESSION[%s]" % (kernel_comp_path, kernel))
+                with open(kernel_comp_path) as kernel_comp_f:
+                    kernel_comp = kernel_comp_f.read().strip()
+        root_node.fitimage_emit_section_kernel(kernel, kernel_file, kernel_comp,
+            d.getVarFlag('FIT_KERNEL_LOADADDRESS', kernel) or d.getVar('UBOOT_LOADADDRESS'),
+            d.getVarFlag('FIT_KERNEL_ENTRYPOINT', kernel) or d.getVar('UBOOT_ENTRYPOINT'),
+            d.getVarFlag('FIT_KERNEL_TYPE', kernel) or d.getVar('UBOOT_MKIMAGE_KERNEL_TYPE'),
+            description=d.getVarFlag('FIT_KERNEL_DESCRIPTION', kernel) or "Linux kernel")
 
     # Prepare a DTB image section
     kernel_devicetree = d.getVar('KERNEL_DEVICETREE')
@@ -209,6 +298,18 @@ python do_compile() {
 
     # Generate the configuration section
     root_node.fitimage_emit_section_config(default_dtb, d.getVar("FIT_CONF_MAPPINGS"))
+
+    # Generate additional configurations, e.g. referring to additional kernels
+    for conf in d.getVar('FIT_CONFIGS').split():
+        conf_dtb = d.getVarFlag('FIT_CONFIG_DTB', conf)
+        if conf_dtb:
+            conf_dtb = apply_dtbvendored(d, conf_dtb)
+        root_node.fitimage_emit_section_config_custom(conf,
+            d.getVarFlag('FIT_CONFIG_KERNEL', conf), conf_dtb)
+
+    fit_conf_default = d.getVar('FIT_CONF_DEFAULT')
+    if fit_conf_default:
+        root_node.fitimage_set_default_config(fit_conf_default)
 
     # Write the its file
     root_node.write_its_file(itsfile)
