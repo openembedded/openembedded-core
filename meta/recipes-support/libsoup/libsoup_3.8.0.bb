@@ -9,20 +9,23 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=5f30f0716dfdd0d91eb439ebec522ec2"
 
 DEPENDS = "glib-2.0 glib-2.0-native libxml2 sqlite3 libpsl nghttp2"
 
-inherit gettext gnomebase upstream-version-is-even gobject-introspection gi-docgen vala
+inherit gettext gnomebase upstream-version-is-even gobject-introspection gi-docgen vala ptest-gnome
 
 SRC_URI[archive.sha256sum] = "bbf08fa3e03a88c31a3d27a0d87cb422e9490f2d08e149211103df6d638a2238"
+
+SRC_URI += "file://run-ptest"
 
 PROVIDES = "libsoup-3.0"
 
 GIR_MESON_ENABLE_FLAG = 'enabled'
 GIR_MESON_DISABLE_FLAG = 'disabled'
 
-PACKAGECONFIG ??= ""
+PACKAGECONFIG ??= "${@bb.utils.contains('PTEST_ENABLED', '1', 'tests', '', d)}"
 PACKAGECONFIG[brotli] = "-Dbrotli=enabled,-Dbrotli=disabled,brotli"
 PACKAGECONFIG[gssapi] = "-Dgssapi=enabled,-Dgssapi=disabled,krb5"
 PACKAGECONFIG[ntlm] = "-Dntlm=enabled,-Dntlm=disabled"
 PACKAGECONFIG[sysprof] = "-Dsysprof=enabled,-Dsysprof=disabled,sysprof"
+PACKAGECONFIG[tests] = "-Dtests=true -Dinstalled_tests=true,-Dtests=false -Dinstalled_tests=false"
 
 # Tell libsoup where the target ntlm_auth is installed
 do_write_config:append:class-target() {
@@ -34,12 +37,34 @@ EOF
 EXTRA_OEMESON:append:class-target = " --cross-file ${WORKDIR}/soup.cross"
 
 EXTRA_OEMESON += "-Dtls_check=false"
-# Disable the test suites
-EXTRA_OEMESON += "-Dtests=false -Dautobahn=disabled -Dpkcs11_tests=disabled"
+# tests are controlled via the 'tests' PACKAGECONFIG (enabled for ptest)
+EXTRA_OEMESON += "-Dautobahn=disabled -Dpkcs11_tests=disabled"
 
 GIDOCGEN_MESON_OPTION = 'docs'
 GIDOCGEN_MESON_ENABLE_FLAG = 'enabled'
 GIDOCGEN_MESON_DISABLE_FLAG = 'disabled'
+
+# These tests abort under ptest and leave the binaries in place:
+# - header-parsing-test: a g_hash_table_size() assertion in
+#   do_param_list_tests() does not hold (returns one entry instead of three)
+#   with the current glib.
+# - logger-test (long-invalid-body-length) and http2-body-stream-test
+#   (large_data) exercise multi-GiB allocations and are killed by the OOM
+#   killer on the memory-constrained ptest machines.
+PTEST_SKIP_TESTS = "header-parsing-test logger-test http2-body-stream-test"
+
+# These tests intermittently abort (SIGABRT) during teardown under the slower
+# emulated targets, so skip them there:
+# - http2-test on qemuriscv64.
+# - multithread-test on qemuarm64 (glibc and musl).
+PTEST_SKIP_TESTS:append:riscv64 = " http2-test"
+PTEST_SKIP_TESTS:append:aarch64 = " multithread-test"
+
+do_install_ptest:append() {
+    for t in ${PTEST_SKIP_TESTS}; do
+        rm -f ${D}${datadir}/installed-tests/libsoup-3.0/$t.test
+    done
+}
 
 # When built without gnome support, libsoup will contain only one shared lib
 # and will therefore become subject to renaming by debian.bbclass. Prevent
@@ -49,6 +74,10 @@ DEBIAN_NOAUTONAME:${PN} = "1"
 
 # glib-networking is needed for SSL, proxies, etc.
 RRECOMMENDS:${PN} = "glib-networking"
+
+# The TLS-based tests (ssl, server-auth, websocket, hsts) need a glib TLS
+# backend at runtime.
+RDEPENDS:${PN}-ptest += "glib-networking"
 
 BBCLASSEXTEND = "native nativesdk"
 

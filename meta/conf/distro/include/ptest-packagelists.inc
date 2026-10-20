@@ -140,6 +140,7 @@ PTESTS_SLOW = "\
     libmodule-build-perl \
     libpcap \
     libpng \
+    libsoup \
     ${@bb.utils.contains('DISTRO_FEATURES', 'seccomp', 'libseccomp', '',d)} \
     lttng-tools \
     lz4 \
