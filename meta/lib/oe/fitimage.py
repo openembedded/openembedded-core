@@ -193,6 +193,7 @@ class ItsNodeRootKernel(ItsNode):
         self._dtbs = []
         self._dtb_alias = []
         self._kernel = None
+        self._kernels = {}
         self._ramdisk = None
         self._bootscr = None
         self._setup = None
@@ -268,8 +269,8 @@ class ItsNodeRootKernel(ItsNode):
     def fitimage_emit_section_kernel(self, kernel_id, kernel_path, compression,
         load, entrypoint, mkimage_kernel_type, entrysymbol=None):
         """Emit the fitImage ITS kernel section"""
-        if self._kernel:
-            bb.fatal("Kernel section already exists in the ITS file.")
+        if kernel_id in self._kernels:
+            bb.fatal("Kernel section '%s' already exists in the ITS file." % kernel_id)
         if entrysymbol:
             result = subprocess.run([self._host_prefix + "nm", "vmlinux"], capture_output=True, text=True)
             for line in result.stdout.splitlines():
@@ -294,7 +295,10 @@ class ItsNodeRootKernel(ItsNode):
             compression,
             opt_props,
         )
-        self._kernel = kernel_node
+        self._kernels[kernel_id] = kernel_node
+
+        if self._kernel is None:
+            self._kernel = kernel_node
 
     def fitimage_emit_section_dtb(self, dtb_id, dtb_path, dtb_loadaddress=None,
                                   dtbo_loadaddress=None, add_compatible=False):
@@ -425,7 +429,7 @@ class ItsNodeRootKernel(ItsNode):
 
         self._loadables.append(loadable_node)
 
-    def _fitimage_emit_one_section_config(self, conf_node_name, dtb=None):
+    def _fitimage_emit_one_section_config(self, conf_node_name, dtb=None, kernel=None):
         """Emit the fitImage ITS configuration section"""
         opt_props = {}
         conf_desc = []
@@ -436,9 +440,11 @@ class ItsNodeRootKernel(ItsNode):
         if dtb and os.path.splitext(dtb.name)[1] == ".dtbo":
             include_kernel = 0
 
-        if self._kernel and include_kernel:
+        selected_kernel = kernel if kernel is not None else self._kernel
+
+        if selected_kernel and include_kernel:
             conf_desc.append("Linux kernel")
-            opt_props["kernel"] = self._kernel.name
+            opt_props["kernel"] = selected_kernel.name
             if self._sign_enable:
                 sign_entries.append("kernel")
 
