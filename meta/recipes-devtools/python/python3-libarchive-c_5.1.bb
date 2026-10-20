@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE.md;md5=bcab380227a83bc147350b40a81e6ffc"
 
 SRC_URI += " \
         file://new-libarchive.patch \
+        file://0001-fix-tests-for-libarchive-3.8.10.patch \
         file://0001-ffi-Insert-a-replacable-anchor-for-find_library.patch \
         file://run-ptest \
 "
