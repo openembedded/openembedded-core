@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=e6fcea978dc627f41e0bada0de889ec4"
 DEPENDS = "zlib bzip2"
 
 SRC_URI = "https://libzip.org/download/libzip-${PV}.tar.xz"
-SRC_URI[sha256sum] = "376908d0f0fda13180a19fdc4f7062a1abfb59e09ca07a392d361253b8e60c2b"
+SRC_URI[sha256sum] = "c40062022a1963c80573d48f6070792297cecd7c6bffe3aefcac0d8b9bee8913"
 
 inherit cmake
 
