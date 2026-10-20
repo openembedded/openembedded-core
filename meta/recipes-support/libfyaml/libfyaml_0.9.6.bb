@@ -9,11 +9,10 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/libfyaml-${PV}.tar.gz \
            file://0001-Fix-32-bit-build-by-removing-stray-parameter-to-fy_s.patch \
            file://0002-vlsize-Handle-decoding-when-size_t-sizeof-uint64_t.patch \
            file://0001-build-don-t-output-none-required-to-LIBM-if-no-linke.patch \
+           file://0003-autoconf-Some-platforms-need-latomic-for-atomics.patch \
            "
 SRC_URI[sha256sum] = "a59cc3331e2eb903ec36933ad52a45888041cac31e44f553a00511131242c483"
 
 inherit autotools pkgconfig github-releases
-# Specify linking with -latomic on architectures missing 64bit atomics.
-LDFLAGS += "${@bb.utils.contains_any('TUNE_FEATURES', '32 armv5 o32 m32', '-latomic', '', d)}"
 
 BBCLASSEXTEND = "native"
