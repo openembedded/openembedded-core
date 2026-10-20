@@ -5,7 +5,7 @@
 
 import unittest
 
-from checklayer import LayerType, get_signatures, check_command, get_depgraph
+from checklayer import LayerType, check_command, get_depgraph
 from checklayer.case import OECheckLayerTestCase
 
 class BSPCheckLayer(OECheckLayerTestCase):
@@ -45,10 +45,9 @@ class BSPCheckLayer(OECheckLayerTestCase):
         msg = []
         for machine in self.td['machines']:
             # In contrast to test_machine_signatures() below, errors are fatal here.
-            try:
-                get_signatures(self.td['builddir'], failsafe=False, machine=machine)
-            except RuntimeError as ex:
-                msg.append(str(ex))
+            error = self.tc.world_error(machine)
+            if error is not None:
+                msg.append(str(error))
         if msg:
             msg.insert(0, 'The following machines broke a world build:')
             self.fail('\n'.join(msg))
@@ -80,7 +79,7 @@ class BSPCheckLayer(OECheckLayerTestCase):
         tunes = {}
         # Preserve ordering of machines as chosen by the user.
         for machine in self.td['machines']:
-            curr_sigs, tune2tasks = get_signatures(self.td['builddir'], failsafe=True, machine=machine)
+            curr_sigs, tune2tasks = self.tc.world_signatures(machine)
             # Invert the tune -> [tasks] mapping.
             tasks2tune = {}
             for tune, tasks in tune2tasks.items():
