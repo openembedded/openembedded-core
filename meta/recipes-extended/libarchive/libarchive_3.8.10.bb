@@ -31,16 +31,13 @@ EXTRA_OECONF += "--enable-largefile --without-iconv"
 
 SRC_URI = "https://libarchive.org/downloads/libarchive-${PV}.tar.gz \
            file://run-ptest \
-           file://0001-append_filter-Use-last-bidder-for-filter.patch \
-           file://0001-test-skip-ppmd8-aes256-streaming-test-when-no-crypto.patch \
-           file://0001-append_filter-Verify-that-bidder-and-filter-match.patch \
-           file://0003-Remove-bidder-name.patch \
+           file://0003-archive_read-register_bidder-Allow-ARCHIVE_STATE_HEADER.patch \
            file://0004-Convert-RPM-reader-into-a-proper-format.patch \
            file://0005-Disable-RPM-filter-auto-bidding.patch \
-          "
+           "
 UPSTREAM_CHECK_URI = "https://www.libarchive.org/"
 
-SRC_URI[sha256sum] = "f5a6539059cf5e597dbeda37bfa4874b1e8dea063c8d93bf85a2b44af90a5bd4"
+SRC_URI[sha256sum] = "a1bffbe5152cfe869751179e7b16648c87c461cb8c46eee75062efbe164cc57c"
 
 inherit autotools update-alternatives pkgconfig ptest
 
