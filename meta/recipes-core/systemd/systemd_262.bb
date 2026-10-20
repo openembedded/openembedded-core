@@ -907,7 +907,7 @@ pkg_postinst:${PN}:libc-glibc () {
 	fi
 	if ${@bb.utils.contains('PACKAGECONFIG', 'nss', 'true', 'false', d)}; then
 		sed -e 's#\(^passwd:.*\)#\1 systemd#' \
-			-e 's#\(^group:.*\)#\1 systemd#' \
+			-e 's#\(^group:.*\)#\1 [SUCCESS=merge] systemd#' \
 			-e 's#\(^shadow:.*\)#\1 systemd#' \
 			-i $D${sysconfdir}/nsswitch.conf
 	fi
