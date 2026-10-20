@@ -79,14 +79,15 @@ do_compile_ptest() {
 	oe_runmake tcltest
 }
 
+# Override-specific skips; do_install_ptest needs the empty SKIP="" in run-ptest
+SKIPPED_TESTS = ""
+# Assumes locales other than provided by musl-locales
+SKIPPED_TESTS:append:libc-musl = " unixInit-3*"
+
 do_install_ptest() {
 	cp ${B}/tcltest ${D}${PTEST_PATH}
 	cp -r ${S}/tests ${D}${PTEST_PATH}
-}
-
-do_install_ptest:append:libc-musl () {
-	# Assumes locales other than provided by musl-locales
-	sed -i '/SKIP="$SKIP.*$/a # unixInit-3* is suppressed due to hardcoded locale assumptions\nSKIP="$SKIP unixInit-3\\\*"' ${D}${PTEST_PATH}/run-ptest
+	sed -i -e 's|^SKIP=""$|SKIP="${SKIPPED_TESTS}"|' ${D}${PTEST_PATH}/run-ptest
 }
 
 # Fix some paths that might be used by Tcl extensions
