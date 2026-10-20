@@ -57,6 +57,10 @@ SPL_DTB_SYMLINK ?= "u-boot-spl-${MACHINE}.dtb"
 SPL_NODTB_IMAGE ?= "u-boot-spl-nodtb-${MACHINE}-${PV}-${PR}.bin"
 SPL_NODTB_BINARY ?= "u-boot-spl-nodtb.bin"
 SPL_NODTB_SYMLINK ?= "u-boot-spl-nodtb-${MACHINE}.bin"
+# The SPL image as assembled by U-Boot (e.g. "u-boot-spl-dtb.bin"). When set,
+# the signed SPL DTB is appended at the same offset U-Boot used, keeping the
+# padding it adds behind BSS for SPLs built without SPL_SEPARATE_BSS.
+SPL_WITH_DTB_BINARY ?= ""
 
 # U-Boot fitImage description
 UBOOT_FIT_DESC ?= "U-Boot fitImage for ${DISTRO_NAME}/${PV}/${MACHINE}"
@@ -249,7 +253,26 @@ deploy_dtb() {
 
 concat_spl_dtb() {
 	if [ -e "${SPL_DIR}/${SPL_NODTB_BINARY}" ] && [ -e "${SPL_DIR}/${SPL_DTB_BINARY}" ] ; then
-		cat ${SPL_DIR}/${SPL_NODTB_BINARY} ${SPL_DIR}/${SPL_DTB_SIGNED} > "${SPL_BINARY}"
+		if [ -n "${SPL_WITH_DTB_BINARY}" ] ; then
+			test -e "${SPL_DIR}/${SPL_WITH_DTB_BINARY}" || \
+				bbfatal "${SPL_WITH_DTB_BINARY} not found in ${SPL_DIR}. Set SPL_WITH_DTB_BINARY to the SPL image U-Boot assembled, or to an empty string."
+
+			# U-Boot pads behind BSS before appending the device tree
+			# ($(SPL_BIN)-pad.bin in scripts/Makefile.xpl); keep that offset.
+			nodtb_size=$(stat -Lc %s ${SPL_DIR}/${SPL_NODTB_BINARY})
+			image_size=$(stat -Lc %s ${SPL_DIR}/${SPL_WITH_DTB_BINARY})
+			dtb_size=$(stat -Lc %s ${SPL_DIR}/${SPL_DTB_BINARY})
+			dtb_offset=$(expr ${image_size} - ${dtb_size})
+			if [ ${dtb_offset} -lt ${nodtb_size} ] ; then
+				bbfatal "${SPL_WITH_DTB_BINARY} is smaller than ${SPL_NODTB_BINARY} and ${SPL_DTB_BINARY} combined."
+			fi
+
+			cp ${SPL_DIR}/${SPL_NODTB_BINARY} "${SPL_BINARY}"
+			truncate -s ${dtb_offset} "${SPL_BINARY}"
+			cat ${SPL_DIR}/${SPL_DTB_SIGNED} >> "${SPL_BINARY}"
+		else
+			cat ${SPL_DIR}/${SPL_NODTB_BINARY} ${SPL_DIR}/${SPL_DTB_SIGNED} > "${SPL_BINARY}"
+		fi
 	else
 		bbwarn "Failure while adding public key to spl binary. Verified U-Boot boot won't be available."
 	fi
