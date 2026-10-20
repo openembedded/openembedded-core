@@ -83,6 +83,10 @@ do_compile_ptest() {
 SKIPPED_TESTS = ""
 # Assumes locales other than provided by musl-locales
 SKIPPED_TESTS:append:libc-musl = " unixInit-3*"
+# RISC-V widens a negative float NaN to the positive canonical NaN, so the
+# sign check fails: https://core.tcl-lang.org/tcl/tktview/bf029ced86
+SKIPPED_TESTS:append:riscv32 = " binary-40.3"
+SKIPPED_TESTS:append:riscv64 = " binary-40.3"
 
 do_install_ptest() {
 	cp ${B}/tcltest ${D}${PTEST_PATH}
