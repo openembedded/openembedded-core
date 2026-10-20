@@ -11,7 +11,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=41e8e060c26822886b592ab4765c756b"
 GITHUB_TAG = "REL_${@d.getVar('PV').replace('.', '_')}"
 
 SRC_URI = "https://github.com/log4cplus/log4cplus/releases/download/${GITHUB_TAG}/log4cplus-${PV}.tar.gz"
-SRC_URI[sha256sum] = "374175c22fabe752eb1c20138e732b69ae191e641f92d32c9432985cd860a2df"
+SRC_URI[sha256sum] = "e19d9b294f8c4c8f60467e0f456e1a347c81d479369d5840afc80c1137b7db6c"
 
 UPSTREAM_CHECK_URI = "https://github.com/log4cplus/log4cplus/releases"
 UPSTREAM_CHECK_REGEX = "log4cplus-(?P<pver>\d+(\.\d+)+)\.tar"
