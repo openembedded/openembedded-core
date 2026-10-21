@@ -30,8 +30,6 @@ PACKAGECONFIG[dpll] = ",,libmnl,"
 
 IPROUTE2_MAKE_SUBDIRS = "lib tc ip bridge misc genl ${@bb.utils.filter('PACKAGECONFIG', 'devlink tipc rdma dcb dpll', d)}"
 
-# This is needed with GCC-14 and musl
-CFLAGS += "-Wno-error=incompatible-pointer-types"
 # CFLAGS are computed in Makefile and reference CCOPTS
 #
 EXTRA_OEMAKE = "\
