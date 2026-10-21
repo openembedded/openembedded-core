@@ -18,6 +18,6 @@ PE = "1"
 XORG_PN = "libXi"
 XORG_EXT = "tar.xz"
 
-SRC_URI[sha256sum] = "7ad60056f01af4f786cfe93b3a7707447711626fc8da2637bec71a90409babe5"
+SRC_URI[sha256sum] = "ddd6057b89a91903bc2f884d55c8467440906945e482c36547260dff28661afc"
 
 BBCLASSEXTEND = "native nativesdk"
