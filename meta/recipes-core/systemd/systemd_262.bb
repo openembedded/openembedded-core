@@ -37,6 +37,7 @@ SRC_URI += "file://touchscreen.rules \
            file://coredumpd-kernel-version.conf \
            file://0001-binfmt-Don-t-install-dependency-links-at-install-tim.patch \
            file://0003-Do-not-create-var-log-README.patch \
+           file://0004-journal-prepend-the-sysroot-to-libaudit-s-includedir.patch \
            "
 
 PAM_PLUGINS = " \
