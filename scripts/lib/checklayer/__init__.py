@@ -289,12 +289,7 @@ def check_command(error_msg, cmd, cwd=None):
         raise RuntimeError(msg)
     return output
 
-def get_signatures(builddir, machine=None, extravars=None):
-    '''
-    Returns the world signatures, the tasks of each tune and None, or the
-    error when some recipes failed, with the signatures of the others
-    (None when none were written).
-    '''
+def get_signatures(builddir, failsafe=False, machine=None, extravars=None):
     import re
 
     # some recipes needs to be excluded like meta-world-pkgdata
@@ -311,20 +306,25 @@ def get_signatures(builddir, machine=None, extravars=None):
         cmd += ' '
     if machine:
         cmd += 'MACHINE=%s ' % machine
-    cmd += 'bitbake -k -S lockedsigs world'
+    cmd += 'bitbake '
+    if failsafe:
+        cmd += '-k '
+    cmd += '-S lockedsigs world'
     sigs_file = os.path.join(builddir, 'locked-sigs.inc')
     if os.path.exists(sigs_file):
         os.unlink(sigs_file)
-    error = None
     try:
         check_command('Generating signatures failed. This might be due to some parse error and/or general layer incompatibilities.',
                       cmd, builddir)
     except RuntimeError as ex:
-        # Most likely some recipes active in a world build lack some
-        # dependencies: the caller decides whether that is fatal.
-        error = str(ex)
-        if not os.path.exists(sigs_file):
-            return (None, None, error)
+        if failsafe and os.path.exists(sigs_file):
+            # Ignore the error here. Most likely some recipes active
+            # in a world build lack some dependencies. There is a
+            # separate test_machine_world_build which exposes the
+            # failure.
+            pass
+        else:
+            raise
 
     sig_regex = re.compile(r"^(?P<task>[^:]*:[^:]*):(?P<hash>[^:]*) .$")
     assignment_regex = re.compile(r"^\s*(?P<var>\S+)\s*\+?=")
@@ -365,7 +365,7 @@ def get_signatures(builddir, machine=None, extravars=None):
     if not sigs:
         raise RuntimeError('Can\'t load signatures from %s' % sigs_file)
 
-    return (sigs, tune2tasks, error)
+    return (sigs, tune2tasks)
 
 def get_depgraph(targets=['world'], failsafe=False):
     '''

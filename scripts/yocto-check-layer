@@ -216,9 +216,7 @@ def main():
         try:
             # Only test_signatures, a common test, compares against them
             if not args.run_tests or 'common' in [t.split('.')[0] for t in args.run_tests]:
-                td['sigs'], td['tunetasks'], error = get_signatures(td['builddir'])
-                if error:
-                    raise RuntimeError(error)
+                td['sigs'], td['tunetasks'] = get_signatures(td['builddir'])
         except RuntimeError as e:
             logger.info(str(e))
             results[layer['name']] = None
