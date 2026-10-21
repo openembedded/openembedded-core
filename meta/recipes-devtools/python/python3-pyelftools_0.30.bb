@@ -12,4 +12,4 @@ inherit pypi setuptools3
 
 BBCLASSEXTEND = "native"
 
-RDEPENDS:${PN} += "python3-debugger python3-pprint"
+RDEPENDS:${PN} += "python3-debugger python3-pprint python3-logging"
