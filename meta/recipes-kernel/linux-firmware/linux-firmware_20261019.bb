@@ -23,6 +23,7 @@ LICENSE = "\
     AND LicenseRef-Firmware-advansys \
     AND LicenseRef-Firmware-aeonsemi \
     AND LicenseRef-Firmware-agere \
+    AND LicenseRef-Firmware-aic \
     AND LicenseRef-Firmware-airoha \
     AND LicenseRef-Firmware-alacritech \
     AND LicenseRef-Firmware-amdgpu \
@@ -155,6 +156,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/LICENCE.Abilis;md5=b5ee3f410780e56711ad48ead
                     file://LICENSES/LICENCE.advansys;md5=bca735476602a7bcb187c7f8bf4a31d5 \
                     file://LICENSES/LICENSE.aeonsemi;md5=521c00bae0077c90d6ffb9ccf66905ae \
                     file://LICENSES/LICENCE.agere;md5=af0133de6b4a9b2522defd5f188afd31 \
+                    file://LICENSES/LICENSE.aic;md5=6c7daaf69662d4c8c0ba954700b3a6e1 \
                     file://LICENSES/LICENSE.airoha;md5=fa3dedb960e2673aea51aa509f7b537d \
                     file://LICENSES/LICENCE.alacritech;md5=75dabc07cc2fb59d929baa6bd6aae48a \
                     file://LICENSES/LICENSE.amdgpu;md5=1433dfea38c97a2e563a248a863dcb94 \
@@ -277,7 +279,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/LICENCE.Abilis;md5=b5ee3f410780e56711ad48ead
                     "
 # WHENCE checksum is defined separately to ease overriding it if
 # class-devupstream is selected.
-WHENCE_CHKSUM  = "376a71c7f18efcb6e6688a73c2a548c7"
+WHENCE_CHKSUM  = "d1b892bc13f2bc5148ce27c732ec8339"
 
 # These are not common licenses, set NO_GENERIC_LICENSE for them
 # so that the license files will be copied from fetched source
@@ -286,6 +288,7 @@ NO_GENERIC_LICENSE[Firmware-adsp-sst] = "LICENSES/LICENCE.adsp_sst"
 NO_GENERIC_LICENSE[Firmware-advansys] = "LICENSES/LICENCE.advansys"
 NO_GENERIC_LICENSE[Firmware-aeonsemi] = "LICENSES/LICENSE.aeonsemi"
 NO_GENERIC_LICENSE[Firmware-agere] = "LICENSES/LICENCE.agere"
+NO_GENERIC_LICENSE[Firmware-aic] = "LICENSES/LICENSE.aic"
 NO_GENERIC_LICENSE[Firmware-airoha] = "LICENSES/LICENSE.airoha"
 NO_GENERIC_LICENSE[Firmware-alacritech] = "LICENSES/LICENCE.alacritech"
 NO_GENERIC_LICENSE[Firmware-amdgpu] = "LICENSES/LICENSE.amdgpu"
@@ -409,7 +412,6 @@ PE = "1"
 
 SRC_URI = "\
   ${KERNELORG_MIRROR}/linux/kernel/firmware/${BPN}-${PV}.tar.xz \
-  file://0001-qcom-shikra-link-WiFi-firmware-from-the-ath10k-subdi.patch \
 "
 
 BBCLASSEXTEND = "devupstream:target"
@@ -417,7 +419,7 @@ SRC_URI:class-devupstream = "git://git.kernel.org/pub/scm/linux/kernel/git/firmw
 # Pin this to the 20220509 release, override this in local.conf
 SRCREV:class-devupstream ?= "b19cbdca78ab2adfd210c91be15a22568e8b8cae"
 
-SRC_URI[sha256sum] = "f80dcb757a623deda62200c08e0e1a88c76fb6b54964f31b35fa74da1c90ccc5"
+SRC_URI[sha256sum] = "a10d1ab5baf2c74ba92e8c7cf313e691696c26bddfa6df00db795e48d70cd4ca"
 
 inherit allarch
 
@@ -523,7 +525,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-moxa-license ${PN}-moxa \
              ${PN}-sd8686 ${PN}-sd8688 ${PN}-sd8787 ${PN}-sd8797 ${PN}-sd8801 \
              ${PN}-sd8887 ${PN}-sd8897 ${PN}-sd8997 ${PN}-usb8997 \
-             ${PN}-cf8381 ${PN}-cf8385 ${PN}-gspi8682 ${PN}-gspi8686 ${PN}-gspi8688 ${PN}-sd8385 ${PN}-sd8682 \
+             ${PN}-cf8381 ${PN}-cf8385 ${PN}-gspi8682 ${PN}-gspi8686 ${PN}-gspi8688 ${PN}-sd416 ${PN}-sd8385 ${PN}-sd8682 \
              ${PN}-usb8388 ${PN}-usb8682 ${PN}-sd8977 ${PN}-usb8766 ${PN}-usb8797 ${PN}-usb8801 ${PN}-usb8897 ${PN}-rvu-cptpf \
              ${PN}-mwl8k ${PN}-mwlwifi\
              ${PN}-ti-connectivity-license ${PN}-wl1251-license ${PN}-wlcommon ${PN}-wl1251 ${PN}-wl12xx ${PN}-wl18xx ${PN}-cc33xx \
@@ -612,6 +614,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-ath12k-qcc2072 \
              ${PN}-ath12k-qcn9274 \
              ${PN}-ath12k-wcn7850 \
+             ${PN}-aic-aic8800d80 ${PN}-aic-license \
              ${PN}-qca \
              ${PN}-qca-qca2066 \
              ${PN}-qca-qca61x4-serial \
@@ -658,7 +661,9 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-bnx2x \
              ${PN}-liquidio \
              ${PN}-linaro-license \
-             ${PN}-mali-csffw-arch108 ${PN}-mali-csffw-arch1010 ${PN}-mali-csffw-arch1012 ${PN}-mali-csffw-arch118 ${PN}-mali-csffw-arch128 ${PN}-mali-csffw-arch138 ${PN}-mali-csffw-license \
+             ${PN}-mali-csffw-arch108 ${PN}-mali-csffw-arch1010 ${PN}-mali-csffw-arch1012 \
+             ${PN}-mali-csffw-arch118 ${PN}-mali-csffw-arch128 ${PN}-mali-csffw-arch138 \
+             ${PN}-mali-csffw-arch148 ${PN}-mali-csffw-license \
              ${PN}-mellanox \
              ${PN}-mm8108 \
              ${PN}-nvidia-license \
@@ -694,14 +699,15 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-qcom-adreno-a702 ${PN}-qcom-adreno-a730 ${PN}-qcom-adreno-a740 \
              ${PN}-qcom-adreno-g705 ${PN}-qcom-adreno-g709 ${PN}-qcom-adreno-g715  ${PN}-qcom-adreno-g717 \
              ${PN}-qcom-adreno-g800 ${PN}-qcom-adreno-g801 ${PN}-qcom-adreno-g802 \
+             ${PN}-qcom-adreno-g811 ${PN}-qcom-adreno-g814 \
              ${PN}-qcom-apq8016-modem ${PN}-qcom-apq8016-wifi \
              ${PN}-qcom-apq8096-adreno ${PN}-qcom-apq8096-audio ${PN}-qcom-apq8096-modem \
-             ${PN}-qcom-eliza-adreno ${PN}-qcom-eliza-compute \
+             ${PN}-qcom-eliza-adreno ${PN}-qcom-eliza-audio ${PN}-qcom-eliza-compute \
              ${PN}-qcom-glymur-adreno ${PN}-qcom-glymur-audio ${PN}-qcom-glymur-compute \
-             ${PN}-qcom-hawi-audio \
+             ${PN}-qcom-hawi-adreno ${PN}-qcom-hawi-audio ${PN}-qcom-hawi-compute \
              ${PN}-qcom-kaanapali-adreno ${PN}-qcom-kaanapali-audio \
              ${PN}-qcom-kaanapali-compute ${PN}-qcom-kaanapali-soccp \
-             ${PN}-qcom-maili-audio \
+             ${PN}-qcom-maili-adreno ${PN}-qcom-maili-audio \
              ${PN}-qcom-nord-audio ${PN}-qcom-nord-compute ${PN}-qcom-nord-qupv3fw \
              ${PN}-qcom-qcm2290-adreno ${PN}-qcom-qcm2290-audio ${PN}-qcom-qcm2290-modem \
              ${PN}-qcom-qcm6490-adreno ${PN}-qcom-qcm6490-audio ${PN}-qcom-qcm6490-compute \
@@ -754,7 +760,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-qcom-x1e80100-qupv3fw \
              ${PN}-qcom-x1p42100-adreno \
              ${PN}-qla2xxx ${PN}-qla2xxx-license \
-             ${PN}-rockchip-license ${PN}-rockchip-dptx \
+             ${PN}-rockchip-license ${PN}-rockchip-dptx ${PN}-rockchip-pcie \
              ${PN}-amlogic-vdec-license ${PN}-amlogic-vdec \
              ${PN}-lt7911exc ${PN}-lt8713sx ${PN}-lt9611c ${PN}-lt9611uxc ${PN}-lontium-license \
              ${PN}-wfx-license ${PN}-wfx \
@@ -763,7 +769,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-xc5000-license ${PN}-xc5000 \
              ${PN}-xc5000c-license ${PN}-xc5000c \
              ${PN}-typhoon-license ${PN}-typhoon \
-             ${PN}-intel-license ${PN}-ish-lnlm \
+             ${PN}-intel-license ${PN}-ish-lnlm ${PN}-ish-nvlh ${PN}-ish-nvls \
              ${PN}-dell-license ${PN}-ish-lnlm-39ceeaf8 ${PN}-ish-ptl-39ceeaf8 \
              ${PN}-hp-license ${PN}-ish-lnlm-12128606 ${PN}-ish-ptl-12128606 \
              ${PN}-lenovo-license ${PN}-ish-lnlm-53c4ffad ${PN}-ish-ptl-53c4ffad \
@@ -938,6 +944,10 @@ LICENSE:${PN}-ath12k-ipq5424 = "LicenseRef-Firmware-qualcommAthos-ath10k"
 LICENSE:${PN}-ath12k-qcc2072 = "LicenseRef-Firmware-qualcommAthos-ath10k"
 LICENSE:${PN}-ath12k-qcn9274 = "LicenseRef-Firmware-qualcommAthos-ath10k"
 LICENSE:${PN}-ath12k-wcn7850 = "LicenseRef-Firmware-qualcommAthos-ath10k"
+
+LICENSE:${PN}-aic-license = "LicenseRef-Firmware-aic"
+LICENSE:${PN}-aic-aic8800d80 = "LicenseRef-Firmware-aic"
+
 LICENSE:${PN}-qca-qca2066 = "LicenseRef-Firmware-qualcommAthos-ath10k"
 LICENSE:${PN}-qca-qca61x4-serial = "LicenseRef-Firmware-qualcommAthos-ath10k"
 LICENSE:${PN}-qca-qca61x4-usb = "LicenseRef-Firmware-qualcommAthos-ath10k"
@@ -987,6 +997,9 @@ FILES:${PN}-ath12k-qcn9274 = "${firmwaredir}/ath12k/QCN9274"
 FILES:${PN}-ath12k-wcn7850 = "${firmwaredir}/ath12k/WCN7850"
 # -ath12k is a virtual package that depends upon all ath12k packages.
 ALLOW_EMPTY:${PN}-ath12k = "1"
+
+FILES:${PN}-aic-license = "${firmwaredir}/LICENSE.aic"
+FILES:${PN}-aic-aic8800d80 = "${firmwaredir}/aic/aic8800d80/*"
 
 FILES:${PN}-qca-qca2066 = " \
   ${firmwaredir}/qca/hpbtfw21.tlv* \
@@ -1124,6 +1137,9 @@ RDEPENDS:${PN}-ath12k-ipq5424 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath12k-qcc2072 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath12k-qcn9274 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-ath12k-wcn7850 += "${PN}-ath10k-license"
+
+RDEPENDS:${PN}-aic-aic8800d80 += "${PN}-aic-license"
+
 RDEPENDS:${PN}-qca += "${PN}-ath10k-license ${PN}-qcom-license"
 RDEPENDS:${PN}-qca-qca2066 += "${PN}-ath10k-license"
 RDEPENDS:${PN}-qca-qca61x4-serial += "${PN}-ath10k-license"
@@ -1377,6 +1393,10 @@ LICENSE:${PN}-mali-csffw-arch138 = "LicenseRef-Firmware-mali-csffw"
 FILES:${PN}-mali-csffw-arch138 = "${firmwaredir}/arm/mali/arch13.8/mali_csffw.bin*"
 RDEPENDS:${PN}-mali-csffw-arch138 += "${PN}-mali-csffw-license"
 
+LICENSE:${PN}-mali-csffw-arch148 = "LicenseRef-Firmware-mali-csffw"
+FILES:${PN}-mali-csffw-arch148 = "${firmwaredir}/arm/mali/arch14.8/mali_csffw.bin*"
+RDEPENDS:${PN}-mali-csffw-arch148 += "${PN}-mali-csffw-license"
+
 # For marvell
 LICENSE:${PN}-pcie8897 = "LicenseRef-Firmware-Marvell"
 LICENSE:${PN}-pcie8997 = "LicenseRef-Firmware-Marvell"
@@ -1394,6 +1414,7 @@ LICENSE:${PN}-cf8385 = "LicenseRef-Firmware-Marvell"
 LICENSE:${PN}-gspi8682 = "LicenseRef-Firmware-Marvell"
 LICENSE:${PN}-gspi8686 = "LicenseRef-Firmware-Marvell"
 LICENSE:${PN}-gspi8688 = "LicenseRef-Firmware-Marvell"
+LICENSE:${PN}-sd416 = "LicenseRef-Firmware-Marvell"
 LICENSE:${PN}-sd8385 = "LicenseRef-Firmware-Marvell"
 LICENSE:${PN}-sd8682 = "LicenseRef-Firmware-Marvell"
 LICENSE:${PN}-usb8388 = "LicenseRef-Firmware-Marvell"
@@ -1456,6 +1477,7 @@ FILES:${PN}-cf8385 = "${firmwaredir}/libertas/cf8385*"
 FILES:${PN}-gspi8682 = "${firmwaredir}/libertas/gspi8682*"
 FILES:${PN}-gspi8686 = "${firmwaredir}/libertas/gspi8686*"
 FILES:${PN}-gspi8688 = "${firmwaredir}/libertas/gspi8688*"
+FILES:${PN}-sd416 = "${firmwaredir}/mrvl/sdiouartiw416*"
 FILES:${PN}-sd8385 = "${firmwaredir}/libertas/sd8385*"
 FILES:${PN}-sd8682 = "${firmwaredir}/libertas/sd8682*"
 FILES:${PN}-usb8388 = "${firmwaredir}/libertas/usb8388*"
@@ -1483,6 +1505,7 @@ RDEPENDS:${PN}-cf8385 += "${PN}-marvell-license"
 RDEPENDS:${PN}-gspi8682 += "${PN}-marvell-license"
 RDEPENDS:${PN}-gspi8686 += "${PN}-marvell-license"
 RDEPENDS:${PN}-gspi8688 += "${PN}-marvell-license"
+RDEPENDS:${PN}-sd416 += "${PN}-marvell-license"
 RDEPENDS:${PN}-sd8385 += "${PN}-marvell-license"
 RDEPENDS:${PN}-sd8682 += "${PN}-marvell-license"
 RDEPENDS:${PN}-usb8388 += "${PN}-marvell-license"
@@ -1730,6 +1753,7 @@ FILES:${PN}-rtl8851 = " \
 "
 FILES:${PN}-rtl8852 = " \
     ${firmwaredir}/rtl_bt/rtl8852* \
+    ${firmwaredir}/rtw89/board_elm.bin* \
     ${firmwaredir}/rtw89/rtw8852* \
 "
 FILES:${PN}-rtl8922 = " \
@@ -2404,21 +2428,27 @@ LICENSE:${PN}-qcom-adreno-g717 = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-adreno-g800 = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-adreno-g801 = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-adreno-g802 = "LicenseRef-Firmware-qcom"
+LICENSE:${PN}-qcom-adreno-g811 = "LicenseRef-Firmware-qcom"
+LICENSE:${PN}-qcom-adreno-g814 = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-apq8016-modem = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-apq8016-wifi = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-apq8096-audio = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-apq8096-adreno = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-apq8096-modem = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-eliza-adreno = "LicenseRef-Firmware-qcom"
+LICENSE:${PN}-qcom-eliza-audio = "LicenseRef-Firmware-qcom-2"
 LICENSE:${PN}-qcom-eliza-compute = "LicenseRef-Firmware-qcom-2"
 LICENSE:${PN}-qcom-glymur-adreno = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-glymur-audio = "LicenseRef-Firmware-qcom-2 AND LicenseRef-Firmware-linaro"
 LICENSE:${PN}-qcom-glymur-compute = "LicenseRef-Firmware-qcom-2"
+LICENSE:${PN}-qcom-hawi-adreno = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-hawi-audio = "LicenseRef-Firmware-qcom-2"
+LICENSE:${PN}-qcom-hawi-compute = "LicenseRef-Firmware-qcom-2"
 LICENSE:${PN}-qcom-kaanapali-adreno = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-kaanapali-audio = "LicenseRef-Firmware-qcom-2 AND LicenseRef-Firmware-linaro"
 LICENSE:${PN}-qcom-kaanapali-compute = "LicenseRef-Firmware-qcom-2"
 LICENSE:${PN}-qcom-kaanapali-soccp = "LicenseRef-Firmware-qcom-2"
+LICENSE:${PN}-qcom-maili-adreno = "LicenseRef-Firmware-qcom"
 LICENSE:${PN}-qcom-maili-audio = "LicenseRef-Firmware-qcom-2"
 LICENSE:${PN}-qcom-nord-audio = "LicenseRef-Firmware-qcom-2"
 LICENSE:${PN}-qcom-nord-compute = "LicenseRef-Firmware-qcom-2"
@@ -2553,12 +2583,15 @@ FILES:${PN}-qcom-adreno-g717 = "${firmwaredir}/qcom/gen71700_*.*"
 FILES:${PN}-qcom-adreno-g800 = "${firmwaredir}/qcom/gen80000_*.*"
 FILES:${PN}-qcom-adreno-g801 = "${firmwaredir}/qcom/gen80100_*.*"
 FILES:${PN}-qcom-adreno-g802 = "${firmwaredir}/qcom/gen80200_*.*"
+FILES:${PN}-qcom-adreno-g811 = "${firmwaredir}/qcom/gen81100_*.*"
+FILES:${PN}-qcom-adreno-g814 = "${firmwaredir}/qcom/gen81400_*.*"
 FILES:${PN}-qcom-apq8016-modem = "${firmwaredir}/qcom/apq8016/mba.mbn* ${firmwaredir}/qcom/apq8016/modem.mbn*"
 FILES:${PN}-qcom-apq8016-wifi = "${firmwaredir}/qcom/apq8016/wcnss.mbn* ${firmwaredir}/qcom/apq8016/WCNSS*"
 FILES:${PN}-qcom-apq8096-adreno = "${firmwaredir}/qcom/apq8096/a530_zap.mbn* ${firmwaredir}/qcom/a530_zap.mdt*"
 FILES:${PN}-qcom-apq8096-audio = "${firmwaredir}/qcom/apq8096/adsp*.*"
 FILES:${PN}-qcom-apq8096-modem = "${firmwaredir}/qcom/apq8096/mba.mbn* ${firmwaredir}/qcom/apq8096/modem*.* ${firmwaredir}/qcom/apq8096/wlanmdsp.mbn*"
 FILES:${PN}-qcom-eliza-adreno = "${firmwaredir}/qcom/eliza/gen71700_zap.mbn*"
+FILES:${PN}-qcom-eliza-audio = "${firmwaredir}/qcom/eliza/adsp*.*"
 FILES:${PN}-qcom-eliza-compute = "${firmwaredir}/qcom/eliza/cdsp*.*"
 FILES:${PN}-qcom-glymur-adreno = "${firmwaredir}/qcom/glymur/gen80100_zap.mbn*"
 FILES:${PN}-qcom-glymur-audio = " \
@@ -2566,7 +2599,9 @@ FILES:${PN}-qcom-glymur-audio = " \
     ${firmwaredir}/qcom/glymur/GLYMUR-CRD-tplg.bin* \
 "
 FILES:${PN}-qcom-glymur-compute = "${firmwaredir}/qcom/glymur/cdsp*.*"
+FILES:${PN}-qcom-hawi-adreno = "${firmwaredir}/qcom/hawi/gen81100_zap.mbn*"
 FILES:${PN}-qcom-hawi-audio = "${firmwaredir}/qcom/hawi/adsp*.*"
+FILES:${PN}-qcom-hawi-compute = "${firmwaredir}/qcom/hawi/cdsp*.*"
 FILES:${PN}-qcom-kaanapali-adreno = "${firmwaredir}/qcom/kaanapali/gen80200_zap.mbn*"
 FILES:${PN}-qcom-kaanapali-audio = " \
     ${firmwaredir}/qcom/kaanapali/adsp*.* \
@@ -2574,6 +2609,7 @@ FILES:${PN}-qcom-kaanapali-audio = " \
 "
 FILES:${PN}-qcom-kaanapali-compute = "${firmwaredir}/qcom/kaanapali/cdsp*.*"
 FILES:${PN}-qcom-kaanapali-soccp = "${firmwaredir}/qcom/kaanapali/soccp*.*"
+FILES:${PN}-qcom-maili-adreno = "${firmwaredir}/qcom/maili/gen81400_zap.mbn*"
 FILES:${PN}-qcom-maili-audio = "${firmwaredir}/qcom/maili/adsp*.*"
 FILES:${PN}-qcom-nord-audio = "${firmwaredir}/qcom/nord/adsp*.*"
 FILES:${PN}-qcom-nord-compute = "${firmwaredir}/qcom/nord/cdsp*.*"
@@ -2761,21 +2797,27 @@ RDEPENDS:${PN}-qcom-adreno-g717 = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-adreno-g800 = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-adreno-g801 = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-adreno-g802 = "${PN}-qcom-license"
+RDEPENDS:${PN}-qcom-adreno-g811 = "${PN}-qcom-license"
+RDEPENDS:${PN}-qcom-adreno-g814 = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-apq8016-modem = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-apq8016-wifi = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-apq8096-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-apq8096-audio = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-apq8096-modem = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-eliza-adreno = "${PN}-qcom-license"
+RDEPENDS:${PN}-qcom-eliza-audio = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-eliza-compute = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-glymur-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-glymur-audio = "${PN}-qcom-2-license ${PN}-linaro-license"
 RDEPENDS:${PN}-qcom-glymur-compute = "${PN}-qcom-2-license"
+RDEPENDS:${PN}-qcom-hawi-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-hawi-audio = "${PN}-qcom-2-license"
+RDEPENDS:${PN}-qcom-hawi-compute = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-kaanapali-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-kaanapali-audio = "${PN}-qcom-2-license ${PN}-linaro-license"
 RDEPENDS:${PN}-qcom-kaanapali-compute = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-kaanapali-soccp = "${PN}-qcom-2-license"
+RDEPENDS:${PN}-qcom-maili-adreno = "${PN}-qcom-license"
 RDEPENDS:${PN}-qcom-maili-audio = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-nord-audio = "${PN}-qcom-2-license"
 RDEPENDS:${PN}-qcom-nord-compute = "${PN}-qcom-2-license"
@@ -2902,6 +2944,10 @@ FILES:${PN}-rockchip-license = "${firmwaredir}/LICENCE.rockchip"
 FILES:${PN}-rockchip-dptx = "${firmwaredir}/rockchip/dptx.bin*"
 RDEPENDS:${PN}-rockchip-dptx = "${PN}-rockchip-license"
 
+LICENSE:${PN}-rockchip-pcie = "LicenseRef-Firmware-rockchip"
+FILES:${PN}-rockchip-pcie = "${firmwaredir}/rockchip/pcie3-t22-c8g2-1.6.3-202a-p7.fw*"
+RDEPENDS:${PN}-rockchip-pcie = "${PN}-rockchip-license"
+
 # For Amlogic VDEC
 LICENSE:${PN}-amlogic-vdec = "LicenseRef-Firmware-amlogic-vdec"
 FILES:${PN}-amlogic-vdec-license = "${firmwaredir}/LICENSE.amlogic_vdec"
@@ -2922,6 +2968,14 @@ FILES:${PN}-intel-license = "${firmwaredir}/LICENSE.intel"
 LICENSE:${PN}-ish-lnlm = "LicenseRef-Firmware-intel"
 FILES:${PN}-ish-lnlm = "${firmwaredir}/intel/ish/ish_lnlm.bin*"
 RDEPENDS:${PN}-ish-lnlm = "${PN}-intel-license"
+
+LICENSE:${PN}-ish-nvlh = "LicenseRef-Firmware-intel"
+FILES:${PN}-ish-nvlh = "${firmwaredir}/intel/ish/ish_nvlh.bin*"
+RDEPENDS:${PN}-ish-nvlh = "${PN}-intel-license"
+
+LICENSE:${PN}-ish-nvls = "LicenseRef-Firmware-intel"
+FILES:${PN}-ish-nvls = "${firmwaredir}/intel/ish/ish_nvls.bin*"
+RDEPENDS:${PN}-ish-nvls = "${PN}-intel-license"
 
 # For Dell ish - Intel Integrated Sensor Hub
 LICENSE:${PN}-dell-license = "LicenseRef-Firmware-dell"
@@ -3631,6 +3685,7 @@ LICENSE:${PN} = "\
     LicenseRef-Firmware-Abilis \
     AND LicenseRef-Firmware-aeonsemi \
     AND LicenseRef-Firmware-agere \
+    AND LicenseRef-Firmware-aic \
     AND LicenseRef-Firmware-airoha \
     AND LicenseRef-Firmware-alacritech \
     AND LicenseRef-Firmware-amdgpu \
