@@ -11,6 +11,7 @@ SRC_URI = "git://gitlab.freedesktop.org/mesa/piglit.git;protocol=https;branch=ma
            file://0003-tests-util-piglit-shader.c-do-not-hardcode-build-pat.patch \
            file://0001-CMakeLists.txt-do-not-obtain-wayland-scanner-path-fr.patch \
            file://0001-tests-no_error.py-modify-_command-and-not-command.patch \
+           file://0001-tests-serializer-reproducible_mtime-should-be-an-int.patch \
            "
 UPSTREAM_CHECK_COMMITS = "1"
 
