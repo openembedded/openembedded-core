@@ -51,6 +51,7 @@ PTESTS_FAST = "\
     libtimedate-perl \
     libtoml11 \
     libtry-tiny-perl \
+    liburcu \
     libusb1 \
     libxml-namespacesupport-perl \
     libxml-parser-perl \
