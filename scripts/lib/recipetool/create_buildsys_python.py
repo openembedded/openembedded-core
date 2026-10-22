@@ -123,6 +123,17 @@ class PythonRecipeHandler(RecipeHandler):
         """
         return re.sub(r"[-_.]+", "-", s).lower()
 
+    @staticmethod
+    def comment_lines(s):
+        """
+        Some Python packages put the full license text into the license
+        field of PKG-INFO or pyproject.toml instead of a short identifier.
+        Prefix follow-up lines with '#' so that multi-line values (e.g.
+        a full license text) remain a valid comment in the recipe.
+        """
+        return "\n".join(("# " + line).rstrip() if i else line
+                         for i, line in enumerate(s.splitlines()))
+
     def process_url(self, args, classes, handled, extravalues):
         """
         Convert any pypi url https://pypi.org/project/<package>/<version> into https://files.pythonhosted.org/packages/source/...
@@ -675,7 +686,7 @@ class PythonSetupPyRecipeHandler(PythonRecipeHandler):
         if license_str:
             for i, line in enumerate(lines_before):
                 if line.startswith('##LICENSE_PLACEHOLDER##'):
-                    lines_before.insert(i, '# NOTE: License in setup.py/PKGINFO is: %s' % license_str)
+                    lines_before.insert(i, '# NOTE: License in setup.py/PKGINFO is: %s' % self.comment_lines(license_str))
                     break
 
         if 'Classifier' in info:
@@ -914,7 +925,7 @@ class PythonPyprojectTomlRecipeHandler(PythonRecipeHandler):
                 for i, line in enumerate(lines_before):
                     if line.startswith("##LICENSE_PLACEHOLDER##"):
                         lines_before.insert(
-                            i, "# NOTE: License in pyproject.toml is: %s" % license_str
+                            i, "# NOTE: License in pyproject.toml is: %s" % self.comment_lines(license_str)
                         )
                         break
 
