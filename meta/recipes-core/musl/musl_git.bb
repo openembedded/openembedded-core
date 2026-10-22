@@ -49,6 +49,10 @@ CONFIGUREOPTS = " \
     --syslibdir=${nonarch_base_libdir} \
 "
 
+# The fallback search path of patch 0002 follows base_libdir, as the .path
+# file does. --syslibdir only says where the dynamic linker goes.
+EXTRA_OEMAKE += "baselibdir=${base_libdir}"
+
 do_configure() {
 	${S}/configure ${CONFIGUREOPTS}
 }
