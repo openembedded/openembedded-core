@@ -162,7 +162,7 @@ class PythonRecipeHandler(RecipeHandler):
                 for release in reversed(data["releases"][version]):
                     if release["packagetype"] == "sdist":
                         fetch_uri = release["url"]
-                        sdist = release["filename"].rsplit("-")[0]
+                        sdist = release["filename"].rsplit("-", 1)[0]
                         break
             else:
                 logger.warning("Cannot handle pypi url %s: cannot fetch package information using %s", source, json_url)
@@ -171,8 +171,10 @@ class PythonRecipeHandler(RecipeHandler):
             match = re.match(r'^https?://files.pythonhosted.org/packages.*/(.*)-.*$', source)
             if match:
                 fetch_uri = source
-                pypi_package = match.group(1)
-                sdist, version = determine_from_url(fetch_uri)
+                # The sdist name as found in the filename, not normalised
+                sdist = match.group(1)
+                pypi_package = sdist
+                _, version = determine_from_url(fetch_uri)
 
         if match and not args.no_pypi:
             if required_version and version != required_version:
