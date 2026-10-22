@@ -695,7 +695,8 @@ def _cleanup_changelog(content):
     return _join_single_line_paragraphs(text)
 
 
-def _extract_changelog(srctree, pn, old_ver, new_ver, old_tag, new_tag, workspace_path, is_git_source):
+def _extract_changelog(srctree, pn, old_ver, new_ver, old_tag, new_tag, workspace_path, is_git_source,
+                       changelog_skip=False):
     """Extract changelog between old and new version using devtool git tags."""
     changelog_content = None
     changelog_fname = None
@@ -803,6 +804,9 @@ def _extract_changelog(srctree, pn, old_ver, new_ver, old_tag, new_tag, workspac
         'new_version': new_ver,
         'changelog_file': os.path.basename(changelog_path),
         'changelog_source': changelog_fname.split(', ') if changelog_fname else None,
+        # Hint from RECIPE_UPGRADE_CHANGELOG_SKIP: changelog is badly formed
+        # for use in a commit message
+        'changelog_skip': changelog_skip,
     }
     metadata_path = os.path.join(changelog_dir, '%s.json' % pn)
     with open(metadata_path, 'w') as f:
@@ -898,9 +902,11 @@ def upgrade(args, config, basepath, workspace):
         is_git = old_srcrev is not None
         newpv = args.version or rd.getVar('PV')
         new_tag = 'devtool-base-new' if is_git else 'devtool-base-%s' % newpv
+        changelog_skip = rd.getVar('BPN') in (rd.getVar('RECIPE_UPGRADE_CHANGELOG_SKIP') or '').split()
         changelog_file = _extract_changelog(srctree, pn, old_ver, newpv,
                                             'devtool-base', new_tag,
-                                            config.workspace_path, is_git)
+                                            config.workspace_path, is_git,
+                                            changelog_skip)
         if changelog_file:
             logger.info('Changelog extracted to %s' % changelog_file)
             metadata_file = os.path.join(os.path.dirname(changelog_file), '%s.json' % pn)

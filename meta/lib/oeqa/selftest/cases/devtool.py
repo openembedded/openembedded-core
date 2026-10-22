@@ -2339,7 +2339,7 @@ class DevtoolUpgradeTests(DevtoolBase):
         except:
             self.skip("Git user.name and user.email must be set")
 
-    def _check_changelog(self, recipe, oldrecipefile, old_ver=None, new_ver=None):
+    def _check_changelog(self, recipe, oldrecipefile, old_ver=None, new_ver=None, changelog_skip=False):
         """Compare extracted changelog against reference data."""
         changelog_ref = oldrecipefile + '.changelog'
         self.assertExists(changelog_ref, 'Changelog reference file must exist for %s' % recipe)
@@ -2366,6 +2366,7 @@ class DevtoolUpgradeTests(DevtoolBase):
             if new_ver:
                 self.assertEqual(metadata.get('new_version'), new_ver)
             self.assertEqual(metadata.get('changelog_file'), '%s.txt' % recipe)
+            self.assertEqual(metadata.get('changelog_skip'), changelog_skip)
 
     def test_devtool_upgrade(self):
         # Check preconditions
@@ -2383,6 +2384,8 @@ class DevtoolUpgradeTests(DevtoolBase):
         oldrecipefile = get_bb_var('FILE', recipe)
         tempdir = tempfile.mkdtemp(prefix='devtoolqa')
         self.track_for_cleanup(tempdir)
+        # Flag the changelog as badly formed; checked in the JSON metadata below
+        self.append_config('RECIPE_UPGRADE_CHANGELOG_SKIP = "%s"' % recipe)
         # Check that recipe is not already under devtool control
         result = runCmd('devtool status')
         self.assertNotIn(recipe, result.output)
@@ -2407,7 +2410,7 @@ class DevtoolUpgradeTests(DevtoolBase):
             newlines = f.readlines()
         self.assertEqual(desiredlines, newlines)
         # Check changelog
-        self._check_changelog(recipe, oldrecipefile, old_version, version)
+        self._check_changelog(recipe, oldrecipefile, old_version, version, changelog_skip=True)
         # Check devtool reset recipe
         result = runCmd('devtool reset %s -n' % recipe)
         result = runCmd('devtool status')
