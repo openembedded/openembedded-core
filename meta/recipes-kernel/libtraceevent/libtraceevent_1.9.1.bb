@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM = "file://LICENSES/GPL-2.0;md5=e6a75371ba4d16749254a51215d13f97
                     file://LICENSES/LGPL-2.1;md5=b370887980db5dd40659b50909238dbd"
 SECTION = "libs"
 
-SRCREV = "13701b5532e0c3295bf5670361692b0d0044228d"
+SRCREV = "34ee98e346e6c8f6586fa3a67db5ba2380403bc3"
 SRC_URI = "git://git.kernel.org/pub/scm/libs/libtrace/libtraceevent.git;branch=${BPN};protocol=https;tag=${BPN}-${PV} \
           "
 
