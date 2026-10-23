@@ -15,7 +15,7 @@ DEPENDS = "libusb1 virtual/libiconv udev"
 
 SRC_URI = "${KERNELORG_MIRROR}/linux/utils/usb/usbutils/usbutils-${PV}.tar.gz \
           "
-SRC_URI[sha256sum] = "347c52b65a6aeb22cfe3af8382192004f99725850e1dc5f705336e54cf6d59fc"
+SRC_URI[sha256sum] = "fed292b2a3dce83464ce9e96e7eaf301f58b3bf0104872b6a75edac14c907ff2"
 
 inherit meson pkgconfig update-alternatives
 
