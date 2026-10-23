@@ -14,12 +14,10 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/strace-${PV}.tar.xz \
            file://skip-load.patch \
            file://0001-configure-Use-autoconf-macro-to-detect-largefile-sup.patch \
            file://0002-tests-Replace-off64_t-with-off_t.patch \
-		   file://0001-m4-Backport-ax_prog_cc_for_build.m4-macros.patch \
+           file://0001-m4-Backport-ax_prog_cc_for_build.m4-macros.patch \
+           file://0001-Handle-both-bpf-link-and-bpf_link-anon_inode-names.patch \
            "
-SRC_URI:append:libc-musl = "\
-           file://0001-Ignore-pwritev-pwrite64-tests-on-musl.patch \
-           "
-SRC_URI[sha256sum] = "4bde6246926890dcee824f6e6ac42a06752f47d77e5097d86e3c0d6d4b709fe5"
+SRC_URI[sha256sum] = "529634c40910895a9a1f3c5c1e65da2ca9ed72fb158dfc4bcc89efdf05e39b72"
 
 inherit autotools github-releases ptest
 
