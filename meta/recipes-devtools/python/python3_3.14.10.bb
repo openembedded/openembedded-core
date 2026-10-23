@@ -274,6 +274,11 @@ SKIPPED_TESTS:append:class-target:libc-musl = " \
     --ignore test.test_ctypes.test_dlerror.TestNullDlsym.test_null_dlsym \
 "
 
+# https://github.com/python/cpython/issues/159424
+SKIPPED_TESTS:append:libc-musl = " \
+    --ignore test.test_readline.TestHistoryManipulation.test_append_limited_history \
+    --ignore test.test_readline.TestHistoryManipulation.test_write_read_append \
+"
 
 do_install_ptest:append () {
     sed -i -e "s|SKIPPED_TESTS=|SKIPPED_TESTS=\"${SKIPPED_TESTS}\"|" ${D}${PTEST_PATH}/run-ptest
