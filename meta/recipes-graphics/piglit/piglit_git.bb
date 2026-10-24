@@ -12,6 +12,7 @@ SRC_URI = "git://gitlab.freedesktop.org/mesa/piglit.git;protocol=https;branch=ma
            file://0001-CMakeLists.txt-do-not-obtain-wayland-scanner-path-fr.patch \
            file://0001-tests-no_error.py-modify-_command-and-not-command.patch \
            file://0001-tests-serializer-reproducible_mtime-should-be-an-int.patch \
+           file://0001-shader_runner-Keep-strchr-result-const.patch \
            "
 UPSTREAM_CHECK_COMMITS = "1"
 
