@@ -7,7 +7,7 @@ HOMEPAGE = "http://ccache.samba.org"
 SECTION = "devel"
 
 LICENSE = "BSL-1.0 AND GPL-3.0-or-later AND ISC AND MIT"
-LIC_FILES_CHKSUM = "file://LICENSE.adoc;md5=e89f26e9f97d14068047871bdb2b3118 \
+LIC_FILES_CHKSUM = "file://LICENSE.adoc;md5=e4a0db390c3eeb742b398ac010a70913 \
                     file://src/third_party/cpp-httplib/httplib.h;endline=6;md5=663aca6f84e7d67ade228aad32afc0ea \
                     file://src/third_party/win32-compat/win32/mktemp.c;endline=17;md5=d287e9c1f1cd2bb2bd164490e1cf449a \
                     "
@@ -16,7 +16,7 @@ DEPENDS = "zstd fmt xxhash"
 
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz"
 
-SRC_URI[sha256sum] = "dfd2b9e446b2cf68e83e21b25317d8f868de6f1b246c7e99e04d07f4e1b0b97e"
+SRC_URI[sha256sum] = "35921f80a93d6453a874525f2e4bd97264c46ddc349d87aacc1032cde4dd2924"
 
 inherit cmake github-releases
 
