@@ -1,16 +1,18 @@
-Fix builds in the case of seprate source from the build directory.
+Fix builds in the case of separate source from the build directory.
 
 RP 2013/4/17
 
 Upstream-Status: Pending
-
-Index: pam-ck-connector/Makefile.am
-===================================================================
---- consolekit/pam-ck-connector.orig/Makefile.am	2010-09-03 13:54:31.000000000 +0000
-+++ consolekit/pam-ck-connector/Makefile.am	2013-04-17 09:06:49.093524918 +0000
-@@ -4,7 +4,7 @@
+---
+ pam-ck-connector/Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+diff --git a/pam-ck-connector/Makefile.am b/pam-ck-connector/Makefile.am
+index 7778d16..9b960a7 100644
+--- a/pam-ck-connector/Makefile.am
++++ b/pam-ck-connector/Makefile.am
+@@ -4,7 +4,7 @@ if ENABLE_PAM_MODULE
  
- INCLUDES = 					\
+ AM_CFLAGS = 					\
  	$(LIBDBUS_CFLAGS)			\
 -	-I$(top_builddir)/libck-connector	\
 +	-I$(top_srcdir)/libck-connector	\
