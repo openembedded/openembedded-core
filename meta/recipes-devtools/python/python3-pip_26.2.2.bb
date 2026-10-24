@@ -26,7 +26,7 @@ inherit pypi python_flit_core
 
 SRC_URI += "file://no_shebang_mangling.patch"
 
-SRC_URI[sha256sum] = "f6ad667e89a1fe78046c8f13232b247200f5258d7828f3f7883d660878e0813f"
+SRC_URI[sha256sum] = "3a8e5c800492787f33a4114ef54444546c340df428974ebba17e0fd47e11af2f"
 
 CVE_PRODUCT = "pypa:pip"
 
