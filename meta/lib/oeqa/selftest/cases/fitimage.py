@@ -2087,19 +2087,18 @@ UBOOT_FIT_HASH_ALG = "sha256"
         self._test_fitimage(bb_vars)
 
 
-    def test_sign_standalone_uboot_fit_image_conf(self):
+    def test_sign_standalone_uboot_fit_image_individual(self):
         """
         Summary:     Check if U-Boot FIT image and Image Tree Source (its) are
-                     created and signed correctly when the FIT configuration
-                     is signed (SPL_SIGN_CONF = "1") instead of the individual
-                     images (SPL_SIGN_INDIVIDUAL = "0").
+                     created and signed correctly when the individual images
+                     are signed (SPL_SIGN_INDIVIDUAL = "1") instead of the FIT
+                     configuration (SPL_SIGN_CONF = "0").
         Expected:    1) U-Boot its and FIT image are built successfully
-                     2) The its file has a hash node in each image node, no
-                        image signature nodes, and a signature node in the
-                        configuration which covers the loadables and the fdt
-                     3) Dumping the FIT image shows hashes for the images and
-                        a signature for the configuration only
-                     4) The public key in the SPL DTB is required for "conf"
+                     2) The its file has a signature node in each image node,
+                        no image hash nodes and no configuration signature node
+                     3) Dumping the FIT image shows signatures for the images
+                        and no signature for the configuration
+                     4) The public key in the SPL DTB is required for "image"
                      5) SPL_MKIMAGE_SIGN_ARGS is passed to mkimage
         Product:     oe-core
         """
@@ -2107,18 +2106,18 @@ UBOOT_FIT_HASH_ALG = "sha256"
         config = """
 # There's no U-boot defconfig with CONFIG_FIT_SIGNATURE yet, so we need at
 # least CONFIG_SPL_LOAD_FIT and CONFIG_SPL_OF_CONTROL set
-# Enable creation and signing of the U-Boot fitImage configuration
+# Enable creation and signing of the individual U-Boot fitImage images
 UBOOT_FITIMAGE_ENABLE = "1"
 SPL_SIGN_ENABLE = "1"
-SPL_SIGN_CONF = "1"
-SPL_SIGN_INDIVIDUAL = "0"
-SPL_SIGN_KEYNAME = "spl-conf-oe-selftest"
+SPL_SIGN_CONF = "0"
+SPL_SIGN_INDIVIDUAL = "1"
+SPL_SIGN_KEYNAME = "spl-individual-oe-selftest"
 SPL_SIGN_KEYDIR = "${TOPDIR}/signing-keys"
 UBOOT_ENTRYPOINT  = "0x80000000"
 UBOOT_LOADADDRESS = "0x80000000"
 UBOOT_DTB_LOADADDRESS = "0x82000000"
 SPL_MKIMAGE_DTCOPTS = "-I dts -O dtb -p 2000"
-SPL_MKIMAGE_SIGN_ARGS = "-c 'a smart U-Boot conf comment'"
+SPL_MKIMAGE_SIGN_ARGS = "-c 'a smart U-Boot individual comment'"
 UBOOT_EXTLINUX = "0"
 UBOOT_FIT_GENERATE_KEYS = "1"
 UBOOT_FIT_HASH_ALG = "sha256"
