@@ -4567,9 +4567,14 @@ class DevtoolIdeSdkSharedTests(DevtoolIdeSdkTests):
         # Handle the workspace (which is not needed by this test case)
         self._check_workspace()
 
+        # Do not add a cmake-kit to the kits of the user
+        xdg_data_home = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(xdg_data_home)
+        ide_env = dict(os.environ, XDG_DATA_HOME=xdg_data_home)
+
         result_init = runCmd(
             'devtool ide-sdk -m shared oe-selftest-image cmake-example meson-example --ide=code',
-            output_log=self._cmd_logger)
+            output_log=self._cmd_logger, env=ide_env)
         bb_vars = get_bb_vars(
             ['REAL_MULTIMACH_TARGET_SYS', 'DEPLOY_DIR_IMAGE', 'COREBASE'], "meta-ide-support")
         environment_script = 'environment-setup-%s' % bb_vars['REAL_MULTIMACH_TARGET_SYS']
@@ -4580,6 +4585,11 @@ class DevtoolIdeSdkSharedTests(DevtoolIdeSdkTests):
 
         # Verify the cross environment script is available
         self.assertExists(environment_script_path)
+
+        # Verify the cmake-kit is added to the location where CMake Tools looks for it
+        with open(os.path.join(xdg_data_home, 'CMakeTools', 'cmake-tools-kits.json')) as f:
+            kits = json.load(f)
+        self.assertEqual([kit['environmentSetupScript'] for kit in kits], [environment_script_path])
 
         def runCmdEnv(cmd, cwd, output_log=self._cmd_logger):
             cmd = '/bin/sh -c ". %s > /dev/null && %s"' % (
