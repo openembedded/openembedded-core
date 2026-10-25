@@ -35,13 +35,13 @@ SPL_SIGN_ENABLE ?= "0"
 
 # Sign the FIT configuration in the SPL signing flow. Configuration
 # signatures bind the selected images and boot metadata together.
-SPL_SIGN_CONF ?= "0"
+SPL_SIGN_CONF ?= "1"
 
 # Legacy compatibility knob for per-image signatures in the SPL FIT path.
 # Individual image signatures do not protect the configuration metadata
 # which selects and parameterizes the boot images.
 # INSECURE, use at your own risk
-SPL_SIGN_INDIVIDUAL ?= "1"
+SPL_SIGN_INDIVIDUAL ?= "0"
 
 # Default value for deployment filenames.
 UBOOT_DTB_IMAGE ?= "u-boot-${MACHINE}-${PV}-${PR}.dtb"
