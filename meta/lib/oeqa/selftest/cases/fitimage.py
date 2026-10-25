@@ -1685,6 +1685,8 @@ class UBootFitImageTests(FitImageTestCase):
             'FIT_SIGN_INDIVIDUAL',
             'FIT_SIGN_NUMBITS',
             'MACHINE',
+            'SPL_DTB_BINARY',
+            'SPL_DTB_IMAGE',
             'SPL_MKIMAGE_SIGN_ARGS',
             'SPL_SIGN_ENABLE',
             'SPL_SIGN_KEYNAME',
@@ -1699,6 +1701,7 @@ class UBootFitImageTests(FitImageTestCase):
             'UBOOT_FIT_ARM_TRUSTED_FIRMWARE_LOADADDRESS',
             'UBOOT_FIT_ARM_TRUSTED_FIRMWARE',
             'UBOOT_FIT_CONF_DESC',
+            'UBOOT_FIT_CONF_FIRMWARE',
             'UBOOT_FIT_CONF_USER_LOADABLES',
             'UBOOT_FIT_DESC',
             'UBOOT_FIT_HASH_ALG',
@@ -1761,19 +1764,30 @@ class UBootFitImageTests(FitImageTestCase):
         # configuration nodes
         configurations = [ 'conf']
 
+        spl_sign_enable = bb_vars['SPL_SIGN_ENABLE'] == "1"
+        spl_sign_individual = spl_sign_enable and bb_vars['SPL_SIGN_INDIVIDUAL'] == "1"
+        spl_sign_conf = spl_sign_enable and bb_vars['SPL_SIGN_CONF'] == "1"
+
         # Create a list of paths for all image and configuration nodes
         req_its_paths = []
+        not_req_its_paths = []
         for image in images:
             req_its_paths.append(['/', 'images', image])
-            if bb_vars['SPL_SIGN_ENABLE'] == "1" and bb_vars['SPL_SIGN_INDIVIDUAL'] == "1":
+            if spl_sign_individual:
                 req_its_paths.append(['/', 'images', image, 'signature'])
-            elif bb_vars['SPL_SIGN_ENABLE'] == "1" and bb_vars['SPL_SIGN_CONF'] == "1":
+            else:
+                not_req_its_paths.append(['/', 'images', image, 'signature'])
+            if spl_sign_conf:
                 req_its_paths.append(['/', 'images', image, 'hash-1'])
+            else:
+                not_req_its_paths.append(['/', 'images', image, 'hash-1'])
         for configuration in configurations:
             req_its_paths.append(['/', 'configurations', configuration])
-            if bb_vars['SPL_SIGN_ENABLE'] == "1" and bb_vars['SPL_SIGN_CONF'] == "1":
-                req_its_paths.append(['/', 'configurations', 'conf', 'signature'])
-        return (req_its_paths, [])
+            if spl_sign_conf:
+                req_its_paths.append(['/', 'configurations', configuration, 'signature'])
+            else:
+                not_req_its_paths.append(['/', 'configurations', configuration, 'signature'])
+        return (req_its_paths, not_req_its_paths)
 
     def _get_req_its_fields(self, bb_vars):
         loadables = ["uboot"]
@@ -1823,10 +1837,17 @@ class UBootFitImageTests(FitImageTestCase):
             'loadables = "%s";' % '", "'.join(loadables),
             'fdt = "fdt";',
         ]
+        if bb_vars['SPL_SIGN_ENABLE'] == "1" and bb_vars['SPL_SIGN_CONF'] == "1":
+            sign_images = []
+            if bb_vars.get('UBOOT_FIT_CONF_FIRMWARE'):
+                sign_images.append("firmware")
+            sign_images += ["loadables", "fdt"]
+            its_field_check.append('sign-images = "%s";' % '", "'.join(sign_images))
         return its_field_check
 
     def _get_req_sigvalues_config(self, bb_vars):
-        # COnfigurations are not signed by uboot-sign
+        # The "conf" node does not match FIT_CONF_PREFIX, so a configuration
+        # signature (SPL_SIGN_CONF) is checked against _get_req_sigvalues_image
         return {}
 
     def _get_req_sigvalues_image(self, bb_vars):
@@ -1919,6 +1940,18 @@ class UBootFitImageTests(FitImageTestCase):
             self.assertEqual(sign_algo, req_sign_algo, 'Signature algorithm for %s not expected value' % section)
             sign_value = values.get('Sign value', None)
             self.assertEqual(len(sign_value), fit_sign_alg_len, 'Signature value for section %s not expected length' % section)
+
+        # The public key added to the SPL DTB tells SPL what has to be signed:
+        # "conf" for configuration signatures, "image" for individual image signatures.
+        if bb_vars['SPL_DTB_BINARY']:
+            dtc_bindir = FitImageTestCase._setup_native('dtc-native')
+            spl_dtb_path = os.path.join(bb_vars['DEPLOY_DIR_IMAGE'], bb_vars['SPL_DTB_IMAGE'])
+            key_dtb_path = "/signature/key-" + spl_sign_keyname
+            req_required = "conf" if bb_vars['SPL_SIGN_CONF'] == "1" else "image"
+            self._verify_dtb_property(dtc_bindir, spl_dtb_path, key_dtb_path, "required", req_required)
+            self._verify_dtb_property(dtc_bindir, spl_dtb_path, key_dtb_path, "algo",
+                                      "%s,%s" % (uboot_fit_hash_alg, uboot_fit_sign_alg))
+            self._verify_dtb_property(dtc_bindir, spl_dtb_path, key_dtb_path, "key-name-hint", spl_sign_keyname)
 
         # Search for the string passed to mkimage in each signed section of the FIT image.
         # Looks like mkimage supports to add a comment but does not support to read it back.
