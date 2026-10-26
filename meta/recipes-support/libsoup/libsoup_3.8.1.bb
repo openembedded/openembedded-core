@@ -11,7 +11,7 @@ DEPENDS = "glib-2.0 glib-2.0-native libxml2 sqlite3 libpsl nghttp2"
 
 inherit gettext gnomebase upstream-version-is-even gobject-introspection gi-docgen vala ptest-gnome
 
-SRC_URI[archive.sha256sum] = "bbf08fa3e03a88c31a3d27a0d87cb422e9490f2d08e149211103df6d638a2238"
+SRC_URI[archive.sha256sum] = "5013dcef9136f6f861e6529fca578af50c1f52a39219027fb5aff652d1371a04"
 
 SRC_URI += "file://run-ptest"
 
