@@ -26,8 +26,10 @@ SRC_URI = "https://sourceware.org/pub/valgrind/valgrind-${PV}.tar.bz2 \
            file://0001-docs-Disable-manual-validation.patch \
            file://0001-tests-arm-Use-O-instead-of-O0.patch \
            file://0001-getdents_filter.c-workaround-off64_t-not-defined-in-.patch \
+           file://0001-Bug-5277723-configure.ac-do-not-fail-the-arm64-test-.patch \
            "
-SRC_URI[sha256sum] = "5d589152eb8071c02feab8ce6ab719e431a1fbc3e2b1700f5432632a8b9264dc"
+
+SRC_URI[sha256sum] = "9f7a18d128f05d3a80fea53e6953f34aad7200a425ceaee46099a8a798a7dd9c"
 UPSTREAM_CHECK_REGEX = "valgrind-(?P<pver>\d+(\.\d+)+)\.tar"
 
 COMPATIBLE_HOST = '(i.86|x86_64|arm|aarch64|mips|powerpc|powerpc64|riscv64).*-linux'
