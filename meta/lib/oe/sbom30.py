@@ -1236,6 +1236,7 @@ def create_sbom(d, name, root_elements, add_objectsets=[]):
             choose=choose_license_expressions,
         )
 
+    with objset.deduplicate() as dedup:
         # Deduplicate creation info
         dedup.find_duplicates(cmp_creation_info, oe.spdx30.CreationInfo)
 
