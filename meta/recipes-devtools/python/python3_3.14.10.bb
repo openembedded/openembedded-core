@@ -276,38 +276,6 @@ SKIPPED_TESTS = " \
     --ignore test_write_read_append \
 "
 
-# We build Python3 with editline support by default, which has tab completion
-# but not bang completion. test_bang_completion_without_do_shell() passes if
-# building with readline, but we don't want to change the default, so skip the
-# test.
-# https://github.com/python/cpython/issues/150922
-SKIPPED_TESTS += " \
-    --ignore test_bang_completion_without_do_shell \
-"
-
-# Also fails with editline instead of readline. See:
-# https://github.com/python/cpython/issues/123018
-SKIPPED_TESTS += " \
-    --ignore test_write_read_limited_history \
-"
-
-# In 3.14+ PyREPL's uses terminfo instead of curses. ICH1, is not in the
-# resulting terminal capabilities, in an "optimization" occurring from PyREPL's
-# side that causes test_cursor_back_write() to fail. Specifically, the test
-# tests the following writes in sequence:
-#
-# 1. b"1"
-# 2. TERM_CAPABILITIES["cub"] + b":1"
-# 3. ANY, b"2"
-#
-# The first two writes are read correctly, but the result for the third
-# write is seeing the equivalent of:
-#
-# ANY, b"21"
-SKIPPED_TESTS += " \
-    --ignore test_cursor_back_write \
-"
-
 # Needs IMAGE_FEATURE += \"tools-sdk\"
 # Can be removed when https://github.com/python/cpython/pull/151231 is merged
 SKIPPED_TESTS += " \
@@ -318,12 +286,6 @@ SKIPPED_TESTS += " \
 # Fails due to differences in CFLAGS as as modified during build
 SKIPPED_TESTS += " \
     --ignore test_sysconfigdata_json \
-"
-
-# Fails with segfault
-# Bugzilla YP 16182 (test_tracemalloc_track_race)
-SKIPPED_TESTS += " \
-    --ignore test.test_tracemalloc.TestCAPI.test_tracemalloc_track_race \
 "
 
 # Intermittent failure under load - the remote pdb attach test is timing
