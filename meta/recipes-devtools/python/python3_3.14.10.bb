@@ -309,6 +309,7 @@ SKIPPED_TESTS += " \
 "
 
 # Needs IMAGE_FEATURE += \"tools-sdk\"
+# Can be removed when https://github.com/python/cpython/pull/151231 is merged
 SKIPPED_TESTS += " \
     --ignore test_find_library_with_gcc \
     --ignore test_find_library_with_ld \
@@ -365,18 +366,6 @@ SKIPPED_TESTS += " \
 # Bugzilla YP 16466
 SKIPPED_TESTS += " \
     --ignore test_shutdown_no_wait_max_tasks_gh119592 \
-"
-
-SKIPPED_TESTS:append:libc-musl = " \
-    -x test__locale \
-    -x test_c_locale_coercion \
-    -x test_locale \
-    -x test_os test_re \
-    -x test__xxsubinterpreters \
-    -x test_threading \
-    --ignore test.test_strptime.StrptimeTests.test_date_locale2 \
-    --ignore test.test_ctypes.test_dlerror.TestNullDlsym.test_null_dlsym \
-    --ignore test.test_multiprocessing_fork.test_processes.WithProcessesTestProcess.test_interrupt \
 "
 
 # https://github.com/python/cpython/issues/159424
