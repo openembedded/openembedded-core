@@ -12,7 +12,7 @@ SRC_URI = "git://github.com/openSUSE/libsolv.git;branch=master;protocol=https;ta
            file://run-ptest \
 "
 
-SRCREV = "0e6eea45c9ffc7dd0756060f2b0f5527df02efa7"
+SRCREV = "fa356d93545033a9962dfa99c4685e6299932922"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>\d+(\.\d+)+)"
 
