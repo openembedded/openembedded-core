@@ -356,6 +356,17 @@ SKIPPED_TESTS += " \
     --ignore test.test_asyncio.test_eager_task_factory.CEagerTaskFactoryLoopTests.test_staggered_race_with_eager_tasks \
 "
 
+# Intermittent failure under load - this concurrent.futures ProcessPool test
+# starts a worker and expects it to be stranded within a 30s thread-join
+# timeout. On loaded autobuilder hosts under QEMU emulation (seen on
+# qemuriscv64) the worker process is slow to start, the managed queue get()
+# times out and the join exceeds 30s. Upstream test is timing-sensitive
+# (CPython gh-119592).
+# Bugzilla YP 16466
+SKIPPED_TESTS += " \
+    --ignore test_shutdown_no_wait_max_tasks_gh119592 \
+"
+
 SKIPPED_TESTS:append:libc-musl = " \
     -x test__locale \
     -x test_c_locale_coercion \
