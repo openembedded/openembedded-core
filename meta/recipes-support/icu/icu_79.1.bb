@@ -92,7 +92,7 @@ FILES:libicuio = "${libdir}/libicuio.so.*"
 
 BBCLASSEXTEND = "native nativesdk"
 
-LIC_FILES_CHKSUM = "file://../LICENSE;md5=e531a388be7c1df9a0fb7b4010c9c1d7"
+LIC_FILES_CHKSUM = "file://../LICENSE;md5=b2329a1b467abf456a6eb531b5000855"
 
 ICU_PV = "${PV}"
 ICU_FOLDER = "${PV}"
@@ -117,8 +117,8 @@ SRC_URI = "${BASE_SRC_URI};name=code \
 SRC_URI:append:class-target = "\
            file://0001-Disable-LDFLAGSICUDT-for-Linux.patch \
           "
-SRC_URI[code.sha256sum] = "3a2e7a47604ba702f345878308e6fefeca612ee895cf4a5f222e7955fabfe0c0"
-SRC_URI[data.sha256sum] = "9d8b3899096aeb83e4e21ef8a40fec9e03b28db18c48452efac882ce25a91e27"
+SRC_URI[code.sha256sum] = "06fa63ecb521048f8082f12ad988f6b678d90cbd88aafce24cbc94902b191d99"
+SRC_URI[data.sha256sum] = "b3a430009bb5fab77b1a4b98fab85cc8f887e26d4e4166121724298ae14d7224"
 
 UPSTREAM_CHECK_REGEX = "releases/tag/release-(?P<pver>(?!.+rc).+)"
 GITHUB_BASE_URI = "https://github.com/unicode-org/icu/releases"
@@ -167,7 +167,6 @@ do_install_ptest() {
     cp -r ${S}/test/testdata ${D}/${PTEST_PATH}/test
     cp -r ${S}/data/unidata ${D}/${PTEST_PATH}/data/
     cp -r ${S}/data/sprep ${D}/${PTEST_PATH}/data/
-    cp -r ${S}/../testdata ${D}/${PTEST_PATH}/
     cp -r ${B}/test/testdata/out ${D}/${PTEST_PATH}/test/testdata
 
     install -d ${D}${PTEST_PATH}/test/tests
