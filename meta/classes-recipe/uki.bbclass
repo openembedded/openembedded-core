@@ -107,7 +107,6 @@ python () {
 
 # main task
 python do_uki() {
-    import glob
     import bb.process
 
     # base ukify command, can be extended if needed
