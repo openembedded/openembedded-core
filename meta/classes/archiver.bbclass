@@ -261,8 +261,6 @@ python do_ar_patched() {
 }
 
 python do_ar_configured() {
-    import shutil
-
     # Forcibly expand the sysroot paths as we're about to change WORKDIR
     d.setVar('STAGING_DIR_HOST', d.getVar('STAGING_DIR_HOST'))
     d.setVar('STAGING_DIR_TARGET', d.getVar('STAGING_DIR_TARGET'))
