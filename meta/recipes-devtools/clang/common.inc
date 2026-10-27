@@ -55,6 +55,7 @@ SRC_URI = "\
     file://0033-Consolidate-and-fix-sysroot-based-compiler-rt-search.patch \
     file://0034-clang-tools-extra-Add-separate-CLANG_TOOLS_EXTRA_INC.patch \
     file://0035-PEI-Call-insertZeroCallUsedRegs-after-materializing-.patch \
+    file://0036-clang-Honor-the-printing-policy-for-declaration-temp.patch \
 "
 # Fallback to no-PIE if not set
 GCCPIE ??= ""
