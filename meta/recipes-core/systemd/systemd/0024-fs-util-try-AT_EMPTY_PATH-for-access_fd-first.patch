@@ -1,0 +1,34 @@
+From 228d4c63102367a757ba4f31c49a148975607a72 Mon Sep 17 00:00:00 2001
+From: Mike Yuan <me@yhndnzj.com>
+Date: Mon, 20 May 2024 19:33:26 +0800
+Subject: [PATCH] fs-util: try AT_EMPTY_PATH for access_fd() first
+
+Upstream-Status: Backport [https://github.com/systemd/systemd/pull/32933/commits/c675851d5fd503c1ae5d244f041d43ae9e3ab79b]
+
+Signed-off-by: Suresh H A <Suresh.HA@bmwtechworks.in>
+---
+ src/basic/fs-util.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/src/basic/fs-util.c b/src/basic/fs-util.c
+index 5bc7d2f..3a7ebd2 100644
+--- a/src/basic/fs-util.c
++++ b/src/basic/fs-util.c
+@@ -668,6 +668,14 @@ int unlink_or_warn(const char *filename) {
+ int access_fd(int fd, int mode) {
+         /* Like access() but operates on an already open fd */
+ 
++        if (faccessat(fd, "", mode, AT_EMPTY_PATH) >= 0)
++                return 0;
++        if (errno != EINVAL)
++                return -errno;
++
++        /* Support for AT_EMPTY_PATH is added rather late (kernel 5.8), so fall back to going through /proc/
++         * if unavailable. */
++
+         if (access(FORMAT_PROC_FD_PATH(fd), mode) < 0) {
+                 if (errno != ENOENT)
+                         return -errno;
+-- 
+2.43.0
+

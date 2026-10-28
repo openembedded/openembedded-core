@@ -39,6 +39,7 @@ SRC_URI += " \
            file://CVE-2026-29111-04.patch \
            file://CVE-2026-4105.patch \
            file://0023-journal-replace-a-bunch-of-assert-with-friendlier-ch.patch \
+           file://0024-fs-util-try-AT_EMPTY_PATH-for-access_fd-first.patch \
            "
 
 # patches needed by musl
