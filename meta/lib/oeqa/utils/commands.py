@@ -317,20 +317,13 @@ def get_bb_vars(variables=None, target=None, postconfig=None):
     return {var: val or None for var, val in values.items()}
 
 def get_bb_var(var, target=None, postconfig=None):
-    if postconfig:
-        return bitbake("-e %s" % target or "", postconfig=postconfig).output
-    else:
-        # Fast-path for the non-postconfig case
-        cmd = ["bitbake-getvar", "--quiet", "--value", var]
-        if target:
-            cmd.extend(["--recipe", target])
-        try:
-            return subprocess.run(cmd, check=True, text=True, stdout=subprocess.PIPE).stdout.strip()
-        except subprocess.CalledProcessError as e:
-            # We need to return None not the empty string if the variable hasn't been set.
-            if e.returncode == 1:
-                return None
-            raise
+    """Get the value of a bitbake variable
+
+    Unset variables are returned as None, empty values as an empty string.
+    """
+    values, _ = get_bb_vars_flags([var], None, target, postconfig)
+    val = values[var]
+    return val.strip() if val is not None else None
 
 def get_test_layer(bblayers=None):
     if bblayers is None:
