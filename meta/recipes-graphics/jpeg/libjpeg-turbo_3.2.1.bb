@@ -9,9 +9,8 @@ DEPENDS = "zlib"
 DEPENDS:append:x86-64:class-target = " nasm-native"
 DEPENDS:append:x86:class-target = " nasm-native"
 
-SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BP}.tar.gz \
-           file://zlib.patch"
-SRC_URI[sha256sum] = "6f30092cef9fb839779646608f4ee14ae3cbac989c47fa05e841b0841f09878e"
+SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/${BP}.tar.gz"
+SRC_URI[sha256sum] = "c27ad72a68da151177929aa969ae773a2da5ac2af9ce946079314fdac8cece7f"
 UPSTREAM_CHECK_REGEX = "releases/tag/(?P<pver>\d+\.\d+\.(?!9\d+)\d+(\.\d+)*)"
 
 PE = "1"
