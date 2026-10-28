@@ -14,7 +14,7 @@ import oe.fitimage
 
 from bb import BBHandledException
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import runCmd, bitbake, get_bb_vars, get_bb_var
+from oeqa.utils.commands import runCmd, bitbake, get_bb_vars, get_bb_vars_flags, get_bb_var
 
 
 class BbVarsMockGenKeys:
@@ -662,10 +662,12 @@ class FitImageTestCase(OESelftestTestCase):
 class KernelFitImageBase(FitImageTestCase):
     """Test cases for the linux-yocto-fitimage recipe"""
 
-    def _fit_get_bb_vars(self, additional_vars=[]):
+    def _fit_get_bb_vars(self, additional_vars=[], flags=None):
         """Retrieve BitBake variables specific to the test case.
 
-        Call the get_bb_vars function once and get all variables needed by the test case.
+        Call the get_bb_vars_flags function once and get all variables needed by
+        the test case. flags maps variable names to lists of flag names. The
+        flags are returned as dict {flag name: value} for their variable name.
         """
         internal_used = {
             'DEPLOY_DIR_IMAGE',
@@ -676,8 +678,6 @@ class KernelFitImageBase(FitImageTestCase):
             'FIT_HASH_ALG',
             'FIT_KERNEL_COMP_ALG',
             'FIT_LOADABLES',
-            'FIT_LOADABLE_ENTRYPOINT',
-            'FIT_LOADABLE_LOADADDRESS',
             'FIT_OS',
             'FIT_SIGN_ALG',
             'FIT_SIGN_INDIVIDUAL',
@@ -712,7 +712,9 @@ class KernelFitImageBase(FitImageTestCase):
             'UBOOT_FIT_TEE_LOADADDRESS',
             'UBOOT_FIT_TEE_ENTRYPOINT',
         }
-        bb_vars = get_bb_vars(list(internal_used | set(additional_vars)), self.kernel_recipe)
+        bb_vars, bb_flags = get_bb_vars_flags([*internal_used, *additional_vars], flags, self.kernel_recipe)
+        bb_vars = {var: val or None for var, val in bb_vars.items()}
+        bb_vars.update(bb_flags)
         self.logger.debug("bb_vars: %s" % pprint.pformat(bb_vars, indent=4))
         return bb_vars
 
@@ -1025,10 +1027,10 @@ class KernelFitImageBase(FitImageTestCase):
                 "Entry Point": bb_vars['UBOOT_RD_ENTRYPOINT']
             }
         # Create one section per loadable
-        for index,loadable in enumerate(loadables):
-            loadaddress = bb_vars['FIT_LOADABLE_LOADADDRESS'].split("?")[index].strip()
+        for loadable in loadables:
+            loadaddress = bb_vars['FIT_LOADABLE_LOADADDRESS'][loadable]
             req_sections[loadable] = { "Load Address": loadaddress }
-            entrypoint = bb_vars['FIT_LOADABLE_ENTRYPOINT'].split("?")[index].strip()
+            entrypoint = bb_vars['FIT_LOADABLE_ENTRYPOINT'][loadable]
             if entrypoint:
                 req_sections[loadable]['Entry Point'] = entrypoint
         # Create a configuration section for each DTB
@@ -1204,7 +1206,9 @@ FIT_LOADABLE_TYPE[loadable2] = "firmware"
         config = FitImageTestCase._config_add_machine_settings(config, machine, keys=["KERNEL_DEVICETREE", "FIT_CONF_DEFAULT_DTB"])
         config = self._config_add_kernel_classes(config)
         self.write_config(config)
-        bb_vars = self._fit_get_bb_vars()
+        loadables = ['loadable1', 'loadable2']
+        bb_vars = self._fit_get_bb_vars(flags={'FIT_LOADABLE_ENTRYPOINT': loadables,
+                                               'FIT_LOADABLE_LOADADDRESS': loadables})
         self._gen_atf_tee_dummy_images(bb_vars)
         self._test_fitimage(bb_vars)
 
