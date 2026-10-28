@@ -13,6 +13,7 @@ DEPENDS = ""
 
 SRC_URI = "https://www.ohse.de/uwe/releases/lrzsz-${PV}.tar.gz \
            file://0001-Fix-build-with-32-bit-targets-under-Werror.patch \
+           file://0002-Remove-unused-file-scope-variables.patch \
            "
 SRC_URI[sha256sum] = "112f91059fbd118e016d800c1a5c5a1702e965d8b9bfbda6015e44e20bfb93c9"
 
