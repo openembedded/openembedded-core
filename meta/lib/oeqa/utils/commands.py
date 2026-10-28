@@ -253,15 +253,32 @@ def get_bb_env(target=None, postconfig=None):
     else:
         return bitbake("-e", postconfig=postconfig).output
 
-def get_bb_vars(variables=None, target=None, postconfig=None):
-    """Get values of multiple bitbake variables
+def _opt_str(val):
+    return str(val) if val is not None else None
 
-    All values are read with a single tinfoil session. If variables is None,
-    all variables are returned. Unset or empty values are returned as None.
+def get_bb_vars_flags(variables=None, flags=None, target=None, postconfig=None):
+    """Get values and flags of multiple bitbake variables
+
+    Everything is read with a single tinfoil session. variables is a list of
+    variable names or None to get all variables which are set. flags maps
+    variable names to lists of flag names. For example:
+
+        get_bb_vars_flags(['FIT_HASH_ALG'],
+                          {'FIT_LOADABLE_LOADADDRESS': ['loadable1', 'loadable2']},
+                          'linux-yocto-fitimage')
+
+    returns a tuple of the values and the flags:
+
+        ({'FIT_HASH_ALG': 'sha256'},
+         {'FIT_LOADABLE_LOADADDRESS': {'loadable1': '0x1000', 'loadable2': None}})
+
+    Unset variables and flags are returned as None, empty ones as an empty
+    string.
     """
     import bb.tinfoil
 
     values = {}
+    flag_values = {}
     with _postconfig_file(postconfig) as postfile, bb.tinfoil.Tinfoil() as tinfoil:
         config_params = None
         if postfile:
@@ -278,14 +295,26 @@ def get_bb_vars(variables=None, target=None, postconfig=None):
                 if var.startswith('__') or d.getVarFlag(var, 'func'):
                     continue
                 val = d.getVar(var)
-                if val is not None and val != '':
+                if val is not None:
                     values[var] = str(val)
-            return values
+        else:
+            for var in variables:
+                values[var] = _opt_str(d.getVar(var))
 
-        for var in variables:
-            val = d.getVar(var)
-            values[var] = str(val) if val is not None and val != '' else None
-    return values
+        for var, names in (flags or {}).items():
+            flag_values[var] = {name: _opt_str(d.getVarFlag(var, name)) for name in names}
+    return values, flag_values
+
+def get_bb_vars(variables=None, target=None, postconfig=None):
+    """Get values of multiple bitbake variables
+
+    All values are read with a single tinfoil session. If variables is None,
+    all variables are returned. Unset or empty values are returned as None.
+    """
+    values, _ = get_bb_vars_flags(variables, None, target, postconfig)
+    if variables is None:
+        return {var: val for var, val in values.items() if val}
+    return {var: val or None for var, val in values.items()}
 
 def get_bb_var(var, target=None, postconfig=None):
     if postconfig:
