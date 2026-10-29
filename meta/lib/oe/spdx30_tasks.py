@@ -1602,7 +1602,9 @@ def sdk_create_spdx(d, sdk_type, spdx_work_dir, toolchain_outputname):
     )
     set_timestamp_now(d, sdk_rootfs, "builtTime")
 
-    sdk_build = objset.add_root(objset.new_task_build("sdk-rootfs", "sdk-rootfs"))
+    sdk_build = objset.add_root(
+        objset.new_task_build("sdk-rootfs-" + sdk_type, "sdk-rootfs")
+    )
     set_timestamp_now(d, sdk_build, "build_buildEndTime")
 
     objset.new_scoped_relationship(
@@ -1615,28 +1617,36 @@ def sdk_create_spdx(d, sdk_type, spdx_work_dir, toolchain_outputname):
     collect_build_package_inputs(d, objset, sdk_build, sdk_packages)
 
     objset.add_aliases()
-    oe.sbom30.write_jsonld_doc(d, objset, spdx_work_dir / "sdk-rootfs.spdx.json")
+    oe.sbom30.write_jsonld_doc(
+        d, objset, spdx_work_dir / ("sdk-rootfs-%s.spdx.json" % sdk_type)
+    )
 
 
 def create_sdk_sbom(d, sdk_deploydir, spdx_work_dir, toolchain_outputname):
-    # Load the document written earlier
-    rootfs_objset = oe.sbom30.load_jsonld(
-        d, spdx_work_dir / "sdk-rootfs.spdx.json", required=True
-    )
+    # Load the target and host documents written earlier
+    rootfs_objsets = []
+    rootfs = []
+    for sdk_type in ("target", "host"):
+        objset = oe.sbom30.load_jsonld(
+            d, spdx_work_dir / ("sdk-rootfs-%s.spdx.json" % sdk_type), required=True
+        )
+        root = objset.find_root(oe.spdx30.software_Package)
+        if root is None:
+            bb.fatal("Unable to find %s rootfs artifact" % sdk_type)
+        rootfs_objsets.append(objset)
+        rootfs.append(root)
+
+    rootfs_objset = rootfs_objsets[0]
 
     # Create a new build for the SDK installer
     sdk_build = rootfs_objset.new_task_build("sdk-populate", "sdk-populate")
     set_timestamp_now(d, sdk_build, "build_buildEndTime")
 
-    rootfs = rootfs_objset.find_root(oe.spdx30.software_Package)
-    if rootfs is None:
-        bb.fatal("Unable to find rootfs artifact")
-
     rootfs_objset.new_scoped_relationship(
         [sdk_build],
         oe.spdx30.RelationshipType.hasInput,
         oe.spdx30.LifecycleScopeType.build,
-        [rootfs],
+        rootfs,
     )
 
     files = set()
@@ -1683,7 +1693,7 @@ def create_sdk_sbom(d, sdk_deploydir, spdx_work_dir, toolchain_outputname):
         bb.warn(f"No SDK output files found in {sdk_deploydir}")
 
     objset, sbom = oe.sbom30.create_sbom(
-        d, toolchain_outputname, sorted(list(files)), [rootfs_objset]
+        d, toolchain_outputname, sorted(list(files)), rootfs_objsets
     )
 
     # Set supplier on root elements if SPDX_SDK_SUPPLIER is defined
