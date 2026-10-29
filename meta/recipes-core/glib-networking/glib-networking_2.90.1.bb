@@ -13,7 +13,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c \
 SECTION = "libs"
 DEPENDS = "glib-2.0-native glib-2.0"
 
-SRC_URI[archive.sha256sum] = "83a75e3d9c36b66ee86d3281c2fc997816101968a5126ba322b2acb9a74dd8c0"
+SRC_URI[archive.sha256sum] = "ea95636590098355a05e3027579dba1a9a950b05e456b2488ea03d82e4b6c18a"
 
 # Upstream note that for the openssl backend, half the tests where this backend don't return
 # the expected error code or don't work as expected so default to gnutls
