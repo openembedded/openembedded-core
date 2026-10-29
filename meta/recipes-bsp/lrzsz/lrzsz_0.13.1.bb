@@ -19,6 +19,8 @@ SRC_URI[sha256sum] = "112f91059fbd118e016d800c1a5c5a1702e965d8b9bfbda6015e44e20b
 
 UPSTREAM_CHECK_URI = "http://ohse.de/uwe/software/lrzsz.html"
 
+EXTRA_OECONF = "--disable-Werror"
+
 inherit autotools gettext
 
 do_install() {
