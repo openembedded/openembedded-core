@@ -12,7 +12,7 @@ EXTRA_OECONF = "--without-python --libdir=${base_libdir}"
 SRC_URI = "git://github.com/cracklib/cracklib;protocol=https;branch=main;tag=v${PV} \
            "
 
-SRCREV = "e73d5db1789d198b5f9ec44b68b9c775c3e6c042"
+SRCREV = "3b38d097102e34b50b5a1c2a8ddd1541172de85a"
 S = "${UNPACKDIR}/${BP}/src"
 
 inherit autotools gettext
