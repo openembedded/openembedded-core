@@ -953,3 +953,32 @@ RECIPE_MAINTAINER:pn-xz = "Denys Dmytriyenko <denis@denix.org>"
 RECIPE_MAINTAINER:pn-zip = "Denys Dmytriyenko <denis@denix.org>"
 RECIPE_MAINTAINER:pn-zlib = "Denys Dmytriyenko <denis@denix.org>"
 RECIPE_MAINTAINER:pn-zstd = "Unassigned <unassigned@yoctoproject.org>"
+
+# Recipes (BPN) whose changelog from 'devtool upgrade' is not suitable
+# for a commit message; devtool flags them in its changelog JSON metadata.
+RECIPE_UPGRADE_CHANGELOG_SKIP += "\
+    acpica \
+    cmake \
+    expat \
+    freetype \
+    gst-devtools \
+    gst-examples \
+    gstreamer1.0 \
+    gstreamer1.0-libav \
+    gstreamer1.0-plugins-bad \
+    gstreamer1.0-plugins-base \
+    gstreamer1.0-plugins-good \
+    gstreamer1.0-plugins-ugly \
+    gstreamer1.0-python \
+    gstreamer1.0-rtsp-server \
+    mesa \
+    mesa-gl \
+    mesa-libclc \
+    mesa-tools \
+    openssh \
+    parted \
+    python3 \
+    u-boot \
+    u-boot-tools \
+    vulkan-validation-layers \
+"
