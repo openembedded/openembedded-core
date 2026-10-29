@@ -137,7 +137,7 @@ python do_uki() {
     if kernel_filename:
         kernel = "%s/%s" % (deploy_dir_image, kernel_filename)
         if not os.path.exists(kernel):
-            bb.fatal(f"ERROR: cannot find %s" % (kernel))
+            bb.fatal("ERROR: cannot find %s" % (kernel))
         ukify_cmd += " --linux=%s" % (kernel)
         # not always needed, ukify can detect version from kernel binary
         kernel_version = d.getVar('KERNEL_VERSION')
