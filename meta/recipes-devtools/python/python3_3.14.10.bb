@@ -373,7 +373,8 @@ PACKAGE_PREPROCESS_FUNCS += "py_package_preprocess"
 
 py_package_preprocess () {
         # Remove references to buildmachine paths in target Makefile and _sysconfigdata
-        sed -i -e 's:--sysroot=${STAGING_DIR_TARGET}::g' -e s:'--with-libtool-sysroot=${STAGING_DIR_TARGET}'::g \
+        sed -i -e 's:--sysroot=${STAGING_DIR_TARGET}::g' \
+                -e s:'--with-libtool-sysroot=${STAGING_DIR_TARGET}'::g \
                 -e 's|${DEBUG_PREFIX_MAP}||g' \
                 -e 's:${HOSTTOOLS_DIR}/::g' \
                 -e 's:${RECIPE_SYSROOT_NATIVE}::g' \
@@ -382,8 +383,10 @@ py_package_preprocess () {
                 -e 's:BUILD_GNU_TYPE\(.*\)=\(.*\)[a-z\-]*:BUILD_GNU_TYPE\1=\2${HOST_SYS}:g' \
                 -e 's:build_alias=${BUILD_ARCH}:build_alias=${HOST_ARCH}:g' \
                 -e 's:--build=${BUILD_ARCH}:--build=${HOST_ARCH}:g' \
+                -e 's|"userbase": ".*"|"userbase": ""|g' \
                 ${PKGD}/${libdir}/python${PYTHON_MAJMIN}/config-${PYTHON_MAJMIN}${PYTHON_ABI}*/Makefile \
                 ${PKGD}/${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata*.py \
+                ${PKGD}/${libdir}/python${PYTHON_MAJMIN}/_sysconfig_vars*.json \
                 ${PKGD}/${bindir}/python${PYTHON_MAJMIN}-config
 
         # Reformat and recompile _sysconfigdata after modifying it so that it remains
@@ -397,18 +400,6 @@ py_package_preprocess () {
 
         #Remove the unneeded copy of target sysconfig data
         rm -rf ${PKGD}/${libdir}/python-sysconfigdata
-
-	# Remove references to buildpaths in _sysconfig_vars JSON files
-        sed -i -e 's:--sysroot=${STAGING_DIR_TARGET}::g' -e s:'--with-libtool-sysroot=${STAGING_DIR_TARGET}'::g \
-                -e 's|${DEBUG_PREFIX_MAP}||g' \
-                -e 's:${HOSTTOOLS_DIR}/::g' \
-                -e 's:${RECIPE_SYSROOT_NATIVE}::g' \
-                -e 's:${RECIPE_SYSROOT}::g' \
-                -e 's:${BASE_WORKDIR}/${MULTIMACH_TARGET_SYS}::g' \
-                -e 's:build_alias=${BUILD_ARCH}:build_alias=${HOST_ARCH}:g' \
-                -e 's:--build=${BUILD_ARCH}:--build=${HOST_ARCH}:g' \
-                -e 's|"userbase": ".*"|"userbase": ""|g' \
-		${PKGD}/${libdir}/python${PYTHON_MAJMIN}/_sysconfig_vars*.json
 
         # Fix extensions in build-details.json
         sed -i -e 's:${BUILD_ARCH}-${HOST_OS}:${HOST_ARCH}-${HOST_OS}:g' ${PKGD}/${libdir}/python${PYTHON_MAJMIN}/build-details.json
