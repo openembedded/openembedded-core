@@ -14,7 +14,7 @@ SRC_URI = "https://sourceware.org/ftp/debugedit/${PV}/debugedit-${PV}.tar.xz \
            file://0001-configure.ac-do-not-check-for-executables-needed-onl.patch \
            "
 
-SRC_URI[sha256sum] = "3b8c6396fe235e0270c9b9c0d244cfd0e86c284fc27e820acc58360e7cfa08c2"
+SRC_URI[sha256sum] = "00e1d74d31df9012913975b76ab0d864f0e2569d29e31271317161187803813a"
 
 DEPENDS = "elfutils xxhash"
 DEPENDS:append:libc-musl = " musl-legacy-error"
