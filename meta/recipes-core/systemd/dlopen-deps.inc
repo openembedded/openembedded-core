@@ -61,7 +61,8 @@ python package_generate_dlopen_deps() {
             if cpath.islink(f):
                 continue
 
-            if os.access(f, os.X_OK) or ".so." in f or f.endswith(".so"):
+            # Scan shared libraries and executable files for dlopen notes.
+            if cpath.is_executable(f) or ".so." in os.path.basename(f) or f.endswith(".so"):
                 try:
                     elf = oe.qa.ELFFile(f)
                     elf.open()
