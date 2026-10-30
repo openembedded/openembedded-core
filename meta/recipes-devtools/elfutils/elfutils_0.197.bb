@@ -65,6 +65,9 @@ PTEST_XFAILS ?= ""
 PTEST_XFAILS:append = "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', ' run-strip-strmerge.sh run-elflint-self.sh run-backtrace-data.sh run-reverse-sections-self.sh', '', d)}"
 PTEST_XFAILS:append:libc-musl = " run-large-elf-file.sh run-backtrace-data.sh run-backtrace-native.sh run-backtrace-native-core.sh run-stack-d-test.sh run-stack-i-test.sh run-stack-demangled-test.sh run-deleted.sh run-compress-test.sh"
 
+ELFUTILS_PTEST_SKIP ?= ""
+ELFUTILS_PTEST_SKIP:append:qemuall = " run-stackprof-system.sh"
+
 do_install_ptest() {
 	# copy the files which needed by the cases
 	TEST_FILES="strip strip.o addr2line elfcmp objdump readelf size.o nm.o nm elflint elfcompress elfclassify stack unstrip srcfiles stackprof"
@@ -104,6 +107,13 @@ do_install_ptest() {
 	sed -i '/^Makefile:/c Makefile:'        ${D}${PTEST_PATH}/tests/Makefile
 	find ${D}${PTEST_PATH} -type f -name *.[hoc] | xargs -i rm {}
 	sed -i -e 's|@XFAIL_TESTS@|${PTEST_XFAILS}|' ${D}${PTEST_PATH}/run-ptest
+}
+
+do_install_ptest:append() {
+	for t in ${ELFUTILS_PTEST_SKIP}; do
+		sed -i -e '\|stackprof-subr.sh|a echo "unreliable under qemu, skipping (PR34544)"; exit 77' \
+			${D}${PTEST_PATH}/tests/$t
+	done
 }
 
 EXTRA_OEMAKE:class-native = ""
