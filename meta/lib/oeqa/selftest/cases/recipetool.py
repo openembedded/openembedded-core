@@ -597,6 +597,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars['LICENSE'] = 'BSD-3-Clause'
         checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=702b1ef12cf66832a88f24c8f2ee9c19'
         checkvars['SRC_URI[sha256sum]'] = 'c225b674c83fa923be93d235330ce0300373d02885cef23238813b0d5668304a'
+        checkvars['PYPI_PACKAGE'] = None
         checkvars['PYPI_PACKAGE_SDIST'] = None
         inherits = ['python_setuptools_build_meta', 'pypi']
 
@@ -621,6 +622,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars['LICENSE'] = 'GPL-3.0-only'
         checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE;md5=1ebbd3e34237af26da5dc08a4e440464'
         checkvars['SRC_URI[sha256sum]'] = '81f7c0c5559becc8049470d86046b36e96113637bcbe4753ecef06977c00245d'
+        checkvars['PYPI_PACKAGE'] = None
         checkvars['PYPI_PACKAGE_SDIST'] = None
         inherits = ['python_setuptools_build_meta', 'pypi']
 
@@ -644,6 +646,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars['LICENSE'] = 'BSD-2-Clause'
         checkvars['LIC_FILES_CHKSUM'] = 'file://LICENSE.txt;md5=b11cf936853a71258d4b57bb1849a3f9'
         checkvars['SRC_URI[sha256sum]'] = 'ab9c8f1080391e231812d20abf2657a69ee35574563b1014414f953964a95fa3'
+        checkvars['PYPI_PACKAGE'] = None
         checkvars['PYPI_PACKAGE_SDIST'] = None
         inherits = ['python_setuptools_build_meta', 'pypi']
 

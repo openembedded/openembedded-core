@@ -180,7 +180,8 @@ class PythonRecipeHandler(RecipeHandler):
             if required_version and version != required_version:
                 raise Exception("Version specified using --version/-V (%s) and version specified in the url (%s) do not match" % (required_version, version))
             # PYPI_PACKAGE is optional if BPN looks like "python-<pypi_package>" or "python3-<pypi_package>" (see pypi.bbclass)
-            # but at this point we cannot know because because user can specify the output name of the recipe on the command line
+            # but at this point we cannot know because the user can specify the output name of the recipe on the command line,
+            # so it is set here and dropped later in cleanup() once the recipe name is known
             pypi_package = self.pypi_normalise(pypi_package)
             extravalues["PYPI_PACKAGE"] = pypi_package
             # Some sdists don't use normalised names, so check and set PYPI_PACKAGE_SDIST if needed
@@ -204,6 +205,25 @@ class PythonRecipeHandler(RecipeHandler):
 
         handled.append('url')
         return fetch_uri
+
+    def cleanup(self, pn, pv, classes, extravalues):
+        """
+        PYPI_PACKAGE is not needed if it matches the default derived from BPN (see pypi.bbclass)
+        """
+        if not pn or 'pypi' not in classes or not extravalues.get('PYPI_PACKAGE'):
+            return
+
+        bpn = pn
+        if bpn.endswith('-native'):
+            bpn = bpn[:-len('-native')]
+        if bpn.startswith('nativesdk-'):
+            bpn = bpn[len('nativesdk-'):]
+        for prefix in ('python-', 'python3-'):
+            if bpn.startswith(prefix):
+                bpn = bpn[len(prefix):]
+                break
+        if self.pypi_normalise(bpn) == extravalues['PYPI_PACKAGE']:
+            del extravalues['PYPI_PACKAGE']
 
     def handle_classifier_license(self, classifiers, existing_licenses=""):
 
