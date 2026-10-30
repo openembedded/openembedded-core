@@ -48,6 +48,22 @@ def dump_layer_debug(layer):
     if collections:
         logger.debug("%s collections: %s" % (layer["name"], ", ".join(collections)))
 
+def validate_layers(layers):
+    valid_layers = []
+    for layer in layers:
+        if layer['type'] == LayerType.ERROR_BSP_DISTRO:
+            logger.error("%s: Can't be DISTRO and BSP type at the same time."\
+                     " Both conf/distro and conf/machine folders were found."\
+                     % layer['name'])
+        elif layer['type'] == LayerType.ERROR_NO_LAYER_CONF:
+            logger.info("%s: Doesn't have conf/layer.conf file, so ignoring"\
+                     % layer['name'])
+        else:
+            logger.info("%s: %s, %s" % (layer['name'], layer['type'],
+                layer['path']))
+            valid_layers.append(layer)
+    return valid_layers
+
 def main():
     parser = argparse.ArgumentParser(
             description="Yocto Project layer checking tool",
@@ -125,19 +141,10 @@ def main():
         return 1
 
     logger.info("Detected layers:")
-    for layer in layers:
-        if layer['type'] == LayerType.ERROR_BSP_DISTRO:
-            logger.error("%s: Can't be DISTRO and BSP type at the same time."\
-                     " Both conf/distro and conf/machine folders were found."\
-                     % layer['name'])
-            layers.remove(layer)
-        elif layer['type'] == LayerType.ERROR_NO_LAYER_CONF:
-            logger.info("%s: Doesn't have conf/layer.conf file, so ignoring"\
-                     % layer['name'])
-            layers.remove(layer)
-        else:
-            logger.info("%s: %s, %s" % (layer['name'], layer['type'],
-                layer['path']))
+    layers = validate_layers(layers)
+    # Keep dep_layers in sync when it previously shared the layers list.
+    if not args.dependency:
+        dep_layers = layers
     if not layers:
         return 1
 
