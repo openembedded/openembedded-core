@@ -255,7 +255,6 @@ do_install:append:class-nativesdk () {
 # 15120 (test_input_no_stdout_fileno)
 # 15131 (*TestBarrier.test_timeout)
 # 15177 (test_thread_time)
-# 15743 (test.test_os.test_os.TimerfdTests.test_timerfd_TFD_TIMER_ABSTIME)
 # 15885 (test_default_timeout)
 SKIPPED_TESTS = " \
     --ignore *TestBarrier.test_timeout \
@@ -263,7 +262,6 @@ SKIPPED_TESTS = " \
     --ignore ExecutorShutdownTest \
     --ignore ProcessPoolShutdownTest \
     --ignore ThreadPoolShutdownTest \
-    --ignore test.test_os.test_os.TimerfdTests.test_timerfd_TFD_TIMER_ABSTIME \
     --ignore test_active_children \
     --ignore test_default_timeout \
     --ignore test_input_no_stdout_fileno \
@@ -328,6 +326,15 @@ SKIPPED_TESTS += " \
 # Bugzilla YP 16466
 SKIPPED_TESTS += " \
     --ignore test_shutdown_no_wait_max_tasks_gh119592 \
+"
+
+# Intermittent failure under load - these are all timer tests.
+# test_timerfd_TFD_TIMER_ABSTIME was observed failing in Bugzilla YP 15743.
+# test_timerfd_ns_TFS_TIMER_ABSTIME was observed failing in Bugzilla YP 16470.
+# There are actually several other tests in the suite that all look prone to
+# load variability, so skip the whole test class.
+SKIPPED_TESTS:append = " \
+    --ignore TimerfdTests \
 "
 
 # https://github.com/python/cpython/issues/159424
