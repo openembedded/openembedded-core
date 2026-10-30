@@ -1,0 +1,110 @@
+From fd39102cd189c524b60915feb46f075d0c12c972 Mon Sep 17 00:00:00 2001
+From: Jinwang Li <jinwang.li@oss.qualcomm.com>
+Date: Tue, 27 Oct 2026 15:10:45 +0800
+Subject: [PATCH 2/3] obexd/pbap: Fix NewMissedCalls parameter size
+
+NewMissedCalls is a one-byte apparam, but was encoded with
+g_obex_apparam_set_uint16(). Use uint8 instead, and update the
+phonebook callback type to match.
+
+Fixes: 398d3e23533a ("obexd: Make use of GObexApparam API")
+Upstream-Status: Backport [https://github.com/bluez/bluez/commit/f1af76b9868ef8f7f403d572f07fc533b1908eda]
+Signed-off-by: Jinwang Li <jinwang.li@oss.qualcomm.com>
+---
+ obexd/plugins/irmc.c              | 4 ++--
+ obexd/plugins/pbap.c              | 8 ++++----
+ obexd/plugins/phonebook-tracker.c | 2 +-
+ obexd/plugins/phonebook.h         | 2 +-
+ 4 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/obexd/plugins/irmc.c b/obexd/plugins/irmc.c
+index cfd8a45d4..b9888bbed 100644
+--- a/obexd/plugins/irmc.c
++++ b/obexd/plugins/irmc.c
+@@ -74,7 +74,7 @@ static const char *owner_vcard =
+ 		"END:VCARD\r\n";
+ 
+ static void phonebook_size_result(const char *buffer, size_t bufsize,
+-					int vcards, int missed,
++					int vcards, uint8_t missed,
+ 					gboolean lastpart, void *user_data)
+ {
+ 	struct irmc_session *irmc = user_data;
+@@ -90,7 +90,7 @@ static void phonebook_size_result(const char *buffer, size_t bufsize,
+ }
+ 
+ static void query_result(const char *buffer, size_t bufsize, int vcards,
+-				int missed, gboolean lastpart, void *user_data)
++			uint8_t missed, gboolean lastpart, void *user_data)
+ {
+ 	struct irmc_session *irmc = user_data;
+ 	const char *s, *t;
+diff --git a/obexd/plugins/pbap.c b/obexd/plugins/pbap.c
+index 9f8684863..3ee54f1fe 100644
+--- a/obexd/plugins/pbap.c
++++ b/obexd/plugins/pbap.c
+@@ -159,7 +159,7 @@ static void cache_clear(struct cache *cache)
+ }
+ 
+ static void phonebook_size_result(const char *buffer, size_t bufsize,
+-					int vcards, int missed,
++					int vcards, uint8_t missed,
+ 					gboolean lastpart, void *user_data)
+ {
+ 	struct pbap_session *pbap = user_data;
+@@ -186,7 +186,7 @@ static void phonebook_size_result(const char *buffer, size_t bufsize,
+ 		DBG("missed %d", missed);
+ 	}
+ 
+-	pbap->obj->apparam = g_obex_apparam_set_uint16(pbap->obj->apparam,
++	pbap->obj->apparam = g_obex_apparam_set_uint8(pbap->obj->apparam,
+ 							NEWMISSEDCALLS_TAG,
+ 							missed);
+ 
+@@ -194,7 +194,7 @@ static void phonebook_size_result(const char *buffer, size_t bufsize,
+ }
+ 
+ static void query_result(const char *buffer, size_t bufsize, int vcards,
+-				int missed, gboolean lastpart, void *user_data)
++			uint8_t missed, gboolean lastpart, void *user_data)
+ {
+ 	struct pbap_session *pbap = user_data;
+ 
+@@ -224,7 +224,7 @@ static void query_result(const char *buffer, size_t bufsize, int vcards,
+ 		pbap->obj->firstpacket = TRUE;
+ 	}
+ 
+-	pbap->obj->apparam = g_obex_apparam_set_uint16(pbap->obj->apparam,
++	pbap->obj->apparam = g_obex_apparam_set_uint8(pbap->obj->apparam,
+ 							NEWMISSEDCALLS_TAG,
+ 							missed);
+ 
+diff --git a/obexd/plugins/phonebook-tracker.c b/obexd/plugins/phonebook-tracker.c
+index eb7a84f46..2f7411312 100644
+--- a/obexd/plugins/phonebook-tracker.c
++++ b/obexd/plugins/phonebook-tracker.c
+@@ -488,7 +488,7 @@ struct phonebook_data {
+ 	GSList *contacts;
+ 	phonebook_cache_ready_cb ready_cb;
+ 	phonebook_entry_cb entry_cb;
+-	int newmissedcalls;
++	uint8_t newmissedcalls;
+ 	GCancellable *query_canc;
+ 	char *req_name;
+ 	int vcard_part_count;
+diff --git a/obexd/plugins/phonebook.h b/obexd/plugins/phonebook.h
+index c73ae73b8..f3150e1f6 100644
+--- a/obexd/plugins/phonebook.h
++++ b/obexd/plugins/phonebook.h
+@@ -61,7 +61,7 @@ struct apparam_field {
+  * Contacts will be returned in the vcard format.
+  */
+ typedef void (*phonebook_cb) (const char *buffer, size_t bufsize,
+-		int vcards, int missed, gboolean lastpart, void *user_data);
++		int vcards, uint8_t missed, gboolean lastpart, void *user_data);
+ 
+ /*
+  * Interface between the PBAP core and backends to
+-- 
+2.34.1
+

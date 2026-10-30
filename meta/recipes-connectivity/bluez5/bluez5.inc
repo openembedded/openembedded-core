@@ -69,6 +69,9 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
            file://0001-adapter-restrict-delta-0-RSSI-to-proximity-filters.patch \
            file://0001-gobex-Fix-ABORT-response-being-discarded.patch \
            file://0001-obexd-pbap-Fix-u128_to_string-skipping-data-4.patch \
+           file://0001-obexd-Fix-FILE-leak-in-phonebook-dummy.patch \
+           file://0001-obexd-pbap-Fix-NewMissedCalls-parameter-size.patch \
+           file://0001-obexd-pbap-Report-NewMissedCalls-for-mch.patch \
            "
 S = "${UNPACKDIR}/bluez-${PV}"
 
