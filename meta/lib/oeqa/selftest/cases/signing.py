@@ -33,7 +33,10 @@ class Signing(OESelftestTestCase):
 
         nsysroot = get_bb_var("RECIPE_SYSROOT_NATIVE", "gnupg-native")
 
-        runCmd('gpg --agent-program=`which gpg-agent`\|--auto-expand-secmem --batch --homedir %s --import %s %s' % (self.gpg_dir, self.pub_key_path, self.secret_key_path), native_sysroot=nsysroot)
+        with open(os.path.join(self.gpg_dir, "gpg-agent.conf"), "w") as f:
+            f.write("auto-expand-secmem\n")
+
+        runCmd('gpg --batch --homedir %s --import %s %s' % (self.gpg_dir, self.pub_key_path, self.secret_key_path), native_sysroot=nsysroot)
         return nsysroot
 
 
