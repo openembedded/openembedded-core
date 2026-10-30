@@ -22,6 +22,6 @@ PACKAGES =+ "sxpm cxpm"
 FILES:cxpm = "${bindir}/cxpm"
 FILES:sxpm = "${bindir}/sxpm"
 
-SRC_URI[sha256sum] = "ad3576d689221a39dc728f0e0dc02ca7bb6a0d724c9a77fd1bfa1e9af83be900"
+SRC_URI[sha256sum] = "c064ead03e4dde78afdeb121fe0b644d25c550444cf903fbdc537f1a78f3ef74"
 
 BBCLASSEXTEND = "native"
