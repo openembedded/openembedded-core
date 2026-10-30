@@ -37,9 +37,10 @@ class ConfigFragmentsPlugin(LayerPlugin):
 
     def discover_fragments(self):
         fragments_path_prefix = self.tinfoil.config_data.getVar('OE_FRAGMENTS_PREFIX')
+        layerdata = self.tinfoil.config_data.getVar("layerdata")
         allfragments = {}
-        for layername in self.bbfile_collections:
-             layerdir = self.bbfile_collections[layername]
+        for layername in layerdata:
+             layerdir = layerdata[layername].path
              fragments = []
              for topdir, dirs, files in os.walk(os.path.join(layerdir, fragments_path_prefix)):
                  fragmentdir = os.path.relpath(topdir, os.path.join(layerdir, fragments_path_prefix))
