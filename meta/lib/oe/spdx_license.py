@@ -765,7 +765,7 @@ def parse(s, *, allow_unknown=False):
 
 def parse_match(s):
     try:
-        tokens = tokenizer(s)
+        tokens = tokenize(s)
         return create_ast(tokens)
     except ParseError as e:
         e.expression = s
