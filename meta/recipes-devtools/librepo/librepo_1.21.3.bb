@@ -3,13 +3,13 @@ SUMMARY = "A library providing C and Python (libcURL like) API \
 HOMEPAGE = "https://github.com/rpm-software-management/librepo"
 DESCRIPTION = "${SUMMARY}"
 LICENSE = "LGPL-2.1-only"
-LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
+LIC_FILES_CHKSUM = "file://COPYING;md5=4bf661c1e3793e55c8d1051bc5e0ae21"
 
 SRC_URI = "git://github.com/rpm-software-management/librepo.git;branch=master;protocol=https;tag=${PV} \
            file://0002-Do-not-try-to-obtain-PYTHON_INSTALL_DIR-by-running-p.patch \
            "
 
-SRCREV = "f892f216a8f7934f32846712f56a27f997b300a3"
+SRCREV = "d665398754be6fe270d0a70c3db2ea5c3b917e68"
 
 DEPENDS = "curl glib-2.0 openssl attr gpgme libxml2"
 
