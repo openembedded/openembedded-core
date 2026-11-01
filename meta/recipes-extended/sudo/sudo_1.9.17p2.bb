@@ -5,6 +5,7 @@ SRC_URI = "https://www.sudo.ws/dist/sudo-${PV}.tar.gz \
            file://0001-sudo.conf.in-fix-conflict-with-multilib.patch \
 		   file://0001-m4-Backport-ax_prog_cc_for_build.m4-macros.patch \
 		   file://CVE-2026-35535.patch \
+		   file://0001-lib-iolog-use-accessor-for-ASN1_STRING-length.patch \
            "
 
 PAM_SRC_URI = "file://sudo.pam"
