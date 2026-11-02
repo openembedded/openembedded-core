@@ -168,7 +168,7 @@ RDEPENDS:${PN}-dev += "${PN}-utils"
 RDEPENDS:${PN}-ptest += "\
             coreutils \
             libgcc \
-            ${VIRTUAL-RUNTIME_dbus} \
+            dbus-daemon \
             desktop-file-utils \
             gnome-desktop-testing \
             tzdata \
