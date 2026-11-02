@@ -5,9 +5,9 @@ HOMEPAGE = "https://github.com/NixOS/patchelf"
 LICENSE = "GPL-3.0-only"
 
 SRC_URI = "git://github.com/NixOS/patchelf;protocol=https;branch=master;tag=${PV}"
-SRCREV = "382d8bc12db9e720515da49d9c272ef4a622c3c0"
+SRCREV = "2b4b49d36b62690860414dd127f567be4f1f3208"
 
-PV = "0.19.2"
+PV = "0.19.3"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=c678957b0c8e964aa6c70fd77641a71e"
 
