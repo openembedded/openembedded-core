@@ -1,15 +1,10 @@
 SUMMARY = "Build and publish crates with pyo3, rust-cpython, cffi bindings and rust binaries as python packages"
 HOMEPAGE = "https://github.com/pyo3/maturin"
-SECTION = "devel/python"
 LICENSE = "Apache-2.0 OR MIT"
 LIC_FILES_CHKSUM = "file://license-apache;md5=1836efb2eb779966696f473ee8540542 \
                     file://license-mit;md5=85fd3b67069cff784d98ebfc7d5c0797"
 
-SRC_URI += "file://0001-Cargo.lock-Update-rustix-to-1.1.5.patch"
-
-SRC_URI[sha256sum] = "94b26cc8e8aba61a5f2099715fe640e18c5f678e9a500408b38761263954228a"
-
-S = "${UNPACKDIR}/maturin-${PV}"
+SRC_URI[sha256sum] = "13e69ca12542999d8c5467131de72a49bb76e4c284b9a45c5783df7c0fcb3a8a"
 
 CFLAGS += "-ffile-prefix-map=${CARGO_HOME}=${TARGET_DBGSRC_DIR}/cargo_home"
 
