@@ -14,7 +14,7 @@ SRC_URI = "${APACHE_MIRROR}/apr/${BPN}-${PV}.tar.gz \
            file://run-ptest \
            "
 
-SRC_URI[sha256sum] = "f43a1c8c79eef497a022ec6c99dddbdf57e42001da6ccbfae259631ed5aa2805"
+SRC_URI[sha256sum] = "acd5f38440eda830e40c4fe35c2a6b8119493cfdba9c9d73d985c317beb4e4f8"
 
 EXTRA_OECONF = "--with-apr=${STAGING_BINDIR_CROSS}/apr-1-config \
 		--without-odbc \
