@@ -12,7 +12,6 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=751419260aa954499f7abaabaa882bbe"
 SRC_URI = "${GNU_MIRROR}/automake/automake-${PV}.tar.gz \
            file://0002-automake-Update-for-python.m4-to-respect-libdir.patch \
            file://0004-Add-a-new-distro-feature-ptest.patch \
-           file://0006-automake-Remove-delays-in-configure-scripts-using-au.patch \
            "
 
 SRC_URI[sha256sum] = "79e8b1f7a967e87ce8a9ded76bee7f793d0ce1886ab2002feb1b0510f578b75a"
