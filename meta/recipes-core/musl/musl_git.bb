@@ -15,6 +15,7 @@ SRC_URI = "git://git.musl-libc.org/musl;branch=master \
            file://0002-ldso-Use-syslibdir-and-libdir-as-default-pathes-to-l.patch \
            file://0003-tools-version.sh-fall-back-to-VERSION-when-git-descr.patch \
            file://0004-configure-use-ffp-exception-behavior-maytrap-when-su.patch \
+           file://ldd \
           "
 
 PROVIDES += "virtual/libc virtual/libiconv virtual/libintl virtual/crypt"
@@ -28,6 +29,9 @@ DEPENDS = "virtual/cross-binutils \
           "
 GLIBC_LDSO = "${@get_glibc_loader(d)}"
 MUSL_LDSO_ARCH = "${@get_musl_loader_arch(d)}"
+MUSL_GETLOADER = "${@get_musl_loader(d)}"
+RTLDLIST = "${@oe.utils.all_multilib_tune_values(d, 'MUSL_GETLOADER')}"
+RTLDLIST[vardepvalue] = "${RTLDLIST}"
 
 export CROSS_COMPILE = "${TARGET_PREFIX}"
 
@@ -68,7 +72,8 @@ do_install() {
         echo "${base_libdir}" > ${D}${sysconfdir}/ld-musl-${MUSL_LDSO_ARCH}.path
         echo "${libdir}" >> ${D}${sysconfdir}/ld-musl-${MUSL_LDSO_ARCH}.path
 	rm -f ${D}${bindir}/ldd ${D}${GLIBC_LDSO}
-	ln -rs ${D}${libdir}/libc.so ${D}${bindir}/ldd
+	install -m 0755 ${UNPACKDIR}/ldd ${D}${bindir}/ldd
+	sed -i -e 's#@RTLDLIST@#${RTLDLIST}#' ${D}${bindir}/ldd
 	musl_multilib_bits
 }
 
@@ -78,6 +83,9 @@ musl_multilib_bits () {
 	done
 }
 
+PACKAGES =+ "ldd"
+
+FILES:ldd = "${bindir}/ldd"
 FILES:${PN} += "${nonarch_base_libdir}/ld-musl-${MUSL_LDSO_ARCH}.so.1 ${sysconfdir}/ld-musl-${MUSL_LDSO_ARCH}.path"
 FILES:${PN}-staticdev = "${libdir}/libc.a"
 FILES:${PN}-dev =+ "${libdir}/libcrypt.a ${libdir}/libdl.a ${libdir}/libm.a \
@@ -87,7 +95,7 @@ FILES:${PN}-dev =+ "${libdir}/libcrypt.a ${libdir}/libdl.a ${libdir}/libm.a \
 
 RDEPENDS:${PN}-dev += "linux-libc-headers-dev bsd-headers-dev libssp-nonshared-staticdev"
 RPROVIDES:${PN}-dev += "libc-dev virtual-libc-dev"
-RPROVIDES:${PN} += "ldd rtld(GNU_HASH)"
+RPROVIDES:${PN} += "rtld(GNU_HASH)"
 
 LEAD_SONAME = "libc.so"
 INSANE_SKIP:${PN}-dev = "staticdev"

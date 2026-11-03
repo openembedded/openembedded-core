@@ -1,0 +1,18 @@
+#!/bin/sh
+
+RTLDLIST="@RTLDLIST@"
+
+elfclass() {
+	dd if="$1" bs=1 skip=4 count=1 2>/dev/null
+}
+
+class=$(elfclass "$1")
+first=
+for rtld in $RTLDLIST; do
+	[ -x "$rtld" ] || continue
+	[ -n "$first" ] || first=$rtld
+	if [ "$(elfclass "$rtld")" = "$class" ]; then
+		exec "$rtld" --list "$@"
+	fi
+done
+exec "$first" --list "$@"
