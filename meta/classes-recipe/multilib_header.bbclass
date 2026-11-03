@@ -15,7 +15,7 @@ oe_multilib_header() {
 
 	case ${HOST_OS} in
 	*-musl*)
-		return
+		[ -n "${MULTILIB_VARIANTS}" ] || return 0
 		;;
 	*)
 	esac
