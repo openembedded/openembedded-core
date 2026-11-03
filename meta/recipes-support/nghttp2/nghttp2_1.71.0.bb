@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=764abdf30b2eadd37ce47dcbce0ea1ec"
 
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/nghttp2-${PV}.tar.xz"
 
-SRC_URI[sha256sum] = "e05cb1388eaca3830aded4ccf20044b6e1ac1a61411dcca11b0437c4285c8bc2"
+SRC_URI[sha256sum] = "c0f55121d88650e4b9227aec28cebaf664d2417ca60fe70be0f8d38829f52116"
 
 inherit cmake manpages python3native github-releases
 
