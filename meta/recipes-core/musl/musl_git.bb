@@ -2,7 +2,7 @@
 # Released under the MIT license (see COPYING.MIT for the terms)
 
 require musl.inc
-inherit linuxloader
+inherit linuxloader multilib_header
 
 SRCREV = "c4e1bb3994c14ed5112c894d15a451bf00f0d501"
 
@@ -69,6 +69,13 @@ do_install() {
         echo "${libdir}" >> ${D}${sysconfdir}/ld-musl-${MUSL_LDSO_ARCH}.path
 	rm -f ${D}${bindir}/ldd ${D}${GLIBC_LDSO}
 	ln -rs ${D}${libdir}/libc.so ${D}${bindir}/ldd
+	musl_multilib_bits
+}
+
+musl_multilib_bits () {
+	for h in ${D}${includedir}/bits/*.h; do
+		oe_multilib_header bits/${h##*/}
+	done
 }
 
 FILES:${PN} += "${nonarch_base_libdir}/ld-musl-${MUSL_LDSO_ARCH}.so.1 ${sysconfdir}/ld-musl-${MUSL_LDSO_ARCH}.path"
