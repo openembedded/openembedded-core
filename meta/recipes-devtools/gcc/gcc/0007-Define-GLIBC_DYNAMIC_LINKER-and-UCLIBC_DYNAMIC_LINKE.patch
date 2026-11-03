@@ -12,8 +12,11 @@ SH, sparc, alpha for possible future support (if any)
 
 Removes the do_headerfix task in metadata
 
+MUSL_DYNAMIC_LINKER uses SYSTEMLIBS_NONARCH_DIR instead.
+
 Upstream-Status: Inappropriate [OE configuration]
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Signed-off-by: mark.yang <mark.yang@lge.com>
 ---
  gcc/config/aarch64/aarch64-linux.h |  4 ++--
  gcc/config/alpha/linux-elf.h       |  4 ++--
@@ -47,7 +50,7 @@ index 116bb4e69f3..c0de4900dc2 100644
  
  #undef MUSL_DYNAMIC_LINKER
 -#define MUSL_DYNAMIC_LINKER "/lib/ld-musl-aarch64%{mbig-endian:_be}%{mabi=ilp32:_ilp32}.so.1"
-+#define MUSL_DYNAMIC_LINKER  SYSTEMLIBS_DIR "ld-musl-aarch64%{mbig-endian:_be}%{mabi=ilp32:_ilp32}.so.1"
++#define MUSL_DYNAMIC_LINKER  SYSTEMLIBS_NONARCH_DIR "ld-musl-aarch64%{mbig-endian:_be}%{mabi=ilp32:_ilp32}.so.1"
  
  #undef  ASAN_CC1_SPEC
  #define ASAN_CC1_SPEC "%{%:sanitize(address):-funwind-tables}"
@@ -86,7 +89,7 @@ index 8ef5643b5d6..76893197773 100644
  #endif
  #define MUSL_DYNAMIC_LINKER \
 -  "/lib/ld-musl-arm" MUSL_DYNAMIC_LINKER_E "%{mfloat-abi=hard:hf}%{mfdpic:-fdpic}.so.1"
-+  SYSTEMLIBS_DIR "ld-musl-arm" MUSL_DYNAMIC_LINKER_E "%{mfloat-abi=hard:hf}%{mfdpic:-fdpic}.so.1"
++  SYSTEMLIBS_NONARCH_DIR "ld-musl-arm" MUSL_DYNAMIC_LINKER_E "%{mfloat-abi=hard:hf}%{mfdpic:-fdpic}.so.1"
  
  /* At this point, bpabi.h will have clobbered LINK_SPEC.  We want to
     use the GNU/Linux version, not the generic BPABI version.  */
@@ -116,7 +119,7 @@ index efbd978c610..9ea0261b0fc 100644
  
  #undef MUSL_DYNAMIC_LINKER
 -#define MUSL_DYNAMIC_LINKER "/lib/ld-musl-i386.so.1"
-+#define MUSL_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-musl-i386.so.1"
++#define MUSL_DYNAMIC_LINKER SYSTEMLIBS_NONARCH_DIR "ld-musl-i386.so.1"
 diff --git a/gcc/config/i386/linux64.h b/gcc/config/i386/linux64.h
 index 24170ee2845..733e3e4945a 100644
 --- a/gcc/config/i386/linux64.h
@@ -134,13 +137,13 @@ index 24170ee2845..733e3e4945a 100644
  
  #undef MUSL_DYNAMIC_LINKER32
 -#define MUSL_DYNAMIC_LINKER32 "/lib/ld-musl-i386.so.1"
-+#define MUSL_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-musl-i386.so.1"
++#define MUSL_DYNAMIC_LINKER32 SYSTEMLIBS_NONARCH_DIR "ld-musl-i386.so.1"
  #undef MUSL_DYNAMIC_LINKER64
 -#define MUSL_DYNAMIC_LINKER64 "/lib/ld-musl-x86_64.so.1"
-+#define MUSL_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-musl-x86_64.so.1"
++#define MUSL_DYNAMIC_LINKER64 SYSTEMLIBS_NONARCH_DIR "ld-musl-x86_64.so.1"
  #undef MUSL_DYNAMIC_LINKERX32
 -#define MUSL_DYNAMIC_LINKERX32 "/lib/ld-musl-x32.so.1"
-+#define MUSL_DYNAMIC_LINKERX32 SYSTEMLIBS_DIR "ld-musl-x32.so.1"
++#define MUSL_DYNAMIC_LINKERX32 SYSTEMLIBS_NONARCH_DIR "ld-musl-x32.so.1"
 diff --git a/gcc/config/linux.h b/gcc/config/linux.h
 index d6280a4d4dd..c79d4902f85 100644
 --- a/gcc/config/linux.h
@@ -178,7 +181,7 @@ index fbc75a90ad5..38c239940bd 100644
  #undef MUSL_DYNAMIC_LINKER
  #define MUSL_DYNAMIC_LINKER \
 -  "/lib/ld-musl-loongarch" ABI_GRLEN_SPEC MUSL_ABI_SPEC ".so.1"
-+  SYSTEMLIBS_DIR "ld-musl-loongarch" ABI_GRLEN_SPEC MUSL_ABI_SPEC ".so.1"
++  SYSTEMLIBS_NONARCH_DIR "ld-musl-loongarch" ABI_GRLEN_SPEC MUSL_ABI_SPEC ".so.1"
  
  #undef GNU_USER_TARGET_LINK_SPEC
  #define GNU_USER_TARGET_LINK_SPEC \
@@ -200,7 +203,7 @@ index 7b09cde7693..8bfafaf87f7 100644
  
  #undef MUSL_DYNAMIC_LINKER
 -#define MUSL_DYNAMIC_LINKER "/lib/ld-musl-microblaze" MUSL_DYNAMIC_LINKER_E ".so.1"
-+#define MUSL_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-musl-microblaze" MUSL_DYNAMIC_LINKER_E ".so.1"
++#define MUSL_DYNAMIC_LINKER SYSTEMLIBS_NONARCH_DIR "ld-musl-microblaze" MUSL_DYNAMIC_LINKER_E ".so.1"
  
  #undef  SUBTARGET_EXTRA_SPECS
  #define SUBTARGET_EXTRA_SPECS \
@@ -236,14 +239,14 @@ index ae15d490108..0281650009d 100644
  #undef MUSL_DYNAMIC_LINKER32
  #define MUSL_DYNAMIC_LINKER32 \
 -  "/lib/ld-musl-mips%{mips32r6|mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
-+  SYSTEMLIBS_DIR "ld-musl-mips%{mips32r6|mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
++  SYSTEMLIBS_NONARCH_DIR "ld-musl-mips%{mips32r6|mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
  #undef MUSL_DYNAMIC_LINKER64
  #define MUSL_DYNAMIC_LINKER64 \
 -  "/lib/ld-musl-mips64%{mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
-+  SYSTEMLIBS_DIR "ld-musl-mips64%{mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
++  SYSTEMLIBS_NONARCH_DIR "ld-musl-mips64%{mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
  #define MUSL_DYNAMIC_LINKERN32 \
 -  "/lib/ld-musl-mipsn32%{mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
-+  SYSTEMLIBS_DIR "ld-musl-mipsn32%{mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
++  SYSTEMLIBS_NONARCH_DIR "ld-musl-mipsn32%{mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
  
  #define BIONIC_DYNAMIC_LINKERN32 "/system/bin/linker32"
  #define GNU_USER_DYNAMIC_LINKERN32 \
@@ -265,7 +268,7 @@ index 9060c940a44..c7712db194a 100644
  
  #undef MUSL_DYNAMIC_LINKER
 -#define MUSL_DYNAMIC_LINKER "/lib/ld-musl-riscv" XLEN_SPEC MUSL_ABI_SUFFIX ".so.1"
-+#define MUSL_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-musl-riscv" XLEN_SPEC MUSL_ABI_SUFFIX ".so.1"
++#define MUSL_DYNAMIC_LINKER SYSTEMLIBS_NONARCH_DIR "ld-musl-riscv" XLEN_SPEC MUSL_ABI_SUFFIX ".so.1"
  
  #define ICACHE_FLUSH_FUNC "__riscv_flush_icache"
  
@@ -295,11 +298,11 @@ index 0316d8cb65d..8de5eb8bb49 100644
  #undef MUSL_DYNAMIC_LINKER32
  #define MUSL_DYNAMIC_LINKER32 \
 -  "/lib/ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
-+  SYSTEMLIBS_DIR "ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
++  SYSTEMLIBS_NONARCH_DIR "ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
  #undef MUSL_DYNAMIC_LINKER64
  #define MUSL_DYNAMIC_LINKER64 \
 -  "/lib/ld-musl-powerpc64" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
-+  SYSTEMLIBS_DIR "ld-musl-powerpc64" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
++  SYSTEMLIBS_NONARCH_DIR "ld-musl-powerpc64" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
  
  #undef  DEFAULT_ASM_ENDIAN
  #if (TARGET_DEFAULT & MASK_LITTLE_ENDIAN)
@@ -316,7 +319,7 @@ index afb5c6ad867..3eb6c814ced 100644
  #undef MUSL_DYNAMIC_LINKER
  #define MUSL_DYNAMIC_LINKER \
 -  "/lib/ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
-+  SYSTEMLIBS_DIR "ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
++  SYSTEMLIBS_NONARCH_DIR "ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
  
  #ifndef GNU_USER_DYNAMIC_LINKER
  #define GNU_USER_DYNAMIC_LINKER GLIBC_DYNAMIC_LINKER
@@ -335,10 +338,10 @@ index 2c3bca5dfcb..1332624abad 100644
  
  #undef MUSL_DYNAMIC_LINKER32
 -#define MUSL_DYNAMIC_LINKER32 "/lib/ld-musl-s390.so.1"
-+#define MUSL_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-musl-s390.so.1"
++#define MUSL_DYNAMIC_LINKER32 SYSTEMLIBS_NONARCH_DIR "ld-musl-s390.so.1"
  #undef MUSL_DYNAMIC_LINKER64
 -#define MUSL_DYNAMIC_LINKER64 "/lib/ld-musl-s390x.so.1"
-+#define MUSL_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-musl-s390x.so.1"
++#define MUSL_DYNAMIC_LINKER64 SYSTEMLIBS_NONARCH_DIR "ld-musl-s390x.so.1"
  
  #undef  LINK_SPEC
  #define LINK_SPEC \
@@ -351,7 +354,7 @@ index 78a7905a919..28493851982 100644
  #undef MUSL_DYNAMIC_LINKER
  #define MUSL_DYNAMIC_LINKER \
 -  "/lib/ld-musl-sh" MUSL_DYNAMIC_LINKER_E MUSL_DYNAMIC_LINKER_FP \
-+  SYSTEMLIBS_DIR "ld-musl-sh" MUSL_DYNAMIC_LINKER_E MUSL_DYNAMIC_LINKER_FP \
++  SYSTEMLIBS_NONARCH_DIR "ld-musl-sh" MUSL_DYNAMIC_LINKER_E MUSL_DYNAMIC_LINKER_FP \
    "%{mfdpic:-fdpic}.so.1"
  
 -#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"

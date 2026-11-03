@@ -72,6 +72,7 @@ CPPFLAGS = ""
 SYSTEMHEADERS = "${target_includedir}"
 SYSTEMLIBS = "${target_base_libdir}/"
 SYSTEMLIBS1 = "${target_libdir}/"
+SYSTEMLIBS_NONARCH = "${target_nonarch_base_libdir}/"
 SYSTEMLOCALHEADERS = "${target_prefix}/local/include"
 
 do_configure:prepend () {
@@ -84,6 +85,7 @@ do_configure:prepend () {
 #define STANDARD_STARTFILE_PREFIX_1 "${SYSTEMLIBS}"
 #define STANDARD_STARTFILE_PREFIX_2 "${SYSTEMLIBS1}"
 #define SYSTEMLIBS_DIR "${SYSTEMLIBS}"
+#define SYSTEMLIBS_NONARCH_DIR "${SYSTEMLIBS_NONARCH}"
 #define LOCAL_INCLUDE_DIR "${SYSTEMLOCALHEADERS}"
 #endif /* ! GCC_DEFAULTS_H */
 _EOF
