@@ -29,9 +29,3 @@ ARM_INSTRUCTION_SET:armv4 = "arm"
 B = "${WORKDIR}/build"
 
 do_configure[cleandirs] = "${B}"
-
-python () {
-    multilibs = d.getVar("MULTILIBS")
-    if multilibs:
-        raise bb.parse.SkipRecipe("musl is not compatible with multilibs")
-}
