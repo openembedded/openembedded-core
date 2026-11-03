@@ -111,6 +111,7 @@ B ?= "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
 target_includedir ?= "${includedir}"
 target_libdir ?= "${libdir}"
 target_base_libdir ?= "${base_libdir}"
+target_nonarch_base_libdir ?= "${nonarch_base_libdir}"
 target_prefix ?= "${prefix}"
 
 # We need to ensure that for the shared work directory, the do_patch signatures match
