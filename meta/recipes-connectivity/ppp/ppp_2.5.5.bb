@@ -25,7 +25,7 @@ SRC_URI = "https://download.samba.org/pub/${BPN}/${BP}.tar.gz \
            file://ppp@.service \
            "
 
-SRC_URI[sha256sum] = "379a630a40d858a1347f6592d671791dde12101697a743ef9900012f3765be31"
+SRC_URI[sha256sum] = "0ebbcfef906d16cfbb9cbdd19c0d92aa3df2fd8fdd29731f614c58d16a279aa5"
 
 inherit autotools pkgconfig systemd
 
