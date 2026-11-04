@@ -445,6 +445,53 @@ class SPDX30Check(SPDX3CheckBase, OESelftestTestCase):
                 f"Version '{version}' for package '{name}' should contain digits"
             )
 
+    def test_gitsm_source_version(self):
+        """Test that gitsm source downloads are enriched like git ones.
+
+        git-submodule-test is fetched with gitsm://, so its source download
+        must carry the SRCREV as version.
+        """
+        objset = self.check_recipe_spdx(
+            "git-submodule-test",
+            "{DEPLOY_DIR_SPDX}/{SSTATE_PKGARCH}/builds/build-git-submodule-test.spdx.json",
+        )
+
+        srcrev = get_bb_var("SRCREV", "git-submodule-test")
+        for pkg in objset.foreach_type(oe.spdx30.software_Package):
+            location = pkg.software_downloadLocation or ""
+            if location.startswith("git+https://git.yoctoproject.org/git-submodule-test"):
+                self.assertEqual(pkg.software_packageVersion, srcrev)
+                break
+        else:
+            self.fail("git-submodule-test gitsm source download not found")
+
+    def test_git_purl_mappings_rerun_create_spdx(self):
+        """Test that SPDX_GIT_PURL_MAPPINGS is part of the do_create_spdx signature.
+
+        fastfloat is fetched from github.com. Build it with the default
+        mapping, then map github.com to another PURL type: do_create_spdx
+        must run again instead of restoring the first result from sstate.
+        """
+        spdx_path = "{DEPLOY_DIR_SPDX}/{SSTATE_PKGARCH}/builds/build-fastfloat.spdx.json"
+        location_prefix = "git+https://github.com/fastfloat/fast_float"
+        srcrev = get_bb_var("SRCREV", "fastfloat")
+
+        def source_purl(objset):
+            for pkg in objset.foreach_type(oe.spdx30.software_Package):
+                if (pkg.software_downloadLocation or "").startswith(location_prefix):
+                    return pkg.software_packageUrl
+            self.fail("fastfloat git source download not found")
+
+        objset = self.check_recipe_spdx("fastfloat", spdx_path)
+        self.assertEqual(source_purl(objset), f"pkg:github/fastfloat/fast_float@{srcrev}")
+
+        objset = self.check_recipe_spdx(
+            "fastfloat",
+            spdx_path,
+            extraconf='SPDX_GIT_PURL_MAPPINGS = "github.com:pkg:selftest"\n',
+        )
+        self.assertEqual(source_purl(objset), f"pkg:selftest/fastfloat/fast_float@{srcrev}")
+
     def test_release_date_source_date_epoch(self):
         """releaseTime should be derived from SDE_FILE via epochfile_read().
 
