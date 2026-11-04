@@ -426,7 +426,7 @@ def enrich_source_package(d, dl, fd, file_name, primary_purpose):
     version = None
     purl = None
 
-    if fd.type == "git":
+    if fd.type in ("git", "gitsm"):
         # Use full SHA-1 from fd.revision
         srcrev = getattr(fd, "revision", None)
         if srcrev and srcrev not in {"${AUTOREV}", "AUTOINC", "INVALID"}:
