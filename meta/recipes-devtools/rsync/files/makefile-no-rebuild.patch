@@ -1,4 +1,4 @@
-From 0e1f2aec0dbfc150013860b42b41645cebe236b7 Mon Sep 17 00:00:00 2001
+From 79b3194efff7e55ae9d0fadc40d45bec4bd37ea7 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@intel.com>
 Date: Tue, 12 Apr 2016 15:51:54 +0100
 Subject: [PATCH] rsync: remove upstream's rebuild logic
@@ -13,10 +13,10 @@ Signed-off-by: Ross Burton <ross.burton@intel.com>
  1 file changed, 54 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 716171d..de24949 100644
+index 3a5d509..9de687e 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -267,60 +267,6 @@ conf: configure.sh config.h.in
+@@ -306,60 +306,6 @@ conf: configure.sh config.h.in
  .PHONY: gen
  gen: conf proto.h man git-version.h
  
