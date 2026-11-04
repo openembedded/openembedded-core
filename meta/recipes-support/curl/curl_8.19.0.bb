@@ -44,6 +44,7 @@ SRC_URI = "https://curl.se/download/${BP}.tar.xz \
            file://CVE-2026-92388-1.patch \
            file://CVE-2026-92388-2.patch \
            file://CVE-2026-92389.patch \
+           file://CVE-2026-86409.patch \
            "
 
 SRC_URI:append:class-nativesdk = " \
