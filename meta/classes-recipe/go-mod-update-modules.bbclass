@@ -91,10 +91,10 @@ python do_update_modules() {
         licenses_filename = os.path.join(thisdir, f"{bpn}-licenses.inc")
         with open(licenses_filename, "w") as f:
             f.write(notice)
-            f.write('LICENSE += "AND')
+            f.write('LICENSE += "')
             if licenses:
-                f.write(' ')
-                f.write(oe.spdx_license.AndOp.join(licenses).sort().to_string())
+                f.write(oe.spdx_license.AndOp.NAME + ' ' +
+                        oe.spdx_license.AndOp.join(licenses).sort().to_string())
             f.write('"\n\n')
             f.write('LIC_FILES_CHKSUM += "\\\n')
             for lic in sorted(lic_files_chksum, key=fold_uri):
