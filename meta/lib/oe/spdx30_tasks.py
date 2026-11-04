@@ -358,7 +358,7 @@ def collect_dep_sources(dep_objsets, dest):
             index_sources_by_hash(e.to, dest)
 
 
-def _generate_git_purl(d, download_location, srcrev):
+def generate_git_purl(d, download_location, srcrev):
     """Generate a Package URL for a Git source from its download location.
 
     Parses the Git URL to identify the hosting service and generates the
@@ -416,7 +416,7 @@ def _generate_git_purl(d, download_location, srcrev):
     return None
 
 
-def _enrich_source_package(d, dl, fd, file_name, primary_purpose):
+def enrich_source_package(d, dl, fd, file_name, primary_purpose):
     """Enrich a Git source download package with version, PURL, and external refs.
 
     For Git sources, extracts the full SHA-1 from SRCREV as the version,
@@ -435,7 +435,7 @@ def _enrich_source_package(d, dl, fd, file_name, primary_purpose):
         # Generate PURL for Git hosting services
         download_location = getattr(dl, "software_downloadLocation", None)
         if version and download_location:
-            purl = _generate_git_purl(d, download_location, version)
+            purl = generate_git_purl(d, download_location, version)
 
     if version:
         dl.software_packageVersion = version
@@ -524,7 +524,7 @@ def add_download_files(d, objset):
                 )
             )
 
-            _enrich_source_package(d, dl, fd, file_name, primary_purpose)
+            enrich_source_package(d, dl, fd, file_name, primary_purpose)
 
             if release_date is not None:
                 dl.releaseTime = release_date
