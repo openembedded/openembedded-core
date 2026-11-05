@@ -240,6 +240,7 @@ class ReproducibleTests(OESelftestTestCase):
             TMPDIR = "{tmpdir}"
             LICENSE_FLAGS_ACCEPTED = "commercial"
             DISTRO_FEATURES:append = ' pam'
+            include_all conf/distro/include/test_reproducible_vars.inc
             USERADDEXTENSION = "useradd-staticids"
             USERADD_ERROR_DYNAMIC = "skip"
             USERADD_UID_TABLES += "files/static-passwd"
