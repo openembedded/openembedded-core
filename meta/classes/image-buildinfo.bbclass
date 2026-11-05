@@ -41,6 +41,8 @@ def buildinfo_target(d):
         vars = (d.getVar("IMAGE_BUILDINFO_VARS") or "")
         return image_buildinfo_outputvars(vars, d)
 
+buildinfo_target[vardeps] += "${IMAGE_BUILDINFO_VARS}"
+
 python buildinfo() {
     if not d.getVar('IMAGE_BUILDINFO_FILE'):
         return
