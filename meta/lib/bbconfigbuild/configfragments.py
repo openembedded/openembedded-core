@@ -66,14 +66,17 @@ class ConfigFragmentsPlugin(LayerPlugin):
         def print_builtin_fragments(builtin, enabled):
             print('Available built-in fragments:')
             builtin_dict = {i[0]:i[1] for i in [f.split(':') for f in builtin]}
+            maxlen = len(max(prefix[0] for prefix in builtin_dict.items()))
             for prefix,var in builtin_dict.items():
-                print('{}/...\tSets {} = "..."'.format(prefix, var))
+                print('{:{}}\tSets {} = "..."'.format(prefix + "/...", maxlen + 4, var))
             print('')
             enabled_builtin_fragments = [f for f in enabled if self.builtin_fragment_exists(f)]
+            if enabled_builtin_fragments:
+                maxlen = len(max(f.split('/', 1)[0] for f in enabled_builtin_fragments))
             print('Enabled built-in fragments:')
             for f in enabled_builtin_fragments:
                  prefix, value = f.split('/', 1)
-                 print('{}\tSets {} = "{}"'.format(f, builtin_dict[prefix], value))
+                 print('{:{}}\tSets {} = "{}"'.format(f, maxlen, builtin_dict[prefix], value))
             print('')
 
         allfragments = self.discover_fragments()
