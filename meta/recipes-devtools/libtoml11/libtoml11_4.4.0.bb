@@ -17,6 +17,7 @@ SRC_URI = "\
     gitsm://github.com/ToruNiina/toml11.git;protocol=https;branch=main;tag=v${PV} \
     file://0001-Remove-whitespace-in-operator.patch \
     file://0001-Remove-more-whitespaces-after-operator.patch \
+    file://0002-avoid-maybe-uninitialized-warnings-in-operator.patch \
     file://run-ptest \
 "
 SRCREV = "be08ba2be2a964edcdb3d3e3ea8d100abc26f286"
