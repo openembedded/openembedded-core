@@ -9,13 +9,11 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=97f58951300aa52a9f9e3a62bd5c846c \
                     "
 DEPENDS = "expat dbus glib-2.0 virtual/libintl"
 
-SRC_URI = "http://dbus.freedesktop.org/releases/dbus-python/dbus_python-${PV}.tar.gz"
+PYPI_PACKAGE = "dbus-python"
 
 SRC_URI[sha256sum] = "57423cf87d09b7d084f420b55b737fe654c33339b06df77945620d97795c6ac4"
 
-S = "${UNPACKDIR}/dbus_python-${PV}"
-
-inherit setuptools3-base meson pkgconfig
+inherit pypi setuptools3-base meson pkgconfig
 
 # requires dbus-run-session
 EXTRA_OEMESON += "-Dtests=disabled"
