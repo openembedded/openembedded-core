@@ -83,7 +83,8 @@ class RpmPM(PackageManager):
         self.saved_packaging_data = self.d.expand('${T}/saved_packaging_data/%s' % self.task_name)
         if not os.path.exists(self.d.expand('${T}/saved_packaging_data')):
             bb.utils.mkdirhier(self.d.expand('${T}/saved_packaging_data'))
-        self.packaging_data_dirs = ['etc/rpm', 'etc/rpmrc', 'etc/dnf', 'var/lib/rpm', 'var/lib/dnf', 'var/cache/dnf']
+        self.packaging_data_dirs = ['etc/rpm', 'etc/rpmrc', 'etc/dnf', 'var/lib/rpm', 'var/lib/dnf', 'var/cache/dnf',
+                                    'usr/lib/sysimage/libdnf5', 'var/cache/libdnf5']
         self.solution_manifest = self.d.expand('${T}/saved/%s_solution' %
                                                self.task_name)
         if not os.path.exists(self.d.expand('${T}/saved')):
@@ -163,7 +164,7 @@ class RpmPM(PackageManager):
             gpg_opts += 'gpgkey=file://%s/pki/packagefeed-gpg/PACKAGEFEED-GPG-KEY-%s-%s\n' % (self.d.getVar('sysconfdir'), self.d.getVar('DISTRO'), self.d.getVar('DISTRO_CODENAME'))
 
         if self.d.getVar('RPM_SIGN_PACKAGES') != '1':
-            gpg_opts += 'gpgcheck=0\n'
+            gpg_opts += 'pkg_gpgcheck=0\n'
 
         bb.utils.mkdirhier(oe.path.join(self.target_rootfs, "etc", "yum.repos.d"))
         remote_uris = self.construct_uris(feed_uris.split(), feed_base_paths.split())
@@ -200,11 +201,11 @@ class RpmPM(PackageManager):
         package_exclude = self.d.getVar('PACKAGE_EXCLUDE')
         exclude_pkgs = (bad_recommendations.split() if bad_recommendations else []) + (package_exclude.split() if package_exclude else [])
 
-        output = self._invoke_dnf((["--skip-broken"] if attempt_only else []) +
-                         (["-x", ",".join(exclude_pkgs)] if len(exclude_pkgs) > 0 else []) +
+        output = self._invoke_dnf((["-x", ",".join(exclude_pkgs)] if len(exclude_pkgs) > 0 else []) +
                          (["--setopt=install_weak_deps=False"] if (hard_depends_only or self.d.getVar('NO_RECOMMENDATIONS') == "1") else []) +
-                         (["--nogpgcheck"] if self.d.getVar('RPM_SIGN_PACKAGES') != '1' else ["--setopt=gpgcheck=True"]) +
+                         (["--no-gpgchecks"] if self.d.getVar('RPM_SIGN_PACKAGES') != '1' else ["--setopt=pkg_gpgcheck=True"]) +
                          ["install"] +
+                         (["--skip-broken"] if attempt_only else []) +
                          pkgs)
 
         failed_scriptlets_pkgnames = collections.OrderedDict()
@@ -212,8 +213,10 @@ class RpmPM(PackageManager):
             if line.startswith("Error: Systemctl"):
                 bb.error(line)
 
-            if line.startswith("Error in POSTIN scriptlet in rpm package"):
-                failed_scriptlets_pkgnames[line.split()[-1]] = True
+            if "Error in %post scriptlet:" in line:
+                # dnf reports name-epoch:version-release.arch, keep only the name
+                pkgname = line.split()[-1].rsplit("-", 2)[0]
+                failed_scriptlets_pkgnames[pkgname] = True
 
         if len(failed_scriptlets_pkgnames) > 0:
             failed_postinsts_abort(list(failed_scriptlets_pkgnames.keys()), self.d.expand("${T}/log.do_${BB_CURRENTTASK}"))
@@ -313,16 +316,21 @@ class RpmPM(PackageManager):
     def _invoke_dnf(self, dnf_args, fatal = True, print_output = True ):
         os.environ['RPM_ETCCONFIGDIR'] = self.target_rootfs
 
+        # Set XDG_CACHE_HOME to avoid dnf attempting to install oe-repo system cache to a /tmp/ directory on the host.
+        os.environ['XDG_CACHE_HOME'] = oe.path.join(os.path.join(self.target_rootfs, "var/cache/libdnf5"))
+
         dnf_cmd = bb.utils.which(os.getenv('PATH'), "dnf")
-        standard_dnf_args = ["-v", "--rpmverbosity=info", "-y",
-                             "-c", oe.path.join(self.target_rootfs, "etc/dnf/dnf.conf"),
+        standard_dnf_args = ["-y",
+                             "--config", os.path.join(self.d.getVar('STAGING_DIR_NATIVE'), "etc/dnf/dnf.conf"),
+                             "--setopt=rpmverbosity=info",
                              "--setopt=reposdir=%s" %(oe.path.join(self.target_rootfs, "etc/yum.repos.d")),
+                             "--setopt=pluginconfpath=%s" %(os.path.join(self.d.getVar('STAGING_DIR_NATIVE'), "etc/dnf/dnf.conf")),
                              "--installroot=%s" % (self.target_rootfs),
                              "--setopt=logdir=%s" % (self.d.getVar('T')),
                              "--setopt=optional_metadata_types=filelists",
                             ]
         if hasattr(self, "rpm_repo_dir"):
-            standard_dnf_args.append("--repofrompath=oe-repo,%s" % (self.rpm_repo_dir))
+            standard_dnf_args.append("--repofrompath=oe-repo,file://%s" % (self.rpm_repo_dir))
         cmd = [dnf_cmd] + standard_dnf_args + dnf_args
         bb.note('Running %s' % ' '.join(cmd))
         try:
@@ -335,9 +343,9 @@ class RpmPM(PackageManager):
                 e_output = e.output.decode("utf-8")
                 # RPM 6 fails the entire transaction when a %post scriptlet
                 # fails, causing dnf to exit non-zero. Let install_pkgs handle
-                # scriptlet failures via its existing "Error in POSTIN scriptlet"
+                # scriptlet failures via its existing "Error in %post scriptlet:"
                 # scanning rather than treating this as a fatal dnf invocation error.
-                if "Error in POSTIN scriptlet in rpm package" in e_output:
+                if "Error in %post scriptlet:" in e_output:
                     bb.note(e_output)
                     return e_output
                 extra_info = ""
@@ -406,8 +414,7 @@ class RpmPM(PackageManager):
         pkg_name = output.splitlines()[-1]
         if not pkg_name.endswith(".rpm"):
             bb.fatal("dnf could not find package %s in repository: %s" %(pkg, output))
-        # Strip file: prefix
-        pkg_path = pkg_name[5:]
+        pkg_path = pkg_name.removeprefix("file://")
 
         tar_cmd = bb.utils.which(os.getenv("PATH"), "tar")
         rpm2archive_cmd = bb.utils.which(os.getenv("PATH"), "rpm2archive")

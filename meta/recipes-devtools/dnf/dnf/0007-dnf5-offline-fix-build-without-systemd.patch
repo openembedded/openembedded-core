@@ -1,0 +1,35 @@
+From 81405407f84d87ebec7c3f9eeeaafaa148e9f462 Mon Sep 17 00:00:00 2001
+From: Adam Duskett <adam.duskett@amarulasolutions.com>
+Date: Fri, 6 Nov 2026 13:29:35 +0100
+Subject: [PATCH] dnf5: offline: fix build without systemd
+
+The plymouth argument of reboot() is only used when dnf5 is built with
+systemd support. Without it, the argument is unused and the build fails:
+
+  dnf5/commands/offline/offline.cpp:277:53: error: unused parameter
+  'plymouth' [-Werror=unused-parameter]
+
+Mark the argument as [[maybe_unused]].
+
+Upstream-Status: Submitted [https://github.com/rpm-software-management/dnf5/pull/3030]
+Signed-off-by: Adam Duskett <adam.duskett@amarulasolutions.com>
+---
+ dnf5/commands/offline/offline.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dnf5/commands/offline/offline.cpp b/dnf5/commands/offline/offline.cpp
+index 74123e2..f95ecdc 100644
+--- a/dnf5/commands/offline/offline.cpp
++++ b/dnf5/commands/offline/offline.cpp
+@@ -274,7 +274,7 @@ void invalidate_if_not_valid(libdnf5::offline::OfflineTransactionState & state,
+     }
+ }
+ 
+-void reboot(bool poweroff = false, PlymouthOutput * plymouth = nullptr) {
++void reboot(bool poweroff = false, [[maybe_unused]] PlymouthOutput * plymouth = nullptr) {
+     if (std::getenv("DNF_SYSTEM_UPGRADE_NO_REBOOT")) {
+         if (poweroff) {
+             std::cerr << "DNF_SYSTEM_UPGRADE_NO_REBOOT is set, not powering off." << std::endl;
+-- 
+2.56.0
+

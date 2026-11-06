@@ -209,6 +209,11 @@ QB_FSINFO = "tar.zst:rootfs-dbg"
         features += 'EXTRA_IMAGE_FEATURES += "package-management"\n'
         features += 'PACKAGE_CLASSES = "package_rpm"\n'
 
+        # librepo and rpm require sequoia
+        # https://github.com/rpm-software-management/dnf5/issues/2539
+        features += 'PACKAGECONFIG:append:pn-rpm = " sequoia"\n'
+        features += 'PACKAGECONFIG:append:pn-librepo = " sequoia"\n'
+
         bitbake('gnupg-native -c addto_recipe_sysroot')
 
         # Enable package feed signing

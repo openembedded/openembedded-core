@@ -1,0 +1,205 @@
+From 42a4a73832913ce018cdc0147805ae324abb47a0 Mon Sep 17 00:00:00 2001
+From: Adam Duskett <adam.duskett@amarulasolutions.com>
+Date: Tue, 3 Nov 2026 12:33:12 +0100
+Subject: [PATCH] libdnf5: subprocess: rename stdout/stderr members of
+ CompletedProcess
+
+The C standard allows stdin, stdout and stderr to be defined as macros, which MUSL does:
+```
+  #define stdout (stdout)
+  #define stderr (stderr)
+```
+
+This breaks the build when cross-compiling on systems that use MUSL instead
+of glibc with the following error:
+  libdnf5/utils/bootc.cpp:44:74: error: expected unqualified-id before '(' token
+
+Rename the members to stdout_data and stderr_data to fix building against
+musl.
+
+Upstream-Status: Submitted [https://github.com/rpm-software-management/dnf5/pull/3024]
+Signed-off-by: Adam Duskett <adam.duskett@amarulasolutions.com>
+---
+ libdnf5/utils/bootc.cpp                | 11 +++---
+ libdnf5/utils/subprocess.cpp           |  4 +--
+ libdnf5/utils/subprocess.hpp           |  4 +--
+ test/libdnf5/utils/test_subprocess.cpp | 50 +++++++++++++-------------
+ 4 files changed, 36 insertions(+), 33 deletions(-)
+
+diff --git a/libdnf5/utils/bootc.cpp b/libdnf5/utils/bootc.cpp
+index 0027e02887..305114f30b 100644
+--- a/libdnf5/utils/bootc.cpp
++++ b/libdnf5/utils/bootc.cpp
+@@ -41,7 +41,8 @@ std::unique_ptr<json_object, decltype(&json_object_put)> get_bootc_status() {
+     // Check whether command failed (non-zero exit code)
+     if (result.returncode != 0) {
+         // Command ran but failed; show stderr to user
+-        std::string stderr_content(reinterpret_cast<const char *>(result.stderr.data()), result.stderr.size());
++        std::string stderr_content(
++            reinterpret_cast<const char *>(result.stderr_data.data()), result.stderr_data.size());
+         if (!stderr_content.empty()) {
+             throw libdnf5::RuntimeError(M_("Error checking bootc status: {}"), stderr_content);
+         } else {
+@@ -50,7 +51,7 @@ std::unique_ptr<json_object, decltype(&json_object_put)> get_bootc_status() {
+         }
+     }
+ 
+-    std::string stdout_content(reinterpret_cast<const char *>(result.stdout.data()), result.stdout.size());
++    std::string stdout_content(reinterpret_cast<const char *>(result.stdout_data.data()), result.stdout_data.size());
+     std::unique_ptr<json_object, decltype(&json_object_put)> root(
+         json_tokener_parse(stdout_content.c_str()), json_object_put);
+ 
+@@ -120,7 +121,8 @@ void make_usr_writable() {
+         // Set up transient overlay
+         const auto & result = subprocess::run("bootc", {"bootc", "usr-overlay", "--read-only"});
+         if (result.returncode != 0) {
+-            std::string stderr_content(reinterpret_cast<const char *>(result.stderr.data()), result.stderr.size());
++            std::string stderr_content(
++                reinterpret_cast<const char *>(result.stderr_data.data()), result.stderr_data.size());
+             if (!stderr_content.empty()) {
+                 throw libdnf5::RuntimeError(M_("Error running `bootc usr-overlay --read-only`: {}"), stderr_content);
+             } else {
+@@ -139,7 +141,8 @@ void make_usr_writable() {
+     const auto & result = subprocess::run("mount", {"mount", "--options-source=disable", "-o", "remount,rw", "/usr"});
+ 
+     if (result.returncode != 0) {
+-        std::string stderr_content(reinterpret_cast<const char *>(result.stderr.data()), result.stderr.size());
++        std::string stderr_content(
++            reinterpret_cast<const char *>(result.stderr_data.data()), result.stderr_data.size());
+         throw libdnf5::RuntimeError(M_("Failed to remount /usr as read-write: {}"), stderr_content);
+     }
+ }
+diff --git a/libdnf5/utils/subprocess.cpp b/libdnf5/utils/subprocess.cpp
+index 33299e0fec..3175d804f2 100644
+--- a/libdnf5/utils/subprocess.cpp
++++ b/libdnf5/utils/subprocess.cpp
+@@ -259,8 +259,8 @@ CompletedProcess run(const std::string & command, const std::vector<std::string>
+ 
+     return CompletedProcess{
+         .returncode = returncode,
+-        .stdout = stdout_bytes,
+-        .stderr = stderr_bytes,
++        .stdout_data = stdout_bytes,
++        .stderr_data = stderr_bytes,
+     };
+ }
+ 
+diff --git a/libdnf5/utils/subprocess.hpp b/libdnf5/utils/subprocess.hpp
+index 7a5066ea30..73f3934bc4 100644
+--- a/libdnf5/utils/subprocess.hpp
++++ b/libdnf5/utils/subprocess.hpp
+@@ -11,8 +11,8 @@ namespace libdnf5::utils::subprocess {
+ 
+ struct CompletedProcess {
+     int returncode;
+-    std::vector<std::byte> stdout;
+-    std::vector<std::byte> stderr;
++    std::vector<std::byte> stdout_data;
++    std::vector<std::byte> stderr_data;
+ };
+ 
+ /// @brief Run a command in a child process and wait for it to complete.
+diff --git a/test/libdnf5/utils/test_subprocess.cpp b/test/libdnf5/utils/test_subprocess.cpp
+index 20fdb7c52c..55084a2193 100644
+--- a/test/libdnf5/utils/test_subprocess.cpp
++++ b/test/libdnf5/utils/test_subprocess.cpp
+@@ -34,8 +34,8 @@ void UtilsSubprocessTest::test_stdout_capture() {
+         libdnf5::utils::subprocess::run("/usr/bin/env", {"/usr/bin/env", "sh", "-c", "echo 'Hello, World!'"});
+ 
+     CPPUNIT_ASSERT_EQUAL(0, result.returncode);
+-    CPPUNIT_ASSERT_EQUAL(std::string("Hello, World!\n"), bytes_to_string(result.stdout));
+-    CPPUNIT_ASSERT_EQUAL(std::string(""), bytes_to_string(result.stderr));
++    CPPUNIT_ASSERT_EQUAL(std::string("Hello, World!\n"), bytes_to_string(result.stdout_data));
++    CPPUNIT_ASSERT_EQUAL(std::string(""), bytes_to_string(result.stderr_data));
+ }
+ 
+ 
+@@ -45,8 +45,8 @@ void UtilsSubprocessTest::test_stderr_capture() {
+         libdnf5::utils::subprocess::run("/usr/bin/env", {"/usr/bin/env", "sh", "-c", "echo 'Error message' >&2"});
+ 
+     CPPUNIT_ASSERT_EQUAL(0, result.returncode);
+-    CPPUNIT_ASSERT_EQUAL(std::string(""), bytes_to_string(result.stdout));
+-    CPPUNIT_ASSERT_EQUAL(std::string("Error message\n"), bytes_to_string(result.stderr));
++    CPPUNIT_ASSERT_EQUAL(std::string(""), bytes_to_string(result.stdout_data));
++    CPPUNIT_ASSERT_EQUAL(std::string("Error message\n"), bytes_to_string(result.stderr_data));
+ }
+ 
+ 
+@@ -56,8 +56,8 @@ void UtilsSubprocessTest::test_stdout_and_stderr_capture() {
+         "/usr/bin/env", {"/usr/bin/env", "sh", "-c", "echo 'stdout line'; echo 'stderr line' >&2"});
+ 
+     CPPUNIT_ASSERT_EQUAL(0, result.returncode);
+-    CPPUNIT_ASSERT_EQUAL(std::string("stdout line\n"), bytes_to_string(result.stdout));
+-    CPPUNIT_ASSERT_EQUAL(std::string("stderr line\n"), bytes_to_string(result.stderr));
++    CPPUNIT_ASSERT_EQUAL(std::string("stdout line\n"), bytes_to_string(result.stdout_data));
++    CPPUNIT_ASSERT_EQUAL(std::string("stderr line\n"), bytes_to_string(result.stderr_data));
+ }
+ 
+ 
+@@ -66,8 +66,8 @@ void UtilsSubprocessTest::test_exit_code_success() {
+     const auto result = libdnf5::utils::subprocess::run("/usr/bin/env", {"/usr/bin/env", "sh", "-c", "exit 0"});
+ 
+     CPPUNIT_ASSERT_EQUAL(0, result.returncode);
+-    CPPUNIT_ASSERT_EQUAL(std::string(""), bytes_to_string(result.stdout));
+-    CPPUNIT_ASSERT_EQUAL(std::string(""), bytes_to_string(result.stderr));
++    CPPUNIT_ASSERT_EQUAL(std::string(""), bytes_to_string(result.stdout_data));
++    CPPUNIT_ASSERT_EQUAL(std::string(""), bytes_to_string(result.stderr_data));
+ }
+ 
+ 
+@@ -97,17 +97,17 @@ void UtilsSubprocessTest::test_binary_data() {
+     CPPUNIT_ASSERT_EQUAL(0, result.returncode);
+ 
+     // Verify stdout contains the expected binary data
+-    CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(5), result.stdout.size());
+-    CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>(0x00), result.stdout[0]);
+-    CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>(0x01), result.stdout[1]);
+-    CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>(0x02), result.stdout[2]);
+-    CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>(0xff), result.stdout[3]);
+-    CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>(0xfe), result.stdout[4]);
++    CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(5), result.stdout_data.size());
++    CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>(0x00), result.stdout_data[0]);
++    CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>(0x01), result.stdout_data[1]);
++    CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>(0x02), result.stdout_data[2]);
++    CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>(0xff), result.stdout_data[3]);
++    CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>(0xfe), result.stdout_data[4]);
+ 
+     // Verify stderr contains the expected binary data
+-    CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), result.stderr.size());
+-    CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>(0x03), result.stderr[0]);
+-    CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>(0x04), result.stderr[1]);
++    CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(2), result.stderr_data.size());
++    CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>(0x03), result.stderr_data[0]);
++    CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>(0x04), result.stderr_data[1]);
+ }
+ 
+ 
+@@ -131,20 +131,20 @@ done
+     const auto result = libdnf5::utils::subprocess::run("/usr/bin/env", {"/usr/bin/env", "sh", "-c", script});
+ 
+     // The expected size is: 1000 × 100 bytes = 100,000 bytes per stream
+-    CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(100000), result.stdout.size());
+-    CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(100000), result.stderr.size());
++    CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(100000), result.stdout_data.size());
++    CPPUNIT_ASSERT_EQUAL(static_cast<size_t>(100000), result.stderr_data.size());
+ 
+     // Verify the command succeeded (didn't deadlock or error)
+     CPPUNIT_ASSERT_EQUAL(0, result.returncode);
+ 
+     // Verify the data is correct (should be all a's on stdout, b's on stderr)
+     // Check first few bytes (only if we have data)
+-    if (result.stdout.size() > 0) {
+-        CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>('a'), result.stdout[0]);
+-        CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>('a'), result.stdout[100]);
++    if (result.stdout_data.size() > 0) {
++        CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>('a'), result.stdout_data[0]);
++        CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>('a'), result.stdout_data[100]);
+     }
+-    if (result.stderr.size() > 0) {
+-        CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>('b'), result.stderr[0]);
+-        CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>('b'), result.stderr[100]);
++    if (result.stderr_data.size() > 0) {
++        CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>('b'), result.stderr_data[0]);
++        CPPUNIT_ASSERT_EQUAL(static_cast<std::byte>('b'), result.stderr_data[100]);
+     }
+ }

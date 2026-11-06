@@ -27,12 +27,12 @@ class ImageOptionsTests(OESelftestTestCase):
         bitbake("core-image-minimal")
         log_data_file = os.path.join(get_bb_var("WORKDIR", "core-image-minimal"), "temp/log.do_rootfs")
         log_data_created = ftools.read_file(log_data_file)
-        incremental_created = re.search(r"Installing\s*:\s*packagegroup-core-ssh-openssh", log_data_created)
+        incremental_created = re.search(r"^Installing:\n(?: .*\n)*? packagegroup-core-ssh-openssh\s", log_data_created, re.M)
         self.remove_config('IMAGE_FEATURES += "ssh-server-openssh"')
         self.assertTrue(incremental_created, msg = "Match failed in:\n%s" % log_data_created)
         bitbake("core-image-minimal")
         log_data_removed = ftools.read_file(log_data_file)
-        incremental_removed = re.search(r"Erasing\s*:\s*packagegroup-core-ssh-openssh", log_data_removed)
+        incremental_removed = re.search(r"^Removing:\n(?: .*\n)*? packagegroup-core-ssh-openssh\s", log_data_removed, re.M)
         self.assertTrue(incremental_removed, msg = "Match failed in:\n%s" % log_data_removed)
 
     def test_ccache_tool(self):
