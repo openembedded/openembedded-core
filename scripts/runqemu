@@ -1314,12 +1314,12 @@ to your build configuration.
             newrootfs = os.path.join(tmpfsdir, os.path.basename(self.rootfs)) + "." + str(os.getpid())
             logger.info("Copying rootfs to %s" % newrootfs)
             copy_start = time.time()
+            self.cleanup_files.append(newrootfs)
             shutil.copyfile(self.rootfs, newrootfs)
             logger.info("Copy done in %s seconds" % (time.time() - copy_start))
             self.rootfs = newrootfs
             # Don't need a second copy now!
             self.snapshot = False
-            self.cleanup_files.append(newrootfs)
 
         qb_rootfs_opt = self.get('QB_ROOTFS_OPT')
         if qb_rootfs_opt:
@@ -1712,7 +1712,7 @@ to your build configuration.
                 logger.info('Removing %s' % ent)
                 if os.path.isfile(ent):
                     os.remove(ent)
-                else:
+                elif os.path.exists(ent):
                     shutil.rmtree(ent)
 
         # Deliberately ignore the return code of 'tput smam'.
