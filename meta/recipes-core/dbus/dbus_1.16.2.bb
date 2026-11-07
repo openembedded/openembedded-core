@@ -108,7 +108,14 @@ RRECOMMENDS:${PN}-lib = "${PN}"
 RRECOMMENDS:${PN}-lib:class-target = "${VIRTUAL-RUNTIME_dbus}"
 FILES:${PN}-dev += "${libdir}/dbus-1.0/include ${bindir}/dbus-test-tool ${datadir}/xml/dbus-1"
 
-RDEPENDS:${PN}-ptest += "bash make dbus"
+# Not using += or append here is to avoid adding PN as dependency.
+# The tests start their own buses with dbus-daemon and talk to them with
+# dbus-send; they don't need the system bus (dbus), which would conflict with
+# other system bus implementations such as dbus-broker.
+# using hard = also threw away gnome-desktop-testing, which ptest-gnome.bbclass adds the same way
+# needs adding explicitly as well
+RDEPENDS:${PN}-ptest = "bash gnome-desktop-testing \
+                        make ${@bb.utils.contains('PACKAGECONFIG', 'message-bus', '${PN}-daemon', '', d)} ${PN}-tools"
 
 pkg_postinst:${PN}() {
 	if [ -z "$D" ] && [ -e /etc/init.d/populate-volatile.sh ] ; then
