@@ -136,6 +136,14 @@ python () {
     if not(d.getVar('PTEST_ENABLED') == "1"):
         for i in ['do_configure_ptest_base', 'do_compile_ptest_base', 'do_install_ptest_base']:
             bb.build.deltask(i, d)
+
+    # On-target compile tests need the clang driver when built with clang
+    if d.getVar('TCOVERRIDE') == 'toolchain-clang':
+        var = 'RDEPENDS:%s-ptest' % d.getVar('PN')
+        rdeps = bb.utils.explode_deps(d.getVar(var) or '')
+        if any(p in rdeps for p in ('gcc', 'gcc-symlinks', 'g++', 'g++-symlinks',
+                                    'packagegroup-core-buildessential')):
+            d.appendVar(var, ' clang')
 }
 
 QARECIPETEST[missing-ptest] = "package_qa_check_missing_ptest"
