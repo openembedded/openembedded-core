@@ -66,6 +66,7 @@ SRC_URI = "${BASEURI} \
            file://0024-Avoid-hardcoded-build-paths-into-ppc-libgcc.patch \
            file://0025-gcc-testsuite-tweaks-for-mips-OE.patch \
            file://0027-Fix-gcc-vect-module-testcases.patch \
+           file://0028-CVE-2026-102010.patch \
 "
 SRC_URI[sha256sum] = "ec3df0015ed01411f91f9a9cd5b4da3070eb1222b02fadf4133c30c090399855"
 
