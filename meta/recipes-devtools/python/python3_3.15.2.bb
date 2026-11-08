@@ -40,6 +40,8 @@ inherit upstream-stable-release-point
 
 CVE_PRODUCT = "python:python python_software_foundation:python cpython"
 
+CVE_STATUS[CVE-2026-19672] = "fixed-version: Fixed from version 3.15.0"
+
 PYTHON_MAJMIN = "3.15"
 
 S = "${UNPACKDIR}/Python-${PV}"
