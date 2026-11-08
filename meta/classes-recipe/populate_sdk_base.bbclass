@@ -71,12 +71,14 @@ SDK_FEATURES:remove:powerpc = "go"
 TOOLCHAIN_HOST_TASK ?= " \
     nativesdk-packagegroup-sdk-host \
     packagegroup-cross-canadian-${MACHINE} \
+    ${@bb.utils.contains('SDK_FEATURES', 'clang', 'packagegroup-clang-cross-canadian-${MACHINE}', '', d)} \
     ${@bb.utils.contains('SDK_FEATURES', 'go', 'packagegroup-go-cross-canadian-${MACHINE}', '', d)} \
     ${@bb.utils.contains('SDK_FEATURES', 'rust', 'packagegroup-rust-cross-canadian-${MACHINE}', '', d)} \
 "
 TOOLCHAIN_HOST_TASK_ATTEMPTONLY ?= ""
 TOOLCHAIN_TARGET_TASK ?= " \
     ${@oe.utils.multilib_pkg_extend(d, 'packagegroup-core-standalone-sdk-target')} \
+    ${@bb.utils.contains('SDK_FEATURES', 'clang', oe.utils.multilib_pkg_extend(d, 'packagegroup-clang-sdk-target'), '', d)} \
     ${@bb.utils.contains('SDK_FEATURES', 'go', oe.utils.multilib_pkg_extend(d, 'packagegroup-go-sdk-target'), '', d)} \
     ${@bb.utils.contains('SDK_FEATURES', 'rust', oe.utils.multilib_pkg_extend(d, 'libstd-rs'), '', d)} \
     ${@bb.utils.contains('SDK_FEATURES', 'kernel-src', 'kernel-devsrc', '', d)} \
