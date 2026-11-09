@@ -30,7 +30,7 @@ python do_create_rootfs_spdx() {
     import oe.spdx30_tasks
     oe.spdx30_tasks.create_rootfs_spdx(d)
 }
-addtask do_create_rootfs_spdx after do_rootfs before do_image
+addtask do_create_rootfs_spdx after do_rootfs do_create_recipe_spdx before do_image
 SSTATETASKS += "do_create_rootfs_spdx"
 do_create_rootfs_spdx[sstate-inputdirs] = "${SPDXROOTFSDEPLOY}"
 do_create_rootfs_spdx[sstate-outputdirs] = "${DEPLOY_DIR_SPDX}"
@@ -47,7 +47,7 @@ python do_create_image_spdx() {
     import oe.spdx30_tasks
     oe.spdx30_tasks.create_image_spdx(d)
 }
-addtask do_create_image_spdx after do_image_complete do_create_rootfs_spdx before do_build
+addtask do_create_image_spdx after do_image_complete do_create_rootfs_spdx do_create_recipe_spdx before do_build
 SSTATETASKS += "do_create_image_spdx"
 SSTATE_SKIP_CREATION:task-create-image-spdx = "1"
 do_create_image_spdx[sstate-inputdirs] = "${SPDXIMAGEWORK}"

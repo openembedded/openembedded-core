@@ -118,7 +118,7 @@ def collect_direct_deps(d, dep_task):
         )
 
     for this_dep in taskdepdata.values():
-        if this_dep[0] == pn and this_dep[1] == current_task:
+        if this_dep.pn == pn and this_dep.taskname == current_task:
             break
     else:
         bb.fatal(f"Unable to find this {pn}:{current_task} in taskdepdata")

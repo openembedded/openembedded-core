@@ -80,7 +80,9 @@ def add_license_expression(
                 if lic is None:
                     p, _ = oe.license.get_license_path(d, node)
                     if p is None:
-                        bb.fatal(f"{pn}: No generic license file exists for: {node.ident} in any provider")
+                        bb.fatal(
+                            f"{pn}: No generic license file exists for: {node.ident} in any provider"
+                        )
                         return
 
                     with open(p, errors="replace") as f:
@@ -598,6 +600,135 @@ def get_is_native(d):
     return bb.data.inherits_class("native", d) or bb.data.inherits_class("cross", d)
 
 
+def set_var_field(d, var, obj, name, package=None):
+    val = None
+    if package:
+        val = d.getVar("%s:%s" % (var, package))
+
+    if not val:
+        val = d.getVar(var)
+
+    if val:
+        setattr(obj, name, val)
+
+
+def find_build_dep_objsets(d, start_task):
+    def find_deps(d, taskdepdata, current_dep, start_dep, visited, depth=0):
+        key = f"{current_dep.pn}:{current_dep.taskname}"
+
+        dep_objsets = []
+
+        if key not in visited:
+            visited.add(key)
+
+            for n in current_dep.deps:
+                dep = taskdepdata[n]
+                dep_name = f"{dep.pn}:{dep.taskname}"
+
+                dep_objset, dep_path = oe.sbom30.find_jsonld(d, "by-task", dep_name)
+                if dep_objset:
+                    dep_objsets.append(dep_objset)
+
+                elif dep.pn == start_dep.pn:
+                    # If this task is still part of the same recipe, continue
+                    # searching up the dependency tree until a valid dependency
+                    # is found. This detects transitive dependencies that may
+                    # have been pulled in by previous tasks in the same recipe.
+                    dep_objsets.extend(
+                        find_deps(d, taskdepdata, dep, start_dep, visited, depth + 1)
+                    )
+
+        return dep_objsets
+
+    pn = d.getVar("PN")
+    taskdepdata = d.getVar("BB_TASKDEPDATA", False)
+    for dep in taskdepdata.values():
+        if dep.pn == pn and dep.taskname == start_task:
+            start_dep = dep
+            break
+    else:
+        bb.fatal(f"Unable to find {pn}:{start_task} in taskdepdata")
+
+    return find_deps(d, taskdepdata, start_dep, start_dep, set())
+
+
+def create_deploy_package(d, objset, build, spdxid, name, start_task, files, **attrs):
+    recipe, _ = load_recipe_spdx(d)
+
+    deploy_package = objset.add_root(
+        oe.spdx30.software_Package(
+            _id=spdxid,
+            creationInfo=objset.doc.creationInfo,
+            name=name,
+            software_packageVersion=d.getVar("PV"),
+        )
+    )
+
+    objset.new_scoped_relationship(
+        [oe.sbom30.get_element_link_id(recipe)],
+        oe.spdx30.RelationshipType.generates,
+        oe.spdx30.LifecycleScopeType.build,
+        [deploy_package],
+    )
+
+    set_var_field(d, "HOMEPAGE", deploy_package, "software_homePage")
+    set_var_field(d, "SUMMARY", deploy_package, "summary")
+    set_var_field(d, "DESCRIPTION", deploy_package, "description")
+
+    set_purls(deploy_package, (d.getVar("SPDX_PACKAGE_URLS") or "").split())
+
+    set_timestamp_now(d, deploy_package, "builtTime")
+
+    supplier = objset.new_agent("SPDX_PACKAGE_SUPPLIER")
+    if supplier is not None:
+        deploy_package.suppliedBy = (
+            supplier if isinstance(supplier, str) else supplier._id
+        )
+
+    if files:
+        objset.new_relationship(
+            [deploy_package],
+            oe.spdx30.RelationshipType.contains,
+            sorted(list(files)),
+        )
+
+    objset.new_scoped_relationship(
+        [build],
+        oe.spdx30.RelationshipType.hasOutput,
+        oe.spdx30.LifecycleScopeType.build,
+        sorted(list(files) + [deploy_package]),
+    )
+
+    # Collect dependencies
+    if start_task is not None:
+        dep_builds = set()
+        dep_packages = set()
+        for o in find_build_dep_objsets(d, start_task):
+            if obj := o.find_root(oe.spdx30.software_Package):
+                dep_packages.add(oe.sbom30.get_element_link_id(obj))
+
+            if obj := o.find_root(oe.spdx30.build_Build):
+                dep_builds.add(oe.sbom30.get_element_link_id(obj))
+
+        if dep_packages:
+            objset.new_scoped_relationship(
+                [deploy_package],
+                oe.spdx30.RelationshipType.dependsOn,
+                oe.spdx30.LifecycleScopeType.build,
+                sorted(list(dep_packages)),
+            )
+
+        if dep_builds:
+            objset.new_scoped_relationship(
+                [build],
+                oe.spdx30.RelationshipType.dependsOn,
+                oe.spdx30.LifecycleScopeType.build,
+                sorted(list(dep_builds)),
+            )
+
+    return deploy_package
+
+
 def create_recipe_spdx(d):
     deploydir = Path(d.getVar("SPDXRECIPEDEPLOY"))
     pn = d.getVar("PN")
@@ -790,7 +921,9 @@ def create_recipe_spdx(d):
             sorted(list(all_cves)),
         )
 
-    oe.sbom30.write_recipe_jsonld_doc(d, recipe_objset, "static", deploydir)
+    oe.sbom30.write_recipe_jsonld_doc(
+        d, recipe_objset, "static", deploydir, create_task_link=True
+    )
 
 
 def load_recipe_spdx(d):
@@ -804,17 +937,6 @@ def load_recipe_spdx(d):
 
 
 def create_spdx(d):
-    def set_var_field(var, obj, name, package=None):
-        val = None
-        if package:
-            val = d.getVar("%s:%s" % (var, package))
-
-        if not val:
-            val = d.getVar(var)
-
-        if val:
-            setattr(obj, name, val)
-
     license_data = oe.spdx_common.load_spdx_license_data(d)
 
     pn = d.getVar("PN")
@@ -943,10 +1065,12 @@ def create_spdx(d):
                 )
 
             set_var_field(
-                "HOMEPAGE", spdx_package, "software_homePage", package=package
+                d, "HOMEPAGE", spdx_package, "software_homePage", package=package
             )
-            set_var_field("SUMMARY", spdx_package, "summary", package=package)
-            set_var_field("DESCRIPTION", spdx_package, "description", package=package)
+            set_var_field(d, "SUMMARY", spdx_package, "summary", package=package)
+            set_var_field(
+                d, "DESCRIPTION", spdx_package, "description", package=package
+            )
 
             purls = (
                 d.getVar("SPDX_PACKAGE_URLS:%s" % package)
@@ -1133,7 +1257,9 @@ def create_spdx(d):
                 f"Added PACKAGECONFIG entries: {len(enabled)} enabled, {len(disabled)} disabled"
             )
 
-    oe.sbom30.write_recipe_jsonld_doc(d, build_objset, "builds", deploydir)
+    oe.sbom30.write_recipe_jsonld_doc(
+        d, build_objset, "builds", deploydir, create_task_link=True
+    )
 
 
 def create_package_spdx(d):
@@ -1369,25 +1495,8 @@ def create_rootfs_spdx(d):
         d, "%s-%s-rootfs" % (image_basename, machine)
     )
 
-    rootfs = objset.add_root(
-        oe.spdx30.software_Package(
-            _id=objset.new_spdxid("rootfs", image_basename),
-            creationInfo=objset.doc.creationInfo,
-            name=image_basename,
-            software_primaryPurpose=oe.spdx30.software_SoftwarePurpose.archive,
-        )
-    )
-    set_timestamp_now(d, rootfs, "builtTime")
-
     rootfs_build = objset.add_root(objset.new_task_build("rootfs", "rootfs"))
     set_timestamp_now(d, rootfs_build, "build_buildEndTime")
-
-    objset.new_scoped_relationship(
-        [rootfs_build],
-        oe.spdx30.RelationshipType.hasOutput,
-        oe.spdx30.LifecycleScopeType.build,
-        [rootfs],
-    )
 
     files_by_hash = {}
     collect_build_package_inputs(d, objset, rootfs_build, packages, files_by_hash)
@@ -1421,14 +1530,20 @@ def create_rootfs_spdx(d):
                     )
                 )
 
-    if files:
-        objset.new_relationship(
-            [rootfs],
-            oe.spdx30.RelationshipType.contains,
-            sorted(list(files)),
-        )
+    rootfs = create_deploy_package(
+        d,
+        objset,
+        rootfs_build,
+        objset.new_spdxid("rootfs", image_basename),
+        image_basename,
+        None,
+        files,
+    )
+    rootfs.software_primaryPurpose = oe.spdx30.software_SoftwarePurpose.archive
 
-    oe.sbom30.write_recipe_jsonld_doc(d, objset, "rootfs", deploydir)
+    oe.sbom30.write_recipe_jsonld_doc(
+        d, objset, "rootfs", deploydir, create_task_link=True
+    )
 
 
 def create_image_spdx(d):
@@ -1508,10 +1623,13 @@ def create_image_spdx(d):
                 set_timestamp_now(d, a, "builtTime")
 
         if artifacts:
-            objset.new_scoped_relationship(
-                [image_build],
-                oe.spdx30.RelationshipType.hasOutput,
-                oe.spdx30.LifecycleScopeType.build,
+            create_deploy_package(
+                d,
+                objset,
+                image_build,
+                objset.new_spdxid(taskname, "image", imagetype),
+                "image",
+                f"do_{taskname}",
                 artifacts,
             )
 
@@ -1532,7 +1650,9 @@ def create_image_spdx(d):
 
     objset.add_aliases()
     objset.link()
-    oe.sbom30.write_recipe_jsonld_doc(d, objset, "image", spdx_work_dir)
+    oe.sbom30.write_recipe_jsonld_doc(
+        d, objset, "image", spdx_work_dir, create_task_link=True
+    )
 
 
 def create_image_sbom_spdx(d):
@@ -1719,4 +1839,81 @@ def create_recipe_sbom(d, deploydir):
 
     objset, sbom = oe.sbom30.create_sbom(d, sbom_name, [recipe], [recipe_objset])
 
+    oe.sbom30.write_jsonld_doc(d, objset, deploydir / (sbom_name + ".spdx.json"))
+
+
+def create_deploy_spdx(d, spdxdeploydir, artifactsdir, artifacts):
+    pn = d.getVar("PN")
+    current_task = "do_" + d.getVar("BB_CURRENTTASK")
+
+    recipe, recipe_objset = load_recipe_spdx(d)
+
+    if artifacts == "AUTO":
+        artifacts = []
+        for root, dirs, files in os.walk(artifactsdir):
+            for p in [Path(os.path.join(root, f)) for f in files]:
+                if p.is_file():
+                    artifacts.append(p)
+    else:
+        artifacts = [artifactsdir / p for p in artifacts.split()]
+
+    artifacts.sort(key=lambda p: (p.is_symlink(), p))
+
+    objset = oe.sbom30.ObjectSet.new_objset(d, f"{pn}-{current_task}-deploy")
+
+    build = objset.add_root(objset.new_task_build(current_task, "deploy"))
+    set_timestamp_now(d, build, "build_buildEndTime")
+    objset.set_is_native(get_is_native(d))
+
+    files = set()
+    for a in artifacts:
+        relpath = a.relative_to(artifactsdir)
+        f = objset.new_file(
+            objset.new_spdxid("deploy", str(relpath)),
+            a.name,
+            a,
+        )
+        files.add(f)
+
+    if not files:
+        if (
+            d.getVar("SPDX_DEPLOY_ALLOW_EMPTY:task-" + d.getVar("BB_CURRENTTASK")) or ""
+        ) != "1":
+            bb.fatal(f"No deployed artifacts found in {artifactsdir}")
+            return
+
+    create_deploy_package(
+        d,
+        objset,
+        build,
+        objset.new_spdxid("deploy", pn, current_task),
+        pn,
+        current_task,
+        files,
+    )
+
+    # Create document
+    dest = oe.sbom30.write_recipe_jsonld_doc(
+        d,
+        objset,
+        "deploy",
+        spdxdeploydir,
+        create_task_link=True,
+    )
+
+
+def create_deploy_sbom(d, deploydir, deploy_tasks):
+    pn = d.getVar("PN")
+    sbom_name = d.getVar("SPDX_DEPLOY_SBOM_NAME")
+
+    objsets = []
+    for t in deploy_tasks:
+        o, _ = oe.sbom30.find_jsonld(d, "deploy", f"{pn}-{t}-deploy", required=True)
+        objsets.append(o)
+
+    root_objs = []
+    for o in objsets:
+        root_objs.extend(o.doc.rootElement)
+
+    objset, sbom = oe.sbom30.create_sbom(d, sbom_name, root_objs, objsets)
     oe.sbom30.write_jsonld_doc(d, objset, deploydir / (sbom_name + ".spdx.json"))

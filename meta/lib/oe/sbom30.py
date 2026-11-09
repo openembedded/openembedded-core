@@ -1108,6 +1108,25 @@ def write_jsonld_doc(d, objset, dest):
     objset.objects.remove(objset.doc)
 
 
+def make_jsonld_link(d, fn, subdir, name, deploydir):
+    pkg_arch = d.getVar("SSTATE_PKGARCH")
+
+    link_name = jsonld_arch_path(
+        d,
+        pkg_arch,
+        subdir,
+        name,
+        deploydir=deploydir,
+    )
+    try:
+        link_name.parent.mkdir(exist_ok=True, parents=True)
+        link_name.symlink_to(os.path.relpath(fn, link_name.parent))
+    except:
+        target = link_name.readlink()
+        bb.warn(f"Unable to link {fn} as {link_name}. Already points to {target}")
+        raise
+
+
 def write_recipe_jsonld_doc(
     d,
     objset,
@@ -1115,6 +1134,7 @@ def write_recipe_jsonld_doc(
     deploydir,
     *,
     create_spdx_id_links=True,
+    create_task_link=False,
 ):
     pkg_arch = d.getVar("SSTATE_PKGARCH")
 
@@ -1122,23 +1142,7 @@ def write_recipe_jsonld_doc(
 
     def link_id(_id):
         hash_path = jsonld_hash_path(hash_id(_id))
-
-        link_name = jsonld_arch_path(
-            d,
-            pkg_arch,
-            *hash_path,
-            deploydir=deploydir,
-        )
-        try:
-            link_name.parent.mkdir(exist_ok=True, parents=True)
-            link_name.symlink_to(os.path.relpath(dest, link_name.parent))
-        except:
-            target = link_name.readlink()
-            bb.warn(
-                f"Unable to link {_id} in {dest} as {link_name}. Already points to {target}"
-            )
-            raise
-
+        make_jsonld_link(d, dest, *hash_path, deploydir)
         return hash_path[-1]
 
     objset.add_aliases()
@@ -1153,6 +1157,14 @@ def write_recipe_jsonld_doc(
         # It is really helpful for debugging if the JSON document is written
         # out, so always do that even if there is an error making the links
         write_jsonld_doc(d, objset, dest)
+
+    if create_task_link:
+        pn = d.getVar("PN")
+        current_task = "do_" + d.getVar("BB_CURRENTTASK")
+
+        make_jsonld_link(d, dest, "by-task", f"{pn}:{current_task}", deploydir)
+
+    return dest
 
 
 def find_root_obj_in_jsonld(d, subdir, fn_name, obj_type, **attr_filter):
