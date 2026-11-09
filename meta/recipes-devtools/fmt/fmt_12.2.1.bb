@@ -5,12 +5,12 @@ LICENSE = "MIT WITH fmt-exception"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=6ec080902ed8f82f5a97ed13e8042634 \
                     file://doc/LICENSE-exception;md5=b9257785fc4f3803a4b71b76c1412729"
 
-SRC_URI = "git://github.com/fmtlib/fmt;branch=main;protocol=https;tag=${PV} \
+SRC_URI = "git://github.com/fmtlib/fmt;branch=12.x;protocol=https;tag=${PV} \
            file://0001-Workaround-an-ABI-issue-in-spdlog.patch \
            file://run-ptest \
            file://0001-Fix-fallback-uint128-bitwise-not-4813.patch \
            "
-SRCREV = "1be298e1bd68957e4cd352e1f676f00e07dcfb57"
+SRCREV = "208219daff58f2a7438f6931cc2ddc358acf33ef"
 
 inherit cmake ptest
 
