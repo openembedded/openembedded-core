@@ -1,6 +1,6 @@
-From dcda938b907d3b99e012b52ea1250d01fb0c8546 Mon Sep 17 00:00:00 2001
+From 970b16c3468dbdf6d4caec9363dbb19279944852 Mon Sep 17 00:00:00 2001
 From: Davide Beatrici <git@davidebeatrici.dev>
-Date: Mon, 25 Aug 2026 23:47:31 +0000
+Date: Tue, 25 Aug 2026 23:47:31 +0000
 Subject: [PATCH] Convert RPM reader into a proper format, supporting both
  stripped CPIO and SVR4
 
@@ -8,7 +8,10 @@ The filter is kept but is not appended by archive_read_support_filter_all() anym
 
 Upstream-Status: Submitted [https://github.com/libarchive/libarchive/pull/2846 commit dcda938b907d]
 
-Note: Resynced patch with upstream commit
+Note: Resynced patch with upstream commit.
+
+Note: OE-local addition on top of PR #2846: bid+init the appended payload
+filter, needed since 3.8.11 (PR #3694) defers filter init to open time.
 
 Signed-off-by: Sumanth Gavini <sumanth.gavini@windriver.com>
 Signed-off-by: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
@@ -22,16 +25,16 @@ Signed-off-by: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
  libarchive/archive_read_support_filter_all.c  |    2 +
  .../archive_read_support_filter_by_code.c     |    2 +
  libarchive/archive_read_support_format_all.c  |    1 +
- libarchive/archive_read_support_format_rpm.c  | 1126 +++++++++++++++++
+ libarchive/archive_read_support_format_rpm.c  | 1157 +++++++++++++++++
  libarchive/test/test_archive_read_support.c   |    2 +-
  .../test_read_format_cpio_svr4_bzip2_rpm.c    |    4 +-
  .../test_read_format_cpio_svr4_gzip_rpm.c     |    4 +-
  libarchive/test/test_read_format_huge_rpm.c   |   13 +-
- 14 files changed, 1154 insertions(+), 14 deletions(-)
+ 14 files changed, 1186 insertions(+), 13 deletions(-)
  create mode 100644 libarchive/archive_read_support_format_rpm.c
 
 diff --git a/Makefile.am b/Makefile.am
-index 8bc70c5..487bef3 100644
+index c171c24..0c150c0 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -212,6 +212,7 @@ libarchive_la_SOURCES= \
@@ -67,7 +70,7 @@ index ac039c1..34ba173 100644
    archive_read_support_format_warc.c
    archive_read_support_format_xar.c
 diff --git a/libarchive/archive.h b/libarchive/archive.h
-index 19b316a..f04a747 100644
+index 2c13908..64dbdaa 100644
 --- a/libarchive/archive.h
 +++ b/libarchive/archive.h
 @@ -316,7 +316,9 @@ typedef const char *archive_passphrase_callback(struct archive *,
@@ -80,7 +83,7 @@ index 19b316a..f04a747 100644
  #define	ARCHIVE_FILTER_LZIP	9
  #define	ARCHIVE_FILTER_LRZIP	10
  #define	ARCHIVE_FILTER_LZOP	11
-@@ -387,6 +389,7 @@ typedef const char *archive_passphrase_callback(struct archive *,
+@@ -389,6 +391,7 @@ typedef const char *archive_passphrase_callback(struct archive *,
  #define	ARCHIVE_FORMAT_7ZIP			0xE0000
  #define	ARCHIVE_FORMAT_WARC			0xF0000
  #define	ARCHIVE_FORMAT_RAR_V5			0x100000
@@ -88,7 +91,7 @@ index 19b316a..f04a747 100644
  
  /*
   * Codes returned by archive_read_format_capabilities().
-@@ -480,7 +483,9 @@ __LA_DECL int archive_read_support_filter_program(struct archive *,
+@@ -482,7 +485,9 @@ __LA_DECL int archive_read_support_filter_program(struct archive *,
  __LA_DECL int archive_read_support_filter_program_signature
  		(struct archive *, const char * /* cmd */,
  				    const void * /* match */, size_t);
@@ -98,7 +101,7 @@ index 19b316a..f04a747 100644
  __LA_DECL int archive_read_support_filter_uu(struct archive *);
  __LA_DECL int archive_read_support_filter_xz(struct archive *);
  __LA_DECL int archive_read_support_filter_zstd(struct archive *);
-@@ -501,6 +506,7 @@ __LA_DECL int archive_read_support_format_mtree(struct archive *);
+@@ -503,6 +508,7 @@ __LA_DECL int archive_read_support_format_mtree(struct archive *);
  __LA_DECL int archive_read_support_format_rar(struct archive *);
  __LA_DECL int archive_read_support_format_rar5(struct archive *);
  __LA_DECL int archive_read_support_format_raw(struct archive *);
@@ -149,11 +152,11 @@ index f086773..cc5c2b2 100644
  	archive_read_support_filter_lrzip(a);
  	/* Lzop decompress falls back to "lzop -d" command-line. */
 diff --git a/libarchive/archive_read_support_filter_by_code.c b/libarchive/archive_read_support_filter_by_code.c
-index 4c8b6cb..d3c7d21 100644
+index 6c18421..7a30c49 100644
 --- a/libarchive/archive_read_support_filter_by_code.c
 +++ b/libarchive/archive_read_support_filter_by_code.c
-@@ -49,8 +49,10 @@ archive_read_support_filter_by_code(struct archive *a, int filter_code)
- 		return archive_read_support_filter_xz(a);
+@@ -50,8 +50,10 @@ archive_read_support_filter_by_code(struct archive *a, int filter_code)
+ 	case ARCHIVE_FILTER_B64:
  	case ARCHIVE_FILTER_UU:
  		return archive_read_support_filter_uu(a);
 +#if ARCHIVE_VERSION_NUMBER < 4000000
@@ -180,7 +183,7 @@ new file mode 100644
 index 0000000..fe0e500
 --- /dev/null
 +++ b/libarchive/archive_read_support_format_rpm.c
-@@ -0,0 +1,1126 @@
+@@ -0,0 +1,1157 @@
 +/*-
 + * Copyright (c) 2026 Davide Beatrici
 + * All rights reserved.
@@ -520,19 +523,25 @@ index 0000000..fe0e500
 +				rpm->state = ST_HEADER;
 +			} else {
 +				enum rpm_cpio_format cpio_format;
++				int filter_appended = 0;
 +
 +				if (!rpm->compressor) {
 +					/* No compression. */
 +				} else if (strcmp(rpm->compressor, "zstd") == 0) {
 +					r = archive_read_append_filter(&a->archive, ARCHIVE_FILTER_ZSTD);
++					filter_appended = 1;
 +				} else if (strcmp(rpm->compressor, "xz") == 0) {
-+					archive_read_append_filter(&a->archive, ARCHIVE_FILTER_XZ);
++					r = archive_read_append_filter(&a->archive, ARCHIVE_FILTER_XZ);
++					filter_appended = 1;
 +				} else if (strcmp(rpm->compressor, "gzip") == 0) {
-+					archive_read_append_filter(&a->archive, ARCHIVE_FILTER_GZIP);
++					r = archive_read_append_filter(&a->archive, ARCHIVE_FILTER_GZIP);
++					filter_appended = 1;
 +				} else if (strcmp(rpm->compressor, "bzip2") == 0) {
-+					archive_read_append_filter(&a->archive, ARCHIVE_FILTER_BZIP2);
++					r = archive_read_append_filter(&a->archive, ARCHIVE_FILTER_BZIP2);
++					filter_appended = 1;
 +				} else if (strcmp(rpm->compressor, "lzma") == 0) {
-+					archive_read_append_filter(&a->archive, ARCHIVE_FILTER_LZMA);
++					r = archive_read_append_filter(&a->archive, ARCHIVE_FILTER_LZMA);
++					filter_appended = 1;
 +				} else {
 +					archive_set_error(&a->archive,
 +						ARCHIVE_ERRNO_FILE_FORMAT,
@@ -544,6 +553,31 @@ index 0000000..fe0e500
 +					archive_set_error(&a->archive, r, "Cannot append %s filter",
 +						rpm->compressor);
 +					return r;
++				}
++
++				/*
++				 * Since libarchive 3.8.11 (upstream PR #3694),
++				 * archive_read_append_filter() no longer bids and
++				 * initializes the appended filter itself; that is
++				 * deferred to archive_read_open1(). As the RPM format
++				 * reader appends its decompression filter after the
++				 * archive is already open, bid and initialize the newly
++				 * added filter here, mirroring archive_read_open1().
++				 */
++				if (filter_appended) {
++					struct archive_read_filter_bidder *bidder =
++						a->filter->bidder;
++
++					r = (bidder->vtable->bid)(bidder, a->filter->upstream);
++					if (r < 0) {
++						archive_set_error(&a->archive,
++							ARCHIVE_ERRNO_FILE_FORMAT,
++							"Cannot bid %s filter", rpm->compressor);
++						return ARCHIVE_FATAL;
++					}
++					r = (bidder->vtable->init)(a->filter);
++					if (r != ARCHIVE_OK)
++						return ARCHIVE_FATAL;
 +				}
 +
 +				cpio_format = rpm_get_cpio_format(a);

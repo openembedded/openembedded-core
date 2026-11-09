@@ -37,7 +37,7 @@ SRC_URI = "https://libarchive.org/downloads/libarchive-${PV}.tar.gz \
            "
 UPSTREAM_CHECK_URI = "https://www.libarchive.org/"
 
-SRC_URI[sha256sum] = "a1bffbe5152cfe869751179e7b16648c87c461cb8c46eee75062efbe164cc57c"
+SRC_URI[sha256sum] = "900fe9fc7237c2b04f090f3c3648de8fe597525771f5035016537ce2d667d12b"
 
 inherit autotools update-alternatives pkgconfig ptest
 
