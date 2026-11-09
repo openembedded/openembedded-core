@@ -1,4 +1,4 @@
-From 40eaa1cd3e6609cf92f7e3caa70dced21a90f431 Mon Sep 17 00:00:00 2001
+From 09ed10895efd65740601a3f4d6f22484b722262c Mon Sep 17 00:00:00 2001
 From: zhouming <b42586@freescale.com>
 Date: Wed, 14 May 2014 10:16:20 +0800
 Subject: [PATCH] ENGR00312515: get caps from src pad when query caps
