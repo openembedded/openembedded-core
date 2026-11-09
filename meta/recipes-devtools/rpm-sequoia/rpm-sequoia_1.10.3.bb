@@ -10,13 +10,16 @@ LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=f0ff5ff7747cf7d394079c6ae87f5f0c"
 
 DEPENDS = "openssl"
 
+# openssl-sys now runs bindgen, which needs libclang and its headers.
+DEPENDS += "clang-native"
+
 inherit pkgconfig rust cargo cargo-update-recipe-crates ptest-cargo
 
 SRC_URI = "git://github.com/rpm-software-management/rpm-sequoia.git;protocol=https;branch=main;tag=v${PV} \
            file://0001-Use-optional-env-vars-to-force-runtime-paths-in-test.patch \
            file://run-ptest \
 "
-SRCREV = "401dbd9ae2eca087a82b7c15c0379f878aea02da"
+SRCREV = "8e0b76e1e75c83d7d8e6f38976b0c83b52ebe7ee"
 
 require ${BPN}-crates.inc
 
@@ -27,6 +30,10 @@ do_compile:prepend () {
 	# rpm-sequoia.pc is generated in the source directory
 	# but the target directory does not exist there.
 	mkdir -p ${S}/target/${BUILD_DIR}
+
+	# openssl-sys runs bindgen, which needs the native clang (like bindgen-cli).
+	export CLANG_PATH="${STAGING_BINDIR_NATIVE}/clang"
+	export LIBCLANG_PATH="${STAGING_LIBDIR_NATIVE}"
 
 	# From rpm-sequoia's README.md:
 	#
