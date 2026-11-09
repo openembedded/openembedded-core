@@ -12,14 +12,13 @@ PROVIDES = "udev"
 SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/${BP}.tar.gz \
            file://init \
            file://local.rules \
-           file://0001-udevd-keep-a-copy-of-the-event-devnode.patch \
            "
 
-SRC_URI[sha256sum] = "eb69809fc0d1187f2463ab2149c53aa9f42a78e59f14ebea68eae6cb6b4fc1c3"
+SRC_URI[sha256sum] = "8fba6e4f49ea4b1938828a3c2e7cc48874816c68621386e527076b6477f5d6ef"
 
 GITHUB_BASE_URI = "https://github.com/eudev-project/eudev/releases"
 
-inherit autotools update-rc.d pkgconfig features_check manpages github-releases
+inherit autotools bash-completion update-rc.d pkgconfig features_check manpages github-releases
 
 CONFLICT_DISTRO_FEATURES = "systemd"
 
@@ -28,6 +27,12 @@ EXTRA_OECONF = " \
     --with-rootlibdir=${base_libdir} \
     --with-rootlibexecdir=${nonarch_base_libdir}/udev \
     --with-rootprefix= \
+    --with-nobody-user=nobody \
+    --with-nobody-group=nogroup \
+    --with-system-uid-max=999 \
+    --with-system-gid-max=999 \
+    --disable-systemd-hwdb \
+    --with-net-ifnames-default=${@bb.utils.contains('DISTRO_FEATURES', 'pni-names', 'yes', 'no', d)} \
 "
 
 PACKAGECONFIG ?= "blkid hwdb kmod \
@@ -48,11 +53,6 @@ do_install:append() {
 
 	install -d ${D}${sysconfdir}/udev/rules.d
 	install -m 0644 ${UNPACKDIR}/local.rules ${D}${sysconfdir}/udev/rules.d/local.rules
-
-	# Use classic network interface naming scheme if no 'pni-names' distro feature
-	if ${@bb.utils.contains('DISTRO_FEATURES', 'pni-names', 'false', 'true', d)}; then
-		touch ${D}${sysconfdir}/udev/rules.d/80-net-name-slot.rules
-	fi
 }
 
 do_install:prepend:class-target () {
@@ -64,11 +64,13 @@ do_install:prepend:class-target () {
 INITSCRIPT_NAME = "udev"
 INITSCRIPT_PARAMS = "start 04 S ."
 
-PACKAGE_BEFORE_PN = "libudev ${PN}-hwdb"
+PACKAGE_BEFORE_PN += "libudev ${PN}-hwdb ${PN}-zsh-completion"
 
 FILES:${PN} += "${nonarch_base_libdir}/udev"
 FILES:libudev = "${base_libdir}/libudev.so.*"
-FILES:${PN}-hwdb = "${sysconfdir}/udev/hwdb.d"
+FILES:${PN}-hwdb = "${sysconfdir}/udev/hwdb.d ${nonarch_base_libdir}/udev/hwdb.d"
+FILES:${PN}-zsh-completion = "${datadir}/zsh"
+
 
 RDEPENDS:${PN}-hwdb += "eudev"
 RDEPENDS:${PN} += "kmod"
