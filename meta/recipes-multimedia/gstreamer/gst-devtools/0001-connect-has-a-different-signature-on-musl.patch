@@ -1,4 +1,4 @@
-From c02d717c6796b797b6da66f022b6a6604d03e510 Mon Sep 17 00:00:00 2001
+From b40b6d73c2ec97a8e6a7ebaa54446be204927b64 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Sun, 9 Sep 2018 17:38:10 -0700
 Subject: [PATCH] connect has a different signature on musl
