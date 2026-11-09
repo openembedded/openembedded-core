@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=25a3927bff3ee4f5b21bcb0ed3fcd6bb"
 
 SRC_URI = "git://github.com/fedora-modularity/libmodulemd;protocol=https;branch=main;tag=${PV}"
 
-SRCREV = "a8f1c5b1243a8e844a276094007a2bbf8a13b40f"
+SRCREV = "2f75d47da15a4e4847c3deeb3101b58ad67a0723"
 
 inherit meson gobject-introspection pkgconfig manpages
 
