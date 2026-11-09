@@ -10,7 +10,7 @@ PNREAL = "gst-rtsp-server"
 
 SRC_URI = "https://gstreamer.freedesktop.org/src/${PNREAL}/${PNREAL}-${PV}.tar.xz"
 
-SRC_URI[sha256sum] = "59181ed21a5bc0533fb4f77cb7bc6005d89365e834b0c1294afb9ab5f7d96fe0"
+SRC_URI[sha256sum] = "b87ed564d857a226a3135bd2c42eae7b40eb64031cb9cbce124722af92cc8b9d"
 
 S = "${UNPACKDIR}/${PNREAL}-${PV}"
 
