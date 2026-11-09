@@ -1,4 +1,4 @@
-From c867736716d52af0d27a540e51426ccd4b4576cf Mon Sep 17 00:00:00 2001
+From dca05b750039f9b80083d4bfc0dd2f379bfaa51e Mon Sep 17 00:00:00 2001
 From: Andrey Zhizhikin <andrey.z@gmail.com>
 Date: Mon, 27 Jan 2020 10:22:35 +0000
 Subject: [PATCH] opencv: resolve missing opencv data dir in yocto build

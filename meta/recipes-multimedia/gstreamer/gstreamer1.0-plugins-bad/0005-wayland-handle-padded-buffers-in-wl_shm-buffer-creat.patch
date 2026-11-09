@@ -1,4 +1,4 @@
-From 05a5f586e0b216ad11bf1b37ed3d5f6633798d61 Mon Sep 17 00:00:00 2001
+From c83922f6cd39bee9bba2c1a54e478e36f05d8dd0 Mon Sep 17 00:00:00 2001
 From: Tushar Darote <tdarote@qti.qualcomm.com>
 Date: Mon, 8 Jun 2026 18:05:51 +0530
 Subject: [PATCH] wayland: handle padded buffers in wl_shm buffer creation

@@ -1,4 +1,4 @@
-From 1bc330b8c29888178d736b13744f004072be7558 Mon Sep 17 00:00:00 2001
+From b3bc02f6f6d6dfc4623f9065acdaae729363f9d2 Mon Sep 17 00:00:00 2001
 From: Andre McCurdy <armccurdy@gmail.com>
 Date: Wed, 3 Feb 2016 18:05:41 -0800
 Subject: [PATCH] avoid including <sys/poll.h> directly
