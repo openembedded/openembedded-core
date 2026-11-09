@@ -81,6 +81,8 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
            file://0001-avdtp-Return-correct-error-when-SEP-is-inuse.patch \
            file://0001-gobex-Fix-ABORT-response-being-discarded.patch \
            file://0001-obexd-pbap-Fix-u128_to_string-skipping-data-4.patch \
+           file://CVE-2026-19774_p1.patch \
+           file://CVE-2026-19774_p2.patch \
            "
 S = "${UNPACKDIR}/bluez-${PV}"
 
