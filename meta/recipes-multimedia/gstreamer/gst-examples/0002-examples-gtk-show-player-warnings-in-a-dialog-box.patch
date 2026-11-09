@@ -1,4 +1,4 @@
-From 1ef021f661d6343eb2be7dfbd12f4033bb2b5cc7 Mon Sep 17 00:00:00 2001
+From 98ac96c420e22a226ca5ba4486ae89fcb35ddf87 Mon Sep 17 00:00:00 2001
 From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 Date: Tue, 25 Aug 2026 11:03:34 +0200
 Subject: [PATCH] examples: gtk: show player warnings in a dialog box
