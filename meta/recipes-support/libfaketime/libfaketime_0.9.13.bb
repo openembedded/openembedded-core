@@ -11,6 +11,9 @@ SRC_URI = "git://github.com/wolfcw/libfaketime.git;branch=master;tag=v${PV};prot
            file://0001-Mark-write-only-real_-pointers-as-unused.patch \
 "
 
+# The version script names the symbols that are defined with .symver
+LDFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', ' -Wl,--undefined-version', '', d)}"
+
 do_install () {
     install -d ${D}${libdir}/faketime
     oe_libinstall -C src libfaketime ${D}${libdir}/faketime
