@@ -100,6 +100,18 @@ do_configure:prepend() {
   ln -srf ${S}/clang-tools-extra ${S}/clang/tools/extra
 }
 
+# The tests run on the target, so lit must use the target python.
+clang_lit_target_python() {
+    sed -i 's|^config.python_executable = .*|config.python_executable = "${bindir}/python3"|' \
+        ${B}/test/lit.site.cfg.py
+}
+
+do_configure:append:class-target() {
+    if [ "${CLANG_ENABLE_TESTSUITE}" = "1" ]; then
+        clang_lit_target_python
+    fi
+}
+
 do_install:append() {
     oe_multilib_header clang/Config/config.h
 }
