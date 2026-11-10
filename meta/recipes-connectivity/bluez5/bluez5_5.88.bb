@@ -2,7 +2,7 @@ require bluez5.inc
 
 LDFLAGS += " ${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', '-Wl,-z,nostart-stop-gc', '', d)}"
 
-SRC_URI[sha256sum] = "26bdcf2cebd7310c6f598850606b037ef0c515fe6608ebc54d22c50c4c32b35f"
+SRC_URI[sha256sum] = "6952c39eb5f8b0ee712cc50ab3bcff03be17c410dd97ca640f4849d9a1653ba3"
 
 CVE_STATUS[CVE-2020-24490] = "cpe-incorrect: This issue has kernel fixes rather than bluez fixes"
 CVE_STATUS[CVE-2020-12351] = "cpe-incorrect: This issue has kernel fixes rather than bluez fixes"
@@ -12,7 +12,6 @@ CVE_STATUS[CVE-2026-19774] = "fixed-version: Fixed from version 5.87"
 # noinst programs in Makefile.tools that are conditional on READLINE
 # support
 NOINST_TOOLS_READLINE ?= " \
-    ${@bb.utils.contains('PACKAGECONFIG', 'deprecated', 'attrib/gatttool', '', d)} \
     tools/obex-client-tool \
     tools/obex-server-tool \
     tools/bluetooth-player \
