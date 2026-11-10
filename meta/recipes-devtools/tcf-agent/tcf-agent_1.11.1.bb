@@ -6,14 +6,13 @@ BUGTRACKER = "https://bugs.eclipse.org/bugs/"
 LICENSE = "BSD-3-Clause OR EPL-1.0"
 LIC_FILES_CHKSUM = "file://edl-v10.html;md5=522a390a83dc186513f0500543ad3679"
 
-SRCREV = "3051a4806ac4b041ec7c49ffc6d07f0014b8480c"
+SRCREV = "8e23af30895e085e3e6a9d694f2c5b521d844742"
 
 UPSTREAM_CHECK_GITTAGREGEX = "(?P<pver>(\d+(\.\d+)+))"
-SRC_URI = "git://gitlab.eclipse.org/eclipse/tcf/tcf.agent.git;protocol=https;branch=master;tag=${PV} \
-           file://ldflags.patch \
+SRC_URI = "git://gitlab.eclipse.org/eclipse/tcf/tcf.agent.git;protocol=https;branch=1.11;tag=${PV} \
            file://tcf-agent.init \
            file://tcf-agent.service \
-          "
+           "
 
 DEPENDS = "util-linux openssl"
 RDEPENDS:${PN} = "bash"
@@ -31,7 +30,7 @@ INITSCRIPT_PARAMS = "start 99 3 5 . stop 20 0 1 2 6 ."
 MAKE_ARCH = "`echo ${TARGET_ARCH} | sed s,i.86,i686, | sed s,aarch64.*,a64, | sed s,armeb,arm,`"
 MAKE_OS = "`echo ${TARGET_OS} | sed s,^linux.*,GNU/Linux,`"
 
-EXTRA_OEMAKE = "MACHINE=${MAKE_ARCH} OPSYS=${MAKE_OS} 'CC=${CC}' 'AR=${AR}'"
+EXTRA_OEMAKE = "MACHINE=${MAKE_ARCH} OPSYS=${MAKE_OS} 'CC=${CC}' 'AR=${AR}' 'LINK_FLAGS=${LDFLAGS} ${CFLAGS}'"
 
 LCL_STOP_SERVICES = "-DSERVICE_RunControl=0 -DSERVICE_Breakpoints=0 \
     -DSERVICE_Memory=0 -DSERVICE_Registers=0 -DSERVICE_MemoryMap=0 \
