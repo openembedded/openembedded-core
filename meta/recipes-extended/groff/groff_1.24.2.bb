@@ -2,8 +2,8 @@ SUMMARY = "GNU Troff software"
 DESCRIPTION = "The groff (GNU troff) software is a typesetting package which reads plain text mixed with \
 formatting commands and produces formatted output."
 SECTION = "base"
-HOMEPAGE = "http://www.gnu.org/software/groff/"
-LICENSE = "GPL-3.0-only"
+HOMEPAGE = "https://www.gnu.org/software/groff/"
+LICENSE = "GPL-3.0-or-later"
 
 LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464"
 
