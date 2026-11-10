@@ -13,7 +13,9 @@ inherit gettext gnomebase upstream-version-is-even gobject-introspection gi-docg
 
 SRC_URI[archive.sha256sum] = "5013dcef9136f6f861e6529fca578af50c1f52a39219027fb5aff652d1371a04"
 
-SRC_URI += "file://run-ptest"
+SRC_URI += "file://run-ptest \
+            file://0001-tests-ssl-test-Accept-partial-input-when-the-client-.patch \
+            "
 
 PROVIDES = "libsoup-3.0"
 
