@@ -538,6 +538,7 @@ PACKAGES =+ "${PN}-amphion-vpu-license ${PN}-amphion-vpu \
              ${PN}-rtl-license ${PN}-rtl8188 ${PN}-rtl8192cu ${PN}-rtl8192ce ${PN}-rtl8192su \
              ${PN}-rtl8261c ${PN}-rtl8261d ${PN}-rtl8723 ${PN}-rtl8821 \
              ${PN}-rtl8761 \
+             ${PN}-rtl8125 \
              ${PN}-rtl8168 \
              ${PN}-rtl8822 \
              ${PN}-rtl8192 ${PN}-rtl8710 ${PN}-rtl8812 \
@@ -1689,6 +1690,7 @@ LICENSE:${PN}-rtl8703 = "LicenseRef-Firmware-rtlwifi-firmware"
 LICENSE:${PN}-rtl8814 = "LicenseRef-Firmware-rtlwifi-firmware"
 LICENSE:${PN}-rtl-license = "LicenseRef-Firmware-rtlwifi-firmware"
 LICENSE:${PN}-rtl-nic = "LicenseRef-Firmware-WHENCE"
+LICENSE:${PN}-rtl8125 = "LicenseRef-Firmware-WHENCE"
 LICENSE:${PN}-rtl8168 = "LicenseRef-Firmware-WHENCE"
 
 FILES:${PN}-rtl-license = " \
@@ -1725,6 +1727,9 @@ FILES:${PN}-rtl8821 = " \
 "
 FILES:${PN}-rtl8761 = " \
   ${firmwaredir}/rtl_bt/rtl8761*.bin* \
+"
+FILES:${PN}-rtl8125 = " \
+  ${firmwaredir}/rtl_nic/rtl8125*.fw* \
 "
 FILES:${PN}-rtl8168 = " \
   ${firmwaredir}/rtl_nic/rtl8168*.fw* \
@@ -1781,6 +1786,7 @@ RDEPENDS:${PN}-rtl8852 += "${PN}-rtl-license"
 RDEPENDS:${PN}-rtl8922 += "${PN}-rtl-license"
 RDEPENDS:${PN}-rtl8703 += "${PN}-rtl-license"
 RDEPENDS:${PN}-rtl8814 += "${PN}-rtl-license"
+RDEPENDS:${PN}-rtl8125 += "${PN}-whence-license"
 RDEPENDS:${PN}-rtl8168 += "${PN}-whence-license"
 RDEPENDS:${PN}-rtl-nic += "${PN}-whence-license"
 
