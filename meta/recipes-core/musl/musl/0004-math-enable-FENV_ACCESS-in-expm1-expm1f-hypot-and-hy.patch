@@ -1,0 +1,73 @@
+From 5009e7cdcd11c585f2bdebacf2fb4f8540508efe Mon Sep 17 00:00:00 2001
+From: Khem Raj <khem.raj@oss.qualcomm.com>
+Date: Tue, 10 Nov 2026 18:36:03 -0800
+Subject: [PATCH] math: enable FENV_ACCESS in expm1, expm1f, hypot and hypotf
+
+These functions rely on floating point exception flags being raised
+exactly as the C code would raise them, but without FENV_ACCESS the
+compiler may assume the flags are never inspected. Clang does, and
+speculates floating point operations across branches. Built with
+clang 23 for aarch64 (-mcpu=cortex-a57), expm1() computes both
+y*2.0*0x1p1023 and y*twopk for the k < 0 || k > 56 case and picks
+one with fcsel, so the unused multiply raises a spurious OVERFLOW.
+libc-test's math/expm1, expm1f, hypot, hypotf and sinh (via expm1)
+fail because of that.
+
+GCC does not speculate these operations, so GCC builds are unchanged.
+
+Upstream-Status: Submitted [https://www.openwall.com/lists/musl/2026/11/11/3]
+Signed-off-by: Khem Raj <khem.raj@oss.qualcomm.com>
+---
+ src/math/expm1.c  | 1 +
+ src/math/expm1f.c | 1 +
+ src/math/hypot.c  | 1 +
+ src/math/hypotf.c | 1 +
+ 4 files changed, 4 insertions(+)
+
+diff --git a/src/math/expm1.c b/src/math/expm1.c
+index ac1e61e..81d0c80 100644
+--- a/src/math/expm1.c
++++ b/src/math/expm1.c
+@@ -105,6 +105,7 @@
+  */
+ 
+ #include "libm.h"
++#pragma STDC FENV_ACCESS ON
+ 
+ static const double
+ o_threshold = 7.09782712893383973096e+02, /* 0x40862E42, 0xFEFA39EF */
+diff --git a/src/math/expm1f.c b/src/math/expm1f.c
+index 09a41af..8c7aa18 100644
+--- a/src/math/expm1f.c
++++ b/src/math/expm1f.c
+@@ -14,6 +14,7 @@
+  */
+ 
+ #include "libm.h"
++#pragma STDC FENV_ACCESS ON
+ 
+ static const float
+ ln2_hi      = 6.9313812256e-01, /* 0x3f317180 */
+diff --git a/src/math/hypot.c b/src/math/hypot.c
+index 6071bf1..0efc546 100644
+--- a/src/math/hypot.c
++++ b/src/math/hypot.c
+@@ -1,6 +1,7 @@
+ #include <math.h>
+ #include <stdint.h>
+ #include <float.h>
++#pragma STDC FENV_ACCESS ON
+ 
+ #if FLT_EVAL_METHOD > 1U && LDBL_MANT_DIG == 64
+ #define SPLIT (0x1p32 + 1)
+diff --git a/src/math/hypotf.c b/src/math/hypotf.c
+index 2fc214b..91fc086 100644
+--- a/src/math/hypotf.c
++++ b/src/math/hypotf.c
+@@ -1,5 +1,6 @@
+ #include <math.h>
+ #include <stdint.h>
++#pragma STDC FENV_ACCESS ON
+ 
+ float hypotf(float x, float y)
+ {
