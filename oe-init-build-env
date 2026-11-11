@@ -14,9 +14,9 @@
 # when being sourced.  To workaround the shell limitation use "set <builddir>"
 # prior to sourcing this script.
 #
-if [ -n "$BASH_SOURCE" ]; then
+if [ -n "${BASH_SOURCE:-}" ]; then
     THIS_SCRIPT=$BASH_SOURCE
-elif [ -n "$ZSH_NAME" ]; then
+elif [ -n "${ZSH_NAME:-}" ]; then
     THIS_SCRIPT=$0
 else
     THIS_SCRIPT="$(pwd)/oe-init-build-env"
@@ -26,16 +26,16 @@ else
         exit 1
     fi
 fi
-if [ -n "$BBSERVER" ]; then
+if [ -n "${BBSERVER:-}" ]; then
     unset BBSERVER
 fi
 
-if [ -z "$ZSH_NAME" ] && [ "$0" = "$THIS_SCRIPT" ]; then
+if [ -z "${ZSH_NAME:-}" ] && [ "$0" = "$THIS_SCRIPT" ]; then
     echo "Error: This script needs to be sourced. Please run as '. $THIS_SCRIPT'" >&2
     exit 1
 fi
 
-if [ -z "$OEROOT" ]; then
+if [ -z "${OEROOT:-}" ]; then
     OEROOT=$(dirname "$THIS_SCRIPT")
     OEROOT=$(readlink -f "$OEROOT")
 fi
@@ -43,12 +43,12 @@ unset THIS_SCRIPT
 
 export OEROOT
 . "$OEROOT"/scripts/oe-buildenv-internal &&
-    TEMPLATECONF="$TEMPLATECONF" "$OEROOT"/scripts/oe-setup-builddir || {
+    TEMPLATECONF="${TEMPLATECONF:-}" "$OEROOT"/scripts/oe-setup-builddir || {
     unset OEROOT
     return 1
 }
 
 unset OEROOT
 
-[ -z "$BUILDDIR" ] || cd "$BUILDDIR"
+[ -z "${BUILDDIR:-}" ] || cd "$BUILDDIR"
 

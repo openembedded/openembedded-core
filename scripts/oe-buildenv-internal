@@ -19,12 +19,12 @@ if ! $(return >/dev/null 2>&1) ; then
 fi
 
 # It is assumed OEROOT is already defined when this is called
-if [ -z "$OEROOT" ]; then
+if [ -z "${OEROOT:-}" ]; then
     echo >&2 "Error: OEROOT is not defined!"
     return 1
 fi
 
-if [ -z "$OE_SKIP_SDK_CHECK" ] && [ -n "$OECORE_SDK_VERSION" ]; then
+if [ -z "${OE_SKIP_SDK_CHECK:-}" ] && [ -n "${OECORE_SDK_VERSION:-}" ]; then
     echo >&2 "Error: The OE SDK/ADT was detected as already being present in this shell environment. Please use a clean shell when sourcing this environment script."
     return 1
 fi
@@ -39,8 +39,8 @@ if [ "$py_v39_check" != "True" ]; then
 fi
 unset py_v39_check
 
-if [ -z "$BDIR" ]; then
-    if [ -z "$1" ]; then
+if [ -z "${BDIR:-}" ]; then
+    if [ -z "${1:-}" ]; then
         BDIR="build"
     else
         BDIR="$1"
@@ -61,7 +61,7 @@ if [ -z "$BDIR" ]; then
             return 1
         fi
     fi
-    if [ -n "$2" ]; then
+    if [ -n "${2:-}" ]; then
         BITBAKEDIR="$2"
     fi
 fi
@@ -72,9 +72,9 @@ else
 fi
 unset BDIR
 
-if [ -z "$BITBAKEDIR" ]; then
-    BITBAKEDIR="$OEROOT/bitbake$BBEXTRA"
-    test -d "$BITBAKEDIR" || BITBAKEDIR="$OEROOT/../bitbake$BBEXTRA"
+if [ -z "${BITBAKEDIR:-}" ]; then
+    BITBAKEDIR="$OEROOT/bitbake${BBEXTRA:-}"
+    test -d "$BITBAKEDIR" || BITBAKEDIR="$OEROOT/../bitbake${BBEXTRA:-}"
 fi
 
 BITBAKEDIR=$(readlink -f "$BITBAKEDIR")
@@ -89,11 +89,11 @@ if [ ! -d "$BITBAKEDIR" ]; then
 fi
 
 # Add BitBake's library to PYTHONPATH
-PYTHONPATH=$BITBAKEDIR/lib:$PYTHONPATH
+PYTHONPATH=$BITBAKEDIR/lib:${PYTHONPATH:-}
 export PYTHONPATH
 
 # Remove any paths added by sourcing this script before
-[ -n "$OE_ADDED_PATHS" ] && PATH=$(echo $PATH | sed -e "s#$OE_ADDED_PATHS##") ||
+[ -n "${OE_ADDED_PATHS:-}" ] && PATH=$(echo $PATH | sed -e "s#$OE_ADDED_PATHS##") ||
     PATH=$(echo $PATH | sed -e "s#$OEROOT/scripts:$BITBAKEDIR/bin:##")
 
 # Make sure our paths are at the beginning of $PATH
@@ -114,6 +114,6 @@ SDKMACHINE BB_NUMBER_THREADS BB_NO_NETWORK PARALLEL_MAKE GIT_PROXY_COMMAND \
 SOCKS5_PASSWD SOCKS5_USER SCREENDIR STAMPS_DIR BBPATH_EXTRA BB_SETSCENE_ENFORCE \
 BB_LOGCONFIG"
 
-BB_ENV_PASSTHROUGH_ADDITIONS="$(echo $BB_ENV_PASSTHROUGH_ADDITIONS $BB_ENV_PASSTHROUGH_ADDITIONS_OE | tr ' ' '\n' | LC_ALL=C sort --unique | tr '\n' ' ')"
+BB_ENV_PASSTHROUGH_ADDITIONS="$(echo ${BB_ENV_PASSTHROUGH_ADDITIONS:-} $BB_ENV_PASSTHROUGH_ADDITIONS_OE | tr ' ' '\n' | LC_ALL=C sort --unique | tr '\n' ' ')"
 
 export BB_ENV_PASSTHROUGH_ADDITIONS
