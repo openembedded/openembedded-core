@@ -10,13 +10,11 @@ LIC_FILES_CHKSUM = "file://lib/LICENSE;md5=5cd5f851b52ec832b10eedb3f01f885a \
 
 PE = "1"
 
-SRCREV = "ebb370ca83af193212df4dcbadcc5d87bc0de2f0"
+SRCREV = "aa4647fad575d01a874aaaadcdbe8e6a40e072f5"
 
 SRC_URI = "git://github.com/lz4/lz4.git;branch=release;protocol=https;tag=v${PV} \
-           file://reproducibility.patch \
            file://run-ptest \
-           file://fix-null-error-handling.patch \
-"
+           "
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>.*)"
 
 inherit ptest
@@ -31,8 +29,6 @@ do_install() {
 
 BBCLASSEXTEND = "native nativesdk"
 
-RDEPENDS:${PN}-ptest += "bash"
-
 do_compile_ptest() {
         oe_runmake -C ${B}/tests/
 }
@@ -40,7 +36,7 @@ do_compile_ptest() {
 do_install_ptest() {
 	install -d ${D}${PTEST_PATH}/tests/
 	install --mode=755 ${B}/tests/frametest ${D}${PTEST_PATH}/tests/
+	install --mode=755 ${B}/tests/unittest ${D}${PTEST_PATH}/tests/
 	sed -i "s#@PTEST_PATH@#${PTEST_PATH}#g" ${D}${PTEST_PATH}/run-ptest
-
 }
 
