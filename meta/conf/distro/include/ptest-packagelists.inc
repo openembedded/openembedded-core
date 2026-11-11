@@ -66,6 +66,7 @@ PTESTS_FAST = "\
     libxmlb \
     libxslt \
     libyaml \
+    log4cplus \
     logrotate \
     lua \
     lzo \
