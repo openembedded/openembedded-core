@@ -22,7 +22,7 @@ SRC_URI = "https://www.freedesktop.org/software/appstream/releases/AppStream-${P
            file://0002-Do-not-build-qt-tests.patch \
            file://0003-Fix-PACKAGE_PREFIX_DIR-in-qt-cmake-AppStreamQtConfig.patch \
            "
-SRC_URI[sha256sum] = "7df664fd3ad3b1640c6a0ff77fa84f9fabe264111bf1fe8f5df3444d6d4caaca"
+SRC_URI[sha256sum] = "8daa01a4d66c73f036aa92af9bf76abfe8408eaa76fcda6ca54fa8ef5b93ed17"
 
 S = "${UNPACKDIR}/AppStream-${PV}"
 
