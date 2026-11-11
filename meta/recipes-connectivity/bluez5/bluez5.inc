@@ -83,6 +83,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/bluetooth/bluez-${PV}.tar.xz \
            file://0001-obexd-pbap-Fix-u128_to_string-skipping-data-4.patch \
            file://CVE-2026-19774_p1.patch \
            file://CVE-2026-19774_p2.patch \
+           file://0001-avrcp-Abort-continuing-response-on-fragmented-CT-rep.patch \
            "
 S = "${UNPACKDIR}/bluez-${PV}"
 

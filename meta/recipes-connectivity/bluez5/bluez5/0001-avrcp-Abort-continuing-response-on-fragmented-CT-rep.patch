@@ -1,0 +1,62 @@
+From 41a00c93baa48cbd63b182b853e93a946962cada Mon Sep 17 00:00:00 2001
+From: Simon Mikuda <simon.mikuda@streamunlimited.com>
+Date: Tue, 9 Jun 2026 23:26:56 +0200
+Subject: [PATCH] avrcp: Abort continuing response on fragmented CT replies
+
+Send AbortContinuingResponse when a Get Element Attributes reply
+arrives fragmented, as the CT side does not reassemble fragments.
+
+Fixes PTS test AVRCP/CT/RCR/BV-03-C
+
+Upstream-Status: Backport [https://github.com/bluez/bluez/commit/249e2bedfacf51fc6c89f43a0adb9a12d761c2b7]
+Signed-off-by: Shuai Zhang <shuai.zhang@oss.qualcomm.com>
+---
+ profiles/audio/avrcp.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/profiles/audio/avrcp.c b/profiles/audio/avrcp.c
+index 326dfda..557ed97 100644
+--- a/profiles/audio/avrcp.c
++++ b/profiles/audio/avrcp.c
+@@ -2466,6 +2466,24 @@ static void avrcp_parse_attribute_list(struct avrcp_player *player,
+ 	}
+ }
+ 
++static void avrcp_abort_continuing(struct avrcp *session, uint8_t pdu_id)
++{
++	uint8_t buf[AVRCP_HEADER_LENGTH + 1];
++	struct avrcp_header *pdu = (void *) buf;
++
++	memset(buf, 0, sizeof(buf));
++
++	set_company_id(pdu->company_id, IEEEID_BTSIG);
++	pdu->pdu_id = AVRCP_ABORT_CONTINUING;
++	pdu->packet_type = AVRCP_PACKET_TYPE_SINGLE;
++	pdu->params_len = cpu_to_be16(1);
++	pdu->params[0] = pdu_id;
++
++	avctp_send_vendordep_req(session->conn, AVC_CTYPE_CONTROL,
++					AVC_SUBUNIT_PANEL, buf, sizeof(buf),
++					NULL, session);
++}
++
+ static gboolean avrcp_get_element_attributes_rsp(struct avctp *conn,
+ 						uint8_t code, uint8_t subunit,
+ 						uint8_t transaction,
+@@ -2483,6 +2501,13 @@ static gboolean avrcp_get_element_attributes_rsp(struct avctp *conn,
+ 	if (code == AVC_CTYPE_REJECTED)
+ 		return FALSE;
+ 
++	/* Abort fragmented responses as reassembly is not supported */
++	if (pdu->packet_type == AVRCP_PACKET_TYPE_START ||
++			pdu->packet_type == AVRCP_PACKET_TYPE_CONTINUING) {
++		avrcp_abort_continuing(session, AVRCP_GET_ELEMENT_ATTRIBUTES);
++		return FALSE;
++	}
++
+ 	count = pdu->params[0];
+ 
+ 	if (be16_to_cpu(pdu->params_len) - 1 < count * 8) {
+-- 
+2.34.1
+
