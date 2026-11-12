@@ -33,6 +33,12 @@ SRCREV = "71b640e686964efb27cb708f4457ffaed183c319"
 GITHUB_BASE_URI = "https://github.com/avahi/avahi/releases/"
 
 CVE_STATUS[CVE-2021-26720] = "not-applicable-platform: Issue only affects Debian/SUSE"
+CVE_STATUS_GROUPS += "CVE_STATUS_RC"
+CVE_STATUS_RC = " \
+    CVE-2023-38469 CVE-2023-38470 CVE-2023-38471 CVE-2023-38472 CVE-2023-38473 \
+    CVE-2025-68276 CVE-2025-68468 CVE-2025-68471 CVE-2026-24401 CVE-2026-34933 \
+"
+CVE_STATUS_RC[status] = "fixed-version: fix included in current rc tag"
 
 DEPENDS = "expat libcap libdaemon glib-2.0 glib-2.0-native"
 
