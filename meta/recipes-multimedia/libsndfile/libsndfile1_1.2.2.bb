@@ -17,6 +17,8 @@ SRC_URI = "${GITHUB_BASE_URI}/download/${PV}/libsndfile-${PV}.tar.xz \
            file://CVE-2026-37555.patch \
            file://CVE-2024-50613.patch \
            file://CVE-2025-52194.patch \
+           file://CVE-2026-109828-01.patch \
+           file://CVE-2026-109828-02.patch \
           "
 GITHUB_BASE_URI = "https://github.com/libsndfile/libsndfile/releases/"
 
