@@ -1,4 +1,4 @@
-From c0f835a59d7b33452f280c8a73c3214e0a3a3d9f Mon Sep 17 00:00:00 2001
+From f0dfb4b314893769659b25da145d602d1dd87499 Mon Sep 17 00:00:00 2001
 From: Zhang Peng <peng.zhang1.cn@windriver.com>
 Date: Fri, 6 Mar 2026 05:18:33 +0000
 Subject: [PATCH] groff: fix test-groff not found in cross-compilation
@@ -29,7 +29,7 @@ Signed-off-by: Zhang Peng <peng.zhang1.cn@windriver.com>
  3 files changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/contrib/mom/mom.am b/contrib/mom/mom.am
-index b99e869..120d3ee 100644
+index 98d1def..57a3b3e 100644
 --- a/contrib/mom/mom.am
 +++ b/contrib/mom/mom.am
 @@ -24,7 +24,7 @@ mom_srcdir = $(top_srcdir)/contrib/mom
@@ -42,12 +42,12 @@ index b99e869..120d3ee 100644
    GROFF_BIN_PATH="$(GROFF_BIN_PATH)" \
    $(PDFMOMBIN) $(FFLAG) $(MFLAG) -M$(mom_srcdir) -K utf8 -p -e -t \
 diff --git a/doc/doc.am b/doc/doc.am
-index 6cf9db5..906a989 100644
+index 8220a5d..e159f70 100644
 --- a/doc/doc.am
 +++ b/doc/doc.am
-@@ -54,7 +54,7 @@ groffmanpagesoption = -P-e
- endif
- 
+@@ -65,7 +65,7 @@ endif # HAVE_URW_FONTS
+ # Use this macro to render a document if it has forward internal
+ # references.
  DOC_PDFMOM = \
 -  GROFF_COMMAND=test-groff \
 +  GROFF_COMMAND=$(abs_top_builddir)/test-groff \
@@ -77,6 +77,3 @@ index a65898a..9c6a8b6 100644
  
 -exec $builddir/groff "$@"
 +exec $GROFF_BIN_PATH/groff "$@"
--- 
-2.51.2
-

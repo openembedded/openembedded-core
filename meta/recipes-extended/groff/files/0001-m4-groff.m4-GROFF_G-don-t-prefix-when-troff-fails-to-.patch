@@ -1,0 +1,40 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
+Date: Wed, 12 Nov 2026 09:00:00 +0000
+Subject: [PATCH] m4/groff.m4: Don't prefix when troff can't run.
+
+* m4/groff.m4 (GROFF_G): Apply the "g" command prefix only when the
+  troff on PATH runs and reports a non-GNU ".g" value, not whenever its
+  output differs from "1".  A troff that is installed but fails to run --
+  as the native groff does when cross compiling, lacking its device
+  files -- is no longer mistaken for a groff-incompatible troff.
+
+Continues commit 96b8274a90, 14 October.
+
+Upstream-Status: Submitted [https://savannah.gnu.org/bugs/index.php?68901]
+Signed-off-by: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
+diff --git a/m4/groff.m4 b/m4/groff.m4
+index e16ff3d..7f41502 100644
+--- a/m4/groff.m4
++++ b/m4/groff.m4
+@@ -1065,11 +1065,14 @@ AC_DEFUN([GROFF_TMAC],
+ AC_DEFUN([GROFF_G], [
+   g=
+   AC_MSG_CHECKING([whether a groff-incompatible troff is installed])
+-  if test -n "`command -v troff`" \
+-    && test "`(echo .tm '|n(.g' | tr '|' '\\\\' | troff -z -i 2>&1) \
+-      2>/dev/null`" != 1
++  if test -n "`command -v troff`"
+   then
+-    g=g
++    troff_dotg=`(echo .tm '|n(.g' | tr '|' '\\\\' | troff -z -i 2>/dev/null) \
++      2>/dev/null`
++    if test -n "$troff_dotg" && test "$troff_dotg" != 1
++    then
++      g=g
++    fi
+   fi
+   if test "$g" = "g"
+   then
+-- 
+2.51.2

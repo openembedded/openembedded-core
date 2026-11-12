@@ -1,12 +1,25 @@
+From d30928c7ee37eabf32075d88b1e6a406968651c2 Mon Sep 17 00:00:00 2001
+From: Ross Burton <ross.burton@arm.com>
+Date: Tue, 19 May 2026 15:15:07 +0100
+Subject: [PATCH] groff: build less in groff-native
+
 Build less bits of groff to save time and reduce random build
 failures from missing dependencies in this logic.
 
 Upstream-Status: Inappropriate
 Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ Makefile.am | 15 ---------------
+ 1 file changed, 15 deletions(-)
 
---- a/Makefile.am~	2026-05-15 13:23:08.000000000 +0100
-+++ b/Makefile.am	2026-05-15 13:29:17.053867035 +0100
-@@ -556,15 +556,0 @@
+diff --git a/Makefile.am b/Makefile.am
+index b74e100..9b5ecec 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -553,21 +553,6 @@ AM_CFLAGS =
+ include $(top_srcdir)/lib/gnulib.mk
+ include $(top_srcdir)/arch/mingw/mingw.am
+ include $(top_srcdir)/arch/misc/misc.am
 -include $(top_srcdir)/contrib/chem/chem.am
 -include $(top_srcdir)/contrib/eqn2graph/eqn2graph.am
 -include $(top_srcdir)/contrib/gdiffmk/gdiffmk.am
@@ -22,3 +35,6 @@ Signed-off-by: Ross Burton <ross.burton@arm.com>
 -include $(top_srcdir)/contrib/rfc1345/rfc1345.am
 -include $(top_srcdir)/contrib/sboxes/sboxes.am
 -include $(top_srcdir)/doc/doc.am
+ include $(top_srcdir)/font/devX100/devX100.am
+ include $(top_srcdir)/font/devX100-12/devX100-12.am
+ include $(top_srcdir)/font/devX75/devX75.am

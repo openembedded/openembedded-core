@@ -11,13 +11,12 @@ SRC_URI = "${GNU_MIRROR}/groff/groff-${PV}.tar.gz \
            file://groff-not-search-fonts-on-build-host.patch \
            file://0001-Make-manpages-mulitlib-identical.patch \
            file://0001-groff-fix-test-groff-not-found-in-cross-compilation.patch \
-           file://0001-gropdf-use-SOURCE_DATE_EPOCH-for-reproducible-builds.patch \
-           file://builddep.patch \
+           file://0001-m4-groff.m4-GROFF_G-don-t-prefix-when-troff-fails-to-.patch \
            "
 
 SRC_URI:append:class-native = "file://build-less.patch"
 
-SRC_URI[sha256sum] = "f9c1efd5bebbe37fc6e1063db7473ce8df1e3e0be4ff0f43ce04fce57e9c5dd9"
+SRC_URI[sha256sum] = "24d103a07eb79e418963bce206c8771b649871f83bda2fd4c2e65529c1c56921"
 
 DEPENDS = "bison-native groff-native"
 RDEPENDS:${PN} += "perl sed"
@@ -27,7 +26,7 @@ inherit autotools-brokensep texinfo multilib_script pkgconfig
 MULTILIB_SCRIPTS = "${PN}:${bindir}/gpinyin ${PN}:${bindir}/grog"
 
 EXTRA_OECONF = "--without-x --with-urw-fonts-dir=/completely/bogus/dir/"
-EXTRA_OEMAKE:class-target = "GROFFBIN=groff GROFF_BIN_PATH=${STAGING_BINDIR_NATIVE}"
+EXTRA_OEMAKE:class-target = "GROFFBIN=groff GROFF_BIN_PATH=${STAGING_BINDIR_NATIVE} SOELIMBIN=${STAGING_BINDIR_NATIVE}/soelim"
 
 CACHED_CONFIGUREVARS += "ac_cv_path_PERL='/usr/bin/env perl' ac_cv_path_BASH_PROG='no' PAGE=A4"
 
@@ -70,6 +69,11 @@ do_install:append() {
 	# strip hosttool path out of generated files
 	if [ -d ${D}${docdir}/${BP}/examples/hdtbl/ ]; then
 		sed -i -e 's:${HOSTTOOLS_DIR}/::g' ${D}${docdir}/${BP}/examples/hdtbl/*.roff
+	fi
+
+	# Remove build paths from generated groff.7 for reproducibility.
+	if [ -f ${D}${mandir}/man7/groff.7 ]; then
+		sed -i -e 's:${S}/::g' ${D}${mandir}/man7/groff.7
 	fi
 }
 
