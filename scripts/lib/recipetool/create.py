@@ -600,8 +600,6 @@ def create_recipe(args):
                 logger.error(str(err))
                 logger.error("Possibly wrong tag name is provided")
                 sys.exit(1)
-            # Drop tag from srcuri as it will have conflicts with SRCREV during recipe parse.
-            del params['tag']
         srcuri = bb.fetch.encodeurl((scheme, network, path, user, passwd, params))
 
         if os.path.exists(os.path.join(srctree, '.gitmodules')) and srcuri.startswith('git://'):

@@ -776,7 +776,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         inherits = ['setuptools3']
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
-    def _test_recipetool_create_git(self, srcuri, branch=None):
+    def _test_recipetool_create_git(self, srcuri, branch=None, extravars=None):
         # Basic test to check http git URL mangling works
         temprecipe = os.path.join(self.tempdir, 'recipe')
         os.makedirs(temprecipe)
@@ -792,6 +792,7 @@ class RecipetoolCreateTests(RecipetoolBase):
                 checkvars['SRC_URI'] = 'git%s;protocol=%s' % (srcuri[len(scheme):], scheme)
         if ';branch=' not in srcuri:
             checkvars['SRC_URI'] += ';branch=' + (branch or 'master')
+        checkvars.update(extravars or {})
         self._test_recipe_contents(recipefile, checkvars, [])
 
     def test_recipetool_create_git_http(self):
@@ -805,6 +806,10 @@ class RecipetoolCreateTests(RecipetoolBase):
 
     def test_recipetool_create_git_srcbranch(self):
         self._test_recipetool_create_git('git://git.yoctoproject.org/matchbox-keyboard;protocol=https', 'matchbox-keyboard-0-1')
+
+    def test_recipetool_create_git_srcuri_branch_tag(self):
+        self._test_recipetool_create_git('git://git.yoctoproject.org/matchbox-keyboard;branch=matchbox-keyboard-0-1;protocol=https;tag=0.1.1',
+                                         extravars={'SRCREV': '630d89068dc0a1e9199306d405cb32f892dfa4d3'})
 
     def _go_urifiy(self, url, version, modulepath = None, pathmajor = None, subdir = None):
         modulepath = ",path='%s'" % modulepath if len(modulepath) else ''
