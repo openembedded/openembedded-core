@@ -824,6 +824,13 @@ class RecipetoolCreateTests(RecipetoolBase):
         self._test_recipetool_create_git('git://git.yoctoproject.org/matchbox-keyboard;branch=matchbox-keyboard-0-1;protocol=https;tag=0.1.1',
                                          extravars={'SRCREV': '630d89068dc0a1e9199306d405cb32f892dfa4d3'})
 
+    def test_recipetool_create_git_srcuri_tag(self):
+        # The 0.1.1 tag is only on the matchbox-keyboard-0-1 branch
+        srcuri = 'git://git.yoctoproject.org/matchbox-keyboard;protocol=https;tag=0.1.1'
+        self._test_recipetool_create_git(srcuri,
+                                         extravars={'SRC_URI': srcuri + ';branch=matchbox-keyboard-0-1',
+                                                    'SRCREV': '630d89068dc0a1e9199306d405cb32f892dfa4d3'})
+
     def _go_urifiy(self, url, version, modulepath = None, pathmajor = None, subdir = None):
         modulepath = ",path='%s'" % modulepath if len(modulepath) else ''
         pathmajor = ",pathmajor='%s'" % pathmajor if len(pathmajor) else ''

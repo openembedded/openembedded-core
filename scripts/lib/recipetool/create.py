@@ -532,6 +532,10 @@ def create_recipe(args):
             storeTagName = params['tag']
             params['nobranch'] = '1'
             del params['tag']
+            if srcrev == '${AUTOREV}':
+                # Nothing for ${AUTOREV} to resolve without a branch, so
+                # fetch the tag itself
+                srcrev = storeTagName
         # Assume 'master' branch if not set
         if scheme in ['git', 'gitsm'] and 'branch' not in params and 'nobranch' not in params:
             params['branch'] = 'master'
