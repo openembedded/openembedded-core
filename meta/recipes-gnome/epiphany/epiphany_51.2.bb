@@ -44,3 +44,6 @@ RDEPENDS:${PN} = "iso-codes adwaita-icon-theme gsettings-desktop-schemas"
 
 # please see webkitgtk recipe for details
 COMPATIBLE_HOST:x86 = "null"
+
+CVE_STATUS[CVE-2026-118598] = "fixed-version: Fixed from version 51.2"
+CVE_STATUS[CVE-2026-118599] = "fixed-version: Fixed from version 51.2"
