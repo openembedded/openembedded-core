@@ -337,6 +337,11 @@ SKIPPED_TESTS:append = " \
     --ignore TimerfdTests \
 "
 
+# https://bugzilla.yoctoproject.org/show_bug.cgi?id=16348
+SKIPPED_TESTS:append:libc-musl = " \
+    --ignore test.test_multiprocessing_fork.test_processes.WithProcessesTestProcess.test_interrupt \
+"
+
 # https://github.com/python/cpython/issues/159424
 SKIPPED_TESTS:append:libc-musl = " \
     --ignore test.test_readline.TestHistoryManipulation.test_append_limited_history \
