@@ -80,6 +80,7 @@ python check_prepare() {
         return "\n".join(content)
 
     def generate_remote_ssh_linux_config(d):
+        import hashlib, os
         content = []
         content.append('load_generic_config "unix"')
         content.append('process_multilib_options ""')
@@ -87,8 +88,19 @@ python check_prepare() {
         content.append("set_board_info username {0}".format(d.getVar("TOOLCHAIN_TEST_HOST_USER")))
 
         port = d.getVar("TOOLCHAIN_TEST_HOST_PORT")
-        content.append("set_board_info rsh_prog \"/usr/bin/ssh -p {0} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR \"".format(port))
-        content.append("set_board_info rcp_prog \"/usr/bin/scp -P {0} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR \"".format(port))
+
+        # Use SSH multiplexing to share one master connection across GCC tests.
+        # Keep the master alive until the selftest explicitly closes it.
+        # Use a per-build ControlPath to avoid conflicts between builds.
+        controlpath = "/tmp/oe-gcc-ssh-" + hashlib.sha1(d.getVar("B").encode()).hexdigest()[:12]
+        # remove stale socket left by a previous stopped run of this build
+        if os.path.exists(controlpath):
+            os.remove(controlpath)
+        rsh_mux = " -o ControlMaster=auto -o ControlPath={0} -o ControlPersist=yes".format(controlpath)
+        rcp_mux = " -o ControlMaster=no -o ControlPath={0}".format(controlpath)
+
+        content.append("set_board_info rsh_prog \"/usr/bin/ssh -p {0} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR{1} \"".format(port, rsh_mux))
+        content.append("set_board_info rcp_prog \"/usr/bin/scp -P {0} -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -o LogLevel=ERROR{1} \"".format(port, rcp_mux))
 
         return "\n".join(content)
 

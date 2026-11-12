@@ -3,6 +3,8 @@
 #
 # SPDX-License-Identifier: MIT
 #
+import hashlib
+import subprocess
 import os
 import time
 from oeqa.core.decorator import OETestTag
@@ -84,10 +86,24 @@ class GccSelfTestBase(OESelftestTestCase, OEPTestResultTestCase):
             # validate that SSH is working
             status, _ = qemu.run("uname")
             self.assertEqual(status, 0)
-            qemu.run('echo "MaxStartups 75:30:100" >> /etc/ssh/sshd_config')
-            qemu.run('service sshd restart')
 
-            return self.run_check(*args, ssh=qemu.ip, **kwargs)
+            # Increase MaxSessions to accommodate concurrent GCC test shards sharing
+            # the SSH master connection.
+            qemu.run('echo "MaxSessions 200" >> /etc/ssh/sshd_config')
+            status, output = qemu.run('[ ! -f /var/run/sshd.pid ] || kill -HUP $(cat /var/run/sshd.pid)')
+            if status != 0:
+                raise Exception(f"sshd reload failed (rc={status}): {output}")
+
+            # With ControlPersist=yes, never times out on its own, so close it
+            # explicitly once all test shards have finished.
+            controlpath = "/tmp/oe-gcc-ssh-" + hashlib.sha1(get_bb_var("B", "gcc-runtime").encode()).hexdigest()[:12]
+            try:
+                return self.run_check(*args, ssh=qemu.ip, **kwargs)
+            finally:
+                subprocess.run(["ssh", "-O", "exit",
+                                "-o", "ControlPath={0}".format(controlpath),
+                                "root@{0}".format(qemu.ip)],
+                               stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 @OETestTag("toolchain-user")
 class GccCrossSelfTest(GccSelfTestBase):
