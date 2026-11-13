@@ -162,7 +162,6 @@ class OETestContextExecutor:
         self.tc_kwargs = {}
         self.tc_kwargs['init'] = {}
         self.tc_kwargs['load'] = {}
-        self.tc_kwargs['list'] = {}
         self.tc_kwargs['run']  = {}
 
         self.tc_kwargs['init']['logger'] = self._setup_logger(logger, args)
@@ -219,7 +218,7 @@ class OETestContextExecutor:
             sys.exit(1)
 
         if args.list_tests:
-            rc = self.tc.listTests(args.list_tests, **self.tc_kwargs['list'])
+            rc = self.tc.listTests(args.list_tests)
         else:
             self._pre_run()
             rc = self.tc.runTests(**self.tc_kwargs['run'])
