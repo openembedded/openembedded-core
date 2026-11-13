@@ -5,57 +5,18 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+import os
 import time
-import datetime
 import pprint
 
-from oeqa.runtime.case import OERuntimeTestCase
+from oeqa.runtime.utils.ltp import LtpTestBase
 from oeqa.core.decorator.depends import OETestDepends
 from oeqa.runtime.decorator.package import OEHasPackage
 from oeqa.utils.logparser import LtpParser
 
-class LtpTestBase(OERuntimeTestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        cls.ltp_startup()
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.ltp_finishup()
-
-    @classmethod
-    def ltp_startup(cls):
-        cls.sections = {}
-        cls.failmsg = ""
-        test_log_dir = os.path.join(cls.td.get('WORKDIR', ''), 'testimage')
-        timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-
-        cls.ltptest_log_dir_link = os.path.join(test_log_dir, 'ltp_log')
-        cls.ltptest_log_dir = '%s.%s' % (cls.ltptest_log_dir_link, timestamp)
-        os.makedirs(cls.ltptest_log_dir)
-
-        cls.tc.target.run("mkdir -p /opt/ltp/results")
-
-        if not hasattr(cls.tc, "extraresults"):
-            cls.tc.extraresults = {}
-        cls.extras = cls.tc.extraresults
-        cls.extras['ltpresult.rawlogs'] = {'log': ""}
-
- 
-    @classmethod
-    def ltp_finishup(cls):
-        cls.extras['ltpresult.sections'] =  cls.sections
-
-        # update symlink to ltp_log
-        if os.path.exists(cls.ltptest_log_dir_link):
-            os.remove(cls.ltptest_log_dir_link)
-        os.symlink(os.path.basename(cls.ltptest_log_dir), cls.ltptest_log_dir_link)
-
-        if cls.failmsg:
-            cls.fail(cls.failmsg)
-
 class LtpTest(LtpTestBase):
+    ltp_log_name = 'ltp_log'
+    ltp_result_prefix = 'ltpresult'
 
     ltp_groups = ["math", "syscalls", "dio", "mm", "sched", "nptl", "containers", "controllers", "fcntl-locktests", "commands", "net.ipv6_lib", "input","fs_perms_simple", "cve", "crypto", "ima", "net.nfs", "net_stress.ipsec_icmp", "net.ipv6", "numa", "uevent", "ltp-aiodio.part1", "ltp-aiodio.part2", "ltp-aiodio.part3", "ltp-aiodio.part4"]
 
