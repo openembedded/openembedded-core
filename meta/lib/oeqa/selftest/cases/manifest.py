@@ -87,7 +87,7 @@ class VerifyManifest(OESelftestTestCase):
                          host = 'nativesdk-packagegroup-sdk-host')
         try:
             mdir = self.get_dir_from_bb_var('SDK_DEPLOY', self.buildtarget)
-            for k in d_target.keys():
+            for k in d_target:
                 toolchain_outputname = get_bb_var('TOOLCHAIN_OUTPUTNAME', self.buildtarget)
                 mfilename[k] = "{}.{}.manifest".format(toolchain_outputname, k)
                 mpath[k] = os.path.join(mdir, mfilename[k])
@@ -113,7 +113,7 @@ class VerifyManifest(OESelftestTestCase):
                     .format(self.classname, mdir)
             self.fail(msg)
 
-        for k in d_target.keys():
+        for k in d_target:
             self.logger.debug("{}: Check manifest {}".format(
                 self.classname, m_entry[k].file))
 

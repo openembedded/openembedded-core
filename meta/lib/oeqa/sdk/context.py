@@ -34,12 +34,12 @@ class OESDKTestContext(OETestContext):
         if regex:
             # do regex match
             pat = re.compile(pkg)
-            for p in manifest.keys():
+            for p in manifest:
                 if pat.search(p):
                     return True
         else:
             # do exact match
-            if pkg in manifest.keys():
+            if pkg in manifest:
                 return True
         return False
 
