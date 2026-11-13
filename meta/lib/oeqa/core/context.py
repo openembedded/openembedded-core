@@ -23,7 +23,7 @@ class OETestContext:
         os.path.abspath(__file__)), "../files"))
 
     def __init__(self, td=None, logger=None):
-        if not type(td) is dict:
+        if not isinstance(td, dict):
             raise TypeError("td isn't dictionary type")
 
         self.td = td
