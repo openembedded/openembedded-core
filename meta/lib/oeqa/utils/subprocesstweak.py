@@ -13,7 +13,7 @@ class OETestCalledProcessError(subprocess.CalledProcessError):
         s = super().__str__()
         s = s + "\nStandard Output: " + strify(self.output)
         # stderr is not available for check_output method
-        if self.stderr != None:
+        if self.stderr is not None:
             s = s + "\nStandard Error: " + strify(self.stderr)
         return s
 

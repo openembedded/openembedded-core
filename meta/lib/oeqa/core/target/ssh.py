@@ -293,7 +293,7 @@ def SSHCall(command, logger, timeout=None, raw=False, **opts):
                 logger.debug('No output from SSH call')
 
         # timout or not, make sure process exits and is not hanging
-        if process.returncode == None:
+        if process.returncode is None:
             try:
                 process.wait(timeout=5)
             except TimeoutExpired:
@@ -339,7 +339,7 @@ def SSHCall(command, logger, timeout=None, raw=False, **opts):
         # whilst running and ensure we don't leave a process behind.
         if process.poll() is None:
             process.kill()
-        if process.returncode == None:
+        if process.returncode is None:
             process.wait()
         logger.debug('Something went wrong, killing SSH process')
         raise

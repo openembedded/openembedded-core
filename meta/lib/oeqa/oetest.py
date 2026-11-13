@@ -583,7 +583,7 @@ class ExportTestContext(RuntimeTestContext):
         super().__init__(d, target, exported)
 
         tag = parsedArgs.get("tag", None)
-        self.tagexp = tag if tag != None else d.getVar("TEST_SUITES_TAGS")
+        self.tagexp = tag if tag is not None else d.getVar("TEST_SUITES_TAGS")
 
         self.sigterm = None
 

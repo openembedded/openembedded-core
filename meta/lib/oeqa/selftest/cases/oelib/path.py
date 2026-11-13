@@ -67,7 +67,7 @@ class TestRealPath(TestCase):
 
     def test_norm(self):
         for l in self.LINKS:
-            if l[2] == None:
+            if l[2] is None:
                 continue
 
             target_p = self.__realpath(l[0], True)
