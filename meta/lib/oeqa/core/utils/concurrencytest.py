@@ -155,6 +155,9 @@ def outSideTestaddError(self, offset, line):
     test_name = line[offset:-1].decode('utf8')
     self.parser._current_test = subunit.RemotedTestCase(test_name)
     self.parser.current_test_description = test_name
+    # The outcome is followed by stopTest(), which testtools needs to match
+    # a startTest() or it loses track and breaks on the following tests
+    self.parser.client.startTest(self.parser._current_test)
     self.parser._state = self.parser._reading_error_details
     self.parser._reading_error_details.set_simple()
     self.parser.subunitLineReceived(line)
@@ -170,6 +173,9 @@ def outSideTestaddSkip(self, offset, line):
     test_name = line[offset:-1].decode('utf8')
     self.parser._current_test = subunit.RemotedTestCase(test_name)
     self.parser.current_test_description = test_name
+    # The outcome is followed by stopTest(), which testtools needs to match
+    # a startTest() or it loses track and breaks on the following tests
+    self.parser.client.startTest(self.parser._current_test)
     self.parser._state = self.parser._reading_skip_details
     self.parser._reading_skip_details.set_simple()
     self.parser.subunitLineReceived(line)
