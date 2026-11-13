@@ -113,7 +113,6 @@ class OESDKTestContextExecutor(OETestContextExecutor):
     def _get_sdk_environs(sdk_dir):
         sdk_env = {}
 
-        environ_pattern = sdk_dir + '/environment-setup-*'
         full_sdk_env = glob.glob(sdk_dir + '/environment-setup-*')
         for env in full_sdk_env:
             m = re.search('environment-setup-(.*)', env)

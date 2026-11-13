@@ -65,11 +65,6 @@ class KernelDropCaches:
         runCmd2(cmd, data=input_data)
 
 
-def str_to_fn(string):
-    """Convert string to a sanitized filename"""
-    return re.sub(r'(\W+)', '-', string, flags=re.LOCALE)
-
-
 class ResultsJsonEncoder(json.JSONEncoder):
     """Extended encoder for build perf test results"""
     unix_epoch = datetime.utcfromtimestamp(0)

@@ -99,9 +99,7 @@ class OETestDataDepends(OETestDecorator):
 
     def setUpDecorator(self):
         for v in self.td_depends:
-            try:
-                value = self.case.td[v]
-            except KeyError:
+            if v not in self.case.td:
                 raise OEQAMissingVariable("Test case need %s variable but"\
                         " isn't into td" % v)
 
