@@ -39,6 +39,7 @@ PTESTS_FAST = "\
     libconvert-asn1-perl \
     libexif \
     libfile-sharedir-install-perl \
+    libfile-sharedir-perl \
     libgpg-error\
     libksba \
     libmd \
