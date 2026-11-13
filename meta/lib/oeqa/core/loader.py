@@ -237,7 +237,7 @@ class OETestLoader(unittest.TestLoader):
                     pattern='*.py', top_level_dir=path)
             big_suite.addTests(suite)
 
-        cases = None
+        cases = list(self.tc._registry['cases'].values())
         discover_classes = [clss for clss in decoratorClasses
                             if issubclass(clss, OETestDiscover)]
         for clss in discover_classes:
@@ -246,7 +246,7 @@ class OETestLoader(unittest.TestLoader):
         if self.modules_required:
             self._required_modules_validation()
 
-        return self.suiteClass(cases) if cases else big_suite
+        return self.suiteClass(cases)
 
     def _filterModule(self, module):
         if module.__name__ in sys.builtin_module_names:

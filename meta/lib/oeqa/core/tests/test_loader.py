@@ -6,6 +6,9 @@
 #
 
 import os
+import subprocess
+import sys
+import textwrap
 import unittest
 
 from common import setup_sys_path, TestBase
@@ -58,6 +61,26 @@ class TestLoader(TestBase):
         self.cases_path = cases_path
         msg = 'Expected modules from two different paths'
         self.assertEqual(modules, expected_modules, msg=msg)
+
+    def test_flat_suite(self):
+        # The loaded suite must be a flat list of tests, which skipTests()
+        # relies on, even if no module registers a discovery decorator such as
+        # OETestDepends. Registering one is global so use a new process.
+        oeqa_lib = os.path.realpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '../../../'))
+        cases_path = os.path.join(self.cases_path, 'loader', 'valid')
+        script = textwrap.dedent("""
+            import logging, sys, unittest
+            sys.path.insert(0, %r)
+            from oeqa.core.context import OETestContext
+            from oeqa.core.decorator import decoratorClasses
+            tc = OETestContext({}, logging.getLogger('flat'))
+            tc.loadTests(%r)
+            assert not [c for c in decoratorClasses if c.__name__ == 'OETestDepends']
+            tc.skipTests(['another.AnotherTest.testAnother'])
+            print(' '.join(type(t).__name__ for t in tc.suites))
+        """) % (oeqa_lib, cases_path)
+        output = subprocess.check_output([sys.executable, '-c', script], text=True)
+        self.assertEqual(output.split(), ['AnotherTest'])
 
 if __name__ == '__main__':
     unittest.main()
