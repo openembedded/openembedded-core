@@ -486,8 +486,7 @@ class BuildPerfTestLoader(unittest.TestLoader):
 
 
 class BuildPerfTestRunner(unittest.TextTestRunner):
-    """Test loader for build performance tests"""
-    sortTestMethodsUsing = None
+    """Test runner for build performance tests"""
 
     def __init__(self, out_dir, *args, **kwargs):
         super().__init__(*args, **kwargs)
