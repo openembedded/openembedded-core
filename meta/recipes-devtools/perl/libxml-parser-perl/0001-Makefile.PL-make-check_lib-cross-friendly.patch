@@ -14,10 +14,10 @@ Signed-off-by: Tim Orling <tim.orling@konsulko.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Makefile.PL b/Makefile.PL
-index 505d1df..19f428b 100644
+index 1344fe9..748a7d1 100644
 --- a/Makefile.PL
 +++ b/Makefile.PL
-@@ -30,7 +30,7 @@ foreach (@ARGV) {
+@@ -85,7 +85,7 @@ if ( !$expat_libpath && !$expat_incpath ) {
  
  unless (
      check_lib(    # fill in what you prompted the user for here
