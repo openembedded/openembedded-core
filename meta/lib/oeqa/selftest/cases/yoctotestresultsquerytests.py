@@ -31,7 +31,7 @@ class TestResultsQueryTests(OESelftestTestCase):
         workdir = create_workdir()
         try:
             url = subprocess.check_output(
-                ["git", "-C", workdir, "remote", "get-url", "origin"]).strip().decode("utf-8")
+                ["git", "-C", workdir, "remote", "get-url", "origin"], text=True).strip()
         except:
             shutil.rmtree(workdir, ignore_errors=True)
             self.fail(f"Can not execute git commands in {workdir}")

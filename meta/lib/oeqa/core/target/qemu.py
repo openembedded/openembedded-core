@@ -81,7 +81,7 @@ class OEQemuTarget(OESSHTarget):
             blcmd = ["tail", "-20", self.bootlog]
             msg += "===== start: snippet =====\n\n"
             try:
-                out = subprocess.check_output(blcmd, stderr=subprocess.STDOUT, timeout=1).decode('utf-8')
+                out = subprocess.check_output(blcmd, stderr=subprocess.STDOUT, timeout=1, text=True)
                 msg += "file: %s\n\n" % self.bootlog
                 msg += out
             except (subprocess.CalledProcessError, subprocess.TimeoutExpired, FileNotFoundError) as err:

@@ -46,8 +46,9 @@ class SDKBuildProject(BuildProject):
         self.log("Running . %s; " % self.sdkenv + cmd)
         try:
             output = subprocess.check_output(". %s; " % self.sdkenv + cmd, shell=True,
-                                             executable='/bin/bash', stderr=subprocess.STDOUT)
+                                             executable='/bin/bash', stderr=subprocess.STDOUT,
+                                             text=True)
         except subprocess.CalledProcessError as exc:
-            print(exc.output.decode('utf-8'))
+            print(exc.output)
             return exc.returncode
         return 0
