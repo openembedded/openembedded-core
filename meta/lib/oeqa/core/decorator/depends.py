@@ -95,4 +95,6 @@ class OETestDepends(OETestDiscover):
             return [registry['cases'][case_id] for case_id in registry['cases']]
 
     def setUpDecorator(self):
-        _skipTestDependency(self.case, self.depends)
+        # Use the fully qualified ids resolved in bind() as the dependencies
+        # may be given relative to the test's module or class
+        _skipTestDependency(self.case, self.case.tc._registry['depends'][self.case.id()])
