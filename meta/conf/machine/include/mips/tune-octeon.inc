@@ -1,4 +1,4 @@
-DEFAULTTUNE ?="octeon2"
+DEFAULTTUNE ?= "octeon2"
 
 require conf/machine/include/mips/tune-mips64.inc
 
