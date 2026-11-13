@@ -159,32 +159,33 @@ class OETestContextExecutor:
         return logger
 
     def _process_args(self, logger, args):
-        self.tc_kwargs = {}
-        self.tc_kwargs['init'] = {}
-        self.tc_kwargs['load'] = {}
-        self.tc_kwargs['run']  = {}
-
-        self.tc_kwargs['init']['logger'] = self._setup_logger(logger, args)
+        self.logger = self._setup_logger(logger, args)
         if args.test_data_file:
-            self.tc_kwargs['init']['td'] = json.load(
-                    open(args.test_data_file, "r"))
+            with open(args.test_data_file, "r") as f:
+                self.td = json.load(f)
         else:
-            self.tc_kwargs['init']['td'] = {}
+            self.td = {}
+
+        # Any further arguments for the test context, for subclasses to add
+        self.context_args = {}
 
         # Run image specific TEST_SUITE like testimage.bbclass by default
-        test_suites = self.tc_kwargs['init']['td'].get("TEST_SUITES")
+        test_suites = self.td.get("TEST_SUITES")
         if test_suites:
             test_suites = test_suites.split()
 
+        self.modules_required = []
         if args.run_tests:
-            self.tc_kwargs['load']['modules'] = args.run_tests
-            self.tc_kwargs['load']['modules_required'] = args.run_tests
+            self.modules = args.run_tests
+            self.modules_required = args.run_tests
         elif test_suites:
-            self.tc_kwargs['load']['modules'] = test_suites
+            self.modules = test_suites
         else:
-            self.tc_kwargs['load']['modules'] = []
+            self.modules = []
+        self.tags_filter = None
 
-        self.tc_kwargs['run']['skips'] = []
+        self.processes = None
+        self.skips = []
 
         self.module_paths = args.CASES_PATHS
 
@@ -192,7 +193,7 @@ class OETestContextExecutor:
         return args.json_result_dir
 
     def _get_configuration(self):
-        td = self.tc_kwargs['init']['td']
+        td = self.td
         configuration = {'TEST_TYPE': self.name,
                         'MACHINE': td.get("MACHINE"),
                         'DISTRO': td.get("DISTRO"),
@@ -210,9 +211,10 @@ class OETestContextExecutor:
     def run(self, logger, args):
         self._process_args(logger, args)
 
-        self.tc = self._context_class(**self.tc_kwargs['init'])
+        self.tc = self._context_class(td=self.td, logger=self.logger, **self.context_args)
         try:
-            self.tc.loadTests(self.module_paths, **self.tc_kwargs['load'])
+            self.tc.loadTests(self.module_paths, modules=self.modules,
+                    modules_required=self.modules_required, tags_filter=self.tags_filter)
         except OEQATestNotFound as ex:
             logger.error(ex)
             sys.exit(1)
@@ -221,7 +223,7 @@ class OETestContextExecutor:
             rc = self.tc.listTests(args.list_tests)
         else:
             self._pre_run()
-            rc = self.tc.runTests(**self.tc_kwargs['run'])
+            rc = self.tc.runTests(processes=self.processes, skips=self.skips)
 
             json_result_dir = self._get_json_result_dir(args)
             if json_result_dir:

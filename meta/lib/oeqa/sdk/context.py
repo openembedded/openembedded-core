@@ -101,13 +101,13 @@ class OESDKTestContextExecutor(OETestContextExecutor):
     def _process_args(self, logger, args):
         super()._process_args(logger, args)
 
-        self.tc_kwargs['init']['sdk_dir'] = args.sdk_dir
-        self.tc_kwargs['init']['sdk_env'] = self.sdk_env
-        self.tc_kwargs['init']['target_pkg_manifest'] = \
+        self.context_args['sdk_dir'] = args.sdk_dir
+        self.context_args['sdk_env'] = self.sdk_env
+        self.context_args['target_pkg_manifest'] = \
                 OESDKTestContextExecutor._load_manifest(args.target_manifest)
-        self.tc_kwargs['init']['host_pkg_manifest'] = \
+        self.context_args['host_pkg_manifest'] = \
                 OESDKTestContextExecutor._load_manifest(args.host_manifest)
-        self.tc_kwargs['run']['processes'] = args.processes
+        self.processes = args.processes
 
     @staticmethod
     def _get_sdk_environs(sdk_dir):
