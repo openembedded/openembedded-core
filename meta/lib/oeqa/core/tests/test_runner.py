@@ -36,5 +36,18 @@ class TestRunner(TestBase):
 
         fp.close()
 
+class TestResultStatus(TestBase):
+    def _statuses(self, modules):
+        tc = self._testLoader(modules=modules)
+        result = tc.runTests()
+        return {case_id: result._getTestResultDetails(case)[0]
+                for case_id, case in tc._registry['cases'].items()}
+
+    def test_subtest_status(self):
+        self.assertEqual(self._statuses(['subtest']), {
+            'subtest.SubTestTest.testSubTestFail': 'FAILED',
+            'subtest.SubTestTest.testSubTestPass': 'PASSED',
+        })
+
 if __name__ == '__main__':
     unittest.main()
