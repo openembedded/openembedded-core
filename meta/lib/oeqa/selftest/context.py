@@ -17,7 +17,7 @@ import bb.utils
 import bb.tinfoil
 
 from oeqa.core.context import OETestContext, OETestContextExecutor
-from oeqa.core.exception import OEQAPreRun, OEQATestNotFound
+from oeqa.core.exception import OEQAPreRun
 
 from oeqa.utils.commands import runCmd, get_bb_vars, get_test_layer
 
@@ -289,6 +289,8 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         self.skips = args.skips
         self.processes = args.processes
 
+        self.module_paths = self._get_cases_paths(self.td['BBPATH'].split(':'))
+
     def _pre_run(self):
         def _check_required_env_variables(vars):
             for var in vars:
@@ -358,14 +360,14 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
             vars['BBLAYERS'] = str(d.getVar('BBLAYERS'))
         self.tc.set_variables(vars)
 
-    def get_json_result_dir(self, args):
+    def _get_json_result_dir(self, args):
         json_result_dir = os.path.join(self.tc.td["LOG_DIR"], 'oeqa')
         if "OEQA_JSON_RESULT_DIR" in self.tc.td:
             json_result_dir = self.tc.td["OEQA_JSON_RESULT_DIR"]
 
         return json_result_dir
 
-    def get_configuration(self, args):
+    def _get_configuration(self, args):
         from oeqa.utils.metadata import metadata_from_bb
         metadata = metadata_from_bb()
         oeselftest_metadata = get_oeselftest_metadata(args)
@@ -378,46 +380,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
                         'OESELFTEST_METADATA': oeselftest_metadata}
         return configuration
 
-    def get_result_id(self, configuration):
+    def _get_result_id(self, configuration):
         return '%s_%s_%s_%s' % (configuration['TEST_TYPE'], configuration['HOST_DISTRO'], configuration['MACHINE'], configuration['STARTTIME'])
-
-    def _internal_run(self, logger, args):
-        self.module_paths = self._get_cases_paths(self.td['BBPATH'].split(':'))
-
-        self.tc = self._context_class(td=self.td, logger=self.logger, **self.context_args)
-        try:
-            self.tc.loadTests(self.module_paths, modules=self.modules,
-                    modules_required=self.modules_required, tags_filter=self.tags_filter)
-        except OEQATestNotFound as ex:
-            logger.error(ex)
-            sys.exit(1)
-
-        if args.list_tests:
-            rc = self.tc.listTests(args.list_tests)
-        else:
-            self._pre_run()
-            rc = self.tc.runTests(processes=self.processes, skips=self.skips)
-            configuration = self.get_configuration(args)
-            rc.logDetails(self.get_json_result_dir(args),
-                          configuration,
-                          self.get_result_id(configuration))
-            rc.logSummary(self.name)
-
-        return rc
-
-    def run(self, logger, args):
-        self._process_args(logger, args)
-
-        rc = None
-        try:
-             rc = self._internal_run(logger, args)
-        finally:
-            output_link = os.path.join(os.path.dirname(args.output_log),
-                    "%s-results.log" % self.name)
-            if os.path.lexists(output_link):
-                os.unlink(output_link)
-            os.symlink(args.output_log, output_link)
-
-        return rc
 
 _executor_class = OESelftestTestContextExecutor
