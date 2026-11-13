@@ -360,7 +360,7 @@ class RuntimeTestContext(TestContext):
                     for line in f:
                         (pkg, arch, version) = line.strip().split()
                         self.pkgmanifest[pkg] = (version, arch)
-            except IOError as e:
+            except OSError as e:
                 bb.fatal("No package manifest file found. Did you build the image?\n%s" % e)
 
     def _get_test_namespace(self):

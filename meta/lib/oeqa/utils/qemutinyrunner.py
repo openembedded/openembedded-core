@@ -55,7 +55,7 @@ class QemuTinyRunner(QemuRunner):
                 self.server_socket.connect(self.socketfile)
                 bb.note("Created listening socket for qemu serial console.")
                 tries = 0
-            except socket.error as msg:
+            except OSError as msg:
                 self.server_socket.close()
                 bb.fatal("Failed to create listening socket.")
                 tries -= 1

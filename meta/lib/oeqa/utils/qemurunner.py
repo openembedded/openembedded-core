@@ -119,7 +119,7 @@ class QemuRunner:
             self.logger.debug("Created listening socket for qemu serial console on: 127.0.0.1:%s" % port)
             return (sock, port)
 
-        except socket.error:
+        except OSError:
             sock.close()
             raise
 
@@ -216,7 +216,7 @@ class QemuRunner:
             if self.serial_ports >= 2:
                 self.threadsock, threadport = self.create_socket()
             self.server_socket, self.serverport = self.create_socket()
-        except socket.error as msg:
+        except OSError as msg:
             self.logger.error("Failed to create listening socket: %s" % msg[1])
             return False
 
@@ -858,7 +858,7 @@ class LoggingThread(threading.Thread):
     def recv(self, count, sock):
         try:
             data = sock.recv(count)
-        except socket.error as e:
+        except OSError as e:
             if e.errno == errno.EAGAIN or e.errno == errno.EWOULDBLOCK:
                 return b''
             else:
