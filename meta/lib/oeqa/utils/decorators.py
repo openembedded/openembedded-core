@@ -16,7 +16,7 @@ import threading
 import signal
 from functools import wraps
 
-class testcase(object):
+class testcase:
     def __init__(self, test_case):
         self.test_case = test_case
 

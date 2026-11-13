@@ -14,7 +14,7 @@ import os
 import select
 
 
-class SSHProcess(object):
+class SSHProcess:
     def __init__(self, **options):
 
         self.defaultopts = {
@@ -99,7 +99,7 @@ class SSHProcess(object):
             raise
         return (self.status, self.output)
 
-class SSHControl(object):
+class SSHControl:
     def __init__(self, ip, logfile=None, timeout=300, user='root', port=None):
         self.ip = ip
         self.defaulttimeout = timeout

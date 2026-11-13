@@ -13,7 +13,7 @@ class GitError(Exception):
     """Git error handling"""
     pass
 
-class GitRepo(object):
+class GitRepo:
     """Class representing a Git repository clone"""
     def __init__(self, path, is_topdir=False):
         git_dir = self._run_git_cmd_at(['rev-parse', '--git-dir'], path)

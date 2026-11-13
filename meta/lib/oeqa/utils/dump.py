@@ -12,7 +12,7 @@ import datetime
 import itertools
 from .commands import runCmd
 
-class BaseDumper(object):
+class BaseDumper:
     """ Base class to dump commands from host/target """
 
     def __init__(self, cmds, parent_dir):

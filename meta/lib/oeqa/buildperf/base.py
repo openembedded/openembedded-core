@@ -32,7 +32,7 @@ log = logging.getLogger('build-perf')
 runCmd2 = partial(runCmd, assert_error=False, limit_exc_output=40)
 
 
-class KernelDropCaches(object):
+class KernelDropCaches:
     """Container of the functions for dropping kernel caches"""
     sudo_passwd = None
 

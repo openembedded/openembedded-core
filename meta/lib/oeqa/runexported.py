@@ -37,7 +37,7 @@ from oeqa.utils.sshcontrol import SSHControl
 # this isn't pretty but we need a fake target object
 # for running the tests externally as we don't care
 # about deploy/start we only care about the connection methods (run, copy)
-class FakeTarget(object):
+class FakeTarget:
     def __init__(self, d):
         self.connection = None
         self.ip = None

@@ -6,7 +6,7 @@
 
 from oeqa.sdk.context import OESDKTestContext, OESDKTestContextExecutor
 
-class TestSDKBase(object):
+class TestSDKBase:
     @staticmethod
     def get_sdk_configuration(d, test_type):
         import platform

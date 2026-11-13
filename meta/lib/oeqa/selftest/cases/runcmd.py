@@ -13,7 +13,7 @@ import threading
 import time
 import signal
 
-class MemLogger(object):
+class MemLogger:
     def __init__(self):
         self.info_msgs = []
         self.error_msgs = []

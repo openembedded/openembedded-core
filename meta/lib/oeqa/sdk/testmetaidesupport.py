@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
-class TestSDK(object):
+class TestSDK:
     def run(self, d):
         import json
         import logging

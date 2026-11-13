@@ -15,7 +15,7 @@ from oeqa.core.loader import OETestLoader
 from oeqa.core.runner import OETestRunner
 from oeqa.core.exception import OEQAMissingManifest, OEQATestNotFound
 
-class OETestContext(object):
+class OETestContext:
     loaderClass = OETestLoader
     runnerClass = OETestRunner
 
@@ -97,7 +97,7 @@ class OETestContext(object):
         self.runner = self.runnerClass(self, verbosity=2)
         return self.runner.list_tests(self.suites, display_type)
 
-class OETestContextExecutor(object):
+class OETestContextExecutor:
     _context_class = OETestContext
     _script_executor = 'oe-test'
 

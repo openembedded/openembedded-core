@@ -12,7 +12,7 @@ from oeqa.utils.commands import bitbake, get_bb_var, get_bb_vars
 import oe.spdx30
 
 
-class SPDX3CheckBase(object):
+class SPDX3CheckBase:
     """
     Base class for checking SPDX 3 based tests
     """

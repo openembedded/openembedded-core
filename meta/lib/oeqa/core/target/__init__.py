@@ -6,7 +6,7 @@
 
 from abc import abstractmethod
 
-class OETarget(object):
+class OETarget:
 
     def __init__(self, logger, *args, **kwargs):
         self.logger = logger

@@ -182,7 +182,7 @@ subunit._OutSideTest.addSkip = outSideTestaddSkip
 # is available and accepts writes. This allows unittest with buffer=True
 # to interact ok with subunit which wants to access sys.stdout.buffer.
 #
-class dummybuf(object):
+class dummybuf:
    def __init__(self, parent):
        self.p = parent
    def write(self, data):
