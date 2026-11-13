@@ -18,7 +18,6 @@ import os
 import sys
 import traceback
 import unittest
-import subprocess
 import testtools
 import threading
 import time

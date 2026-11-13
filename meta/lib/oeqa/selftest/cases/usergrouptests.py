@@ -7,7 +7,6 @@
 import os
 import shutil
 from oeqa.selftest.case import OESelftestTestCase
-from oeqa.utils.commands import bitbake
 from oeqa.utils.commands import bitbake, get_bb_var, get_test_layer
 
 class UserGroupTests(OESelftestTestCase):

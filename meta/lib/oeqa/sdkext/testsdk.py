@@ -14,7 +14,7 @@ class TestSDKExt(TestSDKBase):
         import logging
 
         from bb.utils import export_proxies
-        from oeqa.utils import avoid_paths_in_environ, make_logger_bitbake_compatible, subprocesstweak
+        from oeqa.utils import make_logger_bitbake_compatible, subprocesstweak
         from oeqa.sdkext.context import OESDKExtTestContext, OESDKExtTestContextExecutor
         from oeqa.utils import get_json_result_dir
 

@@ -72,7 +72,7 @@ class HTTPService:
             self.logger.info("Stopped HTTPService on %s:%s" % (self.host, self.port))
 
 if __name__ == "__main__":
-    import sys, logging
+    import sys
 
     logger = logging.getLogger(__name__)
     logging.basicConfig(level=logging.DEBUG)
