@@ -26,7 +26,7 @@ sys.path = sys.path + [devtool_path]
 
 import oe.recipeutils
 from devtool import standard
-from devtool import exec_build_env_command, setup_tinfoil, DevtoolError, parse_recipe, use_external_build, update_unlockedsigs, check_prerelease_version
+from devtool import exec_build_env_command, setup_tinfoil, DevtoolError, parse_recipe, use_external_build, update_unlockedsigs, check_prerelease_version, get_workspace_appends_dir
 
 logger = logging.getLogger('devtool')
 
@@ -138,7 +138,7 @@ def _write_append(rc, srctreebase, srctree, same_dir, no_same_dir, revs, copied,
     if not os.path.exists(rc):
         raise DevtoolError("bbappend not created because %s does not exist" % rc)
 
-    appendpath = os.path.join(workspace, 'appends')
+    appendpath = get_workspace_appends_dir(workspace)
     if not os.path.exists(appendpath):
         bb.utils.mkdirhier(appendpath)
 

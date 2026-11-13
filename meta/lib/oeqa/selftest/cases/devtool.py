@@ -37,8 +37,7 @@ def setUpModule():
     bblayers_conf = os.path.join(os.environ['BUILDDIR'], 'conf', 'bblayers.conf')
     edited_layers = []
     # make sure user doesn't have a local workspace
-    result = runCmd('bitbake-layers show-layers')
-    assert "workspacelayer" not in result.output, "Devtool test suite cannot be run with a local workspace directory"
+    assert not get_bb_var('LAYERDIR_workspace'), "Devtool test suite cannot be run with a local workspace directory"
 
     # We need to take a copy of the meta layer so we can modify it and not
     # have any races against other tests that might be running in parallel
@@ -795,7 +794,7 @@ class DevtoolModifyTests(DevtoolBase):
         result = runCmd('devtool modify mdadm -x %s' % tempdir)
         self.assertExists(os.path.join(tempdir, 'Makefile'), 'Extracted source could not be found')
         self.assertExists(os.path.join(self.workspacedir, 'conf', 'layer.conf'), 'Workspace directory not created')
-        matches = glob.glob(os.path.join(self.workspacedir, 'appends', 'mdadm_*.bbappend'))
+        matches = glob.glob(os.path.join(self.workspacedir, 'recipes-appends', 'mdadm_*.bbappend'))
         self.assertTrue(matches, 'bbappend not created %s' % result.output)
 
         # Test devtool status
@@ -857,7 +856,7 @@ class DevtoolModifyTests(DevtoolBase):
                 oe.path.join(self.workspacedir, 'conf', 'layer.conf'),
                 'Workspace directory not created'
             )
-            matches = glob.glob(oe.path.join(self.workspacedir, 'appends', 'go-helloworld_*.bbappend'))
+            matches = glob.glob(oe.path.join(self.workspacedir, 'recipes-appends', 'go-helloworld_*.bbappend'))
             self.assertTrue(matches, 'bbappend not created %s' % result.output)
 
     def test_devtool_buildclean(self):
@@ -988,7 +987,7 @@ class DevtoolModifyTests(DevtoolBase):
         result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
         srcfile = os.path.join(tempdir, 'share/dot.bashrc')
         self.assertExists(srcfile, 'Extracted source could not be found')
-        matches = glob.glob(os.path.join(self.workspacedir, 'appends', '%s_*.bbappend' % testrecipe))
+        matches = glob.glob(os.path.join(self.workspacedir, 'recipes-appends', '%s_*.bbappend' % testrecipe))
         self.assertTrue(matches, 'bbappend not created')
         # Test devtool status
         result = runCmd('devtool status')
@@ -1013,7 +1012,7 @@ class DevtoolModifyTests(DevtoolBase):
         result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
         self.assertExists(os.path.join(tempdir, 'Makefile.am'), 'Extracted source could not be found')
         self.assertExists(os.path.join(self.workspacedir, 'conf', 'layer.conf'), 'Workspace directory not created. devtool output: %s' % result.output)
-        matches = glob.glob(os.path.join(self.workspacedir, 'appends', 'psplash_*.bbappend'))
+        matches = glob.glob(os.path.join(self.workspacedir, 'recipes-appends', 'psplash_*.bbappend'))
         self.assertTrue(matches, 'bbappend not created')
         # Test devtool status
         result = runCmd('devtool status')
@@ -1039,7 +1038,7 @@ class DevtoolModifyTests(DevtoolBase):
         self.add_command_to_tearDown('bitbake-layers remove-layer */workspace')
         result = runCmd('git clone https://git.yoctoproject.org/psplash %s && devtool modify -n %s %s' % (tempdir, testrecipe, tempdir))
         self.assertExists(os.path.join(self.workspacedir, 'conf', 'layer.conf'), 'Workspace directory not created. devtool output: %s' % result.output)
-        matches = glob.glob(os.path.join(self.workspacedir, 'appends', 'psplash_*.bbappend'))
+        matches = glob.glob(os.path.join(self.workspacedir, 'recipes-appends', 'psplash_*.bbappend'))
         self.assertTrue(matches, 'bbappend not created')
         # Test devtool status
         result = runCmd('devtool status')
@@ -1087,7 +1086,7 @@ class DevtoolModifyTests(DevtoolBase):
         result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
         self.assertExists(os.path.join(tempdir, 'Cargo.toml'), 'Extracted source could not be found')
         self.assertExists(os.path.join(self.workspacedir, 'conf', 'layer.conf'), 'Workspace directory not created. devtool output: %s' % result.output)
-        matches = glob.glob(os.path.join(self.workspacedir, 'appends', '%s_*.bbappend' % testrecipe))
+        matches = glob.glob(os.path.join(self.workspacedir, 'recipes-appends', '%s_*.bbappend' % testrecipe))
         self.assertTrue(matches, 'bbappend not created')
         # Test devtool status
         result = runCmd('devtool status')
@@ -1161,7 +1160,7 @@ class DevtoolModifyTests(DevtoolBase):
         result = runCmd('devtool modify %s -x %s' % (testrecipe, tempdir))
         self.assertExists(os.path.join(tempdir, 'configure.ac'), 'Extracted source could not be found')
         self.assertExists(os.path.join(self.workspacedir, 'conf', 'layer.conf'), 'Workspace directory not created')
-        matches = glob.glob(os.path.join(self.workspacedir, 'appends', '%s_*.bbappend' % testrecipe))
+        matches = glob.glob(os.path.join(self.workspacedir, 'recipes-appends', '%s_*.bbappend' % testrecipe))
         self.assertTrue(matches, 'bbappend not created')
         # Test devtool status
         result = runCmd('devtool status')
@@ -1248,7 +1247,7 @@ class DevtoolModifyTests(DevtoolBase):
         result = runCmd('devtool modify %s -x %s' % (virtrecipe, tempdir))
         self.assertExists(os.path.join(tempdir, 'Makefile.am'), 'Extracted source could not be found')
         self.assertExists(os.path.join(self.workspacedir, 'conf', 'layer.conf'), 'Workspace directory not created')
-        matches = glob.glob(os.path.join(self.workspacedir, 'appends', '%s_*.bbappend' % realrecipe))
+        matches = glob.glob(os.path.join(self.workspacedir, 'recipes-appends', '%s_*.bbappend' % realrecipe))
         self.assertTrue(matches, 'bbappend not created %s' % result.output)
         # Test devtool status
         result = runCmd('devtool status')
@@ -3170,7 +3169,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertExists(os.path.join(self.workspacedir, 'conf',
                                        'layer.conf'), 'Workspace directory not created')
         matches = glob.glob(os.path.join(self.workspacedir,
-                            'appends', recipe_name + '.bbappend'))
+                            'recipes-appends', recipe_name + '.bbappend'))
         self.assertTrue(matches, 'bbappend not created %s' % result.output)
 
         # Test devtool status
@@ -3540,7 +3539,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
 
     def _verify_slirp_bbappend(self, testimage):
         """Verify update_qb_slirp_opt() wrote the SSH port-forward to the image bbappend."""
-        bbappend = os.path.join(self.workspacedir, 'appends', testimage + '.bbappend')
+        bbappend = os.path.join(self.workspacedir, 'recipes-appends', testimage + '.bbappend')
         self.assertExists(bbappend, 'Image bbappend not created at %s' % bbappend)
         with open(bbappend) as f:
             bbappend_content = f.read()
@@ -3608,7 +3607,7 @@ class DevtoolIdeSdkTests(DevtoolBase):
         self.assertIn('exec runqemu ', helper)
         self.assertIn(nfs_rootfs, helper)
 
-        bbappend = os.path.join(self.workspacedir, 'appends', testimage + '.bbappend')
+        bbappend = os.path.join(self.workspacedir, 'recipes-appends', testimage + '.bbappend')
         with open(bbappend) as append_file:
             self.assertRegex(
                 append_file.read(),
@@ -4385,7 +4384,7 @@ class DevtoolIdeSdkKernelTests(DevtoolIdeSdkTests):
         self.assertExists(os.path.join(self.workspacedir, 'conf', 'layer.conf'),
                           'Workspace directory not created')
         matches = glob.glob(os.path.join(
-            self.workspacedir, 'appends', recipe_name + '.bbappend'))
+            self.workspacedir, 'recipes-appends', recipe_name + '.bbappend'))
         self.assertTrue(matches, 'bbappend not created %s' % result.output)
 
         # Test devtool status

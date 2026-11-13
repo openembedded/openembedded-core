@@ -22,7 +22,7 @@ from pathlib import Path
 
 import scriptutils
 import bb
-from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, DevtoolError, parse_recipe
+from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, DevtoolError, parse_recipe, get_workspace_appends_dir
 from devtool.standard import get_real_srctree
 from devtool.deploy import parse_packages_arg
 from devtool.ide_plugins import BuildTool, DebuggerCrossConfig, LOOPBACK_HOSTS, is_loopback_target
@@ -243,7 +243,7 @@ class RecipeImage:
         that have a bbappend, to be passed on to the RecipeImage constructor.
         """
         originals = {}
-        appends_dir = os.path.join(config.workspace_path, 'appends')
+        appends_dir = get_workspace_appends_dir(config.workspace_path)
         for name in recipe_names:
             bbappend = os.path.join(appends_dir, name + '.bbappend')
             if not os.path.exists(bbappend):
@@ -259,7 +259,7 @@ class RecipeImage:
         return originals
 
     def initialize(self, config, tinfoil, nfs=None):
-        appends_dir = os.path.join(config.workspace_path, 'appends')
+        appends_dir = get_workspace_appends_dir(config.workspace_path)
         self._bbappend = os.path.join(appends_dir, self.name + '.bbappend')
 
         # strip_bbappend_sections() ran before the tinfoil session started, so
@@ -897,7 +897,7 @@ class RecipeModified:
         original recipe content and only non standard flags can be bbappended later.
         """
         originals = {}
-        appends_dir = os.path.join(config.workspace_path, 'appends')
+        appends_dir = get_workspace_appends_dir(config.workspace_path)
         for name in recipe_names:
             bbappend = os.path.join(appends_dir, name + '.bbappend')
             if not os.path.exists(bbappend):
@@ -1795,7 +1795,7 @@ def ide_setup(args, config, basepath, workspace):
             invalid_params = True
         if DevtoolIdeMode.modified in modes:
             if not recipes_modified_names:
-                appends_dir = os.path.join(config.workspace_path, 'appends')
+                appends_dir = get_workspace_appends_dir(config.workspace_path)
                 recipes_modified_names = sorted(
                     bb.parse.vars_from_file(path, None)[0]
                     for path in glob.glob(os.path.join(appends_dir, '*.bbappend'))
@@ -1815,7 +1815,7 @@ def ide_setup(args, config, basepath, workspace):
             if not recipes_modified_names:
                 logger.error(
                     "At least one modified recipe is required or must be guessable from %s." %
-                    os.path.join(config.workspace_path, 'appends'))
+                    get_workspace_appends_dir(config.workspace_path))
                 invalid_params = True
             for modified_recipe_name in recipes_modified_names:
                 if modified_recipe_name.startswith('nativesdk-') or modified_recipe_name.endswith('-native'):
@@ -2066,7 +2066,7 @@ def register_commands(subparsers, context):
         'recipenames', nargs='+', help='Generate an IDE configuration suitable to work on the given recipes.\n'
         'Depending on the --mode parameter different types of SDKs and IDE configurations are generated.\n'
         'In modified mode at least the image recipe is required; if no modified recipe is passed, '
-        'all modified recipes are taken from <workspace>/appends/*.bbappend.')
+        'all modified recipes are taken from <workspace>/recipes-appends/*.bbappend.')
     parser_ide_sdk.add_argument(
         '-m', '--mode', type=DevtoolIdeMode, action='append',
         help='Different SDK types are supported. Repeat --mode to generate both:\n'

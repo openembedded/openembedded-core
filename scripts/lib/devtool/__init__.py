@@ -17,6 +17,21 @@ import codecs
 
 logger = logging.getLogger('devtool')
 
+# LAYERNAME used for the auto-generated workspace layer
+WORKSPACE_LAYERNAME = 'workspace'
+# Layer(s) the workspace layer depends upon (LAYERDEPENDS)
+WORKSPACE_LAYERDEPENDS = 'oe-core'
+# Subdirectory of the workspace layer holding bbappends. Bitbake constructs
+# BBFILES automatically from a layer's recipes* directories, so this needs
+# to match that pattern.
+WORKSPACE_APPENDS_DIR = 'recipes-appends'
+# Subdirectory used for bbappends by older versions of devtool
+WORKSPACE_OLD_APPENDS_DIR = 'appends'
+
+def get_workspace_appends_dir(workspace_path):
+    """Return the directory within the workspace layer holding bbappends"""
+    return os.path.join(workspace_path, WORKSPACE_APPENDS_DIR)
+
 class DevtoolError(Exception):
     """Exception for handling devtool errors"""
     def __init__(self, message, exitcode=1):
@@ -286,7 +301,7 @@ def recipe_to_append(recipefile, config, wildcard=False):
     appendname = os.path.splitext(os.path.basename(recipefile))[0]
     if wildcard:
         appendname = re.sub(r'_.*', '_%', appendname)
-    appendpath = os.path.join(config.workspace_path, 'appends')
+    appendpath = get_workspace_appends_dir(config.workspace_path)
     appendfile = os.path.join(appendpath, appendname + '.bbappend')
     return appendfile
 

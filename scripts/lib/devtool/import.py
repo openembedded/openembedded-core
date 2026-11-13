@@ -14,6 +14,7 @@ import json
 import fnmatch
 
 from devtool import standard, setup_tinfoil, replace_from_file, DevtoolError
+from devtool import WORKSPACE_APPENDS_DIR, WORKSPACE_OLD_APPENDS_DIR
 from devtool import export
 
 logger = logging.getLogger('devtool')
@@ -45,12 +46,21 @@ def devimport(args, config, basepath, workspace):
 
         members = tar.getmembers()
 
+        def is_append(name):
+            return name == WORKSPACE_APPENDS_DIR or name.startswith(WORKSPACE_APPENDS_DIR + '/')
+
+        # Archives exported by older versions of devtool stored bbappends
+        # under appends/, map these to the current location
+        for member in members:
+            if member.name == WORKSPACE_OLD_APPENDS_DIR or member.name.startswith(WORKSPACE_OLD_APPENDS_DIR + '/'):
+                member.name = WORKSPACE_APPENDS_DIR + member.name[len(WORKSPACE_OLD_APPENDS_DIR):]
+
         # Get appends and recipes from the exported archive, these
         # will be needed to find out those appends without corresponding
         # recipe pair
         append_fns, recipe_fns = set(), set()
         for member in members:
-            if member.name.startswith('appends'):
+            if is_append(member.name):
                 append_fns.add(get_pn(member.name))
             elif member.name.startswith('recipes'):
                 recipe_fns.add(get_pn(member.name))
@@ -82,7 +92,7 @@ def devimport(args, config, basepath, workspace):
             for nonimp in non_importables:
                 pn = nonimp.split('_')[0]
                 # do not extract data from non-importable recipes or metadata
-                if member.name.startswith('appends/%s' % nonimp) or \
+                if member.name.startswith('%s/%s' % (WORKSPACE_APPENDS_DIR, nonimp)) or \
                         member.name.startswith('recipes/%s' % nonimp) or \
                         member.name.startswith('sources/%s' % pn):
                     break
@@ -102,7 +112,7 @@ def devimport(args, config, basepath, workspace):
                     tar.extract(member, path=config.workspace_path)
 
                 # Update EXTERNALSRC and the devtool md5 file
-                if member.name.startswith('appends'):
+                if is_append(member.name):
                     if export_workspace_path:
                         # appends created by 'devtool modify' just need to update the workspace
                         replace_from_file(path, export_workspace_path, config.workspace_path)
