@@ -47,24 +47,17 @@ class OETestContext:
         return modules
 
     def skipTests(self, skips):
-        if not skips:
-            return
-        def skipfuncgen(skipmsg):
-            def func():
-                raise unittest.SkipTest(skipmsg)
-            return func
-        class_ids = {}
+        # Use unittest's skip support so that skipped tests, and the class
+        # setup of skipped classes, don't run
         for test in self.suites:
-            if test.__class__ not in class_ids:
-                class_ids[test.__class__] = '.'.join(test.id().split('.')[:-1])
+            class_id = test.id().rsplit('.', 1)[0]
             for skip in skips:
-                if (test.id()+'.').startswith(skip+'.'):
-                    setattr(test, 'setUp', skipfuncgen('Skip by the command line argument "%s"' % skip))
-        for tclass in class_ids:
-            cid = class_ids[tclass]
-            for skip in skips:
-                if (cid + '.').startswith(skip + '.'):
-                    setattr(tclass, 'setUpHooker', skipfuncgen('Skip by the command line argument "%s"' % skip))
+                msg = 'Skip by the command line argument "%s"' % skip
+                if (class_id + '.').startswith(skip + '.'):
+                    unittest.skip(msg)(test.__class__)
+                elif (test.id() + '.').startswith(skip + '.'):
+                    method = getattr(test, test._testMethodName)
+                    setattr(test, test._testMethodName, unittest.skip(msg)(method))
 
     def loadTests(self, module_paths, modules=[], tests=[],
             modules_manifest="", modules_required=[], **kwargs):
