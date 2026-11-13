@@ -34,7 +34,7 @@ class VerifyManifest(OESelftestTestCase):
         except OSError as e:
             self.logger.debug("{}: checking of {} failed"\
                     .format(self.classname, manifest))
-            raise e
+            raise
 
         return manifest_errors
 
