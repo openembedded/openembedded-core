@@ -40,7 +40,7 @@ def _find_duplicated_modules(suite, directory):
 def _built_modules_dict(modules, logger):
     modules_dict = {}
 
-    if modules == None:
+    if modules is None:
         return modules_dict
 
     for module in modules:
