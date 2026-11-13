@@ -40,8 +40,7 @@ class VerifyManifest(OESelftestTestCase):
 
     #this will possibly move from here
     @classmethod
-    def get_dir_from_bb_var(self, bb_var, target = None):
-        target == self.buildtarget if target == None else target
+    def get_dir_from_bb_var(self, bb_var, target):
         directory = get_bb_var(bb_var, target);
         if not directory or not os.path.isdir(directory):
             self.logger.debug("{}: {} points to {} when target = {}"\
