@@ -6,6 +6,7 @@
 #
 
 import os
+import re
 import sys
 import unittest
 from unittest import mock
@@ -63,6 +64,21 @@ class TestConcurrency(TestBase):
             self._run(['results'], processes=2)
             self.assertIs(sys.stdout, stdout)
             self.assertIs(sys.stderr, stderr)
+
+    def test_concurrent_failed_count(self):
+        # The failed count in the progress shown for each test must be the
+        # number of tests which failed so far in all processes
+        tc, result = self._run(['failures'], processes=2)
+        failed = {test.id() for test, _ in result.failures + result.errors}
+        self.assertEqual(len(failed), 4)
+        # progressinfo is in the order the results were received
+        seen = set()
+        for test_id, progress in result.progressinfo.items():
+            if test_id in failed:
+                seen.add(test_id)
+            count = int(re.search(r"\((\d+) failed\)", progress).group(1))
+            self.assertEqual(count, len(seen), msg=progress)
+        self.assertEqual(seen, failed)
 
 if __name__ == '__main__':
     unittest.main()

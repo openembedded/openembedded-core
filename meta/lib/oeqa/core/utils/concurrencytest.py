@@ -69,6 +69,11 @@ class BBThreadsafeForwardingResult(ThreadsafeForwardingResult):
         self.semaphore.acquire()
         try:
             if self._test_start:
+                # Count failing tests across all the processes. This is called
+                # once per result, unlike the add* methods of the target which
+                # testtools may call twice.
+                if method.__name__ in ('addError', 'addFailure'):
+                    self.finalresult.failedtests.add(test.id())
                 self.result.starttime[test.id()] = self._test_start.timestamp()
                 self.result.threadprogress[self.threadnum].append(test.id())
                 totalprogress = sum(len(x) for x in self.result.threadprogress.values())
@@ -79,7 +84,7 @@ class BBThreadsafeForwardingResult(ThreadsafeForwardingResult):
                     totalprogress,
                     self.totaltests,
                     "{0:.2f}".format(time.time()-self._test_start.timestamp()),
-                    self.target.failed_tests,
+                    len(self.finalresult.failedtests),
                     test.id())
         finally:
             self.semaphore.release()
@@ -211,6 +216,7 @@ class ConcurrentTestSuite(unittest.TestSuite):
             queue = Queue()
             semaphore = threading.Semaphore(1)
             result.threadprogress = {}
+            result.failedtests = set()
             for i, (testserver, testnum, output) in enumerate(testservers):
                 result.threadprogress[i] = []
                 process_result = BBThreadsafeForwardingResult(
