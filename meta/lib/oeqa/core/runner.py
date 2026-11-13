@@ -15,6 +15,11 @@ import sys
 from unittest import TextTestResult as _TestResult
 from unittest import TextTestRunner as _TestRunner
 
+def _case_id(case):
+    # Failures in subtests are recorded against a subtest object, use the
+    # id of the test case it belongs to
+    return getattr(case, 'test_case', case).id()
+
 class OEStreamLogger:
     def __init__(self, logger):
         self.logger = logger
@@ -73,7 +78,7 @@ class OETestResult(_TestResult):
         # to wait until selftest finishes to see them.
         for t in ['failures', 'errors', 'skipped', 'expectedFailures']:
             for (scase, msg) in getattr(self, t):
-                if test.id() == scase.id():
+                if test.id() == _case_id(scase):
                     self.tc.logger.info(str(msg))
                     self.shownmsg.append(test.id())
                     break
@@ -109,7 +114,7 @@ class OETestResult(_TestResult):
                     scase, msg = resultclass
                 else:
                     scase, msg = resultclass, None
-                if case.id() == scase.id():
+                if case.id() == _case_id(scase):
                     found = True
                     break
                 scase_str = str(scase.id())
