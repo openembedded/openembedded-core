@@ -56,6 +56,9 @@ class BBThreadsafeForwardingResult(ThreadsafeForwardingResult):
         self.totaltests = totaltests
         self.buffer = True
         self.outputbuf = output
+        # The process' output accumulates in outputbuf; this is how much of
+        # it was given to earlier results
+        self.outputoffset = 0
         self.finalresult = finalresult
         self.finalresult.buffer = True
         self.target = target
@@ -78,8 +81,13 @@ class BBThreadsafeForwardingResult(ThreadsafeForwardingResult):
                     test.id())
         finally:
             self.semaphore.release()
-        self.finalresult._stderr_buffer = io.StringIO(initial_value=self.outputbuf.getvalue().decode("utf-8"))
+        # The process runs its tests one at a time, so the output since the
+        # previous result is this test's. stdout and stderr share one pipe so
+        # it is all given as stderr.
+        output = self.outputbuf.getvalue()
+        self.finalresult._stderr_buffer = io.StringIO(initial_value=output[self.outputoffset:].decode("utf-8"))
         self.finalresult._stdout_buffer = io.StringIO()
+        self.outputoffset = len(output)
         super()._add_result_with_semaphore(method, test, *args, **kwargs)
 
 class ProxyTestResult:
