@@ -15,7 +15,7 @@ import sys
 from unittest import TextTestResult as _TestResult
 from unittest import TextTestRunner as _TestRunner
 
-class OEStreamLogger(object):
+class OEStreamLogger:
     def __init__(self, logger):
         self.logger = logger
         self.buffer = ""
@@ -243,7 +243,7 @@ class OETestResult(_TestResult):
         # Account for expected failures
         return not self.wasSuccessful() or len(self.expectedFailures)
 
-class OEListTestsResult(object):
+class OEListTestsResult:
     def wasSuccessful(self):
         return True
 
@@ -333,7 +333,7 @@ class OETestRunner(_TestRunner):
 
         return OEListTestsResult()
 
-class OETestResultJSONHelper(object):
+class OETestResultJSONHelper:
 
     testresult_filename = 'testresults.json'
 

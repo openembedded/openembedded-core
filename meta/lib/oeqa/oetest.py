@@ -155,7 +155,7 @@ def custom_verbose(msg, *args, **kwargs):
             logger.info(_buffer_logger.rstrip("\n"), *args, **kwargs)
         _buffer_logger = ""
 
-class TestContext(object):
+class TestContext:
     def __init__(self, d, exported=False):
         self.d = d
 

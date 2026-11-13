@@ -25,7 +25,7 @@ try:
 except ImportError:
     pass
 
-class Command(object):
+class Command:
     def __init__(self, command, bg=False, timeout=None, data=None, output_log=None, **options):
 
         self.defaultopts = {
@@ -161,7 +161,7 @@ class Command(object):
             self.log.debug("Last 20 lines:\n%s" % lout)
 
 
-class Result(object):
+class Result:
     pass
 
 
