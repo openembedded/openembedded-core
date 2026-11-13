@@ -878,7 +878,7 @@ class RecipetoolTests(RecipetoolBase):
                     if e.errno == errno.EROFS:
                         return False
                     else:
-                        raise e
+                        raise
                 if p == "lib":
                     # Can race with other tests
                     self.add_command_to_tearDown('rmdir --ignore-fail-on-non-empty %s' % dstdir)
