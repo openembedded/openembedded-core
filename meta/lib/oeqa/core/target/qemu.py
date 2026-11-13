@@ -4,10 +4,6 @@
 # SPDX-License-Identifier: MIT
 #
 
-import os
-import sys
-import signal
-import time
 import glob
 import subprocess
 from collections import defaultdict

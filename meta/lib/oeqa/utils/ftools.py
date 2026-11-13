@@ -4,8 +4,6 @@
 # SPDX-License-Identifier: MIT
 #
 
-import os
-import re
 import errno
 
 def write_file(path, data):

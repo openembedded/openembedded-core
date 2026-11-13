@@ -9,7 +9,6 @@ import time
 import select
 import logging
 import subprocess
-import codecs
 
 from . import OETarget
 

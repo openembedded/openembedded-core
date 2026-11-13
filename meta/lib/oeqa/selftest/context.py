@@ -6,12 +6,10 @@
 
 import os
 import time
-import glob
 import sys
 import importlib
 import subprocess
 import unittest
-from random import choice
 
 import oeqa
 import oe
@@ -373,7 +371,6 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         return json_result_dir
 
     def get_configuration(self, args):
-        import platform
         from oeqa.utils.metadata import metadata_from_bb
         metadata = metadata_from_bb()
         oeselftest_metadata = get_oeselftest_metadata(args)

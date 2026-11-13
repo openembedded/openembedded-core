@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: MIT
 #
 
-import os
 import inspect
 import unittest
 

@@ -18,7 +18,6 @@ import select
 import errno
 import string
 import threading
-import codecs
 import tempfile
 from collections import defaultdict
 from contextlib import contextmanager

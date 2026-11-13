@@ -22,7 +22,6 @@ from xml.dom import minidom
 
 import oe.path
 from oeqa.utils.commands import CommandError, runCmd, get_bb_vars
-from oeqa.utils.git import GitError, GitRepo
 
 # Get logger for this module
 log = logging.getLogger('build-perf')

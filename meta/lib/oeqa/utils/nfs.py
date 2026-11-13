@@ -4,10 +4,8 @@
 # SPDX-License-Identifier: MIT
 #
 import os
-import sys
 import tempfile
 import contextlib
-import socket
 from oeqa.utils.commands import bitbake, get_bb_var, Command
 from oeqa.utils.network import get_free_port
 

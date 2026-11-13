@@ -8,10 +8,8 @@
 # dictionary as well as test context to any action to run.
 
 import datetime
-import io
 import os
 import stat
-import subprocess
 import tempfile
 from oeqa.utils import get_artefact_dir
 

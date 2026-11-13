@@ -9,7 +9,6 @@ from oeqa.sdk.context import OESDKTestContext, OESDKTestContextExecutor
 class TestSDKBase:
     @staticmethod
     def get_sdk_configuration(d, test_type):
-        import platform
         import oe.lsb
         from oeqa.utils.metadata import get_layers
         configuration = {'TEST_TYPE': test_type,
@@ -80,7 +79,6 @@ class TestSDK(TestSDKBase):
     def run(self, d):
 
         import os
-        import subprocess
         import json
         import logging
 

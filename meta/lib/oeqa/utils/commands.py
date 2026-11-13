@@ -16,7 +16,6 @@ import time
 import logging
 from oeqa.utils import CommandError
 from oeqa.utils import ftools
-import re
 import contextlib
 import errno
 # Export test doesn't require bb
