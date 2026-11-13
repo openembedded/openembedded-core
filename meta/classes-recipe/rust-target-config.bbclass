@@ -418,6 +418,10 @@ def rust_gen_target(d, thing, wd, arch):
         tspec['llvm-abiname'] = d.getVar('TUNE_RISCV_ABI')
     if "loongarch64" in tspec['llvm-target']:
         tspec['llvm-abiname'] = "lp64d"
+    if arch_abi == "mips64-n32":
+        tspec['llvm-abiname'] = "n32"
+    elif rust_arch in ("mips64", "mips64el"):
+        tspec['llvm-abiname'] = "n64"
     if "powerpc64le" in tspec['llvm-target']:
         tspec['llvm-abiname'] = "elfv2"
     elif "powerpc64" in tspec['llvm-target']:
