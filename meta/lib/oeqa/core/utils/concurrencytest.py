@@ -54,7 +54,9 @@ class BBThreadsafeForwardingResult(ThreadsafeForwardingResult):
         self.threadnum = threadnum
         self.totalinprocess = totalinprocess
         self.totaltests = totaltests
-        self.buffer = True
+        # Don't set self.buffer, the output comes through outputbuf. Buffering
+        # here would swap sys.stdout/stderr in each reader thread, unlocked,
+        # and could leave them replaced after the tests have run.
         self.outputbuf = output
         # The process' output accumulates in outputbuf; this is how much of
         # it was given to earlier results

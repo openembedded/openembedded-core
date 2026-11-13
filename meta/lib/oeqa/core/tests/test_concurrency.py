@@ -6,6 +6,7 @@
 #
 
 import os
+import sys
 import unittest
 from unittest import mock
 
@@ -52,6 +53,16 @@ class TestConcurrency(TestBase):
             self.assertIn("Output from testStreams%d" % n, output)
             for other in {1, 2, 3} - {n}:
                 self.assertNotIn("testStreams%d" % other, output)
+
+    def test_concurrent_streams_restored(self):
+        # Each process' results are read in a separate thread; after running,
+        # sys.stdout and sys.stderr must be the original streams again. Any
+        # problem here is a race, so run several times.
+        stdout, stderr = sys.stdout, sys.stderr
+        for i in range(50):
+            self._run(['results'], processes=2)
+            self.assertIs(sys.stdout, stdout)
+            self.assertIs(sys.stderr, stderr)
 
 if __name__ == '__main__':
     unittest.main()
