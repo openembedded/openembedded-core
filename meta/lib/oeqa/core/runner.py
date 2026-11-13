@@ -20,6 +20,10 @@ def _case_id(case):
     # id of the test case it belongs to
     return getattr(case, 'test_case', case).id()
 
+# setUpClass/setUpModule failures are reported against a placeholder whose id
+# names the class or module
+_setup_failure_re = re.compile(r"^(?:setUpModule|setUpClass) \((?P<name>.*)\)")
+
 class OEStreamLogger:
     def __init__(self, logger):
         self.logger = logger
@@ -41,6 +45,10 @@ class OEStreamLogger:
             handler.flush()
 
 class OETestResult(_TestResult):
+    # If a test has several results, e.g. from subtests, the status reported
+    # is the first of these which it has
+    status_priority = ('FAILED', 'ERROR', 'SKIPPED', 'EXPECTEDFAIL', 'PASSED')
+
     def __init__(self, tc, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -49,7 +57,12 @@ class OETestResult(_TestResult):
         self.endtime = {}
         self.progressinfo = {}
         self.extraresults = {}
-        self.shownmsg = []
+        self.shownmsg = set()
+
+        # (status, message) results for each test id, and for setUpClass and
+        # setUpModule failures by class or module name
+        self.test_results = {}
+        self.setup_results = {}
 
         # Inject into tc so that TestDepends decorator can see results
         tc.results = self
@@ -76,12 +89,10 @@ class OETestResult(_TestResult):
 
         # Print the errors/failures early to aid/speed debugging, its a pain
         # to wait until selftest finishes to see them.
-        for t in ['failures', 'errors', 'skipped', 'expectedFailures']:
-            for (scase, msg) in getattr(self, t):
-                if test.id() == _case_id(scase):
-                    self.tc.logger.info(str(msg))
-                    self.shownmsg.append(test.id())
-                    break
+        for status, msg in self.test_results.get(test.id(), []):
+            if status != 'PASSED' and msg:
+                self.tc.logger.info(str(msg))
+                self.shownmsg.add(test.id())
 
     # Python 3.12 added this, stub it out for now
     def addDuration(self, test, elapsed):
@@ -101,45 +112,23 @@ class OETestResult(_TestResult):
         msg += " (successes=%d, skipped=%d, failures=%d, errors=%d)" % (len(self.successes), len(self.skipped), len(self.failures), len(self.errors))
         self.tc.logger.info(msg)
 
+    def _addResult(self, test, status, msg=None):
+        m = _setup_failure_re.match(str(test.id()))
+        if m:
+            self.setup_results.setdefault(m.group('name'), []).append((status, msg))
+        else:
+            self.test_results.setdefault(_case_id(test), []).append((status, msg))
+
     def _getTestResultDetails(self, case):
-        result_types = {'failures': 'FAILED', 'errors': 'ERROR', 'skipped': 'SKIPPED',
-                        'expectedFailures': 'EXPECTEDFAIL', 'successes': 'PASSED',
-                        'unexpectedSuccesses' : 'PASSED'}
-
-        for rtype in result_types:
-            found = False
-            for resultclass in getattr(self, rtype):
-                # unexpectedSuccesses are just lists, not lists of tuples
-                if isinstance(resultclass, tuple):
-                    scase, msg = resultclass
-                else:
-                    scase, msg = resultclass, None
-                if case.id() == _case_id(scase):
-                    found = True
-                    break
-                scase_str = str(scase.id())
-
-                # When fails at module or class level the class name is passed as string
-                # so figure out to see if match
-                m = re.search(r"^setUpModule \((?P<module_name>.*)\).*$", scase_str)
-                if m:
-                    if case.__class__.__module__ == m.group('module_name'):
-                        found = True
-                        break
-
-                m = re.search(r"^setUpClass \((?P<class_name>.*)\).*$", scase_str)
-                if m:
-                    class_name = "%s.%s" % (case.__class__.__module__,
-                                            case.__class__.__name__)
-
-                    if class_name == m.group('class_name'):
-                        found = True
-                        break
-
-            if found:
-                return result_types[rtype], msg
-
-        return 'UNKNOWN', None
+        results = self.test_results.get(case.id())
+        if not results:
+            # The test didn't run, look for a class or module setup failure
+            cls = case.__class__
+            results = self.setup_results.get("%s.%s" % (cls.__module__, cls.__name__)) or \
+                      self.setup_results.get(cls.__module__)
+        if not results:
+            return 'UNKNOWN', None
+        return min(results, key=lambda r: self.status_priority.index(r[0]))
 
     def extractExtraResults(self, test, details = None):
         extraresults = None
@@ -158,25 +147,43 @@ class OETestResult(_TestResult):
 
     def addError(self, test, *args, details = None):
         self.extractExtraResults(test, details = details)
-        return super().addError(test, *args)
+        super().addError(test, *args)
+        self._addResult(test, 'ERROR', self.errors[-1][1])
 
     def addFailure(self, test, *args, details = None):
         self.extractExtraResults(test, details = details)
-        return super().addFailure(test, *args)
+        super().addFailure(test, *args)
+        self._addResult(test, 'FAILED', self.failures[-1][1])
+
+    def addSubTest(self, test, subtest, err):
+        super().addSubTest(test, subtest, err)
+        if err is not None:
+            if issubclass(err[0], test.failureException):
+                self._addResult(test, 'FAILED', self.failures[-1][1])
+            else:
+                self._addResult(test, 'ERROR', self.errors[-1][1])
+
+    # No details argument, so testtools passes the reason
+    def addSkip(self, test, reason):
+        super().addSkip(test, reason)
+        self._addResult(test, 'SKIPPED', reason)
 
     def addSuccess(self, test, details = None):
         #Added so we can keep track of successes too
         self.successes.append((test, None))
         self.extractExtraResults(test, details = details)
-        return super().addSuccess(test)
+        super().addSuccess(test)
+        self._addResult(test, 'PASSED')
 
     def addExpectedFailure(self, test, *args, details = None):
         self.extractExtraResults(test, details = details)
-        return super().addExpectedFailure(test, *args)
+        super().addExpectedFailure(test, *args)
+        self._addResult(test, 'EXPECTEDFAIL', self.expectedFailures[-1][1])
 
     def addUnexpectedSuccess(self, test, details = None):
         self.extractExtraResults(test, details = details)
-        return super().addUnexpectedSuccess(test)
+        super().addUnexpectedSuccess(test)
+        self._addResult(test, 'PASSED')
 
     def logDetails(self, json_file_dir=None, configuration=None, result_id=None,
             dump_streams=False):
