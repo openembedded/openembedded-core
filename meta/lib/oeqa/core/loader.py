@@ -14,8 +14,7 @@ from oeqa.core.utils.test import getSuiteModules, getCaseID
 
 from oeqa.core.exception import OEQATestNotFound
 from oeqa.core.case import OETestCase
-from oeqa.core.decorator import decoratorClasses, OETestDecorator, \
-        OETestDiscover
+from oeqa.core.decorator import decoratorClasses, OETestDiscover
 
 # When loading tests, the unittest framework stores any exceptions and
 # displays them only when the run method is called.
@@ -103,23 +102,14 @@ class OETestLoader(unittest.TestLoader):
         self.tc._registry['cases'][case_id] = case
 
     def _handleTestCaseDecorators(self, case):
-        def _handle(obj):
-            if isinstance(obj, OETestDecorator):
-                if not obj.__class__ in decoratorClasses:
-                    raise Exception("Decorator %s isn't registered" \
-                            " in decoratorClasses." % obj.__class__.__name__)
-                # The decorator instance is shared by every class that has
-                # the method so bind a copy for this test case
-                copy.copy(obj).bind(self.tc._registry, case)
-
-        def _walk_closure(obj):
-            if hasattr(obj, '__closure__') and obj.__closure__:
-                for f in obj.__closure__:
-                    obj = f.cell_contents
-                    _handle(obj)
-                    _walk_closure(obj)
         method = getattr(case, case._testMethodName, None)
-        _walk_closure(method)
+        for obj in getattr(method, '_oeqa_decorators', []):
+            if not obj.__class__ in decoratorClasses:
+                raise Exception("Decorator %s isn't registered" \
+                        " in decoratorClasses." % obj.__class__.__name__)
+            # The decorator instance is shared by every class that has
+            # the method so bind a copy for this test case
+            copy.copy(obj).bind(self.tc._registry, case)
 
     def _filterTest(self, case):
         """
