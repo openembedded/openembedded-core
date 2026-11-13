@@ -44,14 +44,16 @@ class OETestCase(unittest.TestCase):
         clss.tearDownClassMethod()
 
     def _oeSetUp(self):
+        # unittest doesn't call tearDown() if setUp() fails so the decorators
+        # need tearing down here in that case too
         try:
             for d in self.decorators:
                 d.setUpDecorator()
+            self.setUpMethod()
         except:
             for d in self.decorators:
                 d.tearDownDecorator()
             raise
-        self.setUpMethod()
 
     def _oeTearDown(self):
         for d in self.decorators:

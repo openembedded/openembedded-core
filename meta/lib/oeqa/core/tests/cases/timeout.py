@@ -32,3 +32,12 @@ class TimeoutTest(OETestCase):
 
     def testTimeoutUnrelated(self):
         sleep(6)
+
+class TimeoutSetUpFailTest(OETestCase):
+
+    def setUp(self):
+        raise Exception("setUp failed")
+
+    @OETimeout(10)
+    def testTimeoutSetUpFail(self):
+        self.assertTrue(True, msg='How is this possible?')
