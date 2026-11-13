@@ -69,7 +69,7 @@ def removebuilddir(d):
     bb.utils.prunedir(d, ionice=True)
 
 class OESelftestTestContext(OETestContext):
-    def __init__(self, td=None, logger=None, machines=None, config_paths=None, newbuilddir=None, keep_builddir=None):
+    def __init__(self, td=None, logger=None, config_paths=None, newbuilddir=None, keep_builddir=None):
         super().__init__(td, logger)
 
         self.config_paths = config_paths
@@ -169,12 +169,6 @@ class OESelftestTestContext(OETestContext):
             return ConcurrentTestSuite(suites, processes, self.setup_builddir, self.removebuilddir, self.bb_vars)
         else:
             return NonConcurrentTestSuite(suites, processes, self.setup_builddir, self.removebuilddir, self.bb_vars)
-
-    def runTests(self, processes=None, machine=None, skips=[]):
-        return super().runTests(processes, skips)
-
-    def listTests(self, display_type, machine=None):
-        return super().listTests(display_type)
 
 class OESelftestTestContextExecutor(OETestContextExecutor):
     _context_class = OESelftestTestContext
@@ -398,7 +392,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
             sys.exit(1)
 
         if args.list_tests:
-            rc = self.tc.listTests(args.list_tests, **self.tc_kwargs['list'])
+            rc = self.tc.listTests(args.list_tests)
         else:
             self._pre_run()
             rc = self.tc.runTests(**self.tc_kwargs['run'])
@@ -417,8 +411,6 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         try:
              rc = self._internal_run(logger, args)
         finally:
-            config_paths = self.tc_kwargs['init']['config_paths']
-
             output_link = os.path.join(os.path.dirname(args.output_log),
                     "%s-results.log" % self.name)
             if os.path.lexists(output_link):
