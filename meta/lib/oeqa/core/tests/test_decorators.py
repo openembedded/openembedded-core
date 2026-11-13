@@ -147,6 +147,15 @@ class TestTimeoutDecorator(TestBase):
         msg = "OETestTimeout didn't restore SIGALRM"
         self.assertIs(alarm_signal, signal.getsignal(signal.SIGALRM), msg=msg)
 
+    def test_timeout_setup_fail(self):
+        tests = ['timeout.TimeoutSetUpFailTest.testTimeoutSetUpFail']
+        alarm_signal = signal.getsignal(signal.SIGALRM)
+        tc = self._testLoader(modules=self.modules, tests=tests)
+        self.assertFalse(tc.runTests().wasSuccessful())
+        # signal.alarm() returns the time left on any previous alarm
+        self.assertEqual(signal.alarm(0), 0, msg="OETestTimeout alarm left running after setUp failed")
+        self.assertIs(alarm_signal, signal.getsignal(signal.SIGALRM), msg="OETestTimeout didn't restore SIGALRM")
+
     def test_timeout_cancel(self):
         tests = ['timeout.TimeoutTest.testTimeoutSkip', 'timeout.TimeoutTest.testTimeoutDepends', 'timeout.TimeoutTest.testTimeoutUnrelated']
         msg = 'Unrelated test failed to complete'
