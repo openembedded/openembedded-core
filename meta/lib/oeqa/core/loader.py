@@ -8,7 +8,6 @@ import os
 import re
 import sys
 import unittest
-import inspect
 
 from oeqa.core.utils.path import findFile
 from oeqa.core.utils.test import getSuiteModules, getCaseID
@@ -23,12 +22,8 @@ from oeqa.core.decorator import decoratorClasses, OETestDecorator, \
 #
 # For our purposes, it is better to raise the exceptions in the loading
 # step rather than waiting to run the test suite.
-#
-# Generate the function definition because this differ across python versions
-# Python >= 3.4.4 uses tree parameters instead four but for example Python 3.5.3
-# ueses four parameters so isn't incremental.
-_failed_test_args = inspect.getfullargspec(unittest.loader._make_failed_test).args
-exec("""def _make_failed_test(%s): raise exception""" % ', '.join(_failed_test_args))
+def _make_failed_test(methodname, exception, *args, **kwargs):
+    raise exception
 unittest.loader._make_failed_test = _make_failed_test
 
 def _find_duplicated_modules(suite, directory):
