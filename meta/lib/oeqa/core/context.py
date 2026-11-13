@@ -192,7 +192,7 @@ class OETestContextExecutor:
     def _get_json_result_dir(self, args):
         return args.json_result_dir
 
-    def _get_configuration(self):
+    def _get_configuration(self, args):
         td = self.td
         configuration = {'TEST_TYPE': self.name,
                         'MACHINE': td.get("MACHINE"),
@@ -208,9 +208,7 @@ class OETestContextExecutor:
     def _pre_run(self):
         pass
 
-    def run(self, logger, args):
-        self._process_args(logger, args)
-
+    def _run(self, logger, args):
         self.tc = self._context_class(td=self.td, logger=self.logger, **self.context_args)
         try:
             self.tc.loadTests(self.module_paths, modules=self.modules,
@@ -220,28 +218,34 @@ class OETestContextExecutor:
             sys.exit(1)
 
         if args.list_tests:
-            rc = self.tc.listTests(args.list_tests)
+            return self.tc.listTests(args.list_tests)
+
+        self._pre_run()
+        rc = self.tc.runTests(processes=self.processes, skips=self.skips)
+
+        json_result_dir = self._get_json_result_dir(args)
+        if json_result_dir:
+            configuration = self._get_configuration(args)
+            rc.logDetails(json_result_dir,
+                          configuration,
+                          self._get_result_id(configuration))
         else:
-            self._pre_run()
-            rc = self.tc.runTests(processes=self.processes, skips=self.skips)
+            rc.logDetails()
 
-            json_result_dir = self._get_json_result_dir(args)
-            if json_result_dir:
-                configuration = self._get_configuration()
-                rc.logDetails(json_result_dir,
-                              configuration,
-                              self._get_result_id(configuration))
-            else:
-                rc.logDetails()
-
-            rc.logSummary(self.name)
-
-        output_link = os.path.join(os.path.dirname(args.output_log),
-                "%s-results.log" % self.name)
-        if os.path.exists(output_link):
-            os.remove(output_link)
-        os.symlink(args.output_log, output_link)
-
+        rc.logSummary(self.name)
         return rc
+
+    def run(self, logger, args):
+        self._process_args(logger, args)
+        try:
+            return self._run(logger, args)
+        finally:
+            # Link to the latest log, even if running the tests failed. The
+            # old link may be dangling if its log was removed.
+            output_link = os.path.join(os.path.dirname(args.output_log),
+                    "%s-results.log" % self.name)
+            if os.path.lexists(output_link):
+                os.unlink(output_link)
+            os.symlink(args.output_log, output_link)
 
 _executor_class = OETestContextExecutor
