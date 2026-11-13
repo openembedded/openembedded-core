@@ -4,7 +4,6 @@
 # SPDX-License-Identifier: MIT
 #
 
-from functools import wraps
 from abc import ABCMeta
 
 decoratorClasses = set()
@@ -29,11 +28,10 @@ class OETestDecorator(object, metaclass=ABCMeta):
             setattr(self, attr, value)
 
     def __call__(self, func):
-        @wraps(func)
-        def wrapped_f(*args, **kwargs):
-            self.attrs = self.attrs # XXX: Enables OETestLoader discover
-            return func(*args, **kwargs)
-        return wrapped_f
+        # Record the decorator on the test function for OETestLoader to find.
+        # They are set up in the order they are applied, innermost first.
+        func._oeqa_decorators = getattr(func, '_oeqa_decorators', []) + [self]
+        return func
 
     # OETestLoader call it when is loading test cases.
     # XXX: Most methods would change the registry for later

@@ -126,6 +126,14 @@ class TestDependsDecorator(TestBase):
         self.assertEqual(result.skipped, [])
         self.assertEqual(len(result.successes), len(tests))
 
+class TestDecoratorOrder(TestBase):
+    def test_decorator_order(self):
+        # Decorators are set up in the order they are applied, innermost first
+        tc = self._testLoader(modules=['timeout'])
+        case = tc._registry['cases']['timeout.TimeoutTest.testTimeoutDepends']
+        self.assertEqual([d.__class__.__name__ for d in case.decorators],
+                         ['OETimeout', 'OETestDepends'])
+
 class TestInheritedDecorators(TestBase):
     modules = ['inherit']
 
