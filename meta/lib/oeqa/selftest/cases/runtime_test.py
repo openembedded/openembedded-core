@@ -20,8 +20,7 @@ class TestExport(OESelftestTestCase):
         """
         Summary: Check basic testexport functionality with only ping test enabled.
         Expected: 1. testexport directory must be created.
-                  2. runexported.py must run without any error/exception.
-                  3. ping test must succeed.
+                  2. ping test must succeed.
         Product: oe-core
         Author: Mariano Lopez <mariano.lopez@intel.com>
         """
@@ -44,7 +43,6 @@ class TestExport(OESelftestTestCase):
         self.assertEqual(True, isdir, 'Failed to create testexport dir: %s' % testexport_dir)
 
         with runqemu('core-image-minimal') as qemu:
-            # Attempt to run runexported.py to perform ping test
             test_path = os.path.join(testexport_dir, "oe-test")
             data_file = os.path.join(testexport_dir, 'data', 'testdata.json')
             manifest = os.path.join(testexport_dir, 'data', 'manifest')
