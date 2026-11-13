@@ -19,7 +19,7 @@ class ArgumentParser(argparse.ArgumentParser):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault('formatter_class', OeHelpFormatter)
         self._subparser_groups = OrderedDict()
-        super(ArgumentParser, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._positionals.title = 'arguments'
         self._optionals.title = 'options'
 
@@ -49,7 +49,7 @@ class ArgumentParser(argparse.ArgumentParser):
         if 'dest' not in kwargs:
             kwargs['dest'] = '_subparser_name'
 
-        ret = super(ArgumentParser, self).add_subparsers(*args, **kwargs)
+        ret = super().add_subparsers(*args, **kwargs)
         # Need a way of accessing the parent parser
         ret._parent_parser = self
         # Ensure our class gets instantiated
@@ -100,7 +100,7 @@ class ArgumentSubParser(ArgumentParser):
             self._group = kwargs.pop('group')
         if 'order' in kwargs:
             self._order = kwargs.pop('order')
-        super(ArgumentSubParser, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def parse_known_args(self, args=None, namespace=None):
         # This works around argparse not handling optional positional arguments being
@@ -117,7 +117,7 @@ class ArgumentSubParser(ArgumentParser):
             action.save_nargs = action.nargs
             action.nargs = 0
 
-        namespace, remaining_args = super(ArgumentSubParser, self).parse_known_args(args, namespace)
+        namespace, remaining_args = super().parse_known_args(args, namespace)
         for action in positionals:
             # remove the empty positional values from namespace
             if hasattr(namespace, action.dest):
@@ -125,7 +125,7 @@ class ArgumentSubParser(ArgumentParser):
         for action in positionals:
             action.nargs = action.save_nargs
         # parse positionals
-        namespace, extras = super(ArgumentSubParser, self).parse_known_args(remaining_args, namespace)
+        namespace, extras = super().parse_known_args(remaining_args, namespace)
         return namespace, extras
 
     def format_help(self):
@@ -134,7 +134,7 @@ class ArgumentSubParser(ArgumentParser):
         for action in positionals:
             if hasattr(action, 'save_nargs'):
                 action.nargs = action.save_nargs
-        return super(ArgumentParser, self).format_help()
+        return super().format_help()
 
 
 class OeHelpFormatter(argparse.HelpFormatter):
@@ -172,7 +172,7 @@ class OeHelpFormatter(argparse.HelpFormatter):
                     lines.append('%s%s' % (groupindent, self._format_action(subaction).rstrip()))
             return '\n'.join(lines)
         else:
-            return super(OeHelpFormatter, self)._format_action(action)
+            return super()._format_action(action)
 
 def int_positive(value):
     ivalue = int(value)

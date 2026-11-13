@@ -16,7 +16,7 @@ class RebuildFromSState(SStateBase):
 
     @classmethod
     def setUpClass(self):
-        super(RebuildFromSState, self).setUpClass()
+        super().setUpClass()
         self.builddir = os.path.join(os.environ.get('BUILDDIR'))
 
     def get_dep_targets(self, primary_targets):

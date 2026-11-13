@@ -16,7 +16,7 @@ class BitbakeLayers(OESelftestTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(BitbakeLayers, cls).setUpClass()
+        super().setUpClass()
         bitbake("python3-jsonschema-native")
         bitbake("-c addto_recipe_sysroot python3-jsonschema-native")
 

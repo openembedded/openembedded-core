@@ -95,7 +95,7 @@ class OETestLoader(unittest.TestLoader):
 
         self._patchCaseClass(self.caseClass)
 
-        super(OETestLoader, self).__init__()
+        super().__init__()
 
     def _patchCaseClass(self, testCaseClass):
         # Adds custom attributes to the OETestCase class
@@ -274,7 +274,7 @@ class OETestLoader(unittest.TestLoader):
         big_suite = self.suiteClass()
         for path in self.module_paths:
             _find_duplicated_modules(big_suite, path)
-            suite = super(OETestLoader, self).discover(path,
+            suite = super().discover(path,
                     pattern='*.py', top_level_dir=path)
             big_suite.addTests(suite)
 
@@ -329,7 +329,7 @@ class OETestLoader(unittest.TestLoader):
         load_module, load_underscore = self._filterModule(module)
 
         if load_module or load_underscore:
-            return super(OETestLoader, self).loadTestsFromModule(
+            return super().loadTestsFromModule(
                     module, *args, pattern=pattern, **kws)
         else:
             return self.suiteClass()

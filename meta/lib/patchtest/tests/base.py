@@ -109,7 +109,7 @@ class Base(unittest.TestCase):
         if data:
             value['data'] = data
 
-        return super(Base, self).fail(json.dumps(value))
+        return super().fail(json.dumps(value))
 
     def skip(self, issue, data=None):
         """ Convert the skip string to JSON"""
@@ -120,7 +120,7 @@ class Base(unittest.TestCase):
         if data:
             value['data'] = data
 
-        return super(Base, self).skipTest(json.dumps(value))
+        return super().skipTest(json.dumps(value))
 
     def shortid(self):
         return self.id().split('.')[-1]

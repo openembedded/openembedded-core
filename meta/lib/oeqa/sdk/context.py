@@ -16,7 +16,7 @@ class OESDKTestContext(OETestContext):
 
     def __init__(self, td=None, logger=None, sdk_dir=None, sdk_env=None,
             target_pkg_manifest=None, host_pkg_manifest=None):
-        super(OESDKTestContext, self).__init__(td, logger)
+        super().__init__(td, logger)
 
         self.sdk_dir = sdk_dir
         self.sdk_env = sdk_env
@@ -63,7 +63,7 @@ class OESDKTestContextExecutor(OETestContextExecutor):
     default_test_data = None
 
     def register_commands(self, logger, subparsers):
-        super(OESDKTestContextExecutor, self).register_commands(logger, subparsers)
+        super().register_commands(logger, subparsers)
 
         sdk_group = self.parser.add_argument_group('sdk options')
         sdk_group.add_argument('--sdk-env', action='store',
@@ -99,7 +99,7 @@ class OESDKTestContextExecutor(OETestContextExecutor):
         return pkg_manifest
 
     def _process_args(self, logger, args):
-        super(OESDKTestContextExecutor, self)._process_args(logger, args)
+        super()._process_args(logger, args)
 
         self.tc_kwargs['init']['sdk_dir'] = args.sdk_dir
         self.tc_kwargs['init']['sdk_env'] = self.sdk_env
@@ -151,6 +151,6 @@ class OESDKTestContextExecutor(OETestContextExecutor):
                    "environment (%s) specified" % args.sdk_env, self.name)
 
         self.sdk_env = sdk_envs[args.sdk_env]
-        return super(OESDKTestContextExecutor, self).run(logger, args)
+        return super().run(logger, args)
 
 _executor_class = OESDKTestContextExecutor

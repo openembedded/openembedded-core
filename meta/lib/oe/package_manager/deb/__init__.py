@@ -115,7 +115,7 @@ class PMPkgsList(PkgsList):
 
 class DpkgPM(OpkgDpkgPM):
     def __init__(self, d, target_rootfs, archs, base_archs, apt_conf_dir=None, deb_repo_workdir="oe-rootfs-repo", filterbydependencies=True):
-        super(DpkgPM, self).__init__(d, target_rootfs)
+        super().__init__(d, target_rootfs)
         self.deploy_dir = oe.path.join(self.d.getVar('WORKDIR'), deb_repo_workdir)
 
         create_packages_dir(self.d, self.deploy_dir, d.getVar("DEPLOY_DIR_DEB"), "package_write_deb", filterbydependencies)

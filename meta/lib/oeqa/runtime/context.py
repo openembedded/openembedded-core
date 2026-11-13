@@ -21,7 +21,7 @@ class OERuntimeTestContext(OETestContext):
 
     def __init__(self, td, logger, target,
                  image_packages, extract_dir):
-        super(OERuntimeTestContext, self).__init__(td, logger)
+        super().__init__(td, logger)
 
         self.target = target
         self.image_packages = image_packages
@@ -56,7 +56,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
     default_extract_dir = 'packages/extracted'
 
     def register_commands(self, logger, subparsers):
-        super(OERuntimeTestContextExecutor, self).register_commands(logger, subparsers)
+        super().register_commands(logger, subparsers)
 
         runtime_group = self.parser.add_argument_group('runtime options')
 
@@ -204,7 +204,7 @@ class OERuntimeTestContextExecutor(OETestContextExecutor):
         if not args.packages_manifest:
             raise TypeError('Manifest file not provided')
 
-        super(OERuntimeTestContextExecutor, self)._process_args(logger, args)
+        super()._process_args(logger, args)
 
         td = self.tc_kwargs['init']['td']
 

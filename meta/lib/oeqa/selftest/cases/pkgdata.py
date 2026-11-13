@@ -15,7 +15,7 @@ class OePkgdataUtilTests(OESelftestTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(OePkgdataUtilTests, cls).setUpClass()
+        super().setUpClass()
         # Ensure we have the right data in pkgdata
         cls.logger.info('Running bitbake to generate pkgdata')
         bitbake('target-sdk-provides-dummy -c clean')

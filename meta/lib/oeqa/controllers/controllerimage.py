@@ -29,7 +29,7 @@ class ControllerImageHardwareTarget(oeqa.targetcontrol.BaseTarget, metaclass=ABC
     supported_image_fstypes = ['tar.gz', 'tar.bz2']
 
     def __init__(self, d):
-        super(ControllerImageHardwareTarget, self).__init__(d)
+        super().__init__(d)
 
         # target ip
         addr = d.getVar("TEST_TARGET_IP") or bb.fatal('Please set TEST_TARGET_IP with the IP address of the machine you want to run the tests on.')
@@ -119,7 +119,7 @@ class ControllerImageHardwareTarget(oeqa.targetcontrol.BaseTarget, metaclass=ABC
 
     def deploy(self):
         # base class just sets the ssh log file for us
-        super(ControllerImageHardwareTarget, self).deploy()
+        super().deploy()
         self.controller = sshcontrol.SSHControl(ip=self.ip, logfile=self.sshlog, timeout=600, port=self.port)
         status, output = self.controller.run("cat /etc/controllerimage")
         if status != 0:
@@ -162,7 +162,7 @@ class ControllerImageHardwareTarget(oeqa.targetcontrol.BaseTarget, metaclass=ABC
 class SystemdbootTarget(ControllerImageHardwareTarget):
 
     def __init__(self, d):
-        super(SystemdbootTarget, self).__init__(d)
+        super().__init__(d)
         # this the value we need to set in the LoaderEntryOneShot EFI variable
         # so the system boots the 'test' bootloader label and not the default
         # The first four bytes are EFI bits, and the rest is an utf-16le string

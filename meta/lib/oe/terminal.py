@@ -24,7 +24,7 @@ class Registry(oe.classutils.ClassRegistry):
     command = None
 
     def __init__(cls, name, bases, attrs):
-        super(Registry, cls).__init__(name.lower(), bases, attrs)
+        super().__init__(name.lower(), bases, attrs)
 
     @property
     def implemented(cls):

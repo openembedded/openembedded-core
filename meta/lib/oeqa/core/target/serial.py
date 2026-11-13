@@ -25,7 +25,7 @@ class OESerialTarget(OETarget):
             fileHandler.setFormatter(formatter)
             logger.addHandler(fileHandler)
 
-        super(OESerialTarget, self).__init__(logger)
+        super().__init__(logger)
 
         if serialcontrol_ps1:
             self.target_ps1 = serialcontrol_ps1

@@ -90,7 +90,7 @@ class BuildPerfTestResult(unittest.TextTestResult):
     test_run_queue = []
 
     def __init__(self, out_dir, *args, **kwargs):
-        super(BuildPerfTestResult, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.out_dir = out_dir
         self.hostname = socket.gethostname()
@@ -100,30 +100,30 @@ class BuildPerfTestResult(unittest.TextTestResult):
 
     def addSuccess(self, test):
         """Record results from successful tests"""
-        super(BuildPerfTestResult, self).addSuccess(test)
+        super().addSuccess(test)
         self.successes.append(test)
 
     def addError(self, test, err):
         """Record results from crashed test"""
         test.err = err
-        super(BuildPerfTestResult, self).addError(test, err)
+        super().addError(test, err)
 
     def addFailure(self, test, err):
         """Record results from failed test"""
         test.err = err
-        super(BuildPerfTestResult, self).addFailure(test, err)
+        super().addFailure(test, err)
 
     def addExpectedFailure(self, test, err):
         """Record results from expectedly failed test"""
         test.err = err
-        super(BuildPerfTestResult, self).addExpectedFailure(test, err)
+        super().addExpectedFailure(test, err)
 
     def startTest(self, test):
         """Pre-test hook"""
         test.base_dir = self.out_dir
         log.info("Executing test %s: %s", test.name, test.shortDescription())
         self.stream.write(datetime.now().strftime("[%Y-%m-%d %H:%M:%S] "))
-        super(BuildPerfTestResult, self).startTest(test)
+        super().startTest(test)
 
     def startTestRun(self):
         """Pre-run hook"""
@@ -248,7 +248,7 @@ class BuildPerfTestCase(unittest.TestCase):
     build_target = None
 
     def __init__(self, *args, **kwargs):
-        super(BuildPerfTestCase, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.name = self._testMethodName
         self.base_dir = None
         self.start_time = None
@@ -268,7 +268,7 @@ class BuildPerfTestCase(unittest.TestCase):
         return os.path.join(self.base_dir, self.name + '.tmp')
 
     def shortDescription(self):
-        return super(BuildPerfTestCase, self).shortDescription() or ""
+        return super().shortDescription() or ""
 
     def setUp(self):
         """Set-up fixture for each test"""
@@ -285,7 +285,7 @@ class BuildPerfTestCase(unittest.TestCase):
     def run(self, *args, **kwargs):
         """Run test"""
         self.start_time = datetime.now()
-        super(BuildPerfTestCase, self).run(*args, **kwargs)
+        super().run(*args, **kwargs)
         self.elapsed_time = datetime.now() - self.start_time
 
     def run_cmd(self, cmd):
@@ -496,7 +496,7 @@ class BuildPerfTestRunner(unittest.TextTestRunner):
     sortTestMethodsUsing = None
 
     def __init__(self, out_dir, *args, **kwargs):
-        super(BuildPerfTestRunner, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.out_dir = out_dir
 
     def _makeResult(self):

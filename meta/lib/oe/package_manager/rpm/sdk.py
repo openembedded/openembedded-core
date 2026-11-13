@@ -13,7 +13,7 @@ from oe.package_manager.rpm import RpmPM
 
 class PkgSdk(Sdk):
     def __init__(self, d, manifest_dir=None, rpm_workdir="oe-sdk-repo"):
-        super(PkgSdk, self).__init__(d, manifest_dir)
+        super().__init__(d, manifest_dir)
 
         self.target_manifest = PkgManifest(d, self.manifest_dir,
                                            Manifest.MANIFEST_TYPE_SDK_TARGET)

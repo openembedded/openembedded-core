@@ -126,7 +126,7 @@ class BaseTargetProfile(object, metaclass=ABCMeta):
 class AutoTargetProfile(BaseTargetProfile):
 
     def __init__(self, image_type):
-        super(AutoTargetProfile, self).__init__(image_type)
+        super().__init__(image_type)
         self.image_name = get_bb_var('IMAGE_LINK_NAME', target=image_type)
         self.kernel_type = get_bb_var('KERNEL_IMAGETYPE', target=image_type)
         self.controller = self.get_controller()
@@ -203,7 +203,7 @@ class BaseRepoProfile(object, metaclass=ABCMeta):
 class PublicAB(BaseRepoProfile):
 
     def __init__(self, repolink, localdir=None):
-        super(PublicAB, self).__init__(repolink, localdir)
+        super().__init__(repolink, localdir)
         if localdir is None:
             self.localdir = os.path.join(os.environ['BUILDDIR'], 'PublicABMirror')
 

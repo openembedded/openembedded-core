@@ -22,7 +22,7 @@ class RunqemuTests(OESelftestTestCase):
     deploy_dir_image = ''
 
     def setUpLocal(self):
-        super(RunqemuTests, self).setUpLocal()
+        super().setUpLocal()
         self.recipe = 'core-image-minimal'
         self.machine = self.td['MACHINE']
         self.image_link_name = get_bb_var('IMAGE_LINK_NAME', self.recipe)
@@ -187,7 +187,7 @@ class QemuTest(OESelftestTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(QemuTest, cls).setUpClass()
+        super().setUpClass()
         cls.recipe = 'core-image-minimal'
         cls.image_fstypes = "tar.zst"
 

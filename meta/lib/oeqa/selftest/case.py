@@ -17,11 +17,11 @@ import bb.utils
 class OESelftestTestCase(OETestCase):
     def __init__(self, methodName="runTest"):
         self._extra_tear_down_commands = []
-        super(OESelftestTestCase, self).__init__(methodName)
+        super().__init__(methodName)
 
     @classmethod
     def setUpClass(cls):
-        super(OESelftestTestCase, cls).setUpClass()
+        super().setUpClass()
 
         cls.testlayer_path = cls.tc.config_paths['testlayer_path']
         cls.builddir = cls.tc.config_paths['builddir']
@@ -46,7 +46,7 @@ class OESelftestTestCase(OETestCase):
     def tearDownClass(cls):
         cls.remove_include()
         cls.remove_inc_files()
-        super(OESelftestTestCase, cls).tearDownClass()
+        super().tearDownClass()
 
     @classmethod
     def add_include(cls):
@@ -94,7 +94,7 @@ class OESelftestTestCase(OETestCase):
                 pass
 
     def setUp(self):
-        super(OESelftestTestCase, self).setUp()
+        super().setUp()
         os.chdir(self.builddir)
         # we don't know what the previous test left around in config or inc files
         # if it failed so we need a fresh start
@@ -144,7 +144,7 @@ class OESelftestTestCase(OETestCase):
             self._track_for_cleanup = []
 
         self.tearDownLocal()
-        super(OESelftestTestCase, self).tearDown()
+        super().tearDown()
 
     def tearDownLocal(self):
         pass

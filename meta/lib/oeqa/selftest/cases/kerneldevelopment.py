@@ -13,7 +13,7 @@ class KernelDev(OESelftestTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(KernelDev, cls).setUpClass()
+        super().setUpClass()
         # Create the recipe directory structure inside the created layer
         cls.layername = 'meta-kerneltest'
         runCmd('bitbake-layers create-layer %s' % cls.layername)
@@ -27,10 +27,10 @@ class KernelDev(OESelftestTestCase):
     def tearDownClass(cls):
         runCmd('bitbake-layers remove-layer %s' % cls.layername, ignore_status=True)
         runCmd('rm -rf %s' % cls.layername)
-        super(KernelDev, cls).tearDownClass()
+        super().tearDownClass()
 
     def setUp(self):
-        super(KernelDev, self).setUp()
+        super().setUp()
         self.set_machine_config('MACHINE = "qemux86-64"\n')
 
     def test_apply_patches(self):

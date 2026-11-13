@@ -20,7 +20,7 @@ logger = logging.getLogger('devtool')
 class DevtoolError(Exception):
     """Exception for handling devtool errors"""
     def __init__(self, message, exitcode=1):
-        super(DevtoolError, self).__init__(message)
+        super().__init__(message)
         self.exitcode = exitcode
 
 

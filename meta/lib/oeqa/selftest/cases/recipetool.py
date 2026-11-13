@@ -43,7 +43,7 @@ def needTomllib(test):
 class RecipetoolBase(devtool.DevtoolTestCase):
 
     def setUpLocal(self):
-        super(RecipetoolBase, self).setUpLocal()
+        super().setUpLocal()
         self.templayerdir = templayerdir
         self.tempdir = tempfile.mkdtemp(prefix='recipetoolqa')
         self.track_for_cleanup(self.tempdir)
@@ -55,7 +55,7 @@ class RecipetoolBase(devtool.DevtoolTestCase):
 
     def tearDownLocal(self):
         runCmd('rm -rf %s/recipes-*' % self.templayerdir)
-        super(RecipetoolBase, self).tearDownLocal()
+        super().tearDownLocal()
 
     def _try_recipetool_appendcmd(self, cmd, testrecipe, expectedfiles, expectedlines=None):
         result = runCmd(cmd)
@@ -89,7 +89,7 @@ class RecipetoolAppendTests(RecipetoolBase):
 
     @classmethod
     def setUpClass(cls):
-        super(RecipetoolAppendTests, cls).setUpClass()
+        super().setUpClass()
         # Ensure we have the right data in shlibs/pkgdata
         cls.logger.info('Running bitbake to generate pkgdata')
         bitbake('-c packagedata base-files coreutils busybox selftest-recipetool-appendfile')
@@ -858,7 +858,7 @@ class RecipetoolTests(RecipetoolBase):
     def setUpClass(cls):
         import sys
 
-        super(RecipetoolTests, cls).setUpClass()
+        super().setUpClass()
         bb_vars = get_bb_vars(['BBPATH'])
         cls.bbpath = bb_vars['BBPATH']
         libpath = os.path.join(get_bb_var('COREBASE'), 'scripts', 'lib', 'recipetool')

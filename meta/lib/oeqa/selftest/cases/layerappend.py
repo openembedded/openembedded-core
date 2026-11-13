@@ -53,7 +53,7 @@ SRC_URI:append = " file://appendtest.txt"
     def tearDownLocal(self):
         if self.layerappend:
             ftools.remove_from_file(self.builddir + "/conf/bblayers.conf", self.layerappend)
-        super(LayerAppendTests, self).tearDownLocal()
+        super().tearDownLocal()
 
     def test_layer_appends(self):
         corebase = get_bb_var("COREBASE")

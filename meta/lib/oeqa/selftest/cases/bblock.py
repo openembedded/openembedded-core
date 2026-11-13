@@ -18,7 +18,7 @@ from oeqa.selftest.case import OESelftestTestCase
 class BBLock(OESelftestTestCase):
     @classmethod
     def setUpClass(cls):
-        super(BBLock, cls).setUpClass()
+        super().setUpClass()
         cls.lockfile = cls.builddir + "/conf/bblock.conf"
 
     def unlock_recipes(self, recipes=None, tasks=None):

@@ -15,7 +15,7 @@ from oe.package_manager.ipk import OpkgPM
 
 class DpkgOpkgRootfs(Rootfs):
     def __init__(self, d, progress_reporter=None, logcatcher=None):
-        super(DpkgOpkgRootfs, self).__init__(d, progress_reporter, logcatcher)
+        super().__init__(d, progress_reporter, logcatcher)
 
     def _get_pkgs_postinsts(self, status_file):
         def _get_pkg_depends_list(pkg_depends):
@@ -125,7 +125,7 @@ class DpkgOpkgRootfs(Rootfs):
 
 class PkgRootfs(DpkgOpkgRootfs):
     def __init__(self, d, manifest_dir, progress_reporter=None, logcatcher=None):
-        super(PkgRootfs, self).__init__(d, progress_reporter, logcatcher)
+        super().__init__(d, progress_reporter, logcatcher)
         self.log_check_regex = '(exit 1|Collected errors)'
 
         self.manifest = PkgManifest(d, manifest_dir)

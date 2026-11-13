@@ -14,7 +14,7 @@ from oe.package_manager.ipk import OpkgPM
 
 class PkgSdk(Sdk):
     def __init__(self, d, manifest_dir=None):
-        super(PkgSdk, self).__init__(d, manifest_dir)
+        super().__init__(d, manifest_dir)
 
         # In sdk_list_installed_packages the call to opkg is hardcoded to
         # always use IPKGCONF_TARGET and there's no exposed API to change this

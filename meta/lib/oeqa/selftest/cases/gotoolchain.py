@@ -33,7 +33,7 @@ class oeGoToolchainSelfTest(OESelftestTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(oeGoToolchainSelfTest, cls).setUpClass()
+        super().setUpClass()
         cls.tmpdir_SDKQA = tempfile.mkdtemp(prefix='SDKQA')
         cls.go_path = os.path.join(cls.tmpdir_SDKQA, "go")
         # Build the SDK and locate it in DEPLOYDIR
@@ -46,7 +46,7 @@ class oeGoToolchainSelfTest(OESelftestTestCase):
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree(cls.tmpdir_SDKQA, ignore_errors=True)
-        super(oeGoToolchainSelfTest, cls).tearDownClass()
+        super().tearDownClass()
 
     def run_sdk_go_command(self, gocmd, proj, name):
         cmd = "cd %s/src/%s/%s; " % (self.go_path, proj, name)

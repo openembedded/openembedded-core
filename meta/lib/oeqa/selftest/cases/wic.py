@@ -63,7 +63,7 @@ class WicTestCase(OESelftestTestCase):
         """This code is executed before each test method."""
         self.resultdir = os.path.join(self.builddir, "wic-tmp")
         self._old_path = os.environ.get('PATH')
-        super(WicTestCase, self).setUpLocal()
+        super().setUpLocal()
 
         # Do this here instead of in setUpClass as the base setUp does some
         # clean up which can result in the native tools built earlier in
@@ -96,7 +96,7 @@ class WicTestCase(OESelftestTestCase):
         else:
             os.environ['PATH'] = self._old_path
         rmtree(self.resultdir, ignore_errors=True)
-        super(WicTestCase, self).tearDownLocal()
+        super().tearDownLocal()
 
     def _get_wic_path(self):
         if WicTestCase.wic_bindir is None:
