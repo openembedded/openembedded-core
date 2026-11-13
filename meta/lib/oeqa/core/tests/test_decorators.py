@@ -126,6 +126,20 @@ class TestDependsDecorator(TestBase):
         self.assertEqual(result.skipped, [])
         self.assertEqual(len(result.successes), len(tests))
 
+class TestInheritedDecorators(TestBase):
+    modules = ['inherit']
+
+    def test_inherited_decorators(self):
+        # Each test case needs its own decorator instances, even when the
+        # test method is inherited by another test class
+        tc = self._testLoader(modules=self.modules)
+        cases = tc._registry['cases']
+        self.assertEqual(len(cases), 4)
+        for case in cases.values():
+            for d in case.decorators:
+                self.assertIs(d.case, case)
+        self.assertTrue(tc.runTests().wasSuccessful())
+
 class TestTimeoutDecorator(TestBase):
     modules = ['timeout']
 

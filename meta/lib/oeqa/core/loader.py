@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
+import copy
 import re
 import sys
 import unittest
@@ -106,8 +107,10 @@ class OETestLoader(unittest.TestLoader):
             if isinstance(obj, OETestDecorator):
                 if not obj.__class__ in decoratorClasses:
                     raise Exception("Decorator %s isn't registered" \
-                            " in decoratorClasses." % obj.__name__)
-                obj.bind(self.tc._registry, case)
+                            " in decoratorClasses." % obj.__class__.__name__)
+                # The decorator instance is shared by every class that has
+                # the method so bind a copy for this test case
+                copy.copy(obj).bind(self.tc._registry, case)
 
         def _walk_closure(obj):
             if hasattr(obj, '__closure__') and obj.__closure__:
