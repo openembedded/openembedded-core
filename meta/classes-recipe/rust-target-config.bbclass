@@ -225,7 +225,7 @@ TARGET_C_INT_WIDTH[mipsel] = "32"
 MAX_ATOMIC_WIDTH[mipsel] = "32"
 
 ## mips64-unknown-linux-{gnu, musl}
-DATA_LAYOUT[mips64] = "E-m:e-i8:8:32-i16:16:32-i64:64-n32:64-S128"
+DATA_LAYOUT[mips64] = "E-m:e-i8:8:32-i16:16:32-i64:64-i128:128-n32:64-S128"
 TARGET_ENDIAN[mips64] = "big"
 TARGET_POINTER_WIDTH[mips64] = "64"
 TARGET_C_INT_WIDTH[mips64] = "32"
@@ -239,7 +239,7 @@ TARGET_C_INT_WIDTH[mips64-n32] = "32"
 MAX_ATOMIC_WIDTH[mips64-n32] = "64"
 
 ## mips64el-unknown-linux-{gnu, musl}
-DATA_LAYOUT[mips64el] = "e-m:e-i8:8:32-i16:16:32-i64:64-n32:64-S128"
+DATA_LAYOUT[mips64el] = "e-m:e-i8:8:32-i16:16:32-i64:64-i128:128-n32:64-S128"
 TARGET_ENDIAN[mips64el] = "little"
 TARGET_POINTER_WIDTH[mips64el] = "64"
 TARGET_C_INT_WIDTH[mips64el] = "32"
