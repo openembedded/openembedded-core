@@ -112,6 +112,20 @@ class TestDependsDecorator(TestBase):
             msg = 'Expected OEQADependency exception having a circular dependency'
             self.assertTrue(result, msg=msg)
 
+    def test_depends_run(self):
+        # Dependencies given relative to the class must be found when the
+        # tests run, otherwise the dependent tests are skipped
+        tests =  ['depends.DependsTest.testDependsFirst',
+                  'depends.DependsTest.testDependsSecond',
+                  'depends.DependsTest.testDependsThird',
+                  'depends.DependsTest.testDependsFourth',
+                  'depends.DependsTest.testDependsFifth']
+        tc = self._testLoader(modules=self.modules, tests=tests)
+        result = tc.runTests()
+        self.assertTrue(result.wasSuccessful())
+        self.assertEqual(result.skipped, [])
+        self.assertEqual(len(result.successes), len(tests))
+
 class TestTimeoutDecorator(TestBase):
     modules = ['timeout']
 
