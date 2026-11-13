@@ -322,29 +322,14 @@ class OETestLoader(unittest.TestLoader):
         return (load_module, load_underscore)
 
 
-    # XXX After Python 3.5, remove backward compatibility hacks for
-    # use_load_tests deprecation via *args and **kws.  See issue 16662.
-    if sys.version_info >= (3,5):
-        def loadTestsFromModule(self, module, *args, pattern=None, **kws):
-            """
-                Returns a suite of all tests cases contained in module.
-            """
-            load_module, load_underscore = self._filterModule(module)
+    def loadTestsFromModule(self, module, *args, pattern=None, **kws):
+        """
+            Returns a suite of all tests cases contained in module.
+        """
+        load_module, load_underscore = self._filterModule(module)
 
-            if load_module or load_underscore:
-                return super(OETestLoader, self).loadTestsFromModule(
-                        module, *args, pattern=pattern, **kws)
-            else:
-                return self.suiteClass()
-    else:
-        def loadTestsFromModule(self, module, use_load_tests=True):
-            """
-                Returns a suite of all tests cases contained in module.
-            """
-            load_module, load_underscore = self._filterModule(module)
-
-            if load_module or load_underscore:
-                return super(OETestLoader, self).loadTestsFromModule(
-                        module, use_load_tests)
-            else:
-                return self.suiteClass()
+        if load_module or load_underscore:
+            return super(OETestLoader, self).loadTestsFromModule(
+                    module, *args, pattern=pattern, **kws)
+        else:
+            return self.suiteClass()
