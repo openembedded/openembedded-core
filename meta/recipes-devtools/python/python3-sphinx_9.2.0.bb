@@ -12,7 +12,7 @@ inherit python_flit_core pypi
 
 do_install:append () {
 	# The cache format of "{None, 'en', 'ja'}" doesn't seem to be consistent (dict ordering?)
-	rm ${D}${libdir}/${PYTHON_DIR}/site-packages/sphinx/writers/__pycache__/*latex*
+	rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/sphinx/writers/__pycache__/*latex*
 }
 
 RDEPENDS:${PN} = "\
