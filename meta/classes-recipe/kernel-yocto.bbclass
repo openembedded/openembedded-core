@@ -548,17 +548,17 @@ python do_config_analysis() {
         for action in ["analysis","audit"]:
             if action == "analysis":
                 try:
-                    analysis = subprocess.check_output(['symbol_why.py', '--dotconfig',  '{}'.format( d.getVar('B') + '/.config' ), '--blame', c], cwd=s, env=env ).decode('utf-8')
+                    analysis = subprocess.check_output(['symbol_why.py', '--dotconfig',  '{}'.format( d.getVar('B') + '/.config' ), '--blame', c], cwd=s, stderr=subprocess.PIPE, text=True, env=env)
                 except subprocess.CalledProcessError as e:
-                    bb.fatal( "config analysis failed when running '%s': %s" % (" ".join(e.cmd), e.output.decode('utf-8')))
+                    bb.fatal( "config analysis failed when running '%s': %s\n%s" % (" ".join(e.cmd), e.output, e.stderr))
 
                 outfile = d.getVar( 'CONFIG_ANALYSIS_FILE' )
 
             if action == "audit":
                 try:
-                    analysis = subprocess.check_output(['symbol_why.py', '--dotconfig',  '{}'.format( d.getVar('B') + '/.config' ), '--summary', '--extended', '--sanity', c], cwd=s, env=env ).decode('utf-8')
+                    analysis = subprocess.check_output(['symbol_why.py', '--dotconfig',  '{}'.format( d.getVar('B') + '/.config' ), '--summary', '--extended', '--sanity', c], cwd=s, stderr=subprocess.PIPE, text=True, env=env )
                 except subprocess.CalledProcessError as e:
-                    bb.fatal( "config analysis failed when running '%s': %s" % (" ".join(e.cmd), e.output.decode('utf-8')))
+                    bb.fatal( "config analysis failed when running '%s': %s\n%s" % (" ".join(e.cmd), e.output, e.stderr))
 
                 outfile = d.getVar( 'CONFIG_AUDIT_FILE' )
 
@@ -593,7 +593,10 @@ python do_kernel_configcheck() {
     # passed a valid meta-series for processing
     kmeta = d.getVar("KMETA")
     if not kmeta or not os.path.exists('{}/{}'.format(s,kmeta)):
-        kmeta = subprocess.check_output(['kgit', '--meta'], cwd=d.getVar('S')).decode('utf-8').rstrip()
+        try:
+            kmeta = subprocess.check_output(['kgit', '--meta'], cwd=d.getVar('S'), stderr=subprocess.PIPE, text=True).rstrip()
+        except subprocess.CalledProcessError as e:
+            bb.fatal( "configcheck failed: %s\n%s" % (e.output, e.stderr))
 
     env = os.environ.copy()
     env['PATH'] = "%s:%s%s" % (d.getVar('PATH'), s, "/scripts/util/")
@@ -608,9 +611,9 @@ python do_kernel_configcheck() {
         env['CLANG_FLAGS'] = " -fintegrated-as"
 
     try:
-        configs = subprocess.check_output(['scc', '--configs', '-o', s + '/.kernel-meta'], env=env).decode('utf-8')
+        configs = subprocess.check_output(['scc', '--configs', '-o', s + '/.kernel-meta'], stderr=subprocess.PIPE, text=True, env=env)
     except subprocess.CalledProcessError as e:
-        bb.fatal( "Cannot gather config fragments for audit: %s" % e.output.decode("utf-8") )
+        bb.fatal( "Cannot gather config fragments for audit: %s\n%s" % (e.output, e.stderr))
 
     config_check_visibility = int(d.getVar("KCONF_AUDIT_LEVEL") or 0)
     bsp_check_visibility = int(d.getVar("KCONF_BSP_AUDIT_LEVEL") or 0)
@@ -627,9 +630,9 @@ python do_kernel_configcheck() {
 
     # category #1: mismatches
     try:
-        analysis = subprocess.check_output(['symbol_why.py', '--dotconfig',  '{}'.format( d.getVar('B') + '/.config' ), '--mismatches', extra_params], cwd=s, env=env ).decode('utf-8')
+        analysis = subprocess.check_output(['symbol_why.py', '--dotconfig',  '{}'.format( d.getVar('B') + '/.config' ), '--mismatches', extra_params], cwd=s, stderr=subprocess.PIPE, env=env, text=True )
     except subprocess.CalledProcessError as e:
-        bb.fatal( "config analysis failed when running '%s': %s" % (" ".join(e.cmd), e.output.decode('utf-8')))
+        bb.fatal( "config analysis failed when running '%s': %s\n%s" % (" ".join(e.cmd), e.output, e.stderr))
 
     if analysis:
         outfile = "{}/{}/cfg/mismatch.txt".format( s, kmeta )
@@ -649,9 +652,9 @@ python do_kernel_configcheck() {
     if bsp_check_visibility > 1:
         extra_params = "--strict"
     try:
-        analysis = subprocess.check_output(['symbol_why.py', '--dotconfig',  '{}'.format( d.getVar('B') + '/.config' ), '--invalid', extra_params], cwd=s, env=env ).decode('utf-8')
+        analysis = subprocess.check_output(['symbol_why.py', '--dotconfig',  '{}'.format( d.getVar('B') + '/.config' ), '--invalid', extra_params], cwd=s, stderr=subprocess.PIPE, env=env, text=True )
     except subprocess.CalledProcessError as e:
-        bb.fatal( "config analysis failed when running '%s': %s" % (" ".join(e.cmd), e.output.decode('utf-8')))
+        bb.fatal( "config analysis failed when running '%s': %s\n%s" % (" ".join(e.cmd), e.output, e.stderr))
 
     if analysis:
         outfile = "{}/{}/cfg/invalid.txt".format(s,kmeta)
@@ -668,9 +671,9 @@ python do_kernel_configcheck() {
 
     # category #3: redefined options (this is pretty verbose and is debug only)
     try:
-        analysis = subprocess.check_output(['symbol_why.py', '--dotconfig',  '{}'.format( d.getVar('B') + '/.config' ), '--sanity'], cwd=s, env=env ).decode('utf-8')
+        analysis = subprocess.check_output(['symbol_why.py', '--dotconfig',  '{}'.format( d.getVar('B') + '/.config' ), '--sanity'], cwd=s, stderr=subprocess.PIPE, env=env, text=True)
     except subprocess.CalledProcessError as e:
-        bb.fatal( "config analysis failed when running '%s': %s" % (" ".join(e.cmd), e.output.decode('utf-8')))
+        bb.fatal( "config analysis failed when running '%s': %s\n%s" % (" ".join(e.cmd), e.output, e.stderr))
 
     if analysis:
         outfile = "{}/{}/cfg/redefinition.txt".format(s,kmeta)
