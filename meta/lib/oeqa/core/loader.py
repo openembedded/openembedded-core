@@ -171,37 +171,9 @@ class OETestLoader(unittest.TestLoader):
         return False
 
     def _getTestCase(self, testCaseClass, tcName):
-        if not hasattr(testCaseClass, '__oeqa_loader') and \
-                issubclass(testCaseClass, OETestCase):
-            # In order to support data_vars validation
-            # monkey patch the default setUp/tearDown{Class} to use
-            # the ones provided by OETestCase
-            setattr(testCaseClass, 'setUpClassMethod',
-                    getattr(testCaseClass, 'setUpClass'))
-            setattr(testCaseClass, 'tearDownClassMethod',
-                    getattr(testCaseClass, 'tearDownClass'))
-            setattr(testCaseClass, 'setUpClass',
-                    testCaseClass._oeSetUpClass)
-            setattr(testCaseClass, 'tearDownClass',
-                    testCaseClass._oeTearDownClass)
-
-            # In order to support decorators initialization
-            # monkey patch the default setUp/tearDown to use
-            # a setUpDecorators/tearDownDecorators that methods
-            # will call setUp/tearDown original methods.
-            setattr(testCaseClass, 'setUpMethod',
-                    getattr(testCaseClass, 'setUp')) 
-            setattr(testCaseClass, 'tearDownMethod',
-                    getattr(testCaseClass, 'tearDown'))
-            setattr(testCaseClass, 'setUp', testCaseClass._oeSetUp)
-            setattr(testCaseClass, 'tearDown', testCaseClass._oeTearDown)
-
-            setattr(testCaseClass, '__oeqa_loader', True)
-
         case = testCaseClass(tcName)
         if isinstance(case, OETestCase):
-            setattr(case, 'decorators', [])
-
+            case.decorators = []
         return case
 
     def loadTestsFromTestCase(self, testCaseClass):

@@ -32,33 +32,18 @@ class OETestCase(unittest.TestCase):
     # OEQAMissingVariable exception is raised
     td_vars = None
 
-    @classmethod
-    def _oeSetUpClass(clss):
-        _validate_td_vars(clss.td, clss.td_vars, "class")
-        if hasattr(clss, 'setUpHooker') and callable(getattr(clss, 'setUpHooker')):
-            clss.setUpHooker()
-        clss.setUpClassMethod()
+    # Decorators bound to this test case by OETestLoader
+    decorators = ()
 
-    @classmethod
-    def _oeTearDownClass(clss):
-        clss.tearDownClassMethod()
-
-    def _oeSetUp(self):
-        # unittest doesn't call tearDown() if setUp() fails so the decorators
-        # need tearing down here in that case too
-        try:
-            for d in self.decorators:
-                d.setUpDecorator()
-            self.setUpMethod()
-        except:
-            for d in self.decorators:
-                d.tearDownDecorator()
-            raise
-
-    def _oeTearDown(self):
+    def _callSetUp(self):
+        # unittest.TestCase.run() calls this to run setUp(). Check the test
+        # data and set up the decorators first. Decorators are torn down as
+        # cleanups, which run after tearDown() and also if setUp() fails.
+        _validate_td_vars(self.td, self.td_vars, "class")
         for d in self.decorators:
-            d.tearDownDecorator()
-        self.tearDownMethod()
+            d.setUpDecorator()
+            self.addCleanup(d.tearDownDecorator)
+        super()._callSetUp()
 
     def assertFileExists(self, filename, msg=None):
         """
