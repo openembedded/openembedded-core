@@ -28,8 +28,8 @@ class PingTest(OERuntimeTestCase):
         try:
             while count < 5:
                 cmd = 'ping -c 1 %s' % self.target.ip
-                proc = Popen(cmd, shell=True, stdout=PIPE)
-                output += proc.communicate()[0].decode('utf-8')
+                proc = Popen(cmd, shell=True, stdout=PIPE, text=True)
+                output += proc.communicate()[0]
                 if proc.poll() == 0:
                     count += 1
                 else:

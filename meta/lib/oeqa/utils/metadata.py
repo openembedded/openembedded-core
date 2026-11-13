@@ -68,19 +68,19 @@ def git_rev_info(path):
     except ImportError:
         import subprocess
         try:
-            info['branch'] = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=path).decode('utf-8').strip()
+            info['branch'] = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=path, text=True).strip()
         except subprocess.CalledProcessError:
             pass
         try:
-            info['commit'] = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=path).decode('utf-8').strip()
+            info['commit'] = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=path, text=True).strip()
         except subprocess.CalledProcessError:
             pass
         try:
-            info['commit_count'] = int(subprocess.check_output(["git", "rev-list", "--count", "HEAD"], cwd=path).decode('utf-8').strip())
+            info['commit_count'] = int(subprocess.check_output(["git", "rev-list", "--count", "HEAD"], cwd=path, text=True).strip())
         except subprocess.CalledProcessError:
             pass
         try:
-            info['commit_time'] = int(subprocess.check_output(["git", "show", "--no-patch", "--format=%ct", "HEAD"], cwd=path).decode('utf-8').strip())
+            info['commit_time'] = int(subprocess.check_output(["git", "show", "--no-patch", "--format=%ct", "HEAD"], cwd=path, text=True).strip())
         except subprocess.CalledProcessError:
             pass
         return info

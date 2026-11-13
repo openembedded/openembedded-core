@@ -143,8 +143,8 @@ class QemuTinyRunner(QemuRunner):
         #
         # Walk the process tree from the process specified looking for a qemu-system. Return its [pid'cmd]
         #
-        ps = subprocess.Popen(['ps', 'axww', '-o', 'pid,ppid,pri,ni,command'], stdout=subprocess.PIPE).communicate()[0]
-        processes = ps.decode("utf-8").split('\n')
+        ps = subprocess.Popen(['ps', 'axww', '-o', 'pid,ppid,pri,ni,command'], stdout=subprocess.PIPE, text=True).communicate()[0]
+        processes = ps.split('\n')
         nfields = len(processes[0].split()) - 1
         pids = {}
         commands = {}

@@ -316,8 +316,7 @@ class QemuRunner:
                 % (self.runqemu.poll(), os.path.isfile(self.qemu_pidfile), str(qemu_pid), os.path.exists("/proc/" + str(qemu_pid))))
 
             # Dump all processes to help us to figure out what is going on...
-            ps = subprocess.Popen(['ps', 'axww', '-o', 'pid,ppid,pri,ni,command '], stdout=subprocess.PIPE).communicate()[0]
-            processes = ps.decode("utf-8")
+            processes = subprocess.Popen(['ps', 'axww', '-o', 'pid,ppid,pri,ni,command '], stdout=subprocess.PIPE, text=True).communicate()[0]
             self.logger.debug("Running processes:\n%s" % processes)
             op = getOutput(output)
             self.stop()

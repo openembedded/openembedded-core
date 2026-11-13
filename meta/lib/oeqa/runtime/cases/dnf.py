@@ -103,7 +103,7 @@ class DnfRepoTest(DnfTest):
     @OETestDepends(['dnf.DnfRepoTest.test_dnf_install_from_disk'])
     def test_dnf_install_from_http(self):
         output = subprocess.check_output('%s %s -name dnf-test-dep*' % (bb.utils.which(os.getenv('PATH'), "find"),
-                                                                           os.path.join(self.tc.td['WORKDIR'], 'oe-testimage-repo')), shell=True).decode("utf-8")
+                                                                           os.path.join(self.tc.td['WORKDIR'], 'oe-testimage-repo')), shell=True, text=True)
         rpm_path = output.split("/")[-2] + "/" + output.split("/")[-1]
         url = 'http://%s:%s/%s' %(self.target.server_ip, self.repo_server.port, rpm_path)
         self.dnf_with_repo('remove -y dnf-test-dep')
