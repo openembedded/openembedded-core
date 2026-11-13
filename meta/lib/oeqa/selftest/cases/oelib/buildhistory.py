@@ -45,7 +45,7 @@ class TestBlobParsing(OESelftestTestCase):
             return
 
         for k in to_remove:
-            self.var_map.pop(x,None)
+            self.var_map.pop(k, None)
         for k in to_add:
             self.var_map[k] = to_add[k]
 
