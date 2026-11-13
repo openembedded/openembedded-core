@@ -1,0 +1,59 @@
+From 8580e30c9692548d7e3da88e03c08d985402fae2 Mon Sep 17 00:00:00 2001
+From: Adam Duskett <adam.duskett@amarulasolutions.com>
+Date: Thu, 15 Oct 2026 11:58:49 +0200
+Subject: [PATCH] libdnf: fix arm arch mapping issues for qemuarmv5
+
+We change the way rpm architectures work, we make the machine name the default
+machine specific package architecture.
+
+This arm mapping code can work or in the case of qemuarmv5, it doesn't as it
+creates armv5hl which doesn't exist and causes errrors. We can simply remove
+it, we don't need it.
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
+
+Rebased for 5.4.6.0
+Signed-off-by: Adam Duskett <adam.duskett@amarulasolutions.com>
+---
+ libdnf5/utils/system.cpp | 24 ------------------------
+ 1 file changed, 24 deletions(-)
+
+diff --git a/libdnf5/utils/system.cpp b/libdnf5/utils/system.cpp
+index ecdc57e..35d8801 100644
+--- a/libdnf5/utils/system.cpp
++++ b/libdnf5/utils/system.cpp
+@@ -52,30 +52,6 @@ std::string detect_arch() {
+         throw RuntimeError(M_("Failed to execute uname()"));
+     }
+ 
+-    if (!strncmp(un.machine, "armv", 4)) {
+-        /* un.machine is armvXE, where X is version number and E is
+-         * endianness (b or l); we need to add modifiers such as
+-         * h (hardfloat), n (neon). Neon is a requirement of armv8 so
+-         * as far as rpm is concerned armv8l is the equivalent of armv7hnl
+-         * (or 7hnb) so we don't explicitly add 'n' for 8+ as it's expected. */
+-        char endian = un.machine[strlen(un.machine) - 1];
+-        char * modifier = un.machine + 5;
+-        while (isdigit(*modifier)) /* keep armv7, armv8, armv9, armv10, armv100, ... */
+-            modifier++;
+-        if (getauxval(AT_HWCAP) & HWCAP_ARM_VFP)
+-            *modifier++ = 'h';
+-        if ((atoi(un.machine + 4) == 7) && (getauxval(AT_HWCAP) & HWCAP_ARM_NEON))
+-            *modifier++ = 'n';
+-        *modifier++ = endian;
+-        *modifier = 0;
+-    }
+-#ifdef __MIPSEL__
+-    // support for little endian MIPS
+-    if (!strcmp(un.machine, "mips"))
+-        strcpy(un.machine, "mipsel");
+-    else if (!strcmp(un.machine, "mips64"))
+-        strcpy(un.machine, "mips64el");
+-#endif
+     return un.machine;
+ }
+ 
+-- 
+2.56.0
+

@@ -1,0 +1,36 @@
+From 921f6357dcba131d11366ac11249e1a9b2649cd8 Mon Sep 17 00:00:00 2001
+From: Adam Duskett <adam.duskett@amarulasolutions.com>
+Date: Thu, 15 Oct 2026 11:55:10 +0200
+Subject: [PATCH] Do not hardcode system_cachedir
+
+Because dnf is ran in a fakeroot environment, the UID of the
+"user" is 0, and the hardcoded paths to the host system are
+attempted, leading to the following error:
+
+[log_check] DEBUG: Failed to expire repository cache in path "/var/cache/libdnf5/
+
+Remove the check for geteuid() == 0 and rely only on the
+user cache dir.
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Adam Duskett <adam.duskett@amarulasolutions.com>
+---
+ libdnf5/conf/config_main.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libdnf5/conf/config_main.cpp b/libdnf5/conf/config_main.cpp
+index 2d808ec..a169af4 100644
+--- a/libdnf5/conf/config_main.cpp
++++ b/libdnf5/conf/config_main.cpp
+@@ -244,7 +244,7 @@ class ConfigMain::Impl {
+     // Repo main config
+ 
+     OptionNumber<std::uint32_t> retries{10};
+-    OptionPath cachedir{geteuid() == 0 ? SYSTEM_CACHEDIR : libdnf5::xdg::get_user_cache_dir() / "libdnf5"};
++    OptionPath cachedir{libdnf5::xdg::get_user_cache_dir() / "libdnf5"};
+     OptionBool fastestmirror{false};
+     OptionStringAppendList excludeenvs{std::vector<std::string>{}};
+     OptionStringAppendList excludegroups{std::vector<std::string>{}};
+-- 
+2.56.0
+

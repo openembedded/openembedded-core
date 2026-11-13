@@ -1,0 +1,51 @@
+From 86755bbc9a6596f58f0437823de0ef8a6209e4ab Mon Sep 17 00:00:00 2001
+From: Adam Duskett <adam.duskett@amarulasolutions.com>
+Date: Thu, 15 Oct 2026 11:54:37 +0200
+Subject: [PATCH] cmake: set CMP0190 to OLD
+
+Starting with CMake 4.1, cross-compiling python3 requires setting
+-DCMAKE_CROSSCOMPILING_EMULATOR which can be done by inheriting
+cmake-qemu. However, this leads to the following error:
+Interpreter: Cannot run the interpreter ".../python3-native/python3"
+
+This is due to the target sysroot python3 binary not being installed
+because it can't be executed.
+
+Set CMP0190 to old to force the old behavior.
+
+https://cmake.org/cmake/help/latest/policy/CMP0190.html
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Adam Duskett <adam.duskett@amarulasolutions.com>
+---
+ bindings/python3/CMakeLists.txt                      | 1 +
+ libdnf5-plugins/python_plugins_loader/CMakeLists.txt | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/bindings/python3/CMakeLists.txt b/bindings/python3/CMakeLists.txt
+index cb93269..aa961d0 100644
+--- a/bindings/python3/CMakeLists.txt
++++ b/bindings/python3/CMakeLists.txt
+@@ -6,6 +6,7 @@ endif()
+ message("Building bindings for python3")
+ 
+ 
++cmake_policy(SET CMP0190 OLD)
+ find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+ include_directories(${Python3_INCLUDE_DIRS})
+ 
+diff --git a/libdnf5-plugins/python_plugins_loader/CMakeLists.txt b/libdnf5-plugins/python_plugins_loader/CMakeLists.txt
+index 9ee2ffb..b8f908a 100644
+--- a/libdnf5-plugins/python_plugins_loader/CMakeLists.txt
++++ b/libdnf5-plugins/python_plugins_loader/CMakeLists.txt
+@@ -6,6 +6,7 @@ if(NOT WITH_PYTHON_PLUGINS_LOADER)
+     return()
+ endif()
+ 
++cmake_policy(SET CMP0190 OLD)
+ find_package(Python3 REQUIRED COMPONENTS Interpreter Development)
+ find_package(SWIG REQUIRED)
+ include_directories(${Python3_INCLUDE_DIRS})
+-- 
+2.56.0
+

@@ -17,7 +17,7 @@ from oeqa.runtime.decorator.package import OEHasPackage
 class DnfTest(OERuntimeTestCase):
 
     def dnf(self, command, expected = 0):
-        command = 'dnf %s' % command
+        command = 'dnf --setopt=protect_running_kernel=False %s' % command
         status, output = self.target.run(command, 1500)
         message = os.linesep.join([command, output])
         self.assertEqual(status, expected, message)
@@ -48,7 +48,7 @@ class DnfBasicTest(DnfTest):
 
     @OETestDepends(['dnf.DnfBasicTest.test_dnf_help'])
     def test_dnf_history(self):
-        self.dnf('history')
+        self.dnf('history list')
 
 class DnfRepoTest(DnfTest):
 
@@ -68,7 +68,7 @@ class DnfRepoTest(DnfTest):
         deploy_url = 'http://%s:%s/' %(self.target.server_ip, self.repo_server.port)
         cmdlinerepoopts = ["--repofrompath=oe-testimage-repo-%s,%s%s" %(arch, deploy_url, arch) for arch in pkgarchs]
 
-        output = self.dnf(" ".join(cmdlinerepoopts) + " --nogpgcheck " + command)
+        output = self.dnf(" ".join(cmdlinerepoopts) + " --no-gpgchecks " + command)
         return output
 
     @OETestDepends(['dnf.DnfBasicTest.test_dnf_help'])
@@ -96,7 +96,7 @@ class DnfRepoTest(DnfTest):
     def test_dnf_install_from_disk(self):
         self.dnf_with_repo('remove -y dnf-test-dep')
         self.dnf_with_repo('install -y --downloadonly dnf-test-dep')
-        status, output = self.target.run('find /var/cache/dnf -name dnf-test-dep*rpm')
+        status, output = self.target.run('find /var/cache/libdnf5 -name dnf-test-dep*rpm')
         self.assertEqual(status, 0, output)
         self.dnf_with_repo('install -y %s' % output)
 
@@ -134,8 +134,8 @@ class DnfRepoTest(DnfTest):
         self.target.run('cp -r /etc/dnf %s/etc' % rootpath, 1500)
         self.target.run('cp /bin/sh %s/bin' % rootpath, 1500)
         self.target.run('mount -o bind /dev %s/dev/' % rootpath, 1500)
-        self.dnf_with_repo('install --installroot=%s -v -y --rpmverbosity=debug busybox' % rootpath)
-        status, output = self.target.run('test -e %s/var/cache/dnf' % rootpath, 1500)
+        self.dnf_with_repo('install --installroot=%s -y busybox' % rootpath)
+        status, output = self.target.run('test -e %s/var/cache/libdnf5' % rootpath, 1500)
         self.assertEqual(0, status, output)
         status, output = self.target.run('test -e %s/bin/busybox' % rootpath, 1500)
         self.assertEqual(0, status, output)
@@ -158,8 +158,8 @@ class DnfRepoTest(DnfTest):
         self.target.run('cp -r /etc/dnf %s/etc' % rootpath)
         self.target.run('cp /bin/busybox %s/bin/sh' % rootpath)
         self.target.run('mount -o bind /dev %s/dev/' % rootpath)
-        self.dnf_with_repo('install --installroot=%s -v -y --rpmverbosity=debug busybox' % rootpath)
-        status, output = self.target.run('test -e %s/var/cache/dnf' % rootpath)
+        self.dnf_with_repo('install --installroot=%s -y busybox' % rootpath)
+        status, output = self.target.run('test -e %s/var/cache/libdnf5' % rootpath)
         self.assertEqual(0, status, output)
         status, output = self.target.run('test -e %s/bin/busybox' % rootpath)
         self.assertEqual(0, status, output)

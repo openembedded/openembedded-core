@@ -17,6 +17,9 @@ class PkgRootfs(Rootfs):
                                r'|exit 1\b|ERROR: |Error: |Error |ERROR '\
                                r'|Failed |Failed: |Failed$|Failed\(\d+\):)'
 
+        if self.d.getVar('RPM_SIGN_PACKAGES') != '1':
+            self.warn_check_regex = r'^(?!.*Warning: skipped OpenPGP checks)(warn|Warn|WARNING:)'
+
         self.manifest = PkgManifest(d, manifest_dir)
 
         self.pm = RpmPM(d,

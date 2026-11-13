@@ -1,0 +1,135 @@
+From 2305a8fcd6aec81676c684cb06b9d4a676af3bd3 Mon Sep 17 00:00:00 2001
+From: Adam Duskett <adam.duskett@amarulasolutions.com>
+Date: Thu, 15 Oct 2026 11:58:24 +0200
+Subject: [PATCH] add support for gcc 12 and below
+
+    - Add missing headers for gcc <= 12
+    - Add support for libfmt if the format header is not found
+    - Add an ifdef to support compilers without std::chrono::parse
+
+Commit 1e8ced2293ed62bc7774ef5a2d1aeb48e29e2236 introduced using
+std::chrono::parse which wasn't available until gcc 14.1. This change causes
+build failures when cross-compiling on older, but still supported platforms
+like Debian 12.
+
+Note: This patch should be removed once the minimum GCC version
+for Yocto is >= 14.1.
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Adam Duskett <adam.duskett@amarulasolutions.com>
+---
+ libdnf5-cli/session.cpp                 | 12 ++++++++++++
+ libdnf5/CMakeLists.txt                  |  9 +++++++++
+ libdnf5/base/goal_elements.cpp          |  2 +-
+ libdnf5/conf/config_main.cpp            |  8 ++++++++
+ libdnf5/logger/memory_buffer_logger.cpp |  1 +
+ 5 files changed, 31 insertions(+), 1 deletion(-)
+
+diff --git a/libdnf5-cli/session.cpp b/libdnf5-cli/session.cpp
+index b2fa196..c5fc02f 100644
+--- a/libdnf5-cli/session.cpp
++++ b/libdnf5-cli/session.cpp
+@@ -22,6 +22,7 @@
+ #include <libdnf5/utils/bgettext/bgettext-mark-domain.h>
+ 
+ #include <chrono>
++#include <iomanip>
+ #include <limits>
+ #include <sstream>
+ #include <utility>
+@@ -254,7 +255,18 @@ DateOption::DateOption(
+             new libdnf5::OptionNumber<int64_t>(0, [](const std::string & value) {
+                 std::istringstream ss(value);
+                 std::chrono::sys_seconds tp;
++#if defined(__cpp_lib_chrono) && __cpp_lib_chrono >= 201907L
+                 ss >> std::chrono::parse("%F", tp);
++#else
++                std::tm tm{};
++                ss >> std::noskipws >> std::get_time(&tm, "%Y-%m-%d");
++                const auto ymd = std::chrono::year{tm.tm_year + 1900} / (tm.tm_mon + 1) / tm.tm_mday;
++                if (ymd.ok()) {
++                    tp = std::chrono::sys_days{ymd};
++                } else {
++                    ss.setstate(std::ios_base::failbit);
++                }
++#endif
+                 if (ss.fail()) {
+                     throw libdnf5::cli::ArgumentParserError(
+                         M_("Invalid date passed: \"{}\". Dates in \"YYYY-MM-DD\" format are expected"), value);
+diff --git a/libdnf5/CMakeLists.txt b/libdnf5/CMakeLists.txt
+index 359e39e..315a83b 100644
+--- a/libdnf5/CMakeLists.txt
++++ b/libdnf5/CMakeLists.txt
+@@ -11,6 +11,9 @@ if (NOT WITH_MODULEMD)
+     list(REMOVE_ITEM LIBDNF5_SOURCES ${LIBDNF5_SOURCES_MODULES})
+ endif()
+ 
++include(CheckIncludeFileCXX)
++check_include_file_cxx("format" CXX_FORMAT_SUPPORT)
++
+ # gather all pkg-config requires and write them to a .pc file later
+ list(APPEND LIBDNF5_PC_REQUIRES)
+ list(APPEND LIBDNF5_PC_REQUIRES_PRIVATE)
+@@ -49,6 +52,12 @@ set_target_properties(libdnf5 PROPERTIES SOVERSION ${DNF_SO_VERSION})
+ # required to have dlopen symbol
+ target_link_libraries(libdnf5 PUBLIC ${CMAKE_DL_LIBS})
+ 
++if (NOT CXX_FORMAT_SUPPORT)
++    find_package(fmt REQUIRED)
++    target_link_libraries(libdnf5_obj PRIVATE fmt::fmt)
++    target_compile_definitions(libdnf5_obj PUBLIC USE_FMTLIB)
++endif()
++
+ # required by clang
+ target_link_libraries(libdnf5 PUBLIC stdc++)
+ 
+diff --git a/libdnf5/base/goal_elements.cpp b/libdnf5/base/goal_elements.cpp
+index e5d4a4b..757a6f2 100644
+--- a/libdnf5/base/goal_elements.cpp
++++ b/libdnf5/base/goal_elements.cpp
+@@ -17,7 +17,7 @@
+ // You should have received a copy of the GNU Lesser General Public License
+ // along with libdnf.  If not, see <https://www.gnu.org/licenses/>.
+ 
+-
++#include <optional>
+ #include "libdnf5/base/goal_elements.hpp"
+ 
+ #include "libdnf5/common/exception.hpp"
+diff --git a/libdnf5/conf/config_main.cpp b/libdnf5/conf/config_main.cpp
+index a169af4..8f0c8fe 100644
+--- a/libdnf5/conf/config_main.cpp
++++ b/libdnf5/conf/config_main.cpp
+@@ -37,9 +37,17 @@
+ #include <algorithm>
+ #include <array>
+ #include <cctype>
++#include <optional>
+ #include <sstream>
+ #include <utility>
+ 
++#ifdef USE_FMTLIB
++#include <fmt/core.h>
++namespace std {
++    using fmt::format;
++}
++#endif
++
+ namespace libdnf5 {
+ 
+ /// @brief Converts a friendly bandwidth option to bytes
+diff --git a/libdnf5/logger/memory_buffer_logger.cpp b/libdnf5/logger/memory_buffer_logger.cpp
+index 85bf707..89307e9 100644
+--- a/libdnf5/logger/memory_buffer_logger.cpp
++++ b/libdnf5/logger/memory_buffer_logger.cpp
+@@ -20,6 +20,7 @@
+ #include "libdnf5/logger/memory_buffer_logger.hpp"
+ 
+ #include <mutex>
++#include <vector>
+ 
+ namespace libdnf5 {
+ 
+-- 
+2.56.0
+
