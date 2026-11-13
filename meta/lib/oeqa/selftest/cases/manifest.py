@@ -94,7 +94,7 @@ class VerifyManifest(OESelftestTestCase):
                 if not os.path.isfile(mpath[k]):
                     self.logger.debug("{}: {} does not exist".format(
                         self.classname, mpath[k]))
-                    raise IOError
+                    raise OSError
                 m_entry[k] = ManifestEntry(mpath[k])
 
                 pkgdata_dir[k] = self.get_dir_from_bb_var('PKGDATA_DIR',
@@ -104,11 +104,11 @@ class VerifyManifest(OESelftestTestCase):
                 if not os.path.exists(reverse_dir[k]):
                     self.logger.debug("{}: {} does not exist".format(
                         self.classname, reverse_dir[k]))
-                    raise IOError
+                    raise OSError
         except OSError:
             raise self.skipTest("{}: Error in obtaining manifest dirs"\
                 .format(self.classname))
-        except IOError:
+        except OSError:
             msg = "{}: Error cannot find manifests in the specified dir:\n{}"\
                     .format(self.classname, mdir)
             self.fail(msg)
@@ -137,18 +137,18 @@ class VerifyManifest(OESelftestTestCase):
             mfilename = get_bb_var("IMAGE_LINK_NAME", self.buildtarget)\
                     + ".manifest"
             mpath = os.path.join(mdir, mfilename)
-            if not os.path.isfile(mpath): raise IOError
+            if not os.path.isfile(mpath): raise OSError
             m_entry = ManifestEntry(mpath)
 
             pkgdata_dir = {}
             pkgdata_dir = self.get_dir_from_bb_var('PKGDATA_DIR',
                                                 self.buildtarget)
             revdir = os.path.join(pkgdata_dir, 'runtime-reverse')
-            if not os.path.exists(revdir): raise IOError
+            if not os.path.exists(revdir): raise OSError
         except OSError:
             raise self.skipTest("{}: Error in obtaining manifest dirs"\
                 .format(self.classname))
-        except IOError:
+        except OSError:
             msg = "{}: Error cannot find manifests in dir:\n{}"\
                     .format(self.classname, mdir)
             self.fail(msg)
