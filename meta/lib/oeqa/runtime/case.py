@@ -15,11 +15,11 @@ class OERuntimeTestCase(OETestCase):
     target = None
 
     def setUp(self):
-        super(OERuntimeTestCase, self).setUp()
+        super().setUp()
         install_package(self)
 
     def tearDown(self):
-        super(OERuntimeTestCase, self).tearDown()
+        super().tearDown()
         uninstall_package(self)
 
 def run_network_serialdebug(target):

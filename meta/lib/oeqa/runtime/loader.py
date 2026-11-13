@@ -11,7 +11,7 @@ class OERuntimeTestLoader(OETestLoader):
     caseClass = OERuntimeTestCase
 
     def _getTestCase(self, testCaseClass, tcName):
-        case = super(OERuntimeTestLoader, self)._getTestCase(testCaseClass, tcName)
+        case = super()._getTestCase(testCaseClass, tcName)
 
         # Adds custom attributes to the OERuntimeTestCase
         setattr(case, 'target', self.tc.target)

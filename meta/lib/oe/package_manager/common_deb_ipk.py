@@ -18,7 +18,7 @@ class OpkgDpkgPM(PackageManager):
         """
         This is an abstract class. Do not instantiate this directly.
         """
-        super(OpkgDpkgPM, self).__init__(d, target_rootfs)
+        super().__init__(d, target_rootfs)
 
     def package_info(self, pkg):
         """

@@ -32,10 +32,10 @@ class SDKBuildProject(BuildProject):
         self.targetdir = os.path.join(self.targetdir, self.fname)
 
     def run_configure(self, configure_args='', extra_cmds=''):
-        return super(SDKBuildProject, self).run_configure(configure_args=(configure_args or '$CONFIGURE_FLAGS'), extra_cmds=extra_cmds)
+        return super().run_configure(configure_args=(configure_args or '$CONFIGURE_FLAGS'), extra_cmds=extra_cmds)
 
     def run_install(self, install_args=''):
-        return super(SDKBuildProject, self).run_install(install_args=(install_args or "DESTDIR=%s/../install" % self.targetdir))
+        return super().run_install(install_args=(install_args or "DESTDIR=%s/../install" % self.targetdir))
 
     def log(self, msg):
         if self.logfile:

@@ -93,7 +93,7 @@ class QemuTarget(BaseTarget):
 
         import oe.types
 
-        super(QemuTarget, self).__init__(d, logger)
+        super().__init__(d, logger)
 
         self.rootfs = ''
         self.kernel = ''
@@ -161,7 +161,7 @@ class QemuTarget(BaseTarget):
 
         self.logger.info("rootfs file: %s" % self.rootfs)
         self.logger.info("Qemu log file: %s" % self.qemulog)
-        super(QemuTarget, self).deploy()
+        super().deploy()
 
     def start(self, params=None, ssh=True, extra_bootparams='', runqemuparams='', launch_cmd='', discard_writes=True):
         if 'slirp' in runqemuparams.split():
@@ -228,7 +228,7 @@ class QemuTarget(BaseTarget):
 class SimpleRemoteTarget(BaseTarget):
 
     def __init__(self, d):
-        super(SimpleRemoteTarget, self).__init__(d)
+        super().__init__(d)
         addr = d.getVar("TEST_TARGET_IP") or bb.fatal('Please set TEST_TARGET_IP with the IP address of the machine you want to run the tests on.')
         self.ip = addr.split(":")[0]
         try:
@@ -245,7 +245,7 @@ class SimpleRemoteTarget(BaseTarget):
         self.logger.info("Server IP: %s" % self.server_ip)
 
     def deploy(self):
-        super(SimpleRemoteTarget, self).deploy()
+        super().deploy()
 
     def start(self, params=None, ssh=True, extra_bootparams=None):
         if ssh:

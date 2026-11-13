@@ -37,7 +37,7 @@ class OEStreamLogger(object):
 
 class OETestResult(_TestResult):
     def __init__(self, tc, *args, **kwargs):
-        super(OETestResult, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.successes = []
         self.starttime = {}
@@ -58,14 +58,14 @@ class OETestResult(_TestResult):
         # May have been set by concurrencytest
         if test.id() not in self.starttime:
             self.starttime[test.id()] = time.time()
-        super(OETestResult, self).startTest(test)
+        super().startTest(test)
 
     def stopTest(self, test):
         self.endtime[test.id()] = time.time()
         if self.buffer:
             self.logged_output[test.id()] = (
                     sys.stdout.getvalue(), sys.stderr.getvalue())
-        super(OETestResult, self).stopTest(test)
+        super().stopTest(test)
         if test.id() in self.progressinfo:
             self.tc.logger.info(self.progressinfo[test.id()])
 
@@ -153,25 +153,25 @@ class OETestResult(_TestResult):
 
     def addError(self, test, *args, details = None):
         self.extractExtraResults(test, details = details)
-        return super(OETestResult, self).addError(test, *args)
+        return super().addError(test, *args)
 
     def addFailure(self, test, *args, details = None):
         self.extractExtraResults(test, details = details)
-        return super(OETestResult, self).addFailure(test, *args)
+        return super().addFailure(test, *args)
 
     def addSuccess(self, test, details = None):
         #Added so we can keep track of successes too
         self.successes.append((test, None))
         self.extractExtraResults(test, details = details)
-        return super(OETestResult, self).addSuccess(test)
+        return super().addSuccess(test)
 
     def addExpectedFailure(self, test, *args, details = None):
         self.extractExtraResults(test, details = details)
-        return super(OETestResult, self).addExpectedFailure(test, *args)
+        return super().addExpectedFailure(test, *args)
 
     def addUnexpectedSuccess(self, test, details = None):
         self.extractExtraResults(test, details = details)
-        return super(OETestResult, self).addUnexpectedSuccess(test)
+        return super().addUnexpectedSuccess(test)
 
     def logDetails(self, json_file_dir=None, configuration=None, result_id=None,
             dump_streams=False):
@@ -252,7 +252,7 @@ class OETestRunner(_TestRunner):
 
     def __init__(self, tc, *args, **kwargs):
         kwargs['stream'] = self.streamLoggerClass(tc.logger)
-        super(OETestRunner, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.tc = tc
         self.resultclass = OETestResult
 

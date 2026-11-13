@@ -475,7 +475,7 @@ class SystemTap(OESelftestTestCase):
 
         @classmethod
         def setUpClass(cls):
-            super(SystemTap, cls).setUpClass()
+            super().setUpClass()
             cls.image = "core-image-minimal"
 
         def default_config(self):
@@ -545,7 +545,7 @@ IMAGE_INSTALL:append = " systemtap-runtime"
 class RustKernel(OESelftestTestCase):
         @classmethod
         def setUpClass(cls):
-            super(RustKernel, cls).setUpClass()
+            super().setUpClass()
             cls.image = "core-image-minimal"
 
         def test_kernel_rust_sample(self):

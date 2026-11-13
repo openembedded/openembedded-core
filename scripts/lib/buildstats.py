@@ -33,7 +33,7 @@ class BSTask(dict):
         self['iostat'] = {}
         self['rusage'] = {}
         self['child_rusage'] = {}
-        super(BSTask, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     @property
     def cputime(self):

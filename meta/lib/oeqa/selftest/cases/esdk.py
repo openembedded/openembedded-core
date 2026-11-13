@@ -69,7 +69,7 @@ CORE_IMAGE_EXTRA_INSTALL = "perl"
 
     @classmethod
     def setUpClass(cls):
-        super(oeSDKExtSelfTest, cls).setUpClass()
+        super().setUpClass()
         cls.image = 'core-image-minimal'
 
         bb_vars = get_bb_vars(['SSTATE_DIR', 'WORKDIR'], cls.image)

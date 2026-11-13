@@ -16,7 +16,7 @@ class MetaIDE(OESelftestTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(MetaIDE, cls).setUpClass()
+        super().setUpClass()
         bitbake('meta-ide-support')
         bitbake('build-sysroots -c build_native_sysroot')
         bitbake('build-sysroots -c build_target_sysroot')
@@ -30,7 +30,7 @@ class MetaIDE(OESelftestTestCase):
     @classmethod
     def tearDownClass(cls):
         shutil.rmtree(cls.tmpdir_metaideQA, ignore_errors=True)
-        super(MetaIDE, cls).tearDownClass()
+        super().tearDownClass()
 
     def test_meta_ide_had_installed_meta_ide_support(self):
         self.assertExists(self.environment_script_path)

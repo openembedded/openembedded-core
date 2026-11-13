@@ -67,7 +67,7 @@ class OpkgIndexer(Indexer):
 
 class PMPkgsList(PkgsList):
     def __init__(self, d, rootfs_dir):
-        super(PMPkgsList, self).__init__(d, rootfs_dir)
+        super().__init__(d, rootfs_dir)
         config_file = d.getVar("IPKGCONF_TARGET")
 
         self.opkg_cmd = bb.utils.which(os.getenv('PATH'), "opkg")
@@ -95,7 +95,7 @@ class PMPkgsList(PkgsList):
 
 class OpkgPM(OpkgDpkgPM):
     def __init__(self, d, target_rootfs, config_file, archs, task_name='target', ipk_repo_workdir="oe-rootfs-repo", filterbydependencies=True, prepare_index=True):
-        super(OpkgPM, self).__init__(d, target_rootfs)
+        super().__init__(d, target_rootfs)
 
         self.config_file = config_file
         self.pkg_archs = archs

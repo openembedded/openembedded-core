@@ -25,7 +25,7 @@ control over whether the class will be added to the registry (e.g. to keep
 abstract base classes out of the registry)."""
     priority = 0
     def __init__(cls, name, bases, attrs):
-        super(ClassRegistry, cls).__init__(name, bases, attrs)
+        super().__init__(name, bases, attrs)
         try:
             if not cls.implemented:
                 return

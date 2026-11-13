@@ -82,7 +82,7 @@ class TargetDumper(BaseDumper):
     """
 
     def __init__(self, cmds, parent_dir, runner):
-        super(TargetDumper, self).__init__(cmds, parent_dir)
+        super().__init__(cmds, parent_dir)
         self.runner = runner
         self.errors = 0
 
@@ -112,7 +112,7 @@ class MonitorDumper(BaseDumper):
     """
 
     def __init__(self, cmds, parent_dir, runner):
-        super(MonitorDumper, self).__init__(cmds, parent_dir)
+        super().__init__(cmds, parent_dir)
         self.runner = runner
         self.errors = 0
 

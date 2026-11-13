@@ -20,7 +20,7 @@ class BitbakePrTests(OESelftestTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super(BitbakePrTests, cls).setUpClass()
+        super().setUpClass()
         cls.pkgdata_dir = get_bb_var('PKGDATA_DIR')
 
         cls.exported_db_path = os.path.join(cls.builddir, 'export.inc')

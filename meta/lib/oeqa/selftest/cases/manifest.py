@@ -52,7 +52,7 @@ class VerifyManifest(OESelftestTestCase):
     @classmethod
     def setUpClass(self):
 
-        super(VerifyManifest, self).setUpClass()
+        super().setUpClass()
         self.buildtarget = 'core-image-minimal'
         self.classname = 'VerifyManifest'
 

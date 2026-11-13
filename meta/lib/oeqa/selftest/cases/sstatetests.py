@@ -26,7 +26,7 @@ keep_temp_files = False
 class SStateBase(OESelftestTestCase):
 
     def setUpLocal(self):
-        super(SStateBase, self).setUpLocal()
+        super().setUpLocal()
         self.temp_sstate_location = None
         needed_vars = ['SSTATE_DIR', 'TCLIBC', 'TUNE_ARCH',
                        'TOPDIR', 'TARGET_VENDOR', 'TARGET_OS']

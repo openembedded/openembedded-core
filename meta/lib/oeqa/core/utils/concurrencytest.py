@@ -51,7 +51,7 @@ _all__ = [
 class BBThreadsafeForwardingResult(ThreadsafeForwardingResult):
 
     def __init__(self, target, semaphore, threadnum, totalinprocess, totaltests, output, finalresult):
-        super(BBThreadsafeForwardingResult, self).__init__(target, semaphore)
+        super().__init__(target, semaphore)
         self.threadnum = threadnum
         self.totalinprocess = totalinprocess
         self.totaltests = totaltests
@@ -81,7 +81,7 @@ class BBThreadsafeForwardingResult(ThreadsafeForwardingResult):
             self.semaphore.release()
         self.finalresult._stderr_buffer = io.StringIO(initial_value=self.outputbuf.getvalue().decode("utf-8"))
         self.finalresult._stdout_buffer = io.StringIO()
-        super(BBThreadsafeForwardingResult, self)._add_result_with_semaphore(method, test, *args, **kwargs)
+        super()._add_result_with_semaphore(method, test, *args, **kwargs)
 
 class ProxyTestResult:
     # a very basic TestResult proxy, in order to modify add* calls
@@ -194,7 +194,7 @@ class dummybuf(object):
 class ConcurrentTestSuite(unittest.TestSuite):
 
     def __init__(self, suite, processes, setupfunc, removefunc, bb_vars):
-        super(ConcurrentTestSuite, self).__init__([suite])
+        super().__init__([suite])
         self.processes = processes
         self.setupfunc = setupfunc
         self.removefunc = removefunc

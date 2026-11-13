@@ -72,7 +72,7 @@ def removebuilddir(d):
 
 class OESelftestTestContext(OETestContext):
     def __init__(self, td=None, logger=None, machines=None, config_paths=None, newbuilddir=None, keep_builddir=None):
-        super(OESelftestTestContext, self).__init__(td, logger)
+        super().__init__(td, logger)
 
         self.config_paths = config_paths
         self.newbuilddir = newbuilddir
@@ -173,10 +173,10 @@ class OESelftestTestContext(OETestContext):
             return NonConcurrentTestSuite(suites, processes, self.setup_builddir, self.removebuilddir, self.bb_vars)
 
     def runTests(self, processes=None, machine=None, skips=[]):
-        return super(OESelftestTestContext, self).runTests(processes, skips)
+        return super().runTests(processes, skips)
 
     def listTests(self, display_type, machine=None):
-        return super(OESelftestTestContext, self).listTests(display_type)
+        return super().listTests(display_type)
 
 class OESelftestTestContextExecutor(OETestContextExecutor):
     _context_class = OESelftestTestContext
@@ -261,7 +261,7 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
         bb.utils.mkdirhier(logdir)
         args.output_log = logdir + '/%s-results-%s.log' % (self.name, args.test_start_time)
 
-        super(OESelftestTestContextExecutor, self)._process_args(logger, args)
+        super()._process_args(logger, args)
 
         if args.list_modules:
             args.list_tests = 'module'

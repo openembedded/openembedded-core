@@ -88,7 +88,7 @@ class oeTest(unittest.TestCase):
 class oeRuntimeTest(oeTest):
     def __init__(self, methodName='runTest'):
         self.target = oeRuntimeTest.tc.target
-        super(oeRuntimeTest, self).__init__(methodName)
+        super().__init__(methodName)
 
     def setUp(self):
         # Install packages in the DUT
@@ -346,7 +346,7 @@ class TestContext(object):
 
 class RuntimeTestContext(TestContext):
     def __init__(self, d, target, exported=False):
-        super(RuntimeTestContext, self).__init__(d, exported)
+        super().__init__(d, exported)
 
         self.target = target
 
@@ -549,7 +549,7 @@ class RuntimeTestContext(TestContext):
 
 class ImageTestContext(RuntimeTestContext):
     def __init__(self, d, target, host_dumper):
-        super(ImageTestContext, self).__init__(d, target)
+        super().__init__(d, target)
 
         self.tagexp = d.getVar("TEST_SUITES_TAGS")
 
@@ -570,7 +570,7 @@ class ImageTestContext(RuntimeTestContext):
         """
 
         pkg_dir = self.d.getVar("TEST_EXTRACTED_DIR")
-        super(ImageTestContext, self).install_uninstall_packages(test_id, pkg_dir, install)
+        super().install_uninstall_packages(test_id, pkg_dir, install)
 
 class ExportTestContext(RuntimeTestContext):
     def __init__(self, d, target, exported=False, parsedArgs={}):
@@ -580,7 +580,7 @@ class ExportTestContext(RuntimeTestContext):
         parsedArgs can contain the following:
             - tag:      Filter test by tag.
         """
-        super(ExportTestContext, self).__init__(d, target, exported)
+        super().__init__(d, target, exported)
 
         tag = parsedArgs.get("tag", None)
         self.tagexp = tag if tag != None else d.getVar("TEST_SUITES_TAGS")
@@ -595,4 +595,4 @@ class ExportTestContext(RuntimeTestContext):
         export_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
         extracted_dir = self.d.getVar("TEST_EXPORT_EXTRACTED_DIR")
         pkg_dir = os.path.join(export_dir, extracted_dir)
-        super(ExportTestContext, self).install_uninstall_packages(test_id, pkg_dir, install)
+        super().install_uninstall_packages(test_id, pkg_dir, install)
