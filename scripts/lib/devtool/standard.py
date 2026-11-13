@@ -21,7 +21,7 @@ import glob
 from collections import OrderedDict
 
 from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, recipe_to_append, get_bbclassextend_targets, update_unlockedsigs, check_prerelease_version, check_git_repo_dirty, check_git_repo_op, DevtoolError
-from devtool import parse_recipe
+from devtool import parse_recipe, get_workspace_appends_dir
 
 import bb.utils
 
@@ -2042,7 +2042,7 @@ def _reset(recipes, no_clean, remove_work, config, basepath, workspace):
             # This should always be true if recipefile is set, but just in case
             preservedir(os.path.dirname(recipefile))
         # We don't automatically create this dir next to appends, but the user can
-        preservedir(os.path.join(config.workspace_path, 'appends', pn))
+        preservedir(os.path.join(get_workspace_appends_dir(config.workspace_path), pn))
 
         srctreebase = workspace[pn]['srctreebase']
         if os.path.isdir(srctreebase):

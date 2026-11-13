@@ -138,7 +138,7 @@ class BuildSystem(object):
                 # (because of externalsrc, the workspace bbappends will interfere with the
                 # locked signatures if present, and we don't need them anyway)
                 image_bbappend = os.path.splitext(os.path.basename(self.d.getVar('FILE')))[0] + '.bbappend'
-                appenddir = os.path.join(layerdestpath, 'appends')
+                appenddir = os.path.join(layerdestpath, 'recipes-appends')
                 if os.path.isdir(appenddir):
                     for fn in os.listdir(appenddir):
                         if fn == image_bbappend:
@@ -157,7 +157,10 @@ class BuildSystem(object):
                     for line in origlines:
                         if line.startswith('#'):
                             continue
-                        line = line.replace('workspacelayer', workspace_newname)
+                        # LAYERNAME must be unique, so rename the original workspace layer
+                        if re.match(r'^LAYERNAME\s*=', line):
+                            line = 'LAYERNAME = "%s"\n' % workspace_newname
+                        line = line.replace('_workspace ', '_' + workspace_newname + ' ')
                         f.write(line)
 
         # meta-skeleton layer is added as part of the build system
