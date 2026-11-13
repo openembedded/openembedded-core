@@ -43,6 +43,19 @@ class TestResultStatus(TestBase):
         return {case_id: result._getTestResultDetails(case)[0]
                 for case_id, case in tc._registry['cases'].items()}
 
+    def test_result_status(self):
+        self.assertEqual(self._statuses(['results', 'resultsmodule']), {
+            'results.ResultsTest.testPass': 'PASSED',
+            'results.ResultsTest.testFail': 'FAILED',
+            'results.ResultsTest.testError': 'ERROR',
+            'results.ResultsTest.testSkip': 'SKIPPED',
+            'results.ResultsTest.testExpectedFailure': 'EXPECTEDFAIL',
+            'results.ResultsTest.testUnexpectedSuccess': 'PASSED',
+            'results.ResultsClassErrorTest.testClassError': 'ERROR',
+            'results.ResultsClassSkipTest.testClassSkip': 'SKIPPED',
+            'resultsmodule.ResultsModuleTest.testModuleError': 'ERROR',
+        })
+
     def test_subtest_status(self):
         self.assertEqual(self._statuses(['subtest']), {
             'subtest.SubTestTest.testSubTestFail': 'FAILED',
