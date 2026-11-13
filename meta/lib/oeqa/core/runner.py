@@ -6,7 +6,6 @@
 
 import os
 import time
-import unittest
 import logging
 import re
 import json
@@ -14,6 +13,8 @@ import sys
 
 from unittest import TextTestResult as _TestResult
 from unittest import TextTestRunner as _TestRunner
+
+from oeqa.core.utils.test import getSuiteCases
 
 def _case_id(case):
     # Failures in subtests are recorded against a subtest object, use the
@@ -272,68 +273,44 @@ class OETestRunner(_TestRunner):
         return self.resultclass(self.tc, self.stream, self.descriptions,
                 self.verbosity)
 
-    def _walk_suite(self, suite, func):
-        for obj in suite:
-            if isinstance(obj, unittest.suite.TestSuite):
-                if len(obj._tests):
-                    self._walk_suite(obj, func)
-            elif isinstance(obj, unittest.case.TestCase):
-                func(self.tc.logger, obj)
-                self._walked_cases = self._walked_cases + 1
-
     def _list_tests_name(self, suite):
-        self._walked_cases = 0
-
-        def _list_cases(logger, case):
-            oetags = []
-            if hasattr(case, '__oeqa_testtags'):
-                oetags = getattr(case, '__oeqa_testtags')
-            if oetags:
-                logger.info("%s (%s)" % (case.id(), ",".join(oetags)))
-            else:
-                logger.info("%s" % (case.id()))
+        cases = getSuiteCases(suite)
 
         self.tc.logger.info("Listing all available tests:")
-        self._walked_cases = 0
         self.tc.logger.info("test (tags)")
         self.tc.logger.info("-" * 80)
-        self._walk_suite(suite, _list_cases)
+        for case in cases:
+            oetags = getattr(case, '__oeqa_testtags', None)
+            if oetags:
+                self.tc.logger.info("%s (%s)" % (case.id(), ",".join(oetags)))
+            else:
+                self.tc.logger.info("%s" % (case.id()))
         self.tc.logger.info("-" * 80)
-        self.tc.logger.info("Total found:\t%s" % self._walked_cases)
+        self.tc.logger.info("Total found:\t%s" % len(cases))
 
     def _list_tests_class(self, suite):
-        self._walked_cases = 0
-
-        curr = {}
-        def _list_classes(logger, case):
-            if not 'module' in curr or curr['module'] != case.__module__:
-                curr['module'] = case.__module__
-                logger.info(curr['module'])
-
-            if not 'class' in curr  or curr['class'] != \
-                    case.__class__.__name__:
-                curr['class'] = case.__class__.__name__
-                logger.info(" -- %s" % curr['class'])
-
-            logger.info(" -- -- %s" % case._testMethodName)
-
         self.tc.logger.info("Listing all available test classes:")
-        self._walk_suite(suite, _list_classes)
+        module = cls = None
+        for case in getSuiteCases(suite):
+            if case.__module__ != module:
+                module = case.__module__
+                self.tc.logger.info(module)
+            if case.__class__.__name__ != cls:
+                cls = case.__class__.__name__
+                self.tc.logger.info(" -- %s" % cls)
+            self.tc.logger.info(" -- -- %s" % case._testMethodName)
 
     def _list_tests_module(self, suite):
-        self._walked_cases = 0
-
-        listed = []
-        def _list_modules(logger, case):
-            if not case.__module__ in listed:
-                if case.__module__.startswith('_'):
-                    logger.info("%s (hidden)" % case.__module__)
-                else:
-                    logger.info(case.__module__)
-                listed.append(case.__module__)
-
         self.tc.logger.info("Listing all available test modules:")
-        self._walk_suite(suite, _list_modules)
+        listed = set()
+        for case in getSuiteCases(suite):
+            module = case.__module__
+            if module not in listed:
+                if module.startswith('_'):
+                    self.tc.logger.info("%s (hidden)" % module)
+                else:
+                    self.tc.logger.info(module)
+                listed.add(module)
 
     def list_tests(self, suite, display_type):
         if display_type == 'name':
