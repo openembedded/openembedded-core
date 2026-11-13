@@ -296,7 +296,7 @@ def SSHCall(command, logger, timeout=None, raw=False, **opts):
         if process.returncode is None:
             try:
                 process.wait(timeout=5)
-            except TimeoutExpired:
+            except subprocess.TimeoutExpired:
                 try:
                     process.kill()
                 except OSError:
