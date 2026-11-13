@@ -19,7 +19,7 @@ except ImportError:
 
 @unittest.skipIf(ConcurrentTestSuite is None, "concurrencytest needs testtools, subunit and bitbake")
 class TestConcurrency(TestBase):
-    def _statuses(self, modules, processes=None):
+    def _run(self, modules, processes=None):
         tc = self._testLoader(modules=modules)
         if processes:
             setup = lambda suffix, selftestdir, suite: (None, None)
@@ -27,6 +27,10 @@ class TestConcurrency(TestBase):
         # fork_for_tests() only looks up the selftest layer with BUILDDIR set
         with mock.patch.dict(os.environ, {'BUILDDIR': '/nonexistent'}):
             result = tc.runTests(processes=processes)
+        return tc, result
+
+    def _statuses(self, modules, processes=None):
+        tc, result = self._run(modules, processes)
         return {case_id: result._getTestResultDetails(case)[0]
                 for case_id, case in tc._registry['cases'].items()}
 
@@ -37,6 +41,17 @@ class TestConcurrency(TestBase):
         sequential = self._statuses(modules)
         self.assertNotIn('UNKNOWN', sequential.values())
         self.assertEqual(self._statuses(modules, processes=1), sequential)
+
+    def test_concurrent_output(self):
+        # Each test's results must only have the output from that test, not
+        # everything its process has output so far
+        tc, result = self._run(['streams'], processes=1)
+        for n in (1, 2, 3):
+            stdout, stderr = result.logged_output['streams.StreamsTest.testStreams%d' % n]
+            output = stdout + stderr
+            self.assertIn("Output from testStreams%d" % n, output)
+            for other in {1, 2, 3} - {n}:
+                self.assertNotIn("testStreams%d" % other, output)
 
 if __name__ == '__main__':
     unittest.main()
