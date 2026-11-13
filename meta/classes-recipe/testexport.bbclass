@@ -9,7 +9,7 @@
 # - First build an image. i.e. core-image-sato
 # - Add IMAGE_CLASSES += "testexport" in local.conf
 # - Then bitbake core-image-sato -c testexport. That will generate the directory structure
-#   to execute the runtime tests using runexported.py.
+#   to execute the runtime tests using scripts/oe-test.
 #
 # For more information on TEST_SUITES check testimage class.
 
