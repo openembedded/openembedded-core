@@ -64,12 +64,6 @@ def getCaseModule(test_case):
     """
     return test_case.__module__
 
-def getCaseClass(test_case):
-    """
-        Returns test case class name.
-    """
-    return test_case.__class__.__name__
-
 def getCaseID(test_case):
     """
         Returns test case complete id.

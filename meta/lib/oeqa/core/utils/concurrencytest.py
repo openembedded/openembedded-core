@@ -178,17 +178,6 @@ def outSideTestaddSkip(self, offset, line):
 subunit._OutSideTest.addSkip = outSideTestaddSkip
 
 #
-# A dummy structure to add to io.StringIO so that the .buffer object
-# is available and accepts writes. This allows unittest with buffer=True
-# to interact ok with subunit which wants to access sys.stdout.buffer.
-#
-class dummybuf:
-   def __init__(self, parent):
-       self.p = parent
-   def write(self, data):
-       self.p.write(data.decode("utf-8"))
-
-#
 # Taken from testtools.ConncurrencyTestSuite but modified for OE use
 #
 class ConcurrentTestSuite(unittest.TestSuite):

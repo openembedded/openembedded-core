@@ -50,15 +50,6 @@ def metadata_from_bb():
         info_dict['config'][var] = data_dict[var]
     return info_dict
 
-def metadata_from_data_store(d):
-    """ Returns test's metadata as OrderedDict.
-
-        Data will be collected from the provided data store.
-    """
-    # TODO: Getting metadata from the data store would
-    # be useful when running within bitbake.
-    pass
-
 def git_rev_info(path):
     """Get git revision information as a dict"""
     info = OrderedDict()
