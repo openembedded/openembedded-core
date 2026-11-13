@@ -12,7 +12,7 @@ import errno
 import logging
 
 from bb.process import ExecutionError
-from devtool import exec_build_env_command, setup_tinfoil, parse_recipe, DevtoolError
+from devtool import exec_build_env_command, setup_tinfoil, parse_recipe, DevtoolError, get_workspace_appends_dir
 
 logger = logging.getLogger('devtool')
 
@@ -67,7 +67,7 @@ def build_image_task(config, basepath, workspace, image, add_packages=None, task
     # break because of it
     target_basename = config.get('SDK', 'target_basename', '')
     if target_basename:
-        appendfile = os.path.join(config.workspace_path, 'appends',
+        appendfile = os.path.join(get_workspace_appends_dir(config.workspace_path),
                                   '%s.bbappend' % target_basename)
         try:
             os.unlink(appendfile)
@@ -90,7 +90,7 @@ def build_image_task(config, basepath, workspace, image, add_packages=None, task
         config.set('SDK', 'target_basename', target_basename)
         config.write()
 
-        appendfile = os.path.join(config.workspace_path, 'appends',
+        appendfile = os.path.join(get_workspace_appends_dir(config.workspace_path),
                                 '%s.bbappend' % target_basename)
 
         outputdir = None
