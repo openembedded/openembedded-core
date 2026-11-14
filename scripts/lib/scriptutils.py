@@ -114,22 +114,26 @@ def _get_temp_recipe_dir(d):
     # This is a little bit hacky but we need to find a place where we can put
     # the recipe so that bitbake can find it. We're going to delete it at the
     # end so it doesn't really matter where we put it. BBFILES has a
-    # <layerdir>/recipes* entry for each layer containing recipes which is
-    # expanded whenever recipes are collected, so a new recipes-* directory
-    # in one of those layers will be found.
+    # <layerdir>/recipes* entry for each layer which is expanded whenever
+    # recipes are collected, so a new recipes-* directory in one of those
+    # layers will be found.
     layerdata = d.getVar('layerdata', False) or {}
     # The LAYERNAME devtool uses for its workspace layer
     workspace = layerdata.get('workspace')
+    if workspace and os.access(workspace.path, os.W_OK):
+        # Prefer the workspace
+        return os.path.join(workspace.path, 'recipes-recipetool')
+    layerdirs = [os.path.dirname(pth) for pth in d.getVar('BBFILES').split()
+                 if os.path.basename(pth) == 'recipes*']
+    # Otherwise use the last writeable layer in BBLAYERS order (BBFILES is in
+    # dependency order). Layers listed later, such as test layers, are less
+    # likely to be shared with other builds which could see the temporary
+    # recipe appear and disappear while parsing.
     fetchrecipedir = None
-    for pth in d.getVar('BBFILES').split():
-        if os.path.basename(pth) != 'recipes*':
-            continue
-        layerdir = os.path.dirname(pth)
-        if os.access(layerdir, os.W_OK):
-            fetchrecipedir = os.path.join(layerdir, 'recipes-recipetool')
-            if workspace and layerdir == workspace.path:
-                # Prefer the workspace
-                break
+    for layer in (d.getVar('BBLAYERS') or '').split():
+        layer = os.path.realpath(layer)
+        if layer in layerdirs and os.access(layer, os.W_OK):
+            fetchrecipedir = os.path.join(layer, 'recipes-recipetool')
     return fetchrecipedir
 
 class FetchUrlFailure(Exception):
