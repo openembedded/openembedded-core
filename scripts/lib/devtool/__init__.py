@@ -28,6 +28,12 @@ WORKSPACE_APPENDS_DIR = 'recipes-appends'
 # Subdirectory used for bbappends by older versions of devtool
 WORKSPACE_OLD_APPENDS_DIR = 'appends'
 
+# Written to the bbappend for recipes which live in the workspace (from
+# 'devtool add' and 'devtool upgrade'). Layers no longer have priorities so
+# without this a recipe elsewhere with the same name and an equal or higher
+# version would be used instead.
+WORKSPACE_PREFERENCE_LINES = 'DEFAULT_PREFERENCE = "99"\n'
+
 def get_workspace_appends_dir(workspace_path):
     """Return the directory within the workspace layer holding bbappends"""
     return os.path.join(workspace_path, WORKSPACE_APPENDS_DIR)

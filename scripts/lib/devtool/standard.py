@@ -21,7 +21,7 @@ import glob
 from collections import OrderedDict
 
 from devtool import exec_build_env_command, setup_tinfoil, check_workspace_recipe, use_external_build, setup_git_repo, recipe_to_append, get_bbclassextend_targets, update_unlockedsigs, check_prerelease_version, check_git_repo_dirty, check_git_repo_op, DevtoolError
-from devtool import parse_recipe, get_workspace_appends_dir
+from devtool import parse_recipe, get_workspace_appends_dir, WORKSPACE_PREFERENCE_LINES
 
 import bb.utils
 
@@ -255,6 +255,7 @@ def add(args, config, basepath, workspace):
         with open(appendfile, 'w') as f:
             f.write('inherit externalsrc\n')
             f.write('EXTERNALSRC = "%s"\n' % srctree)
+            f.write(WORKSPACE_PREFERENCE_LINES)
 
             b_is_s = use_external_build(args.same_dir, args.no_same_dir, rd)
             if b_is_s:

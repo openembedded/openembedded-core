@@ -26,7 +26,7 @@ sys.path = sys.path + [devtool_path]
 
 import oe.recipeutils
 from devtool import standard
-from devtool import exec_build_env_command, setup_tinfoil, DevtoolError, parse_recipe, use_external_build, update_unlockedsigs, check_prerelease_version, get_workspace_appends_dir
+from devtool import exec_build_env_command, setup_tinfoil, DevtoolError, parse_recipe, use_external_build, update_unlockedsigs, check_prerelease_version, get_workspace_appends_dir, WORKSPACE_PREFERENCE_LINES
 
 logger = logging.getLogger('devtool')
 
@@ -158,6 +158,7 @@ def _write_append(rc, srctreebase, srctree, same_dir, no_same_dir, revs, copied,
         f.write(('# NOTE: We use pn- overrides here to avoid affecting'
                  'multiple variants in the case where the recipe uses BBCLASSEXTEND\n'))
         f.write('EXTERNALSRC:pn-%s = "%s"\n' % (pn, srctree))
+        f.write(WORKSPACE_PREFERENCE_LINES)
         b_is_s = use_external_build(same_dir, no_same_dir, d)
         if b_is_s:
             f.write('EXTERNALSRC_BUILD:pn-%s = "%s"\n' % (pn, srctree))
