@@ -326,8 +326,8 @@ class RecipetoolAppendTests(RecipetoolBase):
             for f in files:
                 createdfiles.append(os.path.relpath(os.path.join(root, f), exttemplayerdir))
         createdfiles.remove('conf/layer.conf')
-        expectedfiles = ['recipes-test/selftest-recipetool-appendfile/selftest-recipetool-appendfile.bbappend',
-                         'recipes-test/selftest-recipetool-appendfile/selftest-recipetool-appendfile/selftest-replaceme-orig']
+        expectedfiles = ['recipes-test/recipetool/selftest-recipetool-appendfile.bbappend',
+                         'recipes-test/recipetool/selftest-recipetool-appendfile/selftest-replaceme-orig']
         self.assertEqual(sorted(createdfiles), sorted(expectedfiles))
 
     def test_recipetool_appendfile_wildcard(self):
