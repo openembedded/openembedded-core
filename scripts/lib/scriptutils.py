@@ -113,17 +113,23 @@ def git_convert_standalone_clone(repodir):
 def _get_temp_recipe_dir(d):
     # This is a little bit hacky but we need to find a place where we can put
     # the recipe so that bitbake can find it. We're going to delete it at the
-    # end so it doesn't really matter where we put it.
-    bbfiles = d.getVar('BBFILES').split()
+    # end so it doesn't really matter where we put it. BBFILES has a
+    # <layerdir>/recipes* entry for each layer containing recipes which is
+    # expanded whenever recipes are collected, so a new recipes-* directory
+    # in one of those layers will be found.
+    layerdata = d.getVar('layerdata', False) or {}
+    # The LAYERNAME devtool uses for its workspace layer
+    workspace = layerdata.get('workspace')
     fetchrecipedir = None
-    for pth in bbfiles:
-        if pth.endswith('.bb'):
-            pthdir = os.path.dirname(pth)
-            if os.access(os.path.dirname(os.path.dirname(pthdir)), os.W_OK):
-                fetchrecipedir = pthdir.replace('*', 'recipetool')
-                if pthdir.endswith('workspace/recipes/*'):
-                    # Prefer the workspace
-                    break
+    for pth in d.getVar('BBFILES').split():
+        if os.path.basename(pth) != 'recipes*':
+            continue
+        layerdir = os.path.dirname(pth)
+        if os.access(layerdir, os.W_OK):
+            fetchrecipedir = os.path.join(layerdir, 'recipes-recipetool')
+            if workspace and layerdir == workspace.path:
+                # Prefer the workspace
+                break
     return fetchrecipedir
 
 class FetchUrlFailure(Exception):
@@ -155,7 +161,7 @@ def fetch_url(tinfoil, srcuri, srcrev, destdir, logger, preserve_tmp=False, mirr
 
         fetchrecipedir = _get_temp_recipe_dir(tinfoil.config_data)
         if not fetchrecipedir:
-            logger.error('Searched BBFILES but unable to find a writeable place to put temporary recipe')
+            logger.error('Unable to find a writeable layer containing recipes to put the temporary recipe in')
             sys.exit(1)
         fetchrecipe = None
         bb.utils.mkdirhier(fetchrecipedir)
