@@ -110,11 +110,13 @@ def find_latest_debian_release(url, d):
         return "_NotFound_"
 
 def get_debian_style_source_package_list(url, section, d):
-    "Return the list of package-names stored in the debian style Sources.gz file"
+    "Return the list of package-names stored in the debian style Sources.gz or Sources.xz file"
     import gzip
+    import lzma
 
+    opener = lzma.open if url.endswith(".xz") else gzip.open
     package_names = set()
-    for line in gzip.open(create_socket(url, d), mode="rt"):
+    for line in opener(create_socket(url, d), mode="rt"):
         if line.startswith("Package:"):
             pkg = line.split(":", 1)[1].strip()
             package_names.add(pkg + ":" + section)
@@ -125,7 +127,7 @@ def get_latest_released_debian_source_package_list(d):
     latest = find_latest_debian_release("http://ftp.debian.org/debian/dists/", d)
     url = "http://ftp.debian.org/debian/dists/stable/main/source/Sources.gz"
     package_names = get_debian_style_source_package_list(url, "main", d)
-    url = "http://ftp.debian.org/debian/dists/stable-proposed-updates/main/source/Sources.gz"
+    url = "http://ftp.debian.org/debian/dists/stable-updates/main/source/Sources.xz"
     package_names |= get_debian_style_source_package_list(url, "updates", d)
     return latest, package_names
 
