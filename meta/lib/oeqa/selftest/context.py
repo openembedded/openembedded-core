@@ -139,6 +139,9 @@ class OESelftestTestContext(OETestContext):
         # Set SSTATE_DIR to match the parent SSTATE_DIR
         subprocess.check_output("echo 'SSTATE_DIR ?= \"%s\"' >> %s/conf/local.conf" % (sstatedir, newbuilddir), cwd=newbuilddir, shell=True)
 
+        # Clear SANITY_TESTED_DISTROS however it was set
+        subprocess.check_output("echo 'SANITY_TESTED_DISTROS:forcevariable = \"\"' >> %s/conf/local.conf" % newbuilddir, cwd=newbuilddir, shell=True)
+
         os.chdir(newbuilddir)
 
         def patch_test(t):
@@ -342,10 +345,6 @@ class OESelftestTestContextExecutor(OETestContextExecutor):
 
         if "PRSERV_HOST" in self.tc.td:
             self.tc.logger.error("Please unset PRSERV_HOST in order to run oe-selftest")
-            raise OEQAPreRun
-
-        if "SANITY_TESTED_DISTROS" in self.tc.td:
-            self.tc.logger.error("Please unset SANITY_TESTED_DISTROS in order to run oe-selftest")
             raise OEQAPreRun
 
         _add_layer_libs()
