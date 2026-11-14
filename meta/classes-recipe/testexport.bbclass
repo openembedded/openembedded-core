@@ -85,7 +85,7 @@ def copy_needed_files(d, tc):
     from oeqa.core.utils.test import getSuiteCasesFiles
 
     export_path = d.getVar('TEST_EXPORT_DIR')
-    bitbake_path = d.getVar('BITBAKEPATH')
+    bitbake_path = d.getVar('LAYERDIR_bitbake')
     corebase_path = d.getVar('COREBASE')
     bblayers = d.getVar('BBLAYERS').split()
 
@@ -93,10 +93,10 @@ def copy_needed_files(d, tc):
     oe.path.remove(export_path)
     bb.utils.mkdirhier(os.path.join(export_path, 'lib', 'oeqa'))
 
-    # The source of files to copy are relative to 'BITBAKEPATH' and 'COREBASE'
+    # The source of files to copy are relative to 'LAYERDIR_bitbake' and 'COREBASE'
     # directory. The destination is relative to 'TEST_EXPORT_DIR'.
     # bitbake and core files/dirs first.
-    bitbake_files_to_copy = [os.path.join('..', 'lib')]
+    bitbake_files_to_copy = ['lib']
     for f in bitbake_files_to_copy:
         src = os.path.join(bitbake_path, f)
         dst = os.path.join(export_path, 'bitbake', f.split('/', 1)[-1])

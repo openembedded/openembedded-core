@@ -89,7 +89,7 @@ toolchain_create_sdk_env_script () {
 # Caller must ensure CONFIG_SITE is setup
 toolchain_create_tree_env_script () {
 	script=${B}/environment-setup-${REAL_MULTIMACH_TARGET_SYS}
-	bitbakedir=$(readlink -f ${BITBAKEPATH}/..)
+	bitbakedir=$(readlink -f ${LAYERDIR_bitbake})
 	rm -f $script
 	touch $script
 	echo 'standalone_sysroot_target="${STAGING_DIR}/${MACHINE}"' >> $script

@@ -21,9 +21,9 @@ class BitbakeLayers(OESelftestTestCase):
         bitbake("-c addto_recipe_sysroot python3-jsonschema-native")
 
         # Fetch variables used in multiple test cases
-        bb_vars = get_bb_vars(['COREBASE', 'BITBAKEPATH'])
+        bb_vars = get_bb_vars(['COREBASE', 'LAYERDIR_bitbake'])
         cls.corebase = bb_vars['COREBASE']
-        cls.bitbakepath = bb_vars['BITBAKEPATH']
+        cls.bitbakedir = bb_vars['LAYERDIR_bitbake']
         cls.jsonschema_staging_bindir = get_bb_var('STAGING_BINDIR', 'python3-jsonschema-native')
 
     def test_bitbakelayers_layerindexshowdepends(self):
@@ -134,7 +134,7 @@ class BitbakeLayers(OESelftestTestCase):
     def validate_json(self, json, jsonschema):
         python = os.path.join(self.jsonschema_staging_bindir, 'nativepython3')
         jsonvalidator = os.path.join(self.jsonschema_staging_bindir, 'jsonschema')
-        schemas_dir = os.path.join(self.bitbakepath, "..", "setup-schema")
+        schemas_dir = os.path.join(self.bitbakedir, "setup-schema")
         if not os.path.isabs(jsonschema):
             jsonschema = os.path.join(schemas_dir, jsonschema)
 
@@ -154,7 +154,7 @@ class BitbakeLayers(OESelftestTestCase):
     def test_validate_bitbake_setup_default_registry(self):
         jsonschema = "bitbake-setup.schema.json"
 
-        default_registry_path = os.path.join(self.bitbakepath, "..", "default-registry", "configurations")
+        default_registry_path = os.path.join(self.bitbakedir, "default-registry", "configurations")
 
         for root, _, files in os.walk(default_registry_path):
             for f in files:

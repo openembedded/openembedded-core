@@ -974,7 +974,7 @@ class RecipeModified:
         self.base_libdir = recipe_d.getVar('base_libdir')
         self.bblayers = recipe_d.getVar('BBLAYERS').split()
         self.bindir = recipe_d.getVar('bindir')
-        self.bitbakepath = recipe_d.getVar('BITBAKEPATH')
+        self.bitbakepath = recipe_d.getVar('LAYERDIR_bitbake')
         self.bpn = recipe_d.getVar('BPN')
         self.cc = recipe_d.getVar('CC')
         self.cxx = recipe_d.getVar('CXX')
@@ -1656,7 +1656,7 @@ class RecipeModified:
         cmd_lines += ['import os',
                       'import sys',
                       'sys.path.insert(0, %r)' % os.path.realpath(
-                          os.path.join(self.bitbakepath, '..', 'lib')),
+                          os.path.join(self.bitbakepath, 'lib')),
                       'import bb.tinfoil',
                       'os.chdir(%r)' % self.topdir,
                       # A stale BBPATH from the caller's environment (e.g. a
