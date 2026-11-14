@@ -48,7 +48,7 @@ def newappend(args):
         return 1
 
     if not path_ok:
-        logger.warning('Unable to determine correct subdirectory path for bbappend file - check that what %s adds to BBFILES also matches .bbappend files. Using %s for now, but until you fix this the bbappend will not be applied.', os.path.join(args.destlayer, 'conf', 'layer.conf'), os.path.dirname(append_path))
+        logger.warning('Unable to determine correct subdirectory path for bbappend file. Using %s for now, but it may not be applied.', os.path.dirname(append_path))
 
     layerdirs = [os.path.abspath(layerdir) for layerdir in rd.getVar('BBLAYERS').split()]
     if not os.path.abspath(args.destlayer) in layerdirs:
