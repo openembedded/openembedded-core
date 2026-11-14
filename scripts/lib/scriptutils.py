@@ -114,16 +114,20 @@ def _get_temp_recipe_dir(d):
     # This is a little bit hacky but we need to find a place where we can put
     # the recipe so that bitbake can find it. We're going to delete it at the
     # end so it doesn't really matter where we put it.
-    bbfiles = d.getVar('BBFILES').split()
+    # BBFILES has a <layerdir>/recipes* entry for each layer, we place in a
+    # recipes-recipetool directory under one, prefering workspace if present.
+    layerdata = d.getVar('layerdata', False) or {}
+    workspace = layerdata.get('workspace')
+    if workspace and os.access(workspace.path, os.W_OK):
+        # Prefer the workspace
+        return os.path.join(workspace.path, 'recipes-recipetool')
+    layerdirs = [os.path.dirname(pth) for pth in d.getVar('BBFILES').split()
+                 if os.path.basename(pth) == 'recipes*']
     fetchrecipedir = None
-    for pth in bbfiles:
-        if pth.endswith('.bb'):
-            pthdir = os.path.dirname(pth)
-            if os.access(os.path.dirname(os.path.dirname(pthdir)), os.W_OK):
-                fetchrecipedir = pthdir.replace('*', 'recipetool')
-                if pthdir.endswith('workspace/recipes/*'):
-                    # Prefer the workspace
-                    break
+    for layer in layerdirs:
+        layer = os.path.realpath(layer)
+        if os.access(layer, os.W_OK):
+            fetchrecipedir = os.path.join(layer, 'recipes-recipetool')
     return fetchrecipedir
 
 class FetchUrlFailure(Exception):
@@ -155,7 +159,7 @@ def fetch_url(tinfoil, srcuri, srcrev, destdir, logger, preserve_tmp=False, mirr
 
         fetchrecipedir = _get_temp_recipe_dir(tinfoil.config_data)
         if not fetchrecipedir:
-            logger.error('Searched BBFILES but unable to find a writeable place to put temporary recipe')
+            logger.error('Unable to find a writeable layer containing recipes to put the temporary recipe in')
             sys.exit(1)
         fetchrecipe = None
         bb.utils.mkdirhier(fetchrecipedir)
