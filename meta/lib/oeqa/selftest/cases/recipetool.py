@@ -316,9 +316,9 @@ class RecipetoolAppendTests(RecipetoolBase):
         _, output = self._try_recipetool_appendfile('selftest-recipetool-appendfile', '/usr/share/selftest-replaceme-postinst', self.testfile, '-r selftest-recipetool-appendfile', expectedlines, ['testfile'])
 
     def test_recipetool_appendfile_extlayer(self):
-        # Try creating a bbappend in a layer that's not in bblayers.conf and has a different structure
+        # Try creating a bbappend in a layer that's not in bblayers.conf
         exttemplayerdir = os.path.join(self.tempdir, 'extlayer')
-        self._create_temp_layer(exttemplayerdir, False, 'oeselftestextlayer', recipepathspec='metadata/recipes/recipes-*/*')
+        self._create_temp_layer(exttemplayerdir, False, 'oeselftestextlayer')
         result = runCmd('recipetool appendfile %s /usr/share/selftest-replaceme-orig %s' % (exttemplayerdir, self.testfile))
         self.assertNotIn('Traceback', result.output)
         createdfiles = []
@@ -326,8 +326,8 @@ class RecipetoolAppendTests(RecipetoolBase):
             for f in files:
                 createdfiles.append(os.path.relpath(os.path.join(root, f), exttemplayerdir))
         createdfiles.remove('conf/layer.conf')
-        expectedfiles = ['metadata/recipes/recipes-test/selftest-recipetool-appendfile/selftest-recipetool-appendfile.bbappend',
-                         'metadata/recipes/recipes-test/selftest-recipetool-appendfile/selftest-recipetool-appendfile/selftest-replaceme-orig']
+        expectedfiles = ['recipes-test/selftest-recipetool-appendfile/selftest-recipetool-appendfile.bbappend',
+                         'recipes-test/selftest-recipetool-appendfile/selftest-recipetool-appendfile/selftest-replaceme-orig']
         self.assertEqual(sorted(createdfiles), sorted(expectedfiles))
 
     def test_recipetool_appendfile_wildcard(self):
@@ -432,8 +432,7 @@ class RecipetoolCreateTests(RecipetoolBase):
         self._test_recipe_contents(recipefile, checkvars, inherits)
 
     def test_recipetool_create_npm(self):
-        collections = get_bb_var('BBFILE_COLLECTIONS').split()
-        if "openembedded-layer" not in collections:
+        if not get_bb_var('LAYERDIR_meta-oe'):
             self.skipTest("Test needs meta-oe for nodejs")
 
         temprecipe = os.path.join(self.tempdir, 'recipe')

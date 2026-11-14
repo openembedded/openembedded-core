@@ -218,8 +218,8 @@ class DevtoolTestCase(OESelftestTestCase):
             self.fail('bbappend for recipe %s does not seem to be created in test layer' % testrecipe)
         return bbappendfile
 
-    def _create_temp_layer(self, templayerdir, addlayer, templayername, priority=999, recipepathspec='recipes-*/*'):
-        create_temp_layer(templayerdir, templayername, priority, recipepathspec)
+    def _create_temp_layer(self, templayerdir, addlayer, templayername):
+        create_temp_layer(templayerdir, templayername)
         if addlayer:
             self.add_command_to_tearDown('bitbake-layers remove-layer %s || true' % templayerdir)
             result = runCmd('bitbake-layers add-layer %s' % templayerdir, cwd=self.builddir)
@@ -687,8 +687,7 @@ class DevtoolAddTests(DevtoolBase):
         self._test_recipe_contents(recipefile, checkvars, [])
 
     def test_devtool_add_npm(self):
-        collections = get_bb_var('BBFILE_COLLECTIONS').split()
-        if "openembedded-layer" not in collections:
+        if not get_bb_var('LAYERDIR_meta-oe'):
             self.skipTest("Test needs meta-oe for nodejs")
 
         pn = 'savoirfairelinux-node-server-example'
@@ -1553,10 +1552,9 @@ class DevtoolUpdateTests(DevtoolBase):
     def test_devtool_update_recipe_append_git(self):
         # Check preconditions
         testrecipe = 'mtd-utils-selftest'
-        bb_vars = get_bb_vars(['FILE', 'SRC_URI', 'LAYERSERIES_CORENAMES'], testrecipe)
+        bb_vars = get_bb_vars(['FILE', 'SRC_URI'], testrecipe)
         recipefile = bb_vars['FILE']
         src_uri = bb_vars['SRC_URI']
-        corenames = bb_vars['LAYERSERIES_CORENAMES']
         self.assertIn('git://', src_uri, 'This test expects the %s recipe to be a git recipe' % testrecipe)
         for entry in src_uri.split():
             if entry.startswith('git://'):
@@ -1578,18 +1576,8 @@ class DevtoolUpdateTests(DevtoolBase):
         result = runCmd('echo "# Additional line" >> Makefile.am', cwd=tempsrcdir)
         result = runCmd('git commit -a -m "Change the Makefile"', cwd=tempsrcdir)
         self._add_recipe_cleanup(recipefile)
-        # Create a temporary layer
-        os.makedirs(os.path.join(templayerdir, 'conf'))
-        with open(os.path.join(templayerdir, 'conf', 'layer.conf'), 'w') as f:
-            f.write('BBPATH .= ":${LAYERDIR}"\n')
-            f.write('BBFILES += "${LAYERDIR}/recipes-*/*/*.bbappend"\n')
-            f.write('BBFILE_COLLECTIONS += "oeselftesttemplayer"\n')
-            f.write('BBFILE_PATTERN_oeselftesttemplayer = "^${LAYERDIR}/"\n')
-            f.write('BBFILE_PRIORITY_oeselftesttemplayer = "999"\n')
-            f.write('BBFILE_PATTERN_IGNORE_EMPTY_oeselftesttemplayer = "1"\n')
-            f.write('LAYERSERIES_COMPAT_oeselftesttemplayer = "%s"\n' % corenames)
-        self.add_command_to_tearDown('bitbake-layers remove-layer %s || true' % templayerdir)
-        result = runCmd('bitbake-layers add-layer %s' % templayerdir, cwd=self.builddir)
+        # Create a temporary layer and add it to bblayers.conf
+        self._create_temp_layer(templayerdir, True, 'oeselftesttemplayer')
         # Create the bbappend
         result = runCmd('devtool update-recipe -m srcrev %s -a %s' % (testrecipe, templayerdir))
         self.assertNotIn('WARNING:', result.output)
