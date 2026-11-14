@@ -170,6 +170,7 @@ def create_distro_packages_list(distro_check_dir, d):
             release, package_list = fetcher_func(d)
         except Exception as e:
             bb.warn("Cannot fetch packages for %s: %s" % (name, e))
+            continue
         bb.note("Distro: %s, Latest Release: %s, # src packages: %d" % (name, release, len(package_list)))
         if len(package_list) == 0:
             bb.error("Didn't fetch any packages for %s %s" % (name, release))
