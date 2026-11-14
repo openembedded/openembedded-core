@@ -539,6 +539,24 @@ def validate_pn(pn):
     return ''
 
 
+def get_layer_bbfile_specs(d, layerdir, ext):
+    """
+    Return a list of fnmatch patterns matching the recipes (ext='.bb') or
+    bbappends (ext='.bbappend') bitbake will pick up from the specified layer.
+    Bitbake searches any recipes* directories within a layer (at any depth)
+    plus dynamic-recipes/<layername>/ for any configured layer. This is
+    determined from the layer's structure so works for layers which aren't
+    in bblayers.conf.
+    """
+    # fnmatch's '*' also matches '/', so this covers files at any depth
+    specs = [os.path.join(layerdir, 'recipes*', '*' + ext)]
+    dynamicdir = os.path.join(layerdir, 'dynamic-recipes')
+    if os.path.isdir(dynamicdir):
+        for layername in sorted(os.listdir(dynamicdir)):
+            if os.path.isdir(os.path.join(dynamicdir, layername)) and d.getVar('LAYERDIR_%s' % layername):
+                specs.append(os.path.join(dynamicdir, layername, '*' + ext))
+    return specs
+
 def get_bbfile_path(d, destdir, extrapathhint=None):
     """
     Determine the correct path for a recipe within a layer
@@ -548,48 +566,25 @@ def get_bbfile_path(d, destdir, extrapathhint=None):
             partial path somewhere within the layer.
         extrapathhint: a path relative to the base of the layer to try
     """
-    import bb.cookerdata
-
     destdir = os.path.abspath(destdir)
     destlayerdir = find_layerdir(destdir)
-
-    # Parse the specified layer's layer.conf file directly, in case the layer isn't in bblayers.conf
-    confdata = d.createCopy()
-    confdata.setVar('BBFILES', '')
-    confdata.setVar('LAYERDIR', destlayerdir)
-    destlayerconf = os.path.join(destlayerdir, "conf", "layer.conf")
-    confdata = bb.cookerdata.parse_config_file(destlayerconf, confdata)
+    if not destlayerdir:
+        return None
     pn = d.getVar('PN')
 
-    # Parse BBFILES_DYNAMIC and append to BBFILES
-    bbfiles_dynamic = (confdata.getVar('BBFILES_DYNAMIC') or "").split()
-    collections = (confdata.getVar('BBFILE_COLLECTIONS') or "").split()
-    invalid = []
-    for entry in bbfiles_dynamic:
-        parts = entry.split(":", 1)
-        if len(parts) != 2:
-            invalid.append(entry)
-            continue
-        l, f = parts
-        invert = l[0] == "!"
-        if invert:
-            l = l[1:]
-        if (l in collections and not invert) or (l not in collections and invert):
-            confdata.appendVar("BBFILES", " " + f)
-    if invalid:
-        return None
-    bbfilespecs = (confdata.getVar('BBFILES') or '').split()
+    bbfilespecs = get_layer_bbfile_specs(d, destlayerdir, '.bb')
     if destdir == destlayerdir:
-        for bbfilespec in bbfilespecs:
-            if not bbfilespec.endswith('.bbappend'):
-                for match in glob.glob(bbfilespec):
-                    splitext = os.path.splitext(os.path.basename(match))
-                    if splitext[1] == '.bb':
-                        mpn = splitext[0].split('_')[0]
-                        if mpn == pn:
-                            return os.path.dirname(match)
+        # See if there is an existing recipe for this PN in the layer
+        for root, dirs, files in os.walk(destlayerdir):
+            dirs.sort()
+            for fn in sorted(files):
+                splitext = os.path.splitext(fn)
+                if splitext[1] == '.bb' and splitext[0].split('_')[0] == pn:
+                    match = os.path.join(root, fn)
+                    if any(fnmatch.fnmatchcase(match, spec) for spec in bbfilespecs):
+                        return root
 
-    # Try to make up a path that matches BBFILES
+    # Try to make up a path bitbake will find recipes in
     # this is a little crude, but better than nothing
     bpn = d.getVar('BPN')
     recipefn = os.path.basename(d.getVar('FILE'))
@@ -602,18 +597,27 @@ def get_bbfile_path(d, destdir, extrapathhint=None):
         pathoptions.append(os.path.join(destdir, bpn))
     elif not destdir.endswith(('/' + pn, '/' + bpn)):
         pathoptions.append(os.path.join(destdir, bpn))
-    closepath = ''
-    for pathoption in pathoptions:
-        bbfilepath = os.path.join(pathoption, 'test.bb')
-        for bbfilespec in bbfilespecs:
-            if fnmatch.fnmatchcase(bbfilepath, bbfilespec):
-                return pathoption
+
+    def conventional(path):
+        # Recipes are conventionally placed in recipes-<category>/<name>/
+        # (optionally under dynamic-recipes/<layername>/)
+        parts = os.path.relpath(path, destlayerdir).split(os.sep)
+        if parts[0] == 'dynamic-recipes':
+            parts = parts[2:]
+        return len(parts) == 2 and parts[0].startswith('recipes')
+
+    # Bitbake will find recipes at any depth within a recipes* directory, so
+    # prefer the first option giving the conventional layout, if there is one
+    valid = [p for p in pathoptions if any(fnmatch.fnmatchcase(os.path.join(p, 'test.bb'), spec) for spec in bbfilespecs)]
+    for pathoption in valid:
+        if conventional(pathoption):
+            return pathoption
+    if valid:
+        return valid[0]
     return None
 
 def get_bbappend_path(d, destlayerdir, wildcardver=False):
     """Determine how a bbappend for a recipe should be named and located within another layer"""
-
-    import bb.cookerdata
 
     destlayerdir = os.path.abspath(destlayerdir)
     recipefile = d.getVar('FILE')
@@ -622,45 +626,20 @@ def get_bbappend_path(d, destlayerdir, wildcardver=False):
         recipefn = recipefn.split('_', 1)[0] + '_%'
     appendfn = recipefn + '.bbappend'
 
-    # Parse the specified layer's layer.conf file directly, in case the layer isn't in bblayers.conf
-    confdata = d.createCopy()
-    confdata.setVar('BBFILES', '')
-    confdata.setVar('LAYERDIR', destlayerdir)
-    destlayerconf = os.path.join(destlayerdir, "conf", "layer.conf")
-    confdata = bb.cookerdata.parse_config_file(destlayerconf, confdata)
-
     origlayerdir = find_layerdir(recipefile)
     if not origlayerdir:
         return (None, False)
-    # Now join this to the path where the bbappend is going and check if it is covered by BBFILES
+    # Now join this to the path where the bbappend is going and check bitbake will find it there
     appendpath = os.path.join(destlayerdir, os.path.relpath(os.path.dirname(recipefile), origlayerdir), appendfn)
-    closepath = ''
     pathok = True
-    for bbfilespec in confdata.getVar('BBFILES').split():
-        if fnmatch.fnmatchcase(appendpath, bbfilespec):
-            # Our append path works, we're done
-            break
-        elif bbfilespec.startswith(destlayerdir) and fnmatch.fnmatchcase('test.bbappend', os.path.basename(bbfilespec)):
-            # Try to find the longest matching path
-            if len(bbfilespec) > len(closepath):
-                closepath = bbfilespec
-    else:
-        # Unfortunately the bbappend layer and the original recipe's layer don't have the same structure
-        if closepath:
-            # bbappend layer's layer.conf at least has a spec that picks up .bbappend files
-            # Now we just need to substitute out any wildcards
-            appendsubdir = os.path.relpath(os.path.dirname(closepath), destlayerdir)
-            if 'recipes-*' in appendsubdir:
-                # Try to copy this part from the original recipe path
-                res = re.search('/recipes-[^/]+/', recipefile)
-                if res:
-                    appendsubdir = appendsubdir.replace('/recipes-*/', res.group(0))
-            # This is crude, but we have to do something
-            appendsubdir = appendsubdir.replace('*', recipefn.split('_')[0])
-            appendsubdir = appendsubdir.replace('?', 'a')
-            appendpath = os.path.join(destlayerdir, appendsubdir, appendfn)
-        else:
-            pathok = False
+    if not any(fnmatch.fnmatchcase(appendpath, spec) for spec in get_layer_bbfile_specs(d, destlayerdir, '.bbappend')):
+        # The recipe isn't in a location which maps to one bitbake will search
+        # in the destination layer (e.g. it is under dynamic-recipes/ for a
+        # layer which isn't configured), so put the bbappend under a
+        # recipes-* directory, using the original recipe's category if possible
+        res = re.search('/(recipes-[^/]+)/', recipefile)
+        category = res.group(1) if res else 'recipes'
+        appendpath = os.path.join(destlayerdir, category, recipefn.split('_')[0], appendfn)
     return (appendpath, pathok)
 
 
@@ -723,7 +702,7 @@ def bbappend_recipe(rd, destlayerdir, srcfiles, install=None, wildcardver=False,
             bb.error('Unable to determine layer directory containing %s' % recipefile)
             return (None, None)
         if not pathok:
-            bb.warn('Unable to determine correct subdirectory path for bbappend file - check that what %s adds to BBFILES also matches .bbappend files. Using %s for now, but until you fix this the bbappend will not be applied.' % (os.path.join(destlayerdir, 'conf', 'layer.conf'), os.path.dirname(appendpath)))
+            bb.warn('Unable to determine correct subdirectory path for bbappend file. Using %s for now, but it may not be applied.' % os.path.dirname(appendpath))
 
     appenddir = os.path.dirname(appendpath)
     if not redirect_output:
