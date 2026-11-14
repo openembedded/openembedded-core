@@ -117,11 +117,9 @@ class SanityOptionsTest(OESelftestTestCase):
         os.makedirs(dummy_layer_conf_dir)
         dummy_layer_conf_path = os.path.join(dummy_layer_conf_dir, 'layer.conf')
 
-        dummy_layer_content = 'BBPATH .= ":${LAYERDIR}"\n' \
-                              'BBFILES += "${LAYERDIR}/recipes-*/*/*.bb ${LAYERDIR}/recipes-*/*/*.bbappend"\n' \
-                              'BBFILE_COLLECTIONS += "%s"\n' \
-                              'BBFILE_PATTERN_%s = "^${LAYERDIR}/"\n' \
-                              'BBFILE_PRIORITY_%s = "6"\n' % (dummy_layer_name, dummy_layer_name, dummy_layer_name)
+        dummy_layer_content = 'LAYERNAME = "%s"\n' \
+                              'LAYERDEPENDS = "oe-core"\n' \
+                              'LAYERSERIES_COMPAT = "%s"\n' % (dummy_layer_name, get_bb_var('LAYERSERIES_CORENAMES'))
 
         ftools.write_file(dummy_layer_conf_path, dummy_layer_content)
 

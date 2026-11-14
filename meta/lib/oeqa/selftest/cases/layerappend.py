@@ -11,16 +11,12 @@ from oeqa.utils.commands import bitbake, get_bb_var
 import oeqa.utils.ftools as ftools
 
 class LayerAppendTests(OESelftestTestCase):
+    # Each layer depends on the previous one so that the bbappends are
+    # applied in a defined order (layer 2's after layer 1's)
     layerconf = """
-# We have a conf and classes directory, append to BBPATH
-BBPATH .= ":${LAYERDIR}"
-
-# We have a recipes directory, add to BBFILES
-BBFILES += "${LAYERDIR}/recipes*/*.bb ${LAYERDIR}/recipes*/*.bbappend"
-
-BBFILE_COLLECTIONS += "meta-layerINT"
-BBFILE_PATTERN_meta-layerINT := "^${LAYERDIR}/"
-BBFILE_PRIORITY_meta-layerINT = "6"
+LAYERNAME = "meta-layertestINT"
+LAYERDEPENDS = "DEPENDS"
+LAYERSERIES_COMPAT = "CORENAMES"
 """
     recipe = """
 LICENSE = "MIT"
@@ -57,6 +53,8 @@ SRC_URI:append = " file://appendtest.txt"
 
     def test_layer_appends(self):
         corebase = get_bb_var("COREBASE")
+        corenames = get_bb_var("LAYERSERIES_CORENAMES")
+        depends = {"0": "oe-core", "1": "meta-layertest0", "2": "meta-layertest1"}
 
         for l in ["0", "1", "2"]:
             layer = os.path.join(corebase, "meta-layertest" + l)
@@ -64,7 +62,7 @@ SRC_URI:append = " file://appendtest.txt"
             os.mkdir(layer)
             os.mkdir(layer + "/conf")
             with open(layer + "/conf/layer.conf", "w") as f:
-                f.write(self.layerconf.replace("INT", l))
+                f.write(self.layerconf.replace("INT", l).replace("DEPENDS", depends[l]).replace("CORENAMES", corenames))
             os.mkdir(layer + "/recipes-test")
             if l == "0":
                 with open(layer + "/recipes-test/layerappendtest.bb", "w") as f:
