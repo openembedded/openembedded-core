@@ -31,7 +31,11 @@ def _get_configurations(path):
             configs.append(f[:-5]) # strip .conf
     return configs
 
-def _get_layer_collections(layer_path, lconf=None, data=None):
+def _get_layer_info(layer_path, lconf=None, data=None):
+    """
+    Parse a layer's layer.conf and return a dict with its LAYERNAME, the names
+    of the layers it depends upon and the release series it is compatible with.
+    """
     import bb.parse
     import bb.data
 
@@ -51,28 +55,23 @@ def _get_layer_collections(layer_path, lconf=None, data=None):
         raise RuntimeError("Parsing of layer.conf from layer: %s failed" % layer_path)
     ldata.expandVarref('LAYERDIR')
 
-    collections = (ldata.getVar('BBFILE_COLLECTIONS') or '').split()
-    if not collections:
-        name = os.path.basename(layer_path)
-        collections = [name]
+    layername = ldata.getVar('LAYERNAME') or os.path.basename(layer_path)
 
-    collections = {c: {} for c in collections}
-    for name in collections:
-        priority = ldata.getVar('BBFILE_PRIORITY_%s' % name)
-        pattern = ldata.getVar('BBFILE_PATTERN_%s' % name)
-        depends = ldata.getVar('LAYERDEPENDS_%s' % name)
-        compat = ldata.getVar('LAYERSERIES_COMPAT_%s' % name)
-        try:
-            depDict = bb.utils.explode_dep_versions2(depends or "")
-        except bb.utils.VersionStringException as vse:
-            bb.fatal('Error parsing LAYERDEPENDS_%s: %s' % (name, str(vse)))
+    # As with bitbake, the LAYER* variables may optionally have a layername suffix
+    def getVar(var):
+        return ldata.getVar(var) or ldata.getVar('%s_%s' % (var, layername))
 
-        collections[name]['priority'] = priority
-        collections[name]['pattern'] = pattern
-        collections[name]['depends'] = ' '.join(depDict.keys())
-        collections[name]['compat'] = compat
+    try:
+        depDict = bb.utils.explode_dep_versions2(getVar('LAYERDEPENDS') or "")
+    except bb.utils.VersionStringException as vse:
+        bb.fatal('Error parsing LAYERDEPENDS for layer %s: %s' % (layername, str(vse)))
 
-    return collections
+    return {
+        'layername': layername,
+        'has_layername': bool(ldata.getVar('LAYERNAME')),
+        'depends': ' '.join(depDict.keys()),
+        'compat': getVar('LAYERSERIES_COMPAT'),
+    }
 
 def _detect_layer(layer_path):
     """
@@ -109,9 +108,9 @@ def _detect_layer(layer_path):
         if distros:
             is_distro = True
 
-    layer['collections'] = _get_layer_collections(layer['path'])
+    layer.update(_get_layer_info(layer['path']))
 
-    if layer_name == "meta" and "core" in layer['collections']:
+    if layer_name == "meta" and layer['layername'] == "oe-core":
         layer['type'] = LayerType.CORE
         layer['conf']['machines'] = machines
         layer['conf']['distros'] = distros
@@ -155,33 +154,28 @@ def detect_layers(layer_directories, no_auto):
 
 def _find_layer(depend, layers):
     for layer in layers:
-        if 'collections' not in layer:
-            continue
-
-        for collection in layer['collections']:
-            if depend == collection:
-                return layer
+        if layer.get('layername') == depend:
+            return layer
     return None
 
 def sanity_check_layers(layers, logger):
     """
-    Check that we didn't find duplicate collection names, as the layer that will
-    be used is non-deterministic. The precise check is duplicate collections
-    with different patterns, as the same pattern being repeated won't cause
-    problems.
+    Check that we didn't find duplicate layer names (LAYERNAME), as the layer
+    that will be used is non-deterministic and bitbake will refuse to use
+    both together.
     """
     import collections
 
     passed = True
     seen = collections.defaultdict(set)
     for layer in layers:
-        for name, data in layer.get("collections", {}).items():
-            seen[name].add(data["pattern"])
+        if 'layername' in layer:
+            seen[layer['layername']].add(layer['path'])
 
-    for name, patterns in seen.items():
-        if len(patterns) > 1:
+    for name, paths in seen.items():
+        if len(paths) > 1:
             passed = False
-            logger.error("Collection %s found multiple times: %s" % (name, ", ".join(patterns)))
+            logger.error("Layer name %s found multiple times: %s" % (name, ", ".join(sorted(paths))))
     return passed
 
 def get_layer_dependencies(layer, layers, logger):
@@ -190,8 +184,8 @@ def get_layer_dependencies(layer, layers, logger):
                     (depends, layer['name']))
 
         for depend in depends.split():
-            # core (oe-core) is suppose to be provided
-            if depend == 'core':
+            # oe-core is supposed to be provided
+            if depend == 'oe-core':
                 continue
 
             layer_depend = _find_layer(depend, layers)
@@ -211,24 +205,14 @@ def get_layer_dependencies(layer, layers, logger):
                 continue
 
             # Recursively process...
-            if 'collections' not in layer_depend:
-                continue
-
-            for collection in layer_depend['collections']:
-                collect_deps = layer_depend['collections'][collection]['depends']
-                if not collect_deps:
-                    continue
-                ret = recurse_dependencies(collect_deps, layer_depend, layers, logger, ret)
+            if layer_depend.get('depends'):
+                ret = recurse_dependencies(layer_depend['depends'], layer_depend, layers, logger, ret)
 
         return ret
 
     layer_depends = []
-    for collection in layer['collections']:
-        depends = layer['collections'][collection]['depends']
-        if not depends:
-            continue
-
-        layer_depends = recurse_dependencies(depends, layer, layers, logger, layer_depends)
+    if layer.get('depends'):
+        layer_depends = recurse_dependencies(layer['depends'], layer, layers, logger, layer_depends)
 
     # Note: [] (empty) is allowed, None is not!
     return layer_depends

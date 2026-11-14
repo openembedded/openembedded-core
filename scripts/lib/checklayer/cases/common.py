@@ -146,7 +146,10 @@ class CommonCheckLayer(OECheckLayerTestCase):
         if msg is not None:
             self.fail('Adding layer %s changed signatures.\n%s' % (self.tc.layer['name'], msg))
 
+    def test_layername(self):
+        self.assertTrue(self.tc.layer['has_layername'], "Layer %s does not set LAYERNAME in conf/layer.conf." \
+             % self.tc.layer['name'])
+
     def test_layerseries_compat(self):
-        for collection_name, collection_data in self.tc.layer['collections'].items():
-            self.assertTrue(collection_data['compat'], "Collection %s from layer %s does not set compatible oe-core versions via LAYERSERIES_COMPAT_collection." \
-                 % (collection_name, self.tc.layer['name']))
+        self.assertTrue(self.tc.layer['compat'], "Layer %s (%s) does not set compatible oe-core versions via LAYERSERIES_COMPAT." \
+             % (self.tc.layer['layername'], self.tc.layer['name']))

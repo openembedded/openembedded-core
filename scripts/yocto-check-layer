@@ -44,9 +44,8 @@ def test_layer(td, layer, test_software_layer_signatures, run_tests):
 
 def dump_layer_debug(layer):
     logger.debug("Found layer %s (%s)" % (layer["name"], layer["path"]))
-    collections = layer.get("collections", {})
-    if collections:
-        logger.debug("%s collections: %s" % (layer["name"], ", ".join(collections)))
+    if "layername" in layer:
+        logger.debug("%s layer name: %s" % (layer["name"], layer["layername"]))
 
 def validate_layers(layers):
     valid_layers = []
