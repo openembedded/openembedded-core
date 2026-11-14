@@ -196,7 +196,7 @@ do_clean[cleandirs] += " ${S} ${STAGING_KERNEL_DIR} ${B} ${STAGING_KERNEL_BUILDD
 python do_symlink_kernsrc () {
     s = d.getVar("S")
     kernsrc = d.getVar("STAGING_KERNEL_DIR")
-    if s != kernsrc:
+    if os.path.realpath(s) != os.path.realpath(kernsrc):
         bb.utils.mkdirhier(kernsrc)
         bb.utils.remove(kernsrc, recurse=True)
         if s[-1] == '/':
