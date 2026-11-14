@@ -1,0 +1,8 @@
+#!/bin/sh
+
+export LD_LIBRARY_PATH=$PWD/../gi-tests
+export GI_TYPELIB_PATH=$PWD/../gi-tests
+export GSETTINGS_SCHEMA_DIR=$PWD/tests
+export GSETTINGS_BACKEND=memory
+
+pytest --automake

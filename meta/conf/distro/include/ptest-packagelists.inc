@@ -97,6 +97,7 @@ PTESTS_FAST = "\
     python3-pluggy \
     python3-pefile \
     python3-pyasn1 \
+    python3-pygobject \
     python3-pyopenssl \
     python3-pyyaml \
     python3-rpds-py \
