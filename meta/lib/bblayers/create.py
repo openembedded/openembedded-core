@@ -37,11 +37,11 @@ class CreatePlugin(LayerPlugin):
         conf = os.path.join(layerdir, 'conf')
         bb.utils.mkdirhier(conf)
 
-        layername = os.path.basename(os.path.normpath(args.layerdir))
-        layerid = args.layerid if args.layerid is not None else layername
+        layerdirname = os.path.basename(os.path.normpath(args.layerdir))
+        layername = args.layername if args.layername is not None else layerdirname
 
         # Create the README from templates/README
-        readme_template =  read_template('README').format(layername=layername)
+        readme_template =  read_template('README').format(layername=layerdirname)
         readme = os.path.join(layerdir, 'README')
         with open(readme, 'w') as fd:
             fd.write(readme_template)
@@ -58,7 +58,7 @@ class CreatePlugin(LayerPlugin):
 
         # Create the layer.conf from templates/layer.conf
         layerconf_template = read_template('layer.conf').format(
-                layerid=layerid, priority=args.priority, compat=compat)
+                layername=layername, compat=compat)
         layerconf = os.path.join(conf, 'layer.conf')
         with open(layerconf, 'w') as fd:
             fd.write(layerconf_template)
@@ -83,8 +83,7 @@ class CreatePlugin(LayerPlugin):
         parser_create_layer = self.add_command(sp, 'create-layer', self.do_create_layer, parserecipes=False)
         parser_create_layer.add_argument('layerdir', help='Layer directory to create')
         parser_create_layer.add_argument('--add-layer', '-a', action='store_true', help='Add the layer to bblayers.conf after creation')
-        parser_create_layer.add_argument('--layerid', '-i', help='Layer ID to use in BBFILE_COLLECTIONS, if different from the layerdir basename')
-        parser_create_layer.add_argument('--priority', '-p', default=6, help='Priority of recipes in layer')
+        parser_create_layer.add_argument('--layername', '--layerid', '-i', dest='layername', help='Layer name to use for LAYERNAME, if different from the layerdir basename')
         parser_create_layer.add_argument('--example-recipe-name', '-e', dest='examplerecipe', default='example', help='Filename of the example recipe')
         parser_create_layer.add_argument('--example-recipe-version', '-v', dest='version', default='0.1', help='Version number for the example recipe')
 
