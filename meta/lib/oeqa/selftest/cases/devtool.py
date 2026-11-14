@@ -1661,7 +1661,11 @@ class DevtoolUpdateTests(DevtoolBase):
         self._check_repo_status(os.path.dirname(recipefile), expected_status)
         # Now try to update recipe in another layer, so first, clean it
         runCmd('cd %s; git clean -fd .; git checkout .' % os.path.dirname(recipefile))
-        # Create a temporary layer and add it to bblayers.conf
+        # Create a temporary layer and add it to bblayers.conf. This needs its
+        # own directory since the module's templayerdir contains the copy of
+        # OE-Core and layers can't nest.
+        templayerdir = tempfile.mkdtemp(prefix='devtoolqa')
+        self.track_for_cleanup(templayerdir)
         self._create_temp_layer(templayerdir, True, 'templayer')
         # Update recipe in templayer
         result = runCmd('devtool update-recipe %s -a %s' % (testrecipe, templayerdir))
