@@ -72,6 +72,27 @@ python multilib_virtclass_handler () {
             and not bb.data.inherits_class('packagegroup', d)):
         raise bb.parse.SkipRecipe("Don't extend allarch recipes which are not packagegroups")
 
+    # Apply base.bbclass's COMPATIBLE_HOST check before the setup below. That
+    # setup (e.g. expanding ALL_MULTILIB_PACKAGE_ARCHS) creates a datastore per
+    # multilib, so doing it for every variant only for base.bbclass to skip it
+    # later is quadratic in the number of multilibs and dominates parse time for
+    # configurations with many of them (e.g. baremetal toolchains). The variant's
+    # tune isn't in place yet, so evaluate HOST_SYS in a copy which has it.
+    source_mirror_fetch = bb.utils.to_boolean(d.getVar('SOURCE_MIRROR_FETCH', False)) or \
+            bb.utils.to_boolean(d.getVar('PARSE_ALL_RECIPES', False))
+    if not source_mirror_fetch:
+        mldata = bb.data.createCopy(d)
+        mldata.setVar("OVERRIDES", mldata.getVar("OVERRIDES", False) + ":virtclass-multilib-" + variant)
+        mltune = mldata.getVar("DEFAULTTUNE:virtclass-multilib-" + variant, False)
+        if mltune:
+            mldata.setVar("DEFAULTTUNE", mltune)
+        need_host = mldata.getVar('COMPATIBLE_HOST')
+        if need_host:
+            import re
+            this_host = mldata.getVar('HOST_SYS')
+            if not re.match(need_host, this_host):
+                raise bb.parse.SkipRecipe("incompatible with host %s (not in COMPATIBLE_HOST)" % this_host)
+
     # Expand this since this won't work correctly once we set a multilib into place
     d.setVar("ALL_MULTILIB_PACKAGE_ARCHS", d.getVar("ALL_MULTILIB_PACKAGE_ARCHS"))
 
