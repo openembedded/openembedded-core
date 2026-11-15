@@ -58,6 +58,7 @@ SRC_URI =  "${GLIBC_GIT_URI};branch=${SRCBRANCH};name=glibc \
            file://0020-fix-create-thread-failed-in-unprivileged-process-BZ-.patch \
            file://0021-tests-Skip-2-qemu-tests-that-can-hang-in-oe-selftest.patch \
            file://0022-Propagate-ffile-prefix-map-from-CFLAGS-to-ASFLAGS.patch \
+           file://0023-malloc-Add-disable-malloc-default-thp-configure-opti.patch \
 "
 B = "${WORKDIR}/build-${TARGET_SYS}"
 
@@ -93,6 +94,12 @@ EXTRA_OECONF:append:x86-64 = " --enable-cet"
 PACKAGECONFIG ??= ""
 
 PACKAGECONFIG[nscd] = "--enable-nscd,--disable-nscd"
+
+# Since glibc 2.43 malloc defaults to 2MB Transparent Huge Pages on aarch64,
+# which considerably increases memory usage on embedded systems
+# (https://bugzilla.yoctoproject.org/show_bug.cgi?id=16490). Keep it disabled
+# by default, THP can still be enabled at run time with glibc.malloc.hugetlb=1
+PACKAGECONFIG[malloc-default-thp] = "--enable-malloc-default-thp,--disable-malloc-default-thp"
 
 do_configure () {
 # override this function to avoid the autoconf/automake/aclocal/autoheader

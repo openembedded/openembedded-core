@@ -1,0 +1,211 @@
+From 2fdef78855354e7ae389498c7c9eee1c31c0f4dd Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Mon, 9 Nov 2026 18:57:27 +0000
+Subject: [PATCH] malloc: Add --disable-malloc-default-thp configure option
+
+Since glibc 2.43, malloc on aarch64 defaults to glibc.malloc.hugetlb=1
+with a 2MB THP size (MALLOC_DEFAULT_THP_PAGESIZE), and also applies
+MADV_HUGEPAGE to thread arenas.  On memory constrained embedded systems
+this significantly increases the resident memory of every process.  One
+report on an aarch64 system with otherwise identical userspace showed
+idle AnonPages grow from 465 MiB with glibc 2.39 to 1105 MiB with
+2.43, 743 MiB of it in AnonHugePages, and the system started to swap
+(BZ #34081).
+
+The tunable can be set to 0 at run time, but GLIBC_TUNABLES is not
+honored by AT_SECURE programs and has to be propagated to every
+process, including init.  The default is a compile-time constant, so
+add a configure option, --disable-malloc-default-thp, which makes the
+generic hugepages.h override any target definition of
+MALLOC_DEFAULT_THP_PAGESIZE with 0.  This covers every target which
+enables THP in malloc by default, currently aarch64.  hugepages.h is
+included more than once by some files (e.g. via ldsodefs.h and
+malloc-internal.h in malloc.c), so add an include guard to the aarch64
+header to keep it from redefining MALLOC_DEFAULT_THP_PAGESIZE after the
+generic header has undefined it.  This gives the
+pre-2.43 behavior, glibc.malloc.hugetlb defaults to 0 (also as reported
+by ld.so --list-tunables), and THP can still be enabled at run time
+with glibc.malloc.hugetlb=1.
+
+The default is unchanged.
+
+Upstream-Status: Submitted [https://inbox.sourceware.org/libc-alpha/20261115204701.2368765-1-khem.raj@oss.qualcomm.com/]
+
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ INSTALL                                     |  9 +++++++++
+ config.h.in                                 |  4 ++++
+ configure                                   | 21 +++++++++++++++++++++
+ configure.ac                                |  8 ++++++++
+ manual/install.texi                         |  8 ++++++++
+ manual/tunables.texi                        |  3 ++-
+ sysdeps/generic/hugepages.h                 |  4 ++++
+ sysdeps/unix/sysv/linux/aarch64/hugepages.h |  7 +++++++
+ 8 files changed, 63 insertions(+), 1 deletion(-)
+
+diff --git a/INSTALL b/INSTALL
+index bafae84f75..2980a0ac69 100644
+--- a/INSTALL
++++ b/INSTALL
+@@ -230,6 +230,15 @@ passed to 'configure'.  For example:
+      Disable using 'scv' instruction for syscalls.  All syscalls will
+      use 'sc' instead, even if the kernel supports 'scv'.  PowerPC only.
+ 
++'--disable-malloc-default-thp'
++     Do not make 'malloc' use Transparent Huge Pages by default.  This
++     restores the behavior of 'glibc.malloc.hugetlb=0' as the default,
++     which can reduce memory usage on systems with limited memory.  Huge
++     pages can still be enabled at run time by setting the
++     'glibc.malloc.hugetlb' tunable to '1'.  This only affects targets
++     which use Transparent Huge Pages in 'malloc' by default, currently
++     AArch64.
++
+ '--build=BUILD-SYSTEM'
+ '--host=HOST-SYSTEM'
+      These options are for cross-compiling.  If you specify both options
+diff --git a/config.h.in b/config.h.in
+index 17bdd30570..fc1e5268ca 100644
+--- a/config.h.in
++++ b/config.h.in
+@@ -29,6 +29,10 @@
+ /* On powerpc*, define if scv should be used for syscalls (when available).  */
+ #undef USE_PPC_SCV
+ 
++/* Define if malloc should use Transparent Huge Pages by default on
++   targets which define MALLOC_DEFAULT_THP_PAGESIZE.  */
++#undef USE_MALLOC_DEFAULT_THP
++
+ /* Define if _Unwind_Find_FDE should be exported from glibc.  */
+ #undef  EXPORT_UNWIND_FIND_FDE
+ 
+diff --git a/configure b/configure
+index 604279533a..e0658545a1 100755
+--- a/configure
++++ b/configure
+@@ -815,6 +815,7 @@ enable_pt_chown
+ enable_mathvec
+ enable_cet
+ enable_scv
++enable_malloc_default_thp
+ enable_fortify_source
+ enable_sframe
+ with_cpu
+@@ -1495,6 +1496,10 @@ Optional Features:
+                           (CET), x86 only
+   --disable-scv           syscalls will not use scv instruction, even if the
+                           kernel supports it, powerpc only
++  --disable-malloc-default-thp
++                          malloc will not use Transparent Huge Pages by
++                          default on targets which enable them,
++                          glibc.malloc.hugetlb=1 can still enable them
+   --enable-fortify-source[=1|2|3]
+                           Use -D_FORTIFY_SOURCE=[1|2|3] to control code
+                           hardening, defaults to highest possible value
+@@ -4829,6 +4834,22 @@ then :
+ 
+ fi
+ 
++# Check whether --enable-malloc-default-thp was given.
++if test ${enable_malloc_default_thp+y}
++then :
++  enableval=$enable_malloc_default_thp; use_malloc_default_thp=$enableval
++else case e in #(
++  e) use_malloc_default_thp=yes ;;
++esac
++fi
++
++
++if test "$use_malloc_default_thp" != "no"
++then :
++  printf "%s\n" "#define USE_MALLOC_DEFAULT_THP 1" >>confdefs.h
++
++fi
++
+ # Check whether --enable-fortify-source was given.
+ if test ${enable_fortify_source+y}
+ then :
+diff --git a/configure.ac b/configure.ac
+index 2fe7980fc9..89e123529f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -401,6 +401,14 @@ AC_ARG_ENABLE([scv],
+ 
+ AS_IF([[test "$use_scv" != "no"]],[AC_DEFINE(USE_PPC_SCV)])
+ 
++AC_ARG_ENABLE([malloc-default-thp],
++	      AS_HELP_STRING([--disable-malloc-default-thp],
++			     [malloc will not use Transparent Huge Pages by default on targets which enable them, glibc.malloc.hugetlb=1 can still enable them]),
++	      [use_malloc_default_thp=$enableval],
++	      [use_malloc_default_thp=yes])
++
++AS_IF([[test "$use_malloc_default_thp" != "no"]],[AC_DEFINE(USE_MALLOC_DEFAULT_THP)])
++
+ dnl Build glibc with _FORTIFY_SOURCE
+ AC_ARG_ENABLE(fortify-source,
+               AS_HELP_STRING([--enable-fortify-source@<:@=1|2|3@:>@],
+diff --git a/manual/install.texi b/manual/install.texi
+index fe4a368385..957b1f541c 100644
+--- a/manual/install.texi
++++ b/manual/install.texi
+@@ -261,6 +261,14 @@ C++ libraries.
+ Disable using @code{scv} instruction for syscalls. All syscalls will use
+ @code{sc} instead, even if the kernel supports @code{scv}. PowerPC only.
+ 
++@item --disable-malloc-default-thp
++Do not make @code{malloc} use Transparent Huge Pages by default.  This
++restores the behavior of @code{glibc.malloc.hugetlb=0} as the default,
++which can reduce memory usage on systems with limited memory.  Huge pages
++can still be enabled at run time by setting the @code{glibc.malloc.hugetlb}
++tunable to @code{1}.  This only affects targets which use Transparent
++Huge Pages in @code{malloc} by default, currently AArch64.
++
+ @item --build=@var{build-system}
+ @itemx --host=@var{host-system}
+ These options are for cross-compiling.  If you specify both options and
+diff --git a/manual/tunables.texi b/manual/tunables.texi
+index b53cfbf4be..c7e9e7b239 100644
+--- a/manual/tunables.texi
++++ b/manual/tunables.texi
+@@ -369,7 +369,8 @@ still be created depending on the OS settings.
+ Setting its value to @code{1} enables the use of @code{madvise} with
+ @code{MADV_HUGEPAGE} after memory allocation with @code{mmap}.  It is enabled
+ only if the system supports Transparent Huge Page (currently only on Linux).
+-This is the default used for AArch64.
++This is the default used for AArch64, unless @theglibc{} was configured
++with @option{--disable-malloc-default-thp}.
+ 
+ When @code{glibc.elf.thp} set to 1, malloc uses the actual kernel THP mode
+ instead of defaulting to madvise mode and madvise_thp will stop issuing
+diff --git a/sysdeps/generic/hugepages.h b/sysdeps/generic/hugepages.h
+index e8fc70fbf9..77856327bc 100644
+--- a/sysdeps/generic/hugepages.h
++++ b/sysdeps/generic/hugepages.h
+@@ -53,6 +53,10 @@ enum thp_mode_t __get_thp_mode (void) attribute_hidden;
+ void __get_hugepage_config (size_t requested, size_t *pagesize, int *flags)
+      attribute_hidden;
+ 
++#ifndef USE_MALLOC_DEFAULT_THP
++# undef MALLOC_DEFAULT_THP_PAGESIZE
++#endif
++
+ #ifndef MALLOC_DEFAULT_THP_PAGESIZE
+ # define MALLOC_DEFAULT_THP_PAGESIZE	0
+ #endif
+diff --git a/sysdeps/unix/sysv/linux/aarch64/hugepages.h b/sysdeps/unix/sysv/linux/aarch64/hugepages.h
+index 4f9de8a394..6711169de2 100644
+--- a/sysdeps/unix/sysv/linux/aarch64/hugepages.h
++++ b/sysdeps/unix/sysv/linux/aarch64/hugepages.h
+@@ -16,6 +16,13 @@
+    License along with the GNU C Library; see the file COPYING.LIB.  If
+    not, see <https://www.gnu.org/licenses/>.  */
+ 
++#ifndef _LINUX_AARCH64_HUGEPAGES_H
++#define _LINUX_AARCH64_HUGEPAGES_H
++
++/* Only define this on the first inclusion, the generic hugepages.h may
++   undefine it if glibc is configured with --disable-malloc-default-thp.  */
+ #define MALLOC_DEFAULT_THP_PAGESIZE	(1UL << 21)
+ 
+ #include_next <hugepages.h>
++
++#endif
