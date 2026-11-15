@@ -1043,6 +1043,13 @@ def load_jsonld(d, path, required=False):
     return objset
 
 
+def get_pkg_arch(d):
+    pkg_arch = d.getVar("SPDX_PKGARCH")
+    if pkg_arch is None:
+        pkg_arch = d.getVar("SSTATE_PKGARCH")
+    return pkg_arch
+
+
 def jsonld_arch_path(d, arch, subdir, name, deploydir=None):
     if deploydir is None:
         deploydir = Path(d.getVar("DEPLOY_DIR_SPDX"))
@@ -1109,7 +1116,7 @@ def write_jsonld_doc(d, objset, dest):
 
 
 def make_jsonld_link(d, fn, subdir, name, deploydir):
-    pkg_arch = d.getVar("SSTATE_PKGARCH")
+    pkg_arch = get_pkg_arch(d)
 
     link_name = jsonld_arch_path(
         d,
@@ -1136,7 +1143,7 @@ def write_recipe_jsonld_doc(
     create_spdx_id_links=True,
     create_task_link=False,
 ):
-    pkg_arch = d.getVar("SSTATE_PKGARCH")
+    pkg_arch = get_pkg_arch(d)
 
     dest = jsonld_arch_path(d, pkg_arch, subdir, objset.doc.name, deploydir=deploydir)
 

@@ -426,8 +426,10 @@ python () {
         new_postfuncs.extend(postfuncs)
 
         d.setVarFlag(task, "postfuncs", " ".join(new_postfuncs))
+        d.setVar("SPDX_PKGARCH:task-" + task[3:].replace("_", "-"), "")
+        spdx_arch = d.getVarFlag(task, "stamp-extra-info", False) or "${SSTATE_PKGARCH}"
         d.prependVarFlag(task, "sstate-inputdirs", f"{spdx_deploy} ")
-        d.prependVarFlag(task, "sstate-outputdirs", "${DEPLOY_DIR_SPDX} ")
+        d.prependVarFlag(task, "sstate-outputdirs", f"${{DEPLOY_DIR_SPDX}}/{spdx_arch} ")
         d.prependVarFlag(task, "file-checksums", "${SPDX3_DEP_FILES} ")
         d.prependVarFlag(task, "dirs", f"{spdx_deploy} ")
         d.prependVarFlag(task, "cleandirs", f"{spdx_deploy} ")
