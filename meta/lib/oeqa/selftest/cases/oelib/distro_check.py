@@ -52,6 +52,24 @@ Version: 99.10
 Supported: 0
 """
 
+SOURCES_WITH_BINARIES = b"""Package: brotli
+Binary: python3-brotli, brotli, libbrotli-dev,
+ libbrotli1
+Version: 1.1.0-2
+Description: an example
+ Binary: not-a-package
+
+Package: six
+Binary: python3-six
+"""
+
+class TestDebianStyleBinaryPackages(TestCase):
+    def test_binary_packages(self):
+        with mock.patch.object(oe.distro_check, "create_socket", return_value=io.BytesIO(gzip.compress(SOURCES_WITH_BINARIES))):
+            names = oe.distro_check.get_debian_style_source_package_list("http://example.com/Sources.gz", "main", None)
+        self.assertEqual(names, {"brotli:main", "python3-brotli:main", "libbrotli-dev:main", "libbrotli1:main",
+                                 "six:main", "python3-six:main"})
+
 class TestFindLatestUbuntuRelease(TestCase):
     def test_latest_supported(self):
         with mock.patch.object(oe.distro_check, "create_socket", return_value=io.BytesIO(META_RELEASE)):
