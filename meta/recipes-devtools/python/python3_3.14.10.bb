@@ -490,11 +490,8 @@ do_create_manifest() {
     # e.g. BerkeleyDB is an optional build dependency so it may or may not
     # be present, we must ensure it is.
 
-    cp ${UNPACKDIR}/create_manifest3.py ${WORKDIR}
-    cp ${UNPACKDIR}/python3-manifest.json ${WORKDIR}
-    cp ${UNPACKDIR}/get_module_deps3.py ${WORKDIR}
-    cd ${WORKDIR}
     # This needs to be executed by python-native and NOT by HOST's python
+    cd ${UNPACKDIR}
     nativepython3 create_manifest3.py ${PYTHON_MAJMIN}
     cp python3-manifest.json.new ${THISDIR}/python3/python3-manifest.json
 }
