@@ -59,7 +59,7 @@ def make_relative_symlink(path):
     os.remove(path)
     os.symlink(base, path)
 
-def replace_absolute_symlinks(basedir, d):
+def replace_absolute_symlinks(basedir):
     """
     Walk basedir looking for absolute symlinks and replacing them with relative ones.
     The absolute links are assumed to be relative to basedir
