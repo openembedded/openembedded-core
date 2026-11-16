@@ -11,7 +11,7 @@ DEPENDS = "libffi"
 DEPENDS:append = "${@' glib-2.0' if d.getVar('GTKDOC_ENABLED') == 'True' else ''}"
 
 SRC_URI = "gitsm://github.com/p11-glue/p11-kit;branch=master;protocol=https;tag=${PV}"
-SRCREV = "120050e353e8f43d7c40bbcc047f667f903f4de5"
+SRCREV = "f9813f90a51761dc75b5dcd8d9766466b8904f5c"
 
 PACKAGECONFIG ??= "${@bb.utils.filter('DISTRO_FEATURES', 'systemd', d)} trust"
 PACKAGECONFIG[systemd] = "-Dsystemd=enabled,-Dsystemd=disabled,systemd"
