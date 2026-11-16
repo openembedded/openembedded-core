@@ -8,7 +8,7 @@ UPSTREAM_CHECK_COMMITS = "1"
 
 SRC_URI = "git://gn.googlesource.com/gn;protocol=https;branch=main \
 "
-SRCREV = "cfcd774b98f3433e18b722f9a7ff06119825b8eb"
+SRCREV = "311003f8ea3500f8ce87c43ff61aec6f4066dac2"
 PV = "0+git"
 
 BB_GIT_SHALLOW = ""
@@ -27,6 +27,7 @@ def gn_platform(variable, d):
 
 do_configure[cleandirs] += "${B}"
 do_configure() {
+    export LD="${CXX}"
     python3 ${S}/build/gen.py \
         --platform=${@gn_platform("TARGET_OS", d)} \
         --out-path=${B} \
