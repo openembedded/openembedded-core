@@ -93,6 +93,14 @@ def print_indent(msg, offset):
         msg = ' ' * offset + l
         print(msg)
 
+def is_dependency_skipped(manifest, package, dependency):
+    """
+    Check to see if this dependency should be ignored by matching substrings
+    from the optional skip_depends element in the manifest.
+    """
+    skiplist = manifest.get('skip_depends', {}).get(package, [])
+    return any((skip in dependency for skip in skiplist))
+
 
 # Read existing JSON manifest
 with open('python3-manifest.json') as manifest:
@@ -121,6 +129,8 @@ print_indent('Getting dependencies for package: core', 0)
 
 output = subprocess.check_output([sys.executable, 'get_module_deps3.py', 'python-core-package', '%s' % debugFlag]).decode('utf8')
 for coredep in output.split():
+    if is_dependency_skipped(old_manifest['core'], "core", coredep):
+        continue
     coredep = coredep.replace(pyversion,'${PYTHON_MAJMIN}')
     if isCached(coredep):
         if coredep not in old_manifest['core']['cached']:
@@ -172,6 +182,8 @@ for filedep in old_manifest['core']['files']:
 
 
     for pymodule_dep in output.split():
+        if is_dependency_skipped(old_manifest['core'], pymodule, pymodule_dep):
+            continue
         pymodule_dep = pymodule_dep.replace(pyversion,'${PYTHON_MAJMIN}')
 
         if isCached(pymodule_dep):
@@ -221,6 +233,8 @@ for pypkg in old_manifest:
     new_manifest[pypkg] = {}
     new_manifest[pypkg]['summary'] = old_manifest[pypkg]['summary']
     new_manifest[pypkg]['rdepends'] = []
+    if "skip_depends" in old_manifest[pypkg]:
+        new_manifest[pypkg]['skip_depends'] = old_manifest[pypkg]['skip_depends']
     new_manifest[pypkg]['files'] = []
     new_manifest[pypkg]['cached'] = old_manifest[pypkg]['cached']
 
@@ -298,6 +312,8 @@ for pypkg in old_manifest:
         reportRDEPS = []
 
         for pymodule_dep in output.split():
+            if is_dependency_skipped(new_manifest[pypkg], pymodule, pymodule_dep):
+                continue
 
             # Warning: This first part is ugly
             # One of the dependencies that was found, could be inside of one of the folders included by another package
