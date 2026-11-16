@@ -99,7 +99,7 @@ INHIBIT_DEFAULT_RUST_DEPS = "${@bb.utils.contains('PACKAGECONFIG', 'opencl', '',
 PACKAGECONFIG[egl] = "-Degl=enabled, -Degl=disabled"
 
 # "gbm" requires "opengl"
-PACKAGECONFIG[gbm] = "-Dgbm=enabled,-Dgbm=disabled"
+PACKAGECONFIG[gbm] = "-Dgbm=enabled,-Dgbm=disabled, libdrm"
 
 # "gles" requires "opengl"
 PACKAGECONFIG[gles] = "-Dgles1=enabled -Dgles2=enabled, -Dgles1=disabled -Dgles2=disabled"
