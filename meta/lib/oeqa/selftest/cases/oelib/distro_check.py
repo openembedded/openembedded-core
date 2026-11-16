@@ -31,6 +31,32 @@ class TestDebianStyleSourcePackageList(TestCase):
     def test_xz(self):
         self.check("http://example.com/Sources.xz", lzma.compress(SOURCES))
 
+META_RELEASE = b"""Dist: noble
+Name: Noble Numbat
+Version: 24.04.5 LTS
+Supported: 1
+
+Dist: questing
+Name: Questing Quokka
+Version: 25.10
+Supported: 0
+
+Dist: resolute
+Name: Resolute Raccoon
+Version: 26.04.1 LTS
+Supported: 1
+
+Dist: zzz
+Name: Not supported any more
+Version: 99.10
+Supported: 0
+"""
+
+class TestFindLatestUbuntuRelease(TestCase):
+    def test_latest_supported(self):
+        with mock.patch.object(oe.distro_check, "create_socket", return_value=io.BytesIO(META_RELEASE)):
+            self.assertEqual(oe.distro_check.find_latest_ubuntu_release(None), "resolute")
+
 class TestCreateDistroPackagesList(TestCase):
     def test_skip_failed_distro(self):
         """

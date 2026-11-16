@@ -131,23 +131,25 @@ def get_latest_released_debian_source_package_list(d):
     package_names |= get_debian_style_source_package_list(url, "updates", d)
     return latest, package_names
 
-def find_latest_ubuntu_release(url, d):
+def find_latest_ubuntu_release(d):
     """
-    Find the latest listed Ubuntu release on the given ubuntu/dists/ URL.
-
-    To avoid matching development releases look for distributions that have
-    updates, so the resulting distro could be any supported release.
+    Find the latest supported Ubuntu release, from the list of releases
+    that do-release-upgrade reads. The releases are listed oldest first.
     """
-    url += "?C=M;O=D" # Descending Sort by Last Modified
-    for link in get_links_from_url(url, d):
-        if "-updates" in link:
-            distro = link.replace("-updates", "")
-            return distro
-    return "_NotFound_"
+    latest = "_NotFound_"
+    dist = None
+    listing = create_socket("https://changelogs.ubuntu.com/meta-release", d).read().decode("utf-8")
+    for line in listing.splitlines():
+        key, _, value = line.partition(":")
+        if key == "Dist":
+            dist = value.strip()
+        elif key == "Supported" and value.strip() == "1" and dist:
+            latest = dist
+    return latest
 
 def get_latest_released_ubuntu_source_package_list(d):
     "Returns list of all the name os packages in the latest ubuntu distro"
-    latest = find_latest_ubuntu_release("http://archive.ubuntu.com/ubuntu/dists/", d)
+    latest = find_latest_ubuntu_release(d)
     url = "http://archive.ubuntu.com/ubuntu/dists/%s/main/source/Sources.gz" % latest
     package_names = get_debian_style_source_package_list(url, "main", d)
     url = "http://archive.ubuntu.com/ubuntu/dists/%s-updates/main/source/Sources.gz" % latest
