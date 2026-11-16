@@ -13,8 +13,8 @@ DEPENDS:append = " ${EXTRA_PYTHON_DEPENDS}"
 
 setup_target_config() {
         export _PYTHON_SYSCONFIGDATA_NAME="_sysconfigdata"
+        export _PYTHON_SYSCONFIGDATA_PATH="${STAGING_LIBDIR}/python-sysconfigdata"
         export _PYTHON_PROJECT_BASE="${B}"
-        export PYTHONPATH=${STAGING_LIBDIR}/python-sysconfigdata${PYTHONPATH:+:$PYTHONPATH}
         export PATH=${STAGING_EXECPREFIXDIR}/python-target-config/:$PATH
 }
 
