@@ -111,11 +111,6 @@ def get_latest_released_opensuse_source_package_list(d):
             raise
     return latest, package_names
 
-def get_latest_released_clear_source_package_list(d):
-    latest = find_latest_numeric_release("https://download.clearlinux.org/releases/", d)
-    package_names = get_source_package_list_from_url("https://download.clearlinux.org/releases/%s/clear/source/SRPMS/" % latest, "main", d)
-    return latest, package_names
-
 def find_latest_debian_release(url, d):
     "Find the latest listed debian release on the given url"
 
@@ -185,7 +180,6 @@ def create_distro_packages_list(distro_check_dir, d):
                             ("Ubuntu", get_latest_released_ubuntu_source_package_list),
                             ("Fedora", get_latest_released_fedora_source_package_list),
                             ("openSUSE", get_latest_released_opensuse_source_package_list),
-                            ("Clear", get_latest_released_clear_source_package_list),
                            )
 
     for name, fetcher_func in per_distro_functions:

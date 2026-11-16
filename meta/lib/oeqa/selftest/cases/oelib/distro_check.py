@@ -89,7 +89,7 @@ class TestCreateDistroPackagesList(TestCase):
             return "1.0", {"foo:main"}
 
         fetchers = {"get_latest_released_%s_source_package_list" % name: ok
-                    for name in ("ubuntu", "fedora", "opensuse", "clear")}
+                    for name in ("ubuntu", "fedora", "opensuse")}
         fetchers["get_latest_released_debian_source_package_list"] = fail
 
         with tempfile.TemporaryDirectory() as tmpdir, \
@@ -99,6 +99,6 @@ class TestCreateDistroPackagesList(TestCase):
             oe.distro_check.create_distro_packages_list(tmpdir, None)
             lists = sorted(os.listdir(os.path.join(tmpdir, "package_lists")))
 
-        self.assertEqual(lists, ["Clear-1.0", "Fedora-1.0", "Ubuntu-1.0", "openSUSE-1.0"])
+        self.assertEqual(lists, ["Fedora-1.0", "Ubuntu-1.0", "openSUSE-1.0"])
         warn.assert_called_once()
         self.assertIn("Debian", warn.call_args[0][0])
