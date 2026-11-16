@@ -8,8 +8,32 @@ import json
 import oe.maketype
 
 def typed_value(key, d):
-    """Construct a value for the specified metadata variable, using its flags
-    to determine the type and parameters for construction."""
+    """
+    Construct a value for the specified metadata variable, using its flags
+    to determine the type and parameters for construction.
+
+    For example, consider the following definition for ``FOO``::
+
+        FOO = "\\
+            /path/to/one \\
+            /path/to/two \\
+            /path/to/three \\
+        "
+        FOO[type] = "list"
+
+    Then this value can be iterated as follows:
+
+    .. code-block:: python
+
+       for line in oe.data.typed_value("FOO", d):
+           # ...
+
+    Take ``key`` as the variable name and return the object, for which the
+    type depends on the ``type`` variable flag of the variable.
+
+    See :py:mod:`oe.types` for more information on OpenEmbedded types.
+    """
+
     var_type = d.getVarFlag(key, 'type')
     flags = d.getVarFlags(key)
     if flags is not None:
