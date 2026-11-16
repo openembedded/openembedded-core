@@ -14,26 +14,54 @@ import os.path
 import bb.parse
 
 def join(*paths):
-    """Like os.path.join but doesn't treat absolute RHS specially"""
+    """
+    Like :py:func:`os.path.join` but do not treat absolute RHS specially.
+    Use :py:func:`os.path.normpath` after joining paths with slashes (``/``).
+
+    Take ``*paths`` which represent the paths to join and return the joined
+    paths as a string.
+    """
     return os.path.normpath("/".join(paths))
 
 def relative(src, dest):
-    """ Return a relative path from src to dest.
+    """
+    Return a relative path from ``src`` to ``dest``.
 
-    >>> relative("/usr/bin", "/tmp/foo/bar")
-    ../../tmp/foo/bar
+    Examples:
 
-    >>> relative("/usr/bin", "/usr/lib")
-    ../lib
+    .. code-block:: python
 
-    >>> relative("/tmp", "/tmp/foo/bar")
-    foo/bar
+       >>> oe.path.relative("/usr/bin", "/tmp/foo/bar")
+       ../../tmp/foo/bar
+
+    .. code-block:: python
+
+       >>> oe.path.relative("/usr/bin", "/usr/lib")
+       ../lib
+
+    .. code-block:: python
+
+       >>> oe.path.relative("/tmp", "/tmp/foo/bar")
+       foo/bar
     """
 
     return os.path.relpath(dest, src)
 
 def make_relative_symlink(path):
-    """ Convert an absolute symlink to a relative one """
+    """
+    Convert an absolute symbolic link ``path`` and convert it to a relative one.
+
+    No return value.
+
+    For example, if ``/path/to/dir/link`` points to ``/path/to/other/target``,
+    then:
+
+    .. code-block:: python
+
+       >>> oe.path.make_relative_symlink("/path/to/dir/link")
+
+    Converts the symlink to ``../other/file``.
+    """
     if not os.path.islink(path):
         return
     link = os.readlink(path)
@@ -61,10 +89,12 @@ def make_relative_symlink(path):
 
 def replace_absolute_symlinks(basedir):
     """
-    Walk basedir looking for absolute symlinks and replacing them with relative ones.
-    The absolute links are assumed to be relative to basedir
-    (compared to make_relative_symlink above which tries to compute common ancestors
-    using pattern matching instead)
+    Walk ``basedir`` looking for absolute symlinks and replacing them with relative ones.
+    The absolute links are assumed to be relative to ``basedir``.
+    (compared to :py:func:`oe.path.make_relative_symlink` which tries to compute
+    common ancestors using pattern matching instead).
+
+    No return value.
     """
     for walkroot, dirs, files in os.walk(basedir):
         for file in files + dirs:
@@ -82,7 +112,13 @@ def replace_absolute_symlinks(basedir):
 
 @bb.parse.vardepsexclude("TOPDIR")
 def format_display(path, d):
-    """ Prepare a path for display to the user. """
+    """
+    Prepare ``path`` for display to the user: the path is converted to be
+    relative to :term:`TOPDIR`, which is obtained thanks to ``d`` (the
+    :term:`datastore`).
+
+    Return the formatted path as a string.
+    """
     rel = relative(d.getVar("TOPDIR"), path)
     if len(rel) > len(path):
         return path
@@ -100,7 +136,13 @@ def copytree(src, dst):
     subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
 
 def copyhardlinktree(src, dst):
-    """Make a tree of hard links when possible, otherwise copy."""
+    """
+    Replicate the ``src`` directory into ``dst`` and replace files with
+    hardlinks when possible, otherwise copy them (some filesystems do not
+    support hardlinks).
+
+    No return value.
+    """
     bb.utils.mkdirhier(dst)
     if os.path.isdir(src) and not len(os.listdir(src)):
         return
@@ -141,7 +183,12 @@ def copyhardlinktree(src, dst):
         copytree(src, dst)
 
 def copyhardlink(src, dst):
-    """Make a hard link when possible, otherwise copy."""
+    """
+    Make a hard link of ``src`` into ``dst`` when possible, otherwise copy
+    (some filesystems do not support hardlinks).
+
+    No return value.
+    """
 
     try:
         os.link(src, dst)
@@ -150,12 +197,15 @@ def copyhardlink(src, dst):
 
 def remove(path, recurse=True):
     """
-    Equivalent to rm -f or rm -rf
+    Equivalent to ``rm -f`` or ``rm -rf`` (when ``recurse`` is ``True``).
+
     NOTE: be careful about passing paths that may contain filenames with
     wildcards in them (as opposed to passing an actual wildcarded path) -
-    since we use glob.glob() to expand the path. Filenames containing
+    since we use :py:func:`glob.glob` to expand the path. Filenames containing
     square brackets are particularly problematic since the they may not
     actually expand to match the original filename.
+
+    No return value.
     """
     for name in glob.glob(path):
         try:
@@ -167,7 +217,12 @@ def remove(path, recurse=True):
                 raise
 
 def symlink(source, destination, force=False):
-    """Create a symbolic link"""
+    """
+    Create a symbolic link ``destination`` pointing to ``source``.
+    Optionally force it with ``force=True``.
+
+    No return value.
+    """
     try:
         if force:
             # Remove the exact destination path. Do not route this through
@@ -191,8 +246,12 @@ def relsymlink(target, name, force=False):
     symlink(os.path.relpath(target, os.path.dirname(name)), name, force=force)
 
 def find(dir, **walkoptions):
-    """ Given a directory, recurses into that directory,
-    returning all files as absolute paths. """
+    """
+    Given a directory ``dir``, recurse into that directory,
+    ``yield``'ing all files as absolute paths.
+
+    No return value.
+    """
 
     for root, dirs, files in os.walk(dir, **walkoptions):
         for file in files:
@@ -251,12 +310,15 @@ def __realpath(file, root, loop_cnt, assume_dir):
     return (file, is_dir)
 
 def realpath(file, root, use_physdir = True, loop_cnt = 100, assume_dir = False):
-    """ Returns the canonical path of 'file' with assuming a
-    toplevel 'root' directory. When 'use_physdir' is set, all
-    preceding path components of 'file' will be resolved first;
+    """
+    Return the canonical path of ``file`` with assuming a
+    toplevel ``root`` directory. When ``use_physdir`` is set, all
+    preceding path components of ``file`` will be resolved first;
     this flag should be set unless it is guaranteed that there is
-    no symlink in the path. When 'assume_dir' is not set, missing
-    path components will raise an ENOENT error"""
+    no symlink in the path. When ``assume_dir`` is not set, missing
+    path components will raise an ``ENOENT`` error. Limit the recursion to
+    ``loop_cnt`` when recursively resolving paths.
+    """
 
     root = os.path.normpath(root)
     file = os.path.normpath(file)
@@ -288,10 +350,11 @@ def realpath(file, root, use_physdir = True, loop_cnt = 100, assume_dir = False)
 
 def is_path_parent(possible_parent, *paths):
     """
-    Return True if a path is the parent of another, False otherwise.
+    Return ``True`` if one or more paths (passed with ``*paths``) have
+    ``possible_parent`` as their parent, ``False`` otherwise.
     Multiple paths to test can be specified in which case all
     specified test paths must be under the parent in order to
-    return True.
+    return ``True``.
     """
     def abs_path_trailing(pth):
         pth_abs = os.path.abspath(pth)
@@ -309,12 +372,23 @@ def is_path_parent(possible_parent, *paths):
     return True
 
 def which_wild(pathname, path=None, mode=os.F_OK, *, reverse=False, candidates=False):
-    """Search a search path for pathname, supporting wildcards.
+    """
+    Search a search ``path`` for ``pathname``, supporting wildcards.
 
-    Return all paths in the specific search path matching the wildcard pattern
-    in pathname, returning only the first encountered for each file. If
-    candidates is True, information on all potential candidate paths are
-    included.
+    ``path`` should be a colon-separated list of paths. If not passed, the
+    ``PATH`` environment is used.
+
+    Return all paths as a list in the specific search path matching the wildcard pattern
+    in ``pathname``, returning only the first encountered for each file.
+
+    If ``candidates`` is True, information on all potential candidate paths are
+    included as two-element tuples: first element is the matched candidates,
+    second element is the list of other matches.
+
+    ``mode`` is passed to :py:func:`os.access` to control what the matched
+    files should have as attributes (executable, readable, etc.).
+
+    When ``reverse`` is ``True``, reverse the search path before iterating.
     """
     paths = (path or os.environ.get('PATH', os.defpath)).split(':')
     if reverse:
@@ -342,9 +416,11 @@ def which_wild(pathname, path=None, mode=os.F_OK, *, reverse=False, candidates=F
     return files
 
 def canonicalize(paths, sep=','):
-    """Given a string with paths (separated by commas by default), expand
-    each path using os.path.realpath() and return the resulting paths as a
-    string (separated using the same separator a the original string).
+    """
+    Given a string with paths ``paths`` (separated by commas by default, but
+    controllable by ``sep``), expand each path using :py:func:`os.path.realpath`
+    and return the resulting paths as a string (separated using the same
+    separated as the original string).
     """
     # Ignore paths containing "$" as they are assumed to be unexpanded bitbake
     # variables. Normally they would be ignored, e.g., when passing the paths
