@@ -1,4 +1,4 @@
-From e13096fb5b55c9c4d7f05da5963eff4c2cde8d15 Mon Sep 17 00:00:00 2001
+From faf72f65f33732e407c54a973b14b3fc47f90333 Mon Sep 17 00:00:00 2001
 From: Paul Eggleton <paul.eggleton@microsoft.com>
 Date: Sun, 8 Feb 2026 21:34:54 -0800
 Subject: [PATCH] build.c: ignore return of 1 from tar -cf
@@ -31,10 +31,10 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/src/deb/build.c b/src/deb/build.c
-index f7a0156f1275..67e758185b6b 100644
+index b080ea3b0..c7a109862 100644
 --- a/src/deb/build.c
 +++ b/src/deb/build.c
-@@ -526,6 +526,7 @@ tarball_pack(const char *dir, filenames_feed_func *tar_filenames_feeder,
+@@ -529,6 +529,7 @@ tarball_pack(const char *dir, filenames_feed_func *tar_filenames_feeder,
  {
  	int pipe_filenames[2], pipe_tarball[2];
  	pid_t pid_tar, pid_comp;
@@ -42,7 +42,7 @@ index f7a0156f1275..67e758185b6b 100644
  
  	/* Fork off a tar. We will feed it a list of filenames on stdin
  	 * later. */
-@@ -591,7 +592,9 @@ tarball_pack(const char *dir, filenames_feed_func *tar_filenames_feeder,
+@@ -594,7 +595,9 @@ tarball_pack(const char *dir, filenames_feed_func *tar_filenames_feeder,
  	 * job. */
  	close(pipe_filenames[1]);
  	subproc_reap(pid_comp, _("<compress> from tar -cf"), 0);

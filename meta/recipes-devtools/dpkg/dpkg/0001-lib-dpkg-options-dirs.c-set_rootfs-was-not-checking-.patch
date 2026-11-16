@@ -1,4 +1,4 @@
-From 4958631014017b179406396bd600a4eb40792be2 Mon Sep 17 00:00:00 2001
+From 5102d7ecbe673346c7239889e9b3743bf90a1979 Mon Sep 17 00:00:00 2001
 From: Mark Hatle <mark.hatle@kernel.crashing.org>
 Date: Sat, 17 Jan 2026 20:20:23 +0000
 Subject: [PATCH] lib/dpkg/options-dirs.c: set_rootfs was not checking
@@ -18,7 +18,7 @@ Signed-off-by: Mark Hatle <mark.hatle@kernel.crashing.org>
  1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/lib/dpkg/options-dirs.c b/lib/dpkg/options-dirs.c
-index 9b7a122fe92a..34869d792fc5 100644
+index 9b7a122fe..34869d792 100644
 --- a/lib/dpkg/options-dirs.c
 +++ b/lib/dpkg/options-dirs.c
 @@ -49,13 +49,18 @@ set_admindir(const struct cmdinfo *cip, const char *value)

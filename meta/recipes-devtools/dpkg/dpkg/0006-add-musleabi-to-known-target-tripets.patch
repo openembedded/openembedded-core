@@ -1,4 +1,4 @@
-From 98da13e96cd24feb19f7f2f1e4cf2b54208b8897 Mon Sep 17 00:00:00 2001
+From 397a2ee1a3469c86cb5cbeff8cb4a413d075dac2 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 30 Dec 2015 23:05:41 +0000
 Subject: [PATCH] add musleabi to known target tripets
@@ -17,7 +17,7 @@ Signed-off-by: Aníbal Limón <anibal.limon@linux.intel.com>
  2 files changed, 2 insertions(+)
 
 diff --git a/data/ostable b/data/ostable
-index 5e7490fb49bf..edfa2e0b27a6 100644
+index 5e7490fb4..edfa2e0b2 100644
 --- a/data/ostable
 +++ b/data/ostable
 @@ -19,6 +19,7 @@
@@ -29,7 +29,7 @@ index 5e7490fb49bf..edfa2e0b27a6 100644
  eabihf-gnu-linux	linux-gnueabihf		linux[^-]*-gnueabihf
  eabi-gnu-linux		linux-gnueabi		linux[^-]*-gnueabi
 diff --git a/data/tupletable b/data/tupletable
-index bc1fcc5ab808..6168027dc761 100644
+index bc1fcc5ab..6168027dc 100644
 --- a/data/tupletable
 +++ b/data/tupletable
 @@ -24,6 +24,7 @@

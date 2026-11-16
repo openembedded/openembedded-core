@@ -1,4 +1,4 @@
-From 49df215996fb32133e0e4e3ecdedda301c5259bd Mon Sep 17 00:00:00 2001
+From 9626dc25597efbddb01549f5b5775ff345e47fd3 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Sun, 8 Feb 2026 21:21:43 -0800
 Subject: [PATCH] The lutimes function doesn't work properly for all systems.
@@ -14,7 +14,7 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/src/main/archives.c b/src/main/archives.c
-index ff778bc9cf22..a58b27c2eb3a 100644
+index ff778bc9c..a58b27c2e 100644
 --- a/src/main/archives.c
 +++ b/src/main/archives.c
 @@ -557,9 +557,11 @@ tarobject_set_mtime(struct tar_entry *te, const char *path)
@@ -29,6 +29,3 @@ index ff778bc9cf22..a58b27c2eb3a 100644
  #endif
  	} else {
  		if (utimes(path, tv))
--- 
-2.47.3
-

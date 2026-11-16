@@ -1,4 +1,4 @@
-From 60d32f2a547c28d7cf7ccb3842664ee8135f2eca Mon Sep 17 00:00:00 2001
+From c3ffa337de08eb6b7c7c0e93f988ee53876dddf4 Mon Sep 17 00:00:00 2001
 From: Constantin Musca <constantinx.musca@intel.com>
 Date: Sun, 8 Feb 2026 21:03:30 -0800
 Subject: [PATCH] busybox-1.19.4 tar utility doesn't support
@@ -15,10 +15,10 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 1 deletion(-)
 
 diff --git a/src/deb/extract.c b/src/deb/extract.c
-index 16d559f8303a..0cc390ce9767 100644
+index ad9cb4e83..826c11c00 100644
 --- a/src/deb/extract.c
 +++ b/src/deb/extract.c
-@@ -371,7 +371,6 @@ extracthalf(const char *debar, const char *dir,
+@@ -372,7 +372,6 @@ extracthalf(const char *debar, const char *dir,
  
  			command_add_arg(&cmd, "-f");
  			command_add_arg(&cmd, "-");

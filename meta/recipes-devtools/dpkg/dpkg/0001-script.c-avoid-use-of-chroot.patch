@@ -1,4 +1,4 @@
-From 4e720386c346db10c0fcd8b20078c05d38c85951 Mon Sep 17 00:00:00 2001
+From 272886f41c30c1405395fbc8d49d19075a3d5289 Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex.kanavin@gmail.com>
 Date: Sun, 8 Feb 2026 21:17:43 -0800
 Subject: [PATCH] script.c: avoid use of chroot
@@ -25,7 +25,7 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 3 insertions(+), 53 deletions(-)
 
 diff --git a/src/main/script.c b/src/main/script.c
-index 951cdfe7b4e9..102740798617 100644
+index 218d481c8..b479d1993 100644
 --- a/src/main/script.c
 +++ b/src/main/script.c
 @@ -99,60 +99,10 @@ static const char *
@@ -92,6 +92,3 @@ index 951cdfe7b4e9..102740798617 100644
  }
  
  /**
--- 
-2.47.3
-

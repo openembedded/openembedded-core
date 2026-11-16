@@ -1,4 +1,4 @@
-From a9eab9d87b6c5e0eb5142d4004727b78749ca5d0 Mon Sep 17 00:00:00 2001
+From d77e3091b7fd69e3a279c91110a0ff8328c42882 Mon Sep 17 00:00:00 2001
 From: Joe Slater <jslater@windriver.com>
 Date: Sun, 8 Feb 2026 21:06:44 -0800
 Subject: [PATCH] dpkg: fix configuration issue for mips64
@@ -19,7 +19,7 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
  1 file changed, 3 deletions(-)
 
 diff --git a/scripts/Dpkg/Arch.pm b/scripts/Dpkg/Arch.pm
-index 3d9e3e97503b..05c6debc3cc7 100644
+index bdc5dc518..ea3bdb7e6 100644
 --- a/scripts/Dpkg/Arch.pm
 +++ b/scripts/Dpkg/Arch.pm
 @@ -326,9 +326,6 @@ sub _load_tupletable
