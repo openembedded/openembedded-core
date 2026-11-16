@@ -22,7 +22,8 @@ def get_links_from_url(url, d):
     soup = BeautifulSoup(create_socket(url,d), "html.parser", parse_only=SoupStrainer("a"))
     hyperlinks = []
     for line in soup.find_all('a', href=True):
-        hyperlinks.append(line['href'].strip('/'))
+        # Some listings (e.g. MirrorCache) link to "./name/"
+        hyperlinks.append(line['href'].removeprefix('./').strip('/'))
     return hyperlinks
 
 def find_latest_numeric_release(url, d):
@@ -84,12 +85,30 @@ def get_latest_released_fedora_source_package_list(d):
     package_names |= get_source_package_list_from_url_by_letter("http://archive.fedoraproject.org/pub/fedora/linux/updates/%s/SRPMS/" % latest, "updates", d)
     return latest, package_names
 
+def find_latest_opensuse_leap_release(url, d):
+    "Find the latest Leap release on the given url, ignoring Leap 42.x, which came before 15.0"
+    releases = []
+    for link in get_links_from_url(url, d):
+        try:
+            version = tuple(int(n) for n in link.split("."))
+        except ValueError:
+            continue
+        if version[0] != 42:
+            releases.append((version, link))
+    return max(releases)[1] if releases else "_NotFound_"
+
 def get_latest_released_opensuse_source_package_list(d):
     "Returns list of all the name os packages in the latest opensuse distro"
-    latest = find_latest_numeric_release("http://download.opensuse.org/source/distribution/leap", d)
+    from urllib.error import HTTPError
+    latest = find_latest_opensuse_leap_release("http://download.opensuse.org/source/distribution/leap/", d)
 
-    package_names = get_source_package_list_from_url("http://download.opensuse.org/source/distribution/leap/%s/repo/oss/suse/src/" % latest, "main", d)
-    package_names |= get_source_package_list_from_url("http://download.opensuse.org/update/leap/%s/oss/src/" % latest, "updates", d)
+    package_names = get_source_package_list_from_url("http://download.opensuse.org/source/distribution/leap/%s/repo/oss/src/" % latest, "main", d)
+    # Leap 16 has no separate update repository
+    try:
+        package_names |= get_source_package_list_from_url("http://download.opensuse.org/update/leap/%s/oss/src/" % latest, "updates", d)
+    except HTTPError as e:
+        if e.code != 404:
+            raise
     return latest, package_names
 
 def get_latest_released_clear_source_package_list(d):
