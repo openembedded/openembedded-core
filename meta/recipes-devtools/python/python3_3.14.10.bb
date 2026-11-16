@@ -402,7 +402,7 @@ py_package_preprocess () {
 INCLUDE_PYCS ?= "1"
 
 python(){
-    import collections, json
+    import json
 
     filename = os.path.join(d.getVar('THISDIR'), 'python3', 'python3-manifest.json')
     # This python changes the datastore based on the contents of a file, so mark
@@ -414,7 +414,7 @@ python(){
         json_start = manifest_str.find('# EOC') + 6
         manifest_file.seek(json_start)
         manifest_str = manifest_file.read()
-        python_manifest = json.loads(manifest_str, object_pairs_hook=collections.OrderedDict)
+        python_manifest = json.loads(manifest_str)
 
     # First set RPROVIDES for -native case
     # Hardcoded since it cant be python3-native-foo, should be python3-foo-native

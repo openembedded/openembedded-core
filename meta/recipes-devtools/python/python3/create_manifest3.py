@@ -43,7 +43,6 @@ import sys
 import subprocess
 import json
 import os
-import collections
 
 if '-d' in sys.argv:
     debugFlag = '-d'
@@ -60,7 +59,7 @@ for p in sys.path:
         nativelibfolder = p[:p.find(pivot)+len(pivot)]
 
 # Empty dict to hold the whole manifest
-new_manifest = collections.OrderedDict()
+new_manifest = {}
 
 # Check for repeated files, folders and wildcards
 allfiles = []
@@ -103,7 +102,7 @@ with open('python3-manifest.json') as manifest:
     manifest.seek(0)
     comments = manifest.read(json_start)
     manifest_str = manifest.read()
-    old_manifest = json.loads(manifest_str, object_pairs_hook=collections.OrderedDict)
+    old_manifest = json.loads(manifest_str)
 
 #
 # First pass to get core-package functionality, because we base everything on the fact that core is actually working
@@ -219,7 +218,7 @@ for pypkg in old_manifest:
 
 for pypkg in old_manifest:
     # Use an empty dict as data structure to hold data for each package and fill it up
-    new_manifest[pypkg] = collections.OrderedDict()
+    new_manifest[pypkg] = {}
     new_manifest[pypkg]['summary'] = old_manifest[pypkg]['summary']
     new_manifest[pypkg]['rdepends'] = []
     new_manifest[pypkg]['files'] = []
