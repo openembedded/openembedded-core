@@ -3,7 +3,7 @@ HOMEPAGE = "https://sphinx-design.readthedocs.io/"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=484a29024499c025d11c52f22a6f0bb8"
 
-SRC_URI[sha256sum] = "d2a3f5b19c24b916adb52f97c5f00efab4009ca337812001109084a740ec9b7a"
+SRC_URI[sha256sum] = "57fa4d96378525122947ab6109c6e490190e3119dc10f3e3adf6b71444bf3bb4"
 
 inherit pypi python_flit_core
 
