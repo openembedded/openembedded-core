@@ -194,9 +194,9 @@ SPDX_DEPLOY_SBOM_NAME[doc] = "The name of the output deploy SBoM when using \
     create_deploy_sbom"
 
 SPDX_DEPLOY_ARTIFACTS = "AUTO"
-SPDX_DEPLOY_ARITFACTS[doc] = "A space separated list of deployed artifacts, \
+SPDX_DEPLOY_ARTIFACTS[doc] = "A space separated list of deployed artifacts, \
     relative to SPDX_DEPLOY_ARTIFACTS_DIR that should be included in the SBoM. \
-    If 'AUTO' (the default), all files in SPDX_DEPLOY_ARITFACTS_DIR will be \
+    If 'AUTO' (the default), all files in SPDX_DEPLOY_ARTIFACTS_DIR will be \
     added. A :task- override *must* be used to set this value so that it is \
     scoped to a specific task"
 
