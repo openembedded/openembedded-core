@@ -74,5 +74,6 @@ CVE_PRODUCT = "gstreamer"
 CVE_STATUS[CVE-2026-5056] = "cpe-stable-backport: Fixed since 1.28.2"
 CVE_STATUS[CVE-2026-12891] = "cpe-stable-backport: Fixed since 1.28.5"
 CVE_STATUS[CVE-2026-12892] = "cpe-stable-backport: Fixed since 1.28.5"
+CVE_STATUS[CVE-2026-111183] = "cpe-stable-backport: Fixed since 1.28.8"
 
 PTEST_BUILD_HOST_FILES = ""
