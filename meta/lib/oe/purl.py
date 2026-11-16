@@ -11,16 +11,17 @@ PREFIX = "pkg:yocto"
 
 def quote(s):
     """
-    Returns the percent encoded version of the string, suitable for including
-    in a PURL field
+    Return the percent encoded version of the string ``s``, suitable for inclusion
+    in a PURL field.
     """
     return urllib.parse.quote(s, safe="")
 
 
 def get_base_purl(d):
     """
-    Returns the base PURL for the current recipe (that is, the PURL without any
-    additional qualifiers)
+    Return the base PURL for the current recipe (that is, the PURL without any
+    additional qualifiers), using ``d`` (the :term:`datastore`) to access the recipe's
+    variables.
     """
     layername = d.getVar("FILE_LAYERNAME")
     bpn = d.getVar("BPN")
