@@ -601,25 +601,6 @@ def all_multilib_tune_values(d, var, unique = True, need_split = True, delim = '
         ret = values
     return " ".join(ret)
 
-def all_multilib_tune_list(vars, d):
-    """
-    Return a list of ${VAR} for each variable VAR in vars from each
-    multilib tune configuration.
-    Is safe to be called from a multilib recipe/context as it can
-    figure out the original tune and remove the multilib overrides.
-    """
-    values = {}
-    for v in vars:
-        values[v] = []
-    values['ml'] = ['']
-
-    variants = (d.getVar("MULTILIB_VARIANTS") or "").split() + ['']
-    for item in variants:
-        localdata = oe.utils.get_multilib_datastore(item, d)
-        values[v].append(localdata.getVar(v))
-        values['ml'].append(item)
-    return values
-
 def extend_variants(d, var, extend, delim=':'):
     """Return a string of all bb class extend variants for the given extend"""
     variants = []
