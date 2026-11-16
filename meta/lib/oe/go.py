@@ -8,8 +8,11 @@ import re
 
 def map_arch(a):
     """
-    Map our architecture names to Go's GOARCH names.
-    See https://github.com/golang/go/blob/master/src/internal/syslist/syslist.go for the complete list.
+    Take ``a``, the architecture name used in OpenEmbedded (see the
+    :term:`TUNE_ARCH` variable), and return a string for the mapped architecture
+    name from Go's ``GOARCH`` names (see
+    https://github.com/golang/go/blob/master/src/internal/syslist/syslist.go
+    for the complete list).
     """
     if re.match('i.86', a):
         return '386'
