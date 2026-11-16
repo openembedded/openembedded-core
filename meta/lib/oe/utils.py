@@ -132,11 +132,11 @@ def prune_suffix(var, suffixes, d):
 
     return var
 
-def str_filter(f, str, d):
+def str_filter(f, str):
     from re import match
     return " ".join([x for x in str.split() if match(f, x, 0)])
 
-def str_filter_out(f, str, d):
+def str_filter_out(f, str):
     from re import match
     return " ".join([x for x in str.split() if not match(f, x, 0)])
 
