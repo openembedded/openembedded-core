@@ -73,6 +73,14 @@ UBOOT_ELF_IMAGE ?= "u-boot-${MACHINE}-${UBOOT_VERSION}.${UBOOT_ELF_SUFFIX}"
 UBOOT_ELF_BINARY ?= "u-boot.${UBOOT_ELF_SUFFIX}"
 UBOOT_ELF_SYMLINK ?= "u-boot-${MACHINE}.${UBOOT_ELF_SUFFIX}"
 
+# Output the ELF converted into SREC generated. Some platforms can use the ELF
+# converted into SREC file and directly load it (SCIF loader).
+UBOOT_ELF_SREC ?= ""
+UBOOT_ELF_SREC_SUFFIX ?= "srec"
+UBOOT_ELF_SREC_IMAGE ?= "u-boot-elf-${MACHINE}-${UBOOT_VERSION}.${UBOOT_ELF_SREC_SUFFIX}"
+UBOOT_ELF_SREC_BINARY ?= "u-boot-elf.${UBOOT_ELF_SREC_SUFFIX}"
+UBOOT_ELF_SREC_SYMLINK ?= "u-boot-elf-${MACHINE}.${UBOOT_ELF_SREC_SUFFIX}"
+
 # Some versions of u-boot build an SPL (Second Program Loader) image that
 # should be packaged along with the u-boot binary as well as placed in the
 # deploy directory.  For those versions they can set the following variables

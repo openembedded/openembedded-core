@@ -175,6 +175,27 @@ do_install () {
         fi
     fi
 
+    if [ -n "${UBOOT_ELF_SREC}" ]
+    then
+        if [ -n "${UBOOT_CONFIG}" ]
+        then
+            for config in ${UBOOT_MACHINE}; do
+                i=$(expr $i + 1);
+                for type in ${UBOOT_CONFIG}; do
+                    j=$(expr $j + 1);
+                    if [ $j -eq $i ]
+                    then
+                        uboot_install_elf_srec_config $config $type
+                    fi
+                done
+                unset j
+            done
+            unset i
+        else
+            uboot_install_elf_srec
+        fi
+    fi
+
     if [ -e ${UNPACKDIR}/fw_env.config ] ; then
         install -d ${D}${sysconfdir}
         install -m 644 ${UNPACKDIR}/fw_env.config ${D}${sysconfdir}/fw_env.config
@@ -260,6 +281,22 @@ uboot_install_elf () {
     ln -sf ${UBOOT_ELF_IMAGE} ${D}/boot/${UBOOT_ELF_BINARY}
 }
 
+uboot_install_elf_srec_config () {
+    config=$1
+    type=$2
+
+    builddir="${config}-${type}"
+
+    install -m 644 ${B}/${builddir}/${UBOOT_ELF_SREC} ${D}/boot/u-boot-elf-${type}-${UBOOT_VERSION}.${UBOOT_ELF_SREC_SUFFIX}
+    ln -sf u-boot-elf-${type}-${UBOOT_VERSION}.${UBOOT_ELF_SREC_SUFFIX} ${D}/boot/${UBOOT_BINARY}-${type}
+    ln -sf u-boot-elf-${type}-${UBOOT_VERSION}.${UBOOT_ELF_SREC_SUFFIX} ${D}/boot/${UBOOT_BINARY}
+}
+
+uboot_install_elf_srec () {
+    install -m 644 ${B}/${UBOOT_ELF_SREC} ${D}/boot/${UBOOT_ELF_SREC_IMAGE}
+    ln -sf ${UBOOT_ELF_SREC_IMAGE} ${D}/boot/${UBOOT_ELF_SREC_BINARY}
+}
+
 uboot_install_spl_config () {
     config=$1
     type=$2
@@ -337,6 +374,27 @@ do_deploy () {
             unset i
         else
             uboot_deploy_elf
+        fi
+    fi
+
+    if [ -n "${UBOOT_ELF_SREC}" ]
+    then
+        if [ -n "${UBOOT_CONFIG}" ]
+        then
+            for config in ${UBOOT_MACHINE}; do
+                i=$(expr $i + 1);
+                for type in ${UBOOT_CONFIG}; do
+                    j=$(expr $j + 1);
+                    if [ $j -eq $i ]
+                    then
+                        uboot_deploy_elf_srec_config $config $type
+                    fi
+                done
+                unset j
+            done
+            unset i
+        else
+            uboot_deploy_elf_srec
         fi
     fi
 
@@ -451,6 +509,25 @@ uboot_deploy_elf () {
     install -m 644 ${B}/${UBOOT_ELF} ${DEPLOYDIR}/${UBOOT_ELF_IMAGE}
     ln -sf ${UBOOT_ELF_IMAGE} ${DEPLOYDIR}/${UBOOT_ELF_BINARY}
     ln -sf ${UBOOT_ELF_IMAGE} ${DEPLOYDIR}/${UBOOT_ELF_SYMLINK}
+}
+
+uboot_deploy_elf_srec_config () {
+    config=$1
+    type=$2
+
+    builddir="${config}-${type}"
+
+    install -m 644 ${B}/${builddir}/${UBOOT_ELF_SREC} ${DEPLOYDIR}/u-boot-elf-${type}-${UBOOT_VERSION}.${UBOOT_ELF_SREC_SUFFIX}
+    ln -sf u-boot-elf-${type}-${UBOOT_VERSION}.${UBOOT_ELF_SREC_SUFFIX} ${DEPLOYDIR}/${UBOOT_ELF_SREC_BINARY}-${type}
+    ln -sf u-boot-elf-${type}-${UBOOT_VERSION}.${UBOOT_ELF_SREC_SUFFIX} ${DEPLOYDIR}/${UBOOT_ELF_SREC_BINARY}
+    ln -sf u-boot-elf-${type}-${UBOOT_VERSION}.${UBOOT_ELF_SREC_SUFFIX} ${DEPLOYDIR}/${UBOOT_ELF_SREC_SYMLINK}-${type}
+    ln -sf u-boot-elf-${type}-${UBOOT_VERSION}.${UBOOT_ELF_SREC_SUFFIX} ${DEPLOYDIR}/${UBOOT_ELF_SREC_SYMLINK}
+}
+
+uboot_deploy_elf_srec () {
+    install -m 644 ${B}/${UBOOT_ELF_SREC} ${DEPLOYDIR}/${UBOOT_ELF_SREC_IMAGE}
+    ln -sf ${UBOOT_ELF_SREC_IMAGE} ${DEPLOYDIR}/${UBOOT_ELF_SREC_BINARY}
+    ln -sf ${UBOOT_ELF_SREC_IMAGE} ${DEPLOYDIR}/${UBOOT_ELF_SREC_SYMLINK}
 }
 
 uboot_deploy_spl_config () {
