@@ -7,7 +7,13 @@
 import os
 
 def get_os_release():
-    """Get all key-value pairs from /etc/os-release as a dict"""
+    """
+    Get all key-value pairs from the :term:`Build Host`'s ``/etc/os-release``
+    as a dictionary.
+
+    Return a Python dictionary mapping keys from ``/etc/os-release`` to their
+    values.
+    """
 
     data = {}
     if os.path.exists('/etc/os-release'):
@@ -21,8 +27,14 @@ def get_os_release():
     return data
 
 def distro_identifier(d=None):
-    """Return a distro identifier string based upon /etc/os-release
-       with optional adjustment via a hook"""
+    """
+    Return a distro identifier string based upon the :term:`Build Host`'s /etc/os-release
+    with optional adjustment via a hook defined by ``LSB_DISTRO_ADJUST``.
+    See the value of :term:`SANITY_TESTED_DISTROS` for a list of valid distro identifiers.
+
+    Can optionally take ``d`` (the :term:`datastore`) to read the value of
+    ``LSB_DISTRO_ADJUST``.
+    """
 
     import re
 
