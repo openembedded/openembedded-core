@@ -81,9 +81,9 @@ def replace_absolute_symlinks(basedir, d):
             os.symlink(base, path)
 
 @bb.parse.vardepsexclude("TOPDIR")
-def format_display(path, metadata):
+def format_display(path, d):
     """ Prepare a path for display to the user. """
-    rel = relative(metadata.getVar("TOPDIR"), path)
+    rel = relative(d.getVar("TOPDIR"), path)
     if len(rel) > len(path):
         return path
     else:
