@@ -75,14 +75,34 @@ class NoMatch(object):
 NoMatch = NoMatch()
 
 def regex(value, regexflags=None):
-    """OpenEmbedded 'regex' type
+    """
+    OpenEmbedded 'regex' type.
 
     Acts as a regular expression, returning the pre-compiled regular
-    expression pattern object.  To use this type, set the variable type flag
-    to 'regex', and optionally, set the 'regexflags' type to a space separated
-    list of the flags to control the regular expression matching (e.g.
-    FOO[regexflags] += 'ignorecase').  See the python documentation on the
-    're' module for a list of valid flags."""
+    expression pattern object from the string ``value``.
+
+    To use this type, set a BitBake variable ``type`` flag
+    to ``regex``, and optionally, set the ``regexflags`` flag to a space-separated
+    list of the flags to control the regular expression matching.
+
+    The variable can then be used with :py:func:`oe.data.typed_value`.
+
+    For example::
+
+        FOO = "^foo[0-9]+$"
+        FOO[type] = "regex"
+        FOO[regexflags] += "ignorecase"
+
+    Then:
+
+    .. code-block:: python
+
+       if re.match(oe.data.typed_value("FOO", d), somevalue):
+           ...
+
+    See the Python documentation on the :py:mod:`re` module for a list of
+    valid flags.
+    """
 
     flagval = 0
     if regexflags:
@@ -106,10 +126,29 @@ def regex(value, regexflags=None):
                          (value, exc.args[0]))
 
 def boolean(value):
-    """OpenEmbedded 'boolean' type
+    """
+    OpenEmbedded 'boolean' type.
 
-    Valid values for true: 'yes', 'y', 'true', 't', '1'
-    Valid values for false: 'no', 'n', 'false', 'f', '0', None
+    To use this type, set a BitBake variable ``type`` flag
+    to ``boolean``, and its value depending on the expected behavior:
+
+    -  To return ``True``: ``yes``, ``y``, ``true``, ``t`` or ``1``.
+    -  To return ``False``: ``no``, ``n``, ``false``, ``f``, ``0`` or ``None``.
+
+    The variable can then be used with :py:func:`oe.data.typed_value`.
+
+    For example::
+
+        FOO = "yes"
+        FOO[type] = "boolean"
+
+    Then:
+
+    .. code-block:: python
+
+       if oe.data.typed_value("FOO", d):
+           # condition is met as FOO = "yes" so becomes "True"
+           ...
     """
     if value is None:
         return False
@@ -128,20 +167,56 @@ def boolean(value):
     raise ValueError("Invalid boolean value '%s'" % value)
 
 def integer(value, numberbase=10):
-    """OpenEmbedded 'integer' type
+    """
+    OpenEmbedded 'integer' type.
 
-    Defaults to base 10, but this can be specified using the optional
-    'numberbase' flag."""
+    To use this type, set a BitBake variable ``type`` flag
+    to ``integer``, and its value to an integer string. Optionally, the
+    ``numberbase`` flag can be set (defaults to base 10).
+
+    The variable can then be used with :py:func:`oe.data.typed_value`.
+
+    For example::
+
+        FOO = "13"
+        FOO[type] = "integer"
+
+    Then:
+
+    .. code-block:: python
+
+       if oe.data.typed_value("FOO", d) > 12:
+           # condition is met as FOO = "13" and 13 > 12
+           ...
+    """
 
     return int(value, int(numberbase))
 
 _float = float
 def float(value, fromhex='false'):
-    """OpenEmbedded floating point type
+    """
+    OpenEmbedded 'float' type.
 
-    To use this type, set the type flag to 'float', and optionally set the
-    'fromhex' flag to a true value (obeying the same rules as for the
-    'boolean' type) if the value is in base 16 rather than base 10."""
+    To use this type, set a BitBake variable ``type`` flag
+    to ``float``, and its value to a floating number string. Optionally, the
+    ``fromhex`` flag can be set to "true" to use Python's built-in
+    :py:func:`float.fromhex` (defaults to "false").
+
+    The variable can then be used with :py:func:`oe.data.typed_value`.
+
+    For example::
+
+        FOO = "1.23"
+        FOO[type] = "float"
+
+    Then:
+
+    .. code-block:: python
+
+       if oe.data.typed_value("FOO", d) > 1:
+           # condition is met as FOO = "1.23" and 1.23 > 1
+           ...
+    """
 
     if boolean(fromhex):
         return _float.fromhex(value)
@@ -149,6 +224,42 @@ def float(value, fromhex='false'):
         return _float(value)
 
 def path(value, relativeto='', normalize='true', mustexist='false'):
+    """
+    OpenEmbedded 'path' type.
+
+    To use this type, set a BitBake variable ``type`` flag
+    to ``path``, and its value to a path. Optionally, the following variable
+    flags can be defined:
+
+    -  ``relativeto``: another path string to join to the variable's value, with
+       :py:func:`os.path.join`:
+
+       .. code-block:: python
+
+          os.path.join(relativeto, value)
+
+    -  ``normalize``: a boolean string ("true" by default) that normalizes the
+       path with :py:func:`os.path.normpath`.
+
+    -  ``mustexist``: a boolean string ("false" by default) that ensures the
+       path to the file/directory exists, otherwise raises
+       :py:class:`ValueError`.
+
+    The variable can then be used with :py:func:`oe.data.typed_value`.
+
+    For example::
+
+        FOO = "src/pyproject.toml"
+        FOO[type] = "path"
+        FOO[relativeto] = "${S}"
+
+    Then:
+
+    .. code-block:: python
+
+       >>> print(oe.data.typed_value("FOO", d))
+       ".../path/to/source/src/pyproject.toml"
+    """
     value = os.path.join(relativeto, value)
 
     if boolean(normalize):
