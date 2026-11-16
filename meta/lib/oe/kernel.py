@@ -7,10 +7,13 @@
 import os
 import re
 
-# Return a value for the ARCH environment variable for kernel compilation (including
-# modules). return value must match one of the architecture directories
-# in the kernel source "arch" directory
 def map_kernel_arch(d):
+    """
+    Take ``d`` (the :term:`datastore`) to get the value of :term:`TARGET_ARCH`
+    and return a value for the ``ARCH`` environment variable for kernel
+    compilation (including modules). Return value must match one of the architecture
+    directories in the kernel source "arch" directory.
+    """
     a = d.getVar('TARGET_ARCH')
 
     valid_archs = ["alpha", "cris", "ia64", "i386", "x86", "m68knommu", "m68k", "ppc", "powerpc",
@@ -39,13 +42,20 @@ def map_kernel_arch(d):
             return a
         bb.error("cannot map '%s' to a linux kernel architecture" % a)
 
-# Return a value for the -A parameter to u-boot's mkimage
-# This would be the value from the table in boot/image.c:uimage_arch
 def map_uboot_arch(d):
+    """
+    Take ``d`` (the :term:`datastore`) to get the value of :term:`TARGET_ARCH`
+    and return a value for the ``-A`` parameter to U-Boot's ``mkimage``.
+    This would be the value from the table in ``boot/image.c:uimage_arch``.
+    """
     return map_kernel_arch(d)
 
-# parse kernel ABI version out of <linux/version.h>
 def get_version_headers(p):
+    """
+    Take ``p``, the root of the kernel build directory and parse the kernel
+    ABI version out of ``<linux/version.h>``, and return a string containing
+    the ABI version, if found. If not found, return ``None``.
+    """
     fn = p + '/include/linux/utsrelease.h'
     if not os.path.isfile(fn):
         # after 2.6.33-rc1
