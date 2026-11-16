@@ -1,0 +1,67 @@
+From b6e398e6a1884a176e78f94f32112529888d5d45 Mon Sep 17 00:00:00 2001
+From: "Miss Islington (bot)"
+ <31488909+miss-islington@users.noreply.github.com>
+Date: Mon, 2 Nov 2026 15:46:37 -0800
+Subject: [PATCH] [3.14] gh-158097: Make test_staggered_race_with_eager_tasks
+ deterministic (GH-158469) (#161224)
+X-ARM-No-Footer: NoDisclaimer
+
+gh-158097: Make test_staggered_race_with_eager_tasks deterministic (GH-158469)
+
+* gh-158097: Make test_staggered_race_with_eager_tasks deterministic
+
+staggered_race() awaits the coroutines it is given inline, so the
+"await asyncio.sleep(0)" in the test's fail() helper suspended the
+run_one_coro() task running it and left a scheduled resumption behind.
+If the asyncio.sleep(1) winner (started 0.25s late by the stagger delay)
+completes before that resumption runs, the winner's cancel() sets
+_must_cancel and the resumption throws CancelledError into fail(), so
+excs[2] reports a CancelledError instead of a ValueError.
+
+Pending timers are only moved onto the ready queue at the top of
+BaseEventLoop._run_once() and are appended after the handles already
+queued, so the t=0.50s stagger timer and the t=1.25s sleep(1) timer run
+in due-time order.  When both are due in the same _run_once() - which is
+what a busy CI machine causes - the stagger timer starts fail(), which
+immediately suspends again, and the very next handle is the winner.
+
+Raise straight away instead, so the ValueError is stored in excs[2] in
+the same step that starts the coroutine and there is no longer a
+scheduled resumption for a cancellation to overtake.  The outcome no
+longer depends on the event loop getting another iteration.
+
+* Update Lib/test/test_asyncio/test_eager_task_factory.py
+
+* Delete Misc/NEWS.d/next/Tests/2026-09-30-00-00-00.gh-issue-158097.pcB3mO.rst
+
+---------
+(cherry picked from commit 3945eaf2fcd9cbc3f3061275bd29751c8b2e7d3b)
+
+Co-authored-by: Abhinav <alpha9coder@gmail.com>
+Co-authored-by: abhinav-phi <abhinav-phi@users.noreply.github.com>
+Co-authored-by: Andrew Svetlov <andrew.svetlov@gmail.com>
+
+Upstream-Status: Backport [https://github.com/python/cpython/pull/161224]
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ Lib/test/test_asyncio/test_eager_task_factory.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Lib/test/test_asyncio/test_eager_task_factory.py b/Lib/test/test_asyncio/test_eager_task_factory.py
+index 0561b54a3f1..72bceb8c314 100644
+--- a/Lib/test/test_asyncio/test_eager_task_factory.py
++++ b/Lib/test/test_asyncio/test_eager_task_factory.py
+@@ -217,7 +217,9 @@ def test_staggered_race_with_eager_tasks(self):
+         # See https://github.com/python/cpython/issues/124309
+ 
+         async def fail():
+-            await asyncio.sleep(0)
++            # Raise without suspending: staggered_race() cancels unfinished
++            # coroutines once another one wins, so yielding first could turn
++            # this into a CancelledError when the event loop is busy.
+             raise ValueError("no good")
+ 
+         async def blocked():
+-- 
+2.43.0
+

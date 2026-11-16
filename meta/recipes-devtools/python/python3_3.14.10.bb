@@ -25,6 +25,7 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-gh-146207-Add-support-for-OpenSSL-4.0.0.patch \
            file://0002-gh-148292-Update-_ssl._SSLSocket-for-OpenSSL-4.patch \
            file://0003-gh-148292-Remove-shutdown-test-in-test_ssl.test_got_eof.patch \
+           file://0001-3.14-gh-158097-Make-test_staggered_race_with_eager_t.patch \
            "
 SRC_URI:append:class-native = " \
            file://0001-Lib-sysconfig.py-use-prefix-value-from-build-configu.patch \
@@ -301,20 +302,6 @@ SKIPPED_TESTS += " \
 # Bugzilla YP 15564
 SKIPPED_TESTS += " \
     --ignore test.test_asyncio.test_taskgroups.TestTaskGroup.test_taskgroup_23 \
-"
-
-# Intermittent failure under load - this asyncio staggered_race test starts
-# candidate coroutines 0.25s apart and expects the third one to raise
-# ValueError after an "await asyncio.sleep(0)". On loaded autobuilder hosts
-# under QEMU emulation the winning coroutine finishes and staggered_race
-# cancels the losers before the third coroutine resumes to raise, so its
-# recorded exception is CancelledError instead of ValueError. Upstream test
-# is timing-sensitive (CPython #124309). Skip both the pure-Python and
-# C-accelerated eager task factory variants.
-# Bugzilla YP 16435
-SKIPPED_TESTS += " \
-    --ignore test.test_asyncio.test_eager_task_factory.PyEagerTaskFactoryLoopTests.test_staggered_race_with_eager_tasks \
-    --ignore test.test_asyncio.test_eager_task_factory.CEagerTaskFactoryLoopTests.test_staggered_race_with_eager_tasks \
 "
 
 # Intermittent failure under load - this concurrent.futures ProcessPool test
