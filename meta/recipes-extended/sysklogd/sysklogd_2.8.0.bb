@@ -12,6 +12,7 @@ inherit update-rc.d update-alternatives systemd autotools
 
 SRC_URI = "git://github.com/troglobit/sysklogd.git;branch=v2.x;protocol=https;tag=v${PV} \
            file://sysklogd \
+           file://50-sysklogd.conf \
            "
 
 SRCREV = "e2c0c1d9585e88b1a85e3634c4dc230517f68f0e"
@@ -23,6 +24,12 @@ do_install:append () {
        install -m 644 ${S}/syslog.conf ${D}${sysconfdir}/syslog.conf
        install -d ${D}${sysconfdir}/init.d
        install -m 755 ${UNPACKDIR}/sysklogd ${D}${sysconfdir}/init.d/syslog
+
+       # syslogd.service reads syslog.socket, which journald only feeds
+       # when ForwardToSyslog is enabled.
+       if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
+               install -D -m 644 ${UNPACKDIR}/50-sysklogd.conf ${D}${systemd_unitdir}/journald.conf.d/50-sysklogd.conf
+       fi
 }
 
 SYSTEMD_PACKAGES = "${PN}"
@@ -33,7 +40,7 @@ INITSCRIPT_NAME = "syslog"
 CONFFILES:${PN} = "${sysconfdir}/syslog.conf"
 RCONFLICTS:${PN} = "rsyslog busybox-syslog syslog-ng"
 
-FILES:${PN} += "${@bb.utils.contains('DISTRO_FEATURES','systemd','${exec_prefix}/lib/tmpfiles.d/sysklogd.conf', '', d)}"
+FILES:${PN} += "${@bb.utils.contains('DISTRO_FEATURES','systemd','${exec_prefix}/lib/tmpfiles.d/sysklogd.conf ${systemd_unitdir}/journald.conf.d/50-sysklogd.conf', '', d)}"
 
 ALTERNATIVE_PRIORITY = "100"
 
