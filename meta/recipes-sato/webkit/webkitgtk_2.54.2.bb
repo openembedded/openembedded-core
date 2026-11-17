@@ -17,8 +17,9 @@ SRC_URI = "https://www.webkitgtk.org/releases/${BPN}-${PV}.tar.xz \
            file://sys_futex.patch \
            file://fix-ftbfs-riscv64.patch \
            file://0001-Source-cmake-FindGLib.cmake-do-not-set-include-dirs-.patch \
+           file://0001-libpas-Do-not-include-stdatomic.h-from-C-translation.patch \
            "
-SRC_URI[sha256sum] = "179a2ea3f8f6edd4be7f31fdc55afc57bd0729f1fba648c61d4181539ac116fc"
+SRC_URI[sha256sum] = "a76345b391bef6211fb5ab6cfab2e86b285d18cda17cbb9ade595f1252b86065"
 
 inherit cmake pkgconfig gobject-introspection perlnative features_check upstream-version-is-even gi-docgen
 

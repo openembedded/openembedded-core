@@ -1,4 +1,4 @@
-From a7e4c23c7f6faf76307ecad5f879e47b96ca66c9 Mon Sep 17 00:00:00 2001
+From ae017d7bd4d98a28a4f89a4ca75493333172bd35 Mon Sep 17 00:00:00 2001
 From: Alberto Garcia <berto@igalia.com>
 Date: Fri, 19 Dec 2025 10:10:41 +0000
 Subject: [PATCH] Use WTF_CPU_UNKNOWN when building for riscv64
@@ -17,7 +17,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  2 files changed, 10 deletions(-)
 
 diff --git a/Source/WTF/wtf/PlatformCPU.h b/Source/WTF/wtf/PlatformCPU.h
-index 8aac1024..d9d69a40 100644
+index fabd6cba..c8639827 100644
 --- a/Source/WTF/wtf/PlatformCPU.h
 +++ b/Source/WTF/wtf/PlatformCPU.h
 @@ -286,14 +286,6 @@
@@ -36,10 +36,10 @@ index 8aac1024..d9d69a40 100644
  #define WTF_CPU_UNKNOWN 1
  #endif
 diff --git a/Source/cmake/WebKitCommon.cmake b/Source/cmake/WebKitCommon.cmake
-index 639b7e5d..c7e60287 100644
+index d96e1850..3daa0eaf 100644
 --- a/Source/cmake/WebKitCommon.cmake
 +++ b/Source/cmake/WebKitCommon.cmake
-@@ -129,8 +129,6 @@ if (NOT HAS_RUN_WEBKIT_COMMON)
+@@ -186,8 +186,6 @@ if (NOT HAS_RUN_WEBKIT_COMMON)
          set(WTF_CPU_PPC64 1)
      elseif (LOWERCASE_CMAKE_SYSTEM_PROCESSOR MATCHES "ppc64le")
          set(WTF_CPU_PPC64LE 1)

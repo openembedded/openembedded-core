@@ -1,4 +1,4 @@
-From a6e91e04651dbd2d003dbaef0919284a8944184e Mon Sep 17 00:00:00 2001
+From 1899b9f2eadbe4f2cd5b4a68d0788e8a9f02cabb Mon Sep 17 00:00:00 2001
 From: Alexander Kanavin <alex@linutronix.de>
 Date: Sun, 21 Jun 2026 22:57:24 +0200
 Subject: [PATCH] Source/cmake/FindGLib.cmake: do not set include dirs from
@@ -17,10 +17,10 @@ Signed-off-by: Alexander Kanavin <alex@linutronix.de>
  1 file changed, 1 deletion(-)
 
 diff --git a/Source/cmake/FindGLib.cmake b/Source/cmake/FindGLib.cmake
-index 00de647d..68581c25 100644
+index b6ff9283..e9697ba8 100644
 --- a/Source/cmake/FindGLib.cmake
 +++ b/Source/cmake/FindGLib.cmake
-@@ -191,7 +191,6 @@ function(GLib_HandleComponent name)
+@@ -195,7 +195,6 @@ function(GLib_HandleComponent name)
      list(TRANSFORM dependencies PREPEND GLib::)
      add_library(GLib::${name} UNKNOWN IMPORTED GLOBAL)
      set_target_properties(GLib::${name} PROPERTIES IMPORTED_LOCATION "${GLib_${name}_LIBRARY}")
