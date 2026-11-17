@@ -8,7 +8,7 @@
 #
 # Automatically translate a RISC-V ISA string to TUNE_FEATURES
 #
-# Abbreviations, such as rv32g -> rv32imaffd_zicsr_zifencei are supported.
+# Abbreviations, such as rv32g -> rv32imafd_zicsr_zifencei are supported.
 #
 # Profiles, such as rva22u64, are NOT supported, you must use ISA strings.
 #
