@@ -1,6 +1,6 @@
-From 8d200d7cd700f93333353632e7dce48cf4b871fe Mon Sep 17 00:00:00 2001
+From b19405a555473b6045cea94f77ac14388085c960 Mon Sep 17 00:00:00 2001
 From: Mingli Yu <mingli.yu@windriver.com>
-Date: Sun, 24 Apr 2022 17:25:33 +0800
+Date: Tue, 17 Nov 2026 12:25:17 +0000
 Subject: [PATCH] makedumpfile: replace hardcode CFLAGS
 
 * Create alias for target such as powerpc as powerpc32
@@ -19,15 +19,19 @@ Signed-off-by: Fathi Boudra <fathi.boudra@linaro.org>
 
 Rebase to 1.7.1
 Signed-off-by: Mingli Yu <mingli.yu@windriver.com>
+
+[2026-11-17] Rebase to 1.8.0.
+rebase CFLAGS patch to 1.8.0 (keep -llzma, add powerpc32 alias)
+Signed-off-by: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
 ---
- Makefile | 40 +++++++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
+ Makefile | 39 +++++++++++++++++++++------------------
+ 1 file changed, 21 insertions(+), 18 deletions(-)
 
 diff --git a/Makefile b/Makefile
-index b2ffcec..e416f4e 100644
+index a7b5ec9..a0d86ba 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -8,12 +8,6 @@ ifeq ($(strip $CC),)
+@@ -8,10 +8,6 @@ ifeq ($(strip $CC),)
  CC	= gcc
  endif
  
@@ -35,12 +39,10 @@ index b2ffcec..e416f4e 100644
 -		-D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE
 -CFLAGS      := $(CFLAGS_BASE) -DVERSION='"$(VERSION)"' -DRELEASE_DATE='"$(DATE)"'
 -CFLAGS_ARCH := $(CFLAGS_BASE)
--# LDFLAGS = -L/usr/local/lib -I/usr/local/include
--
+ # LDFLAGS = -L/usr/local/lib -I/usr/local/include
+ 
  HOST_ARCH := $(shell uname -m)
- # Use TARGET as the target architecture if specified.
- # Defaults to uname -m
-@@ -24,26 +18,34 @@ endif
+@@ -24,26 +20,33 @@ endif
  ARCH := $(shell echo ${TARGET}  | sed -e s/i.86/x86/ -e s/sun4u/sparc64/ \
  			       -e s/arm.*/arm/ -e s/sa110/arm/ \
  			       -e s/s390x/s390/ -e s/parisc64/parisc/ \
@@ -77,11 +79,10 @@ index b2ffcec..e416f4e 100644
 +              -DVERSION='"$(VERSION)"' \
 +              -DRELEASE_DATE='"$(DATE)"'
 +
-+
  SRC_BASE = makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
- SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c detect_cycle.c
+ SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c detect_cycle.c kallsyms.c btf_info.c extension.c
  OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
-@@ -52,12 +54,12 @@ OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
+@@ -52,12 +55,12 @@ OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
  
  LIBS = -ldw -lbz2 -ldl -lelf -lz
  ifneq ($(LINKTYPE), dynamic)
@@ -96,7 +97,7 @@ index b2ffcec..e416f4e 100644
  endif
  
  ifeq ($(USESNAPPY), on)
-@@ -65,12 +67,12 @@ LIBS := -lsnappy $(LIBS)
+@@ -65,17 +68,17 @@ LIBS := -lsnappy $(LIBS)
  ifneq ($(LINKTYPE), dynamic)
  LIBS := $(LIBS) -lstdc++
  endif
@@ -110,8 +111,14 @@ index b2ffcec..e416f4e 100644
 +CFLAGS_COMMON += -DUSEZSTD
  endif
  
+ ifeq ($(EXTENSION), on)
+ LIBS := -lbpf $(LIBS)
+-CFLAGS += -DEXTENSION
++CFLAGS_COMMON += -DEXTENSION
+ endif
+ 
  ifeq ($(DEBUG), on)
-@@ -106,14 +108,14 @@ SBINDIR ?= /usr/sbin
+@@ -111,14 +114,14 @@ SBINDIR ?= /usr/sbin
  all: makedumpfile
  
  $(OBJ_PART): $(SRC_PART)
@@ -123,12 +130,12 @@ index b2ffcec..e416f4e 100644
  	$(CC) $(CFLAGS_ARCH) -c -o ./$@ $(VPATH)$(@:.o=.c)
  
  makedumpfile: $(SRC_BASE) $(OBJ_PART) $(OBJ_ARCH)
--	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -o $@ $< $(LIBS)
-+	$(CC) $(CFLAGS_COMMON) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -o $@ $< $(LIBS)
+-	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -Wl,-T,makedumpfile.ld -o $@ $< $(LIBS)
++	$(CC) $(CFLAGS_COMMON) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -Wl,-T,makedumpfile.ld -o $@ $< $(LIBS)
  	@sed -e "s/@DATE@/$(DATE)/" \
  	     -e "s/@VERSION@/$(VERSION)/" \
  	     $(VPATH)makedumpfile.8.in > $(VPATH)makedumpfile.8
-@@ -122,7 +124,7 @@ makedumpfile: $(SRC_BASE) $(OBJ_PART) $(OBJ_ARCH)
+@@ -127,7 +130,7 @@ makedumpfile: $(SRC_BASE) $(OBJ_PART) $(OBJ_ARCH)
  	     $(VPATH)makedumpfile.conf.5.in > $(VPATH)makedumpfile.conf.5
  
  eppic_makedumpfile.so: extension_eppic.c
