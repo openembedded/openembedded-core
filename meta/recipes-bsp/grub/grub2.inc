@@ -13,15 +13,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=d32239bcb673463ab874e80d47fae504"
 
 CVE_PRODUCT = "grub2"
 
-SRC_URI = "${GNU_MIRROR}/grub/grub-${PV}.tar.gz \
+SRC_URI = "https://gitlab.freedesktop.org/api/v4/projects/26558/packages/generic/source-assets/grub-${PV}/grub-${PV}.tar.xz \
            file://0001-autogen.sh-exclude-.pc-from-po-POTFILES.in.patch \
            file://0002-grub-module-explicitly-keeps-symbole-.module_license.patch \
            file://0003-grub.d-10_linux.in-add-oe-s-kernel-name.patch \
-           file://0001-Revert-configure-Check-linker-for-image-base-support.patch \
-           file://0002-Revert-configure-Print-a-more-helpful-error-if-autoc.patch \
+           file://0001-Revert-arm64-Limit-memory-allocations-to-4GB-boundar.patch \
 "
 
-SRC_URI[sha256sum] = "d0415fbb3e739237064e173743a6e5f60c33a81ec02a069cc9152d80efff4967"
+SRC_URI[sha256sum] = "f0db0104927df0b9a48bc41b735c702936190d17eb2d73d3018fa77474a0cabe"
 
 UPSTREAM_CHECK_URI = "https://gitlab.freedesktop.org/gnu-grub/grub/-/tags"
 UPSTREAM_CHECK_REGEX = "grub-(?P<pver>\d+(\.\d+)+)"
@@ -31,12 +30,6 @@ CVE_STATUS[CVE-2023-4001]  = "not-applicable-platform: Applies only to RHEL/Fedo
 CVE_STATUS[CVE-2024-1048]  = "not-applicable-platform: Applies only to RHEL/Fedora"
 CVE_STATUS[CVE-2024-2312]  = "not-applicable-platform: Applies only to Ubuntu"
 CVE_STATUS[CVE-2024-49504] = "not-applicable-platform: Applies only to SUSE"
-CVE_STATUS[CVE-2025-54770] = "fixed-version: fixed since 2.14"
-CVE_STATUS[CVE-2025-54771] = "fixed-version: fixed since 2.14"
-CVE_STATUS[CVE-2025-61661] = "fixed-version: fixed since 2.14"
-CVE_STATUS[CVE-2025-61662] = "fixed-version: fixed since 2.14"
-CVE_STATUS[CVE-2025-61663] = "fixed-version: fixed since 2.14"
-CVE_STATUS[CVE-2025-61664] = "fixed-version: fixed since 2.14"
 
 DEPENDS = "flex-native bison-native gettext-native gawk-replacement-native"
 
