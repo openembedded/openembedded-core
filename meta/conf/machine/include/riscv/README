@@ -91,7 +91,7 @@ TUNE_RISCV_PKGARCH - This is the generated PKGARCH value.
 
 The standard variables are defined as:
 
-TUNE_CCARGS = "${@ '-march=${TUNE_RISCV_MARCH} -mabi=${TUNE_RISCV_ABI}' if not d.getVar('TUNE_CCARGS:tune-${DEFAULTTUNE}') else 'TUNE_CCARGS:tune-${DEFAULTTUNE}'}"
+TUNE_CCARGS = "${@d.getVar('TUNE_CCARGS:tune-${DEFAULTTUNE}') or '-march=${TUNE_RISCV_MARCH} -mabi=${TUNE_RISCV_ABI}'}"
 
 The above will allow the user to specify an implementation specific
 TUNE_CCARGS for a given processor tune if the default implementtion is

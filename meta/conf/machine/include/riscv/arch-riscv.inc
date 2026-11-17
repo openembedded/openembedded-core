@@ -113,7 +113,7 @@ TUNE_RISCV_PKGARCH .= "${@bb.utils.contains_any("TUNE_FEATURES", "b zbs", "_zbs"
 # Construct TUNE_CCARGS
 # This should result in a CCARG similar to:
 #   -march=rv32imac -mabi=ilp32
-TUNE_CCARGS = "${@ '-march=${TUNE_RISCV_MARCH} -mabi=${TUNE_RISCV_ABI}' if not d.getVar('TUNE_CCARGS:tune-${DEFAULTTUNE}') else 'TUNE_CCARGS:tune-${DEFAULTTUNE}'}"
+TUNE_CCARGS = "${@d.getVar('TUNE_CCARGS:tune-${DEFAULTTUNE}') or '-march=${TUNE_RISCV_MARCH} -mabi=${TUNE_RISCV_ABI}'}"
 
 # Construct TUNE_ARCH
 # This should result in an arch string similar to:
