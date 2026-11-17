@@ -1,0 +1,49 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Hemanth Kumar M D <Hemanth.KumarMD@windriver.com>
+Date: Mon, 16 Nov 2026 03:14:17 -0800
+Subject: [PATCH] rustc_llvm: drop native sysroot -L when cross-building
+
+With the recent refactoring of the LLVM handling in rust bootstrap [1],
+the library search path of the native LLVM
+(recipe-sysroot-native/usr/lib) is added to the link of the target
+rustc_llvm when rustc is cross-built.
+
+rustc_llvm/build.rs only adjusts these -L paths by replacing the host
+triple with the target triple. In OE the native and target sysroot
+paths do not contain a triple, so the native path is kept and the
+linker finds the native libLLVM before the target one. A linker that
+cannot read the native library fails with:
+
+  libLLVM-23.so: file not recognized: file format not recognized
+
+Drop -L paths that point into recipe-sysroot-native when
+cross-building. The target libLLVM is still found through the target
+--sysroot.
+
+Upstream-Status: Inappropriate [https://github.com/rust-lang/rust/issues/165385]
+
+[1] https://github.com/rust-lang/rust/pull/161247
+
+Signed-off-by: Hemanth Kumar M D <Hemanth.KumarMD@windriver.com>
+---
+ compiler/rustc_llvm/build.rs | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/compiler/rustc_llvm/build.rs b/compiler/rustc_llvm/build.rs
+index 450b98f..05ff9dc 100644
+--- a/compiler/rustc_llvm/build.rs
++++ b/compiler/rustc_llvm/build.rs
+@@ -452,7 +452,12 @@ fn main() {
+             if let Some(stripped) = lib.strip_prefix("-LIBPATH:") {
+                 println!("cargo:rustc-link-search=native={}", stripped.replace(&host, &target));
+             } else if let Some(stripped) = lib.strip_prefix("-L") {
+-                println!("cargo:rustc-link-search=native={}", stripped.replace(&host, &target));
++                // OE: the build-machine llvm-config reports a libdir in the
++                // native sysroot, which holds a wrong-arch libLLVM.
++                let rewritten = stripped.replace(&host, &target);
++                if !rewritten.contains("recipe-sysroot-native") {
++                    println!("cargo:rustc-link-search=native={rewritten}");
++                }
+             }
+         } else if let Some(stripped) = lib.strip_prefix("-LIBPATH:") {
+             println!("cargo:rustc-link-search=native={stripped}");
