@@ -16,6 +16,7 @@ inherit upstream-stable-release-point
 include lttng-platforms.inc
 
 SRC_URI = "https://lttng.org/files/${BPN}/${BPN}-${PV}.tar.bz2 \
+           file://0001-fix-splice-remove-pipe-buffer-stealing-v7.4.patch \
            "
 
 # Use :append here so that the patch is applied also when using devupstream

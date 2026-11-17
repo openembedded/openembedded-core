@@ -1,0 +1,56 @@
+From a03326efb3ae2f3ebc6c8016535f34aa58b1623c Mon Sep 17 00:00:00 2001
+From: Michael Jeanson <mjeanson@efficios.com>
+Date: Mon, 16 Nov 2026 08:54:42 -0500
+Subject: [PATCH] fix: splice: remove pipe buffer stealing (v7.4)
+
+See upstream commit:
+
+  commit 0f76da93e5c7d41ccf1376e715278c1d474ed181
+  Author: Kiryl Shutsemau (Meta) <kas@kernel.org>
+  Date:   Tue Nov 10 14:52:38 2026 +0000
+
+    splice: remove pipe buffer stealing
+
+    Nothing calls pipe_buf_try_steal() any more.  Remove ->try_steal() from
+    struct pipe_buf_operations, its implementations and the exported
+    generic_pipe_buf_try_steal().
+
+    PIPE_BUF_FLAG_LRU and PIPE_BUF_FLAG_GIFT were set only for stealing, and
+    go too.  page_cache_pipe_buf_release() did nothing but drop the page and
+    the LRU flag, so page cache and user page buffers use
+    generic_pipe_buf_release().
+
+    vmsplice() still accepts SPLICE_F_GIFT, and splice() SPLICE_F_MOVE.
+    Both were hints, and nothing acts on them now.
+
+Upstream-Status: Backport [24b630e62dfe3465ac9a2bb19c89fdd10f5bd1c7]
+
+Change-Id: Ie1d0bddc3aa7d1af186e195c712746c0d3b358c0
+Reported-by: Mikko Rapeli <mikko.rapeli@linaro.org>
+Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+---
+ src/lib/ringbuffer/ring_buffer_splice.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/lib/ringbuffer/ring_buffer_splice.c b/src/lib/ringbuffer/ring_buffer_splice.c
+index f34bc355..7e470cfc 100644
+--- a/src/lib/ringbuffer/ring_buffer_splice.c
++++ b/src/lib/ringbuffer/ring_buffer_splice.c
+@@ -47,7 +47,12 @@ static void lib_ring_buffer_pipe_buf_release(struct pipe_inode_info *pipe,
+ 	__free_page(pbuf->page);
+ }
+ 
+-#if (LTTNG_LINUX_VERSION_CODE >= LTTNG_KERNEL_VERSION(5,8,0))
++#if (LTTNG_LINUX_VERSION_CODE >= LTTNG_KERNEL_VERSION(7,4,0))
++static const struct pipe_buf_operations ring_buffer_pipe_buf_ops = {
++	.release = lib_ring_buffer_pipe_buf_release,
++	.get = generic_pipe_buf_get
++};
++#elif (LTTNG_LINUX_VERSION_CODE >= LTTNG_KERNEL_VERSION(5,8,0))
+ static const struct pipe_buf_operations ring_buffer_pipe_buf_ops = {
+ 	.release = lib_ring_buffer_pipe_buf_release,
+ 	.try_steal = generic_pipe_buf_try_steal,
+-- 
+2.55.0
+
