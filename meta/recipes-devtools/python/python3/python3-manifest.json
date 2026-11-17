@@ -117,7 +117,11 @@
         "files": [
             "${libdir}/python${PYTHON_MAJMIN}/asyncio",
             "${libdir}/python${PYTHON_MAJMIN}/concurrent",
-            "${libdir}/python${PYTHON_MAJMIN}/concurrent/futures"
+            "${libdir}/python${PYTHON_MAJMIN}/concurrent/futures",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_asyncio.*.so",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_interpchannels.*.so",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_interpqueues.*.so",
+            "${libdir}/python${PYTHON_MAJMIN}/lib-dynload/_interpreters.*.so"
         ],
         "cached": []
     },
