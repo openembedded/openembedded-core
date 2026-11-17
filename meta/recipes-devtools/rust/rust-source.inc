@@ -5,11 +5,10 @@ SRC_URI += "https://static.rust-lang.org/dist/rustc-${RUST_VERSION}-src.tar.xz;n
             file://cc-hash-object-names-relative-to-source-roots.patch;patchdir=${RUSTSRC} \
             file://0001-src-core-build_steps-tool.rs-switch-off-lto-for-rust.patch;patchdir=${RUSTSRC} \
             file://0002-Fix-rust-build-failure-with-unstable-options.patch;patchdir=${RUSTSRC} \
-            file://0003-bootstrap-skip-StdarchVerify-when-remote-testing.patch;patchdir=${RUSTSRC} \
-            file://0004-cargo-omit-host-triple-from-unit-metadata-hash.patch;patchdir=${RUSTSRC} \
-            file://0005-rustc-span-make-hygiene-encoding-order-deterministic.patch;patchdir=${RUSTSRC} \
+            file://0003-cargo-omit-host-triple-from-unit-metadata-hash.patch;patchdir=${RUSTSRC} \
+            file://0004-Re-bless-tests-adjust-for-new-Cargo-lints.patch;patchdir=${RUSTSRC} \
 "
-SRC_URI[rust.sha256sum] = "6451598a99e77f07571960f6b21d577399d3a30f33e80cbd2e3a4aae6535d265"
+SRC_URI[rust.sha256sum] = "90dab90b8084eb57c35ae2b1d0b70c8e5138ace6023b22c60a5a400f586f63b2"
 
 # Point UNPACKDIR into the work-shared location so rust-source.bb and all
 # consumers (via S/RUSTSRC) reference a single shared source tree.

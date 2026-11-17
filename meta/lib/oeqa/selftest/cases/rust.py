@@ -93,6 +93,7 @@ class RustSelfTestSystemEmulated(OESelftestTestCase, OEPTestResultTestCase):
                             'tests/rustdoc-js-std',
                             'tests/ui/abi/stack-probes-lto.rs',
                             'tests/ui/abi/stack-probes.rs',
+                            'tests/ui/asm/arm-high-dregs.rs#baseline',
                             'tests/ui/codegen/huge-stacks.rs',
                             'tests/ui/codegen/mismatched-data-layouts.rs',
                             'tests/codegen-llvm/rust-abi-arch-specific-adjustment.rs',

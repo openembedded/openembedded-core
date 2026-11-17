@@ -1,0 +1,287 @@
+From daa24324904fa6aa460a22de733068c8dcb0323d Mon Sep 17 00:00:00 2001
+From: Mark Rousskov <mark.simulacrum@gmail.com>
+Date: Tue, 29 Sep 2026 08:13:20 -0400
+Subject: [PATCH] Re-bless tests / adjust for new Cargo lints
+
+Cargo 1.100 added its own lints (rust-lang/cargo#17298) and rustc no
+longer emits unused_crate_dependencies under cargo. The target and
+nativesdk rust are built with cargo-native 1.100, so do_install fails on
+the unfulfilled expect in rustc-main and on unused dependencies in
+library/sysroot, as warnings are denied.
+
+rust-native is still built with the 1.99 snapshot, so keep the attribute
+in compiler/rustc/src/main.rs as allow instead of dropping it.
+
+Upstream-Status: Backport [https://github.com/rust-lang/rust/commit/daa24324904fa6aa460a22de733068c8dcb0323d]
+Signed-off-by: Hemanth Kumar M D <Hemanth.KumarMD@windriver.com>
+---
+ compiler/rustc/src/main.rs                                   | 2 +-
+ library/alloc/Cargo.toml                                     | 4 ++++
+ library/panic_unwind/Cargo.toml                              | 3 +++
+ library/std/Cargo.toml                                       | 4 ++++
+ library/std_detect/Cargo.toml                                | 4 ++++
+ library/sysroot/Cargo.toml                                   | 5 +++++
+ src/tools/clippy/clippy_test_deps/Cargo.toml                 | 4 ++++
+ src/tools/miri/tests/deps/Cargo.toml                         | 4 ++++
+ src/tools/miri/tests/deps/cross-crate-items/Cargo.toml       | 4 ++++
+ src/tools/rust-analyzer/Cargo.toml                           | 5 +++--
+ src/tools/rust-analyzer/crates/macros/Cargo.toml             | 3 +++
+ .../crates/proc-macro-srv/proc-macro-test/Cargo.toml         | 3 +++
+ .../rust-analyzer/lib/ungrammar/ungrammar2json/Cargo.toml    | 3 +++
+ tests/ui/array-slice-vec/vec-res-add.stderr                  | 1 -
+ ...st_equality_comparison_instead_of_pattern_matching.stderr | 4 ----
+ tests/ui/pattern/deref-patterns/implicit-const-deref.stderr  | 1 -
+ tests/ui/pattern/issue-115599.stderr                         | 1 -
+ tests/ui/pattern/pattern-tyvar-2.stderr                      | 1 -
+ 18 files changed, 45 insertions(+), 11 deletions(-)
+
+diff --git a/compiler/rustc/src/main.rs b/compiler/rustc/src/main.rs
+--- a/compiler/rustc/src/main.rs
++++ b/compiler/rustc/src/main.rs
+@@ -1,7 +1,7 @@
+ // We need this feature as it changes `dylib` linking behavior and allows us to link to `rustc_driver`.
+ #![feature(rustc_private)]
+ // Several crates are depended upon but unused so that they are present in the sysroot
+-#![expect(unused_crate_dependencies)]
++#![allow(unused_crate_dependencies)]
+ 
+ #[allow(unused_imports)]
+ use std::process::ExitCode;
+diff --git a/library/alloc/Cargo.toml b/library/alloc/Cargo.toml
+index b32e5e991cc74..a1071d2cde5f0 100644
+--- a/library/alloc/Cargo.toml
++++ b/library/alloc/Cargo.toml
+@@ -31,3 +31,7 @@ check-cfg = [
+     'cfg(no_rc)',
+     'cfg(no_sync)',
+ ]
++
++[lints.cargo]
++# compiler-builtins is claimed unused?
++unused_dependencies = "allow"
+diff --git a/library/panic_unwind/Cargo.toml b/library/panic_unwind/Cargo.toml
+index 72c1041b46795..3b7805a205492 100644
+--- a/library/panic_unwind/Cargo.toml
++++ b/library/panic_unwind/Cargo.toml
+@@ -18,3 +18,6 @@ unwind = { path = "../unwind" }
+ 
+ [target.'cfg(not(all(windows, target_env = "msvc")))'.dependencies]
+ libc = { version = "0.2", default-features = false }
++
++[lints.cargo]
++unused_dependencies = "allow"
+diff --git a/library/std/Cargo.toml b/library/std/Cargo.toml
+index 1d35b42a53947..67eebd820ca59 100644
+--- a/library/std/Cargo.toml
++++ b/library/std/Cargo.toml
+@@ -167,3 +167,7 @@ check-cfg = [
+     'cfg(target_has_reliable_f128)',
+     'cfg(target_has_reliable_f128_math)',
+ ]
++
++[lints.cargo]
++# panic_abort is not directly used but must be linked in
++unused_dependencies = "allow"
+diff --git a/library/std_detect/Cargo.toml b/library/std_detect/Cargo.toml
+index a6785bb20555d..c03fff827d5cd 100644
+--- a/library/std_detect/Cargo.toml
++++ b/library/std_detect/Cargo.toml
+@@ -24,3 +24,7 @@ libc = { version = "0.2.0", default-features = false }
+ 
+ [features]
+ std_detect_env_override = []
++
++[lints.cargo]
++# libc is definitely used in code but the lint doesn't realize that (unclear why)
++unused_dependencies = "allow"
+diff --git a/library/sysroot/Cargo.toml b/library/sysroot/Cargo.toml
+index 10562389d62d3..cef5532857b5e 100644
+--- a/library/sysroot/Cargo.toml
++++ b/library/sysroot/Cargo.toml
+@@ -32,3 +32,8 @@ optimize_for_size = ["std/optimize_for_size"]
+ panic-unwind = ["std/panic-unwind"]
+ profiler = ["dep:profiler_builtins"]
+ windows_raw_dylib = ["std/windows_raw_dylib"]
++
++[lints.cargo]
++# We expect some of these dependencies to not actually be used since this is
++# just an aggregator crate.
++unused_dependencies = "allow"
+diff --git a/src/tools/clippy/clippy_test_deps/Cargo.toml b/src/tools/clippy/clippy_test_deps/Cargo.toml
+index 880df6599c1e4..c3d236a17e1bb 100644
+--- a/src/tools/clippy/clippy_test_deps/Cargo.toml
++++ b/src/tools/clippy/clippy_test_deps/Cargo.toml
+@@ -18,3 +18,7 @@ itertools = "0.15"
+ 
+ # Make sure we are not part of the rustc workspace.
+ [workspace]
++
++[lints.cargo]
++# Not all tests use all of the above dependencies
++unused_dependencies = "allow"
+diff --git a/src/tools/miri/tests/deps/Cargo.toml b/src/tools/miri/tests/deps/Cargo.toml
+index a377141f98aaf..6b6d4a9e2f443 100644
+--- a/src/tools/miri/tests/deps/Cargo.toml
++++ b/src/tools/miri/tests/deps/Cargo.toml
+@@ -37,3 +37,7 @@ windows-sys = { version = "0.61", features = [
+ # Make sure we are not part of the rustc workspace.
+ [workspace]
+ members = ["cross-crate-items"]
++
++[lints.cargo]
++# Not all tests use all of the above dependencies
++unused_dependencies = "allow"
+diff --git a/src/tools/miri/tests/deps/cross-crate-items/Cargo.toml b/src/tools/miri/tests/deps/cross-crate-items/Cargo.toml
+index 1f9fc93cd5237..ca6818dc0fe25 100644
+--- a/src/tools/miri/tests/deps/cross-crate-items/Cargo.toml
++++ b/src/tools/miri/tests/deps/cross-crate-items/Cargo.toml
+@@ -5,3 +5,7 @@ edition = "2021"
+ 
+ [dependencies]
+ futures = { version = "0.3.0", default-features = false, features = ["alloc", "async-await"] }
++
++[lints.cargo]
++# panic_abort is not directly used but must be linked in
++unused_dependencies = "allow"
+diff --git a/src/tools/rust-analyzer/Cargo.toml b/src/tools/rust-analyzer/Cargo.toml
+index d77e89df45e44..54e82148665b6 100644
+--- a/src/tools/rust-analyzer/Cargo.toml
++++ b/src/tools/rust-analyzer/Cargo.toml
+@@ -68,10 +68,8 @@ parser = { path = "./crates/parser", version = "0.0.0" }
+ paths = { path = "./crates/paths", version = "0.0.0" }
+ proc-macro-api = { path = "./crates/proc-macro-api", version = "0.0.0" }
+ proc-macro-srv = { path = "./crates/proc-macro-srv", version = "0.0.0" }
+-proc-macro-srv-cli = { path = "./crates/proc-macro-srv-cli", version = "0.0.0" }
+ profile = { path = "./crates/profile", version = "0.0.0" }
+ project-model = { path = "./crates/project-model", version = "0.0.0" }
+-query-group = { package = "query-group-macro", path = "./crates/query-group-macro", version = "0.0.0" }
+ span = { path = "./crates/span", version = "0.0.0" }
+ stdx = { path = "./crates/stdx", version = "0.0.0" }
+ syntax = { path = "./crates/syntax", version = "0.0.0" }
+@@ -167,6 +165,9 @@ hashbrown = { version = "0.17.0", features = [
+ # We need to freeze the version of the crate, as the raw-api feature is considered unstable
+ dashmap = { version = "=6.2.1", features = ["raw-api", "inline"] }
+ 
++[workspace.lints.cargo]
++unused_dependencies = "allow"
++
+ [workspace.lints.rust]
+ # remember to update RUSTFLAGS in ci.yml if you add something here
+ 
+diff --git a/src/tools/rust-analyzer/crates/macros/Cargo.toml b/src/tools/rust-analyzer/crates/macros/Cargo.toml
+index 8184cc6d1c03d..b0d0000268588 100644
+--- a/src/tools/rust-analyzer/crates/macros/Cargo.toml
++++ b/src/tools/rust-analyzer/crates/macros/Cargo.toml
+@@ -17,3 +17,6 @@ proc-macro2 = "1"
+ quote = "1"
+ syn = "2.0.9"
+ synstructure = "0.13.0"
++
++[lints]
++workspace = true
+diff --git a/src/tools/rust-analyzer/crates/proc-macro-srv/proc-macro-test/Cargo.toml b/src/tools/rust-analyzer/crates/proc-macro-srv/proc-macro-test/Cargo.toml
+index 78630ddb4d7d8..668188340e5c8 100644
+--- a/src/tools/rust-analyzer/crates/proc-macro-srv/proc-macro-test/Cargo.toml
++++ b/src/tools/rust-analyzer/crates/proc-macro-srv/proc-macro-test/Cargo.toml
+@@ -11,3 +11,6 @@ doctest = false
+ 
+ [build-dependencies]
+ cargo_metadata = "0.23.0"
++
++[lints]
++workspace = true
+diff --git a/src/tools/rust-analyzer/lib/ungrammar/ungrammar2json/Cargo.toml b/src/tools/rust-analyzer/lib/ungrammar/ungrammar2json/Cargo.toml
+index 0fa08bbbd0485..f17587e3f556c 100644
+--- a/src/tools/rust-analyzer/lib/ungrammar/ungrammar2json/Cargo.toml
++++ b/src/tools/rust-analyzer/lib/ungrammar/ungrammar2json/Cargo.toml
+@@ -10,3 +10,6 @@ edition = "2024"
+ [dependencies]
+ write-json = "0.1.1"
+ ungrammar = { path = "../", version = "1.1.0" }
++
++[lints]
++workspace = true
+diff --git a/tests/ui/array-slice-vec/vec-res-add.stderr b/tests/ui/array-slice-vec/vec-res-add.stderr
+index 6d5ad1d3c9694..4e13dbd0366d0 100644
+--- a/tests/ui/array-slice-vec/vec-res-add.stderr
++++ b/tests/ui/array-slice-vec/vec-res-add.stderr
+@@ -8,7 +8,6 @@ LL |     let k = i + j;
+    |
+ note: `Vec<R>` does not implement `Add`
+   --> $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+-  ::: $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+    |
+    = note: `Vec<R>` is defined in another crate
+ 
+diff --git a/tests/ui/consts/const_in_pattern/suggest_equality_comparison_instead_of_pattern_matching.stderr b/tests/ui/consts/const_in_pattern/suggest_equality_comparison_instead_of_pattern_matching.stderr
+index ab823c8fc73b9..38440af675feb 100644
+--- a/tests/ui/consts/const_in_pattern/suggest_equality_comparison_instead_of_pattern_matching.stderr
++++ b/tests/ui/consts/const_in_pattern/suggest_equality_comparison_instead_of_pattern_matching.stderr
+@@ -123,7 +123,6 @@ LL |             V => {}
+    |             ^ constant of non-structural type
+    |
+   --> $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+-  ::: $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+    |
+    = note: `Vec<()>` is not usable in patterns
+    |
+@@ -144,7 +143,6 @@ LL |         if let V = vec![] {}
+    |                ^ constant of non-structural type
+    |
+   --> $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+-  ::: $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+    |
+    = note: `Vec<()>` is not usable in patterns
+    |
+@@ -160,7 +158,6 @@ LL |         let V = vec![] else { return; };
+    |             ^ constant of non-structural type
+    |
+   --> $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+-  ::: $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+    |
+    = note: `Vec<()>` is not usable in patterns
+    |
+@@ -176,7 +173,6 @@ LL |         let V = Vec::new() else { return; };
+    |             ^ constant of non-structural type
+    |
+   --> $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+-  ::: $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+    |
+    = note: `Vec<()>` is not usable in patterns
+    |
+diff --git a/tests/ui/pattern/deref-patterns/implicit-const-deref.stderr b/tests/ui/pattern/deref-patterns/implicit-const-deref.stderr
+index c03137fcc4151..7c176162ad184 100644
+--- a/tests/ui/pattern/deref-patterns/implicit-const-deref.stderr
++++ b/tests/ui/pattern/deref-patterns/implicit-const-deref.stderr
+@@ -8,7 +8,6 @@ LL |         EMPTY => {}
+    |         ^^^^^ constant of non-structural type
+    |
+   --> $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+-  ::: $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+    |
+    = note: `Vec<()>` is not usable in patterns
+    |
+diff --git a/tests/ui/pattern/issue-115599.stderr b/tests/ui/pattern/issue-115599.stderr
+index 280516deba14b..f776623ff75b2 100644
+--- a/tests/ui/pattern/issue-115599.stderr
++++ b/tests/ui/pattern/issue-115599.stderr
+@@ -8,7 +8,6 @@ LL |     if let CONST_STRING = empty_str {}
+    |            ^^^^^^^^^^^^ constant of non-structural type
+    |
+   --> $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+-  ::: $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+    |
+    = note: `Vec<u8>` is not usable in patterns
+    |
+diff --git a/tests/ui/pattern/pattern-tyvar-2.stderr b/tests/ui/pattern/pattern-tyvar-2.stderr
+index 4761a4e829b85..6676d5129872b 100644
+--- a/tests/ui/pattern/pattern-tyvar-2.stderr
++++ b/tests/ui/pattern/pattern-tyvar-2.stderr
+@@ -8,7 +8,6 @@ LL | fn foo(t: Bar) -> isize { match t { Bar::T1(_, Some(x)) => { return x * 3;
+    |
+ note: `Vec<isize>` does not implement `Mul<{integer}>`
+   --> $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+-  ::: $SRC_DIR/alloc/src/vec/mod.rs:LL:COL
+    |
+    = note: `Vec<isize>` is defined in another crate
+ 

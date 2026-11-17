@@ -18,17 +18,21 @@ Upstream-Status: Inappropriate [reported at https://github.com/rust-lang/rust/is
 Signed-off-by: Alexander Kanavin <alex@linutronix.de>
 Signed-off-by: Deepesh Varatharajan <Deepesh.Varatharajan@windriver.com>
 ---
- src/bootstrap/src/core/build_steps/tool.rs | 19 +++----------------
+ src/bootstrap/src/core/build_steps/tool.rs | 22 ++++------------------
  src/bootstrap/src/core/builder/mod.rs      |  2 +-
- 2 files changed, 4 insertions(+), 17 deletions(-)
+ 2 files changed, 5 insertions(+), 19 deletions(-)
 
+diff --git a/src/bootstrap/src/core/build_steps/tool.rs b/src/bootstrap/src/core/build_steps/tool.rs
+index c4fae69..7c4e230 100644
 --- a/src/bootstrap/src/core/build_steps/tool.rs
 +++ b/src/bootstrap/src/core/build_steps/tool.rs
-@@ -13,14 +13,13 @@
+@@ -13,16 +13,16 @@ use std::ffi::OsStr;
  use std::path::{Path, PathBuf};
  use std::{env, fs};
  
--use crate::core::build_steps::compile::is_lto_stage;
+-use crate::core::build_steps::compile::{CargoMessage, is_lto_stage};
++use crate::core::build_steps::compile::CargoMessage;
+ use crate::core::build_steps::dist::LLD_FILE_NAMES;
  use crate::core::build_steps::toolstate::ToolState;
  use crate::core::build_steps::{compile, llvm};
  use crate::core::builder::{
@@ -36,12 +40,13 @@ Signed-off-by: Deepesh Varatharajan <Deepesh.Varatharajan@windriver.com>
 -    StepMetadata, apply_pgo, cargo_profile_var,
 +    StepMetadata, apply_pgo,
  };
+ use crate::core::compiler::Compiler;
 -use crate::core::config::{Allocator, DebuginfoLevel, RustcLto, TargetSelection};
 +use crate::core::config::{Allocator, DebuginfoLevel, TargetSelection};
+ use crate::core::session::{FileType, Mode};
  use crate::utils::exec::{BootstrapCommand, command};
  use crate::utils::helpers::{self, add_dylib_path, exe, t};
- use crate::{Compiler, FileType, Mode};
-@@ -117,21 +116,7 @@
+@@ -121,21 +121,7 @@ impl Step for ToolBuild {
              cargo.env("RUSTC_WRAPPER", ccache);
          }
  
@@ -64,14 +69,16 @@ Signed-off-by: Deepesh Varatharajan <Deepesh.Varatharajan@windriver.com>
  
          let pgo_config = match self.path {
              "src/tools/rustdoc" => Some(&builder.config.rustdoc_pgo),
+diff --git a/src/bootstrap/src/core/builder/mod.rs b/src/bootstrap/src/core/builder/mod.rs
+index c221a97..4af0fda 100644
 --- a/src/bootstrap/src/core/builder/mod.rs
 +++ b/src/bootstrap/src/core/builder/mod.rs
-@@ -13,7 +13,7 @@
+@@ -13,7 +13,7 @@ use clap::ValueEnum;
  #[cfg(feature = "tracing")]
  use tracing::instrument;
  
--pub use self::cargo::{Cargo, apply_pgo, cargo_profile_var};
-+pub use self::cargo::{Cargo, apply_pgo};
- pub use crate::Compiler;
+-pub(crate) use self::cargo::{Cargo, apply_pgo, cargo_profile_var};
++pub(crate) use self::cargo::{Cargo, apply_pgo};
  use crate::core::build_steps::compile::{Std, StdLink, looks_like_codegen_backend};
+ use crate::core::build_steps::llvm::{LlvmKind, get_llvm_build_status};
  use crate::core::build_steps::tool::RustcPrivateCompilers;
