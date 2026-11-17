@@ -1,4 +1,4 @@
-From 8d7fcf04c6513841c7985e64b746b1ef5de0c426 Mon Sep 17 00:00:00 2001
+From 57c51c6746c1efdae1654df443c5d23351b2d131 Mon Sep 17 00:00:00 2001
 From: Ross Burton <ross.burton@arm.com>
 Date: Fri, 17 Apr 2026 16:53:42 +0100
 Subject: [PATCH] prefer valid entrypoints
@@ -16,10 +16,10 @@ Signed-off-by: Ross Burton <ross.burton@arm.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/Lib/importlib/metadata/__init__.py b/Lib/importlib/metadata/__init__.py
-index 085378c..ff5cae4 100644
+index 32f4b7d..705f245 100644
 --- a/Lib/importlib/metadata/__init__.py
 +++ b/Lib/importlib/metadata/__init__.py
-@@ -1016,7 +1016,7 @@ def entry_points(**params) -> EntryPoints:
+@@ -1120,7 +1120,7 @@ def entry_points(**params) -> EntryPoints:
      :return: EntryPoints for all installed packages.
      """
      eps = itertools.chain.from_iterable(

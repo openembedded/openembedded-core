@@ -1,10 +1,9 @@
-From b6e398e6a1884a176e78f94f32112529888d5d45 Mon Sep 17 00:00:00 2001
+From 39aa513a688c08af3565d2b25889fcb9bc4c5035 Mon Sep 17 00:00:00 2001
 From: "Miss Islington (bot)"
  <31488909+miss-islington@users.noreply.github.com>
-Date: Mon, 2 Nov 2026 15:46:37 -0800
-Subject: [PATCH] [3.14] gh-158097: Make test_staggered_race_with_eager_tasks
- deterministic (GH-158469) (#161224)
-X-ARM-No-Footer: NoDisclaimer
+Date: Mon, 2 Nov 2026 15:44:05 -0800
+Subject: [PATCH] [3.15] gh-158097: Make test_staggered_race_with_eager_tasks
+ deterministic (GH-158469) (#161223)
 
 gh-158097: Make test_staggered_race_with_eager_tasks deterministic (GH-158469)
 
@@ -41,14 +40,14 @@ Co-authored-by: Abhinav <alpha9coder@gmail.com>
 Co-authored-by: abhinav-phi <abhinav-phi@users.noreply.github.com>
 Co-authored-by: Andrew Svetlov <andrew.svetlov@gmail.com>
 
-Upstream-Status: Backport [https://github.com/python/cpython/pull/161224]
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+Upstream-Status: Backport [https://github.com/python/cpython/commit/39aa513a688c08af3565d2b25889fcb9bc4c5035]
+Signed-off-by: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
 ---
  Lib/test/test_asyncio/test_eager_task_factory.py | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/Lib/test/test_asyncio/test_eager_task_factory.py b/Lib/test/test_asyncio/test_eager_task_factory.py
-index 0561b54a3f1..72bceb8c314 100644
+index 0561b54a3f19c66..72bceb8c31441ba 100644
 --- a/Lib/test/test_asyncio/test_eager_task_factory.py
 +++ b/Lib/test/test_asyncio/test_eager_task_factory.py
 @@ -217,7 +217,9 @@ def test_staggered_race_with_eager_tasks(self):
@@ -62,6 +61,3 @@ index 0561b54a3f1..72bceb8c314 100644
              raise ValueError("no good")
  
          async def blocked():
--- 
-2.43.0
-
