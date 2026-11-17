@@ -37,16 +37,16 @@ do_install_ptest() {
         install -m644 ${S}/test/*.acl ${D}${PTEST_PATH}/
 
         # Install the tests
-        for t in $(makefile-getvar ${S}/test/Makemodule.am TESTS); do
+        for t in $(makefile-getvar ${B}/Makefile TESTS); do
                 install -m644 ${S}/$t ${D}${PTEST_PATH}/
         done
         # Remove the tests that are expected to fail (they need a NFS server configured)
-        for t in $(makefile-getvar ${S}/test/Makemodule.am XFAIL_TESTS); do
+        for t in $(makefile-getvar ${B}/Makefile XFAIL_TESTS); do
                 rm ${D}${PTEST_PATH}/$(basename $t)
         done
         # These tests need a very specific user/group setup
         # (https://savannah.nongnu.org/bugs/index.php?66927)
-        rm -f ${D}${PTEST_PATH}/getfacl.test ${D}${PTEST_PATH}/permissions.test ${D}${PTEST_PATH}/restore.test ${D}${PTEST_PATH}/setfacl.test
+        rm -f ${D}${PTEST_PATH}/getfacl.run ${D}${PTEST_PATH}/misc.run ${D}${PTEST_PATH}/permissions.run ${D}${PTEST_PATH}/restore.run ${D}${PTEST_PATH}/setfacl.run
 
         ${B}/libtool --mode=install install ${B}/libtestlookup.la ${D}${PTEST_PATH}/
         rm -f ${D}${PTEST_PATH}/*.la

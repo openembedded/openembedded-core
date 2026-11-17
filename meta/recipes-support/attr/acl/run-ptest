@@ -4,7 +4,7 @@ failed=0
 all=0
 
 
-for f in *.test; do
+for f in *.run; do
     LD_PRELOAD=$(pwd)/libtestlookup.so ./run $f
     case "$?" in
         0)
