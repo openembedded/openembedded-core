@@ -40,4 +40,9 @@ SRC_URI = "\
      file://0014-Remove-duplicate-pe-dll.o-entry-deom-targ_extra_ofil.patch \
      file://CVE-2026-91781.patch \
      file://CVE-2026-90828.patch \
+     file://CVE-2026-91782-1.patch \
+     file://CVE-2026-91782-2.patch \
+     file://CVE-2026-91782-3.patch \
+     file://CVE-2026-91782-4.patch \
+     file://CVE-2026-91782-5.patch \
 "
