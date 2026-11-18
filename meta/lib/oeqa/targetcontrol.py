@@ -91,7 +91,7 @@ class QemuTarget(BaseTarget):
 
     def __init__(self, d, logger, image_fstype=None, boot_patterns=None):
 
-        import oe.types
+        import oe.qemu
 
         super().__init__(d, logger)
 
@@ -108,7 +108,7 @@ class QemuTarget(BaseTarget):
         dump_dir = d.getVar("TESTIMAGE_DUMP_DIR")
         if not dump_dir:
             dump_dir = os.path.join(d.getVar('LOG_DIR'), 'runtime-hostdump')
-        use_kvm = oe.types.qemu_use_kvm(d.getVar('QEMU_USE_KVM'), d.getVar('TARGET_ARCH'))
+        use_kvm = oe.qemu.qemu_use_kvm(d.getVar('QEMU_USE_KVM'), d.getVar('TARGET_ARCH'))
 
         # Log QemuRunner log output to a file
         import oe.path

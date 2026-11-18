@@ -7,7 +7,7 @@
 import os
 import re
 import time
-import oe.types
+import oe.qemu
 from oeqa.core.decorator import OETestTag
 from oeqa.core.decorator.data import skipIfNotArch, skipIfNotMachine
 from oeqa.selftest.case import OESelftestTestCase
@@ -34,7 +34,7 @@ class RunqemuTests(OESelftestTestCase):
             self.fstypes += " wic.vmdk wic.qcow2 wic.vdi wic.zst"
 
         self.cmd_common = "runqemu nographic snapshot"
-        kvm = oe.types.qemu_use_kvm(get_bb_var('QEMU_USE_KVM'), self.td["TARGET_ARCH"])
+        kvm = oe.qemu.qemu_use_kvm(get_bb_var('QEMU_USE_KVM'), self.td["TARGET_ARCH"])
         if kvm:
             self.cmd_common += " kvm"
 

@@ -9,7 +9,7 @@ from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake, runqemu, get_bb_var
 from oeqa.core.decorator.data import skipIfNotArch
 from oeqa.core.decorator import OETestTag
-import oe.types
+import oe.qemu
 
 class UkiTest(OESelftestTestCase):
     """Boot Unified Kernel Image (UKI) generated with uki.bbclass on UEFI firmware (omvf/edk2)"""
@@ -21,7 +21,7 @@ class UkiTest(OESelftestTestCase):
         image = "core-image-minimal"
         runqemu_params = get_bb_var('TEST_RUNQEMUPARAMS', image) or ""
         cmd = "runqemu %s nographic serial wic ovmf" % (runqemu_params)
-        if oe.types.qemu_use_kvm(self.td.get('QEMU_USE_KVM', 0), self.td["TARGET_ARCH"]):
+        if oe.qemu.qemu_use_kvm(self.td.get('QEMU_USE_KVM', 0), self.td["TARGET_ARCH"]):
             cmd += " kvm"
 
         self.write_config("""
