@@ -130,6 +130,21 @@ class BitbakeTests(OESelftestTestCase):
         self.assertTrue('Task dependencies saved to \'task-depends.dot\'' in result.output, msg = "No task dependency \"task-depends.dot\" file was generated for the given task target. bitbake output: %s" % result.output)
         self.assertIn(recipe, ftools.read_file(os.path.join(self.builddir, 'task-depends.dot')))
 
+    def test_deploy_image_version_suffix_sde(self):
+        self.write_recipeinc('emptytest', '''
+inherit deploy image-artifact-names
+IMAGE_VERSION_SUFFIX = "-${DATETIME}"
+SOURCE_DATE_EPOCH = "1234567890"
+''')
+
+        # Commit 0e2fbdb32bae ("image-artifact-names: Use SOURCE_DATE_EPOCH when
+        # making reproducible builds for deploy") intended "-${DATETIME}" to use
+        # SOURCE_DATE_EPOCH for recipes inheriting deploy.
+        self.assertEqual(get_bb_var('IMAGE_VERSION_SUFFIX', 'emptytest'), '-20090213233130')
+
+        self.append_recipeinc('emptytest', 'IMAGE_VERSION_SUFFIX = "-custom"')
+        self.assertEqual(get_bb_var('IMAGE_VERSION_SUFFIX', 'emptytest'), '-custom')
+
     def test_image_manifest(self):
         bitbake('core-image-minimal')
         bb_vars = get_bb_vars(["DEPLOY_DIR_IMAGE", "IMAGE_LINK_NAME"], "core-image-minimal")

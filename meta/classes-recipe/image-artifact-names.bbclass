@@ -34,7 +34,8 @@ IMAGE_MACHINE_SUFFIX ??= "-${MACHINE}"
 IMAGE_NAME_SUFFIX ??= ".rootfs"
 
 python () {
-    if bb.data.inherits_class('deploy', d) and d.getVar("IMAGE_VERSION_SUFFIX") == "-${DATETIME}":
+    # Compare before expansion to recognize the default DATETIME suffix.
+    if bb.data.inherits_class('deploy', d) and d.getVar("IMAGE_VERSION_SUFFIX", False) == "-${DATETIME}":
         import datetime
         d.setVar("IMAGE_VERSION_SUFFIX", "-" + datetime.datetime.fromtimestamp(int(d.getVar("SOURCE_DATE_EPOCH")), datetime.timezone.utc).strftime('%Y%m%d%H%M%S'))
         d.setVarFlag("IMAGE_VERSION_SUFFIX", "vardepvalue", "")
