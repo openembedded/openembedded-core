@@ -4,6 +4,9 @@
 # SPDX-License-Identifier: MIT
 #
 
+import json
+import os
+
 from oe.tune import riscv_isa_to_tune
 from oeqa.selftest.case import OESelftestTestCase
 from oeqa.utils.commands import bitbake, get_bb_var, get_bb_vars
@@ -146,3 +149,26 @@ class RiscvTunesTests(OESelftestTestCase):
                 # small, and compiled with TUNE_CCARGS. It has no do_build, and
                 # populate_sysroot also writes an sstate object.
                 bitbake('libgcc-initial -c populate_sysroot')
+
+    def test_riscv_rust_target_features(self):
+        """
+        Check that the Rust target spec passes every extension in the tune's
+        TUNE_FEATURES on to LLVM, in TUNE_FEATURES order.
+        """
+        for tune in ['riscv64gc', 'rva23u64']:
+            with self.subTest(tune=tune):
+                self.write_config(self._machine_config() + 'DEFAULTTUNE = "%s"\n' % tune)
+                # hello-rs is a small cargo recipe in meta-selftest, and
+                # do_rust_gen_targets runs right after do_patch, so neither
+                # the toolchain nor Rust has to be built
+                bitbake('hello-rs -c rust_gen_targets')
+                v = get_bb_vars(['WORKDIR', 'RUST_TARGET_SYS', 'TUNE_FEATURES'], 'hello-rs')
+                with open(os.path.join(v['WORKDIR'], 'rust-targets', v['RUST_TARGET_SYS'] + '.json')) as f:
+                    features = json.load(f)['features'].split(',')
+
+                # Everything but the base ISA and its width
+                expected = ['+' + e for e in v['TUNE_FEATURES'].split() if e not in ('rv', '64', 'i')]
+                self.assertEqual(features, expected)
+                if tune == 'riscv64gc':
+                    # The features of the existing tunes must not change
+                    self.assertEqual(features, ['+m', '+a', '+f', '+d', '+c', '+zicsr', '+zifencei'])
