@@ -11,7 +11,7 @@ PACKAGE_EXTRA_ARCHS:tune-riscv64gc = "${RISCVPKGARCH:tune-riscv64gc}"
 
 TUNE_FEATURES:tune-riscv64gcv := "${@oe.tune.riscv_isa_to_tune("rv64gcv")}"
 RISCVPKGARCH:tune-riscv64gcv ?= "riscv64imafdcv_zicsr_zifencei"
-PACKAGE_EXTRA_ARCHS:tune-riscv64gcv = "${RISCVPKGARCH:tune-riscv64gcv}"
+PACKAGE_EXTRA_ARCHS:tune-riscv64gcv = "${PACKAGE_EXTRA_ARCHS:tune-riscv64gc} ${RISCVPKGARCH:tune-riscv64gcv}"
 
 TUNE_FEATURES:tune-riscv32gc := "${@oe.tune.riscv_isa_to_tune("rv32gc")}"
 RISCVPKGARCH:tune-riscv32gc ?= "riscv32imafdc_zicsr_zifencei"
@@ -41,14 +41,18 @@ PACKAGE_EXTRA_ARCHS:tune-riscv64nc = "${RISCVPKGARCH:tune-riscv64nc}"
 
 # RISC-V profiles. zifencei isn't mandatory in them, but Linux requires it, so
 # it's added on top of each profile's mandatory extensions.
+#
+# Each profile tune's PACKAGE_EXTRA_ARCHS lists the package archs of the tunes
+# that it's a superset of (with the same lp64d ABI), lowest priority first.
 TUNE_FEATURES:tune-rva20u64 := "${@oe.tune.riscv_isa_to_tune("rva20u64")} zifencei"
 RISCVPKGARCH:tune-rva20u64 ?= "rva20u64_zifencei"
-PACKAGE_EXTRA_ARCHS:tune-rva20u64 = "${RISCVPKGARCH:tune-rva20u64}"
+PACKAGE_EXTRA_ARCHS:tune-rva20u64 = "${PACKAGE_EXTRA_ARCHS:tune-riscv64gc} ${RISCVPKGARCH:tune-rva20u64}"
 
 TUNE_FEATURES:tune-rva22u64 := "${@oe.tune.riscv_isa_to_tune("rva22u64")} zifencei"
 RISCVPKGARCH:tune-rva22u64 ?= "rva22u64_zifencei"
-PACKAGE_EXTRA_ARCHS:tune-rva22u64 = "${RISCVPKGARCH:tune-rva22u64}"
+PACKAGE_EXTRA_ARCHS:tune-rva22u64 = "${PACKAGE_EXTRA_ARCHS:tune-rva20u64} ${RISCVPKGARCH:tune-rva22u64}"
 
 TUNE_FEATURES:tune-rva23u64 := "${@oe.tune.riscv_isa_to_tune("rva23u64")} zifencei"
 RISCVPKGARCH:tune-rva23u64 ?= "rva23u64_zifencei"
-PACKAGE_EXTRA_ARCHS:tune-rva23u64 = "${RISCVPKGARCH:tune-rva23u64}"
+# Unlike rva20u64 and rva22u64, rva23u64 is a superset of riscv64gcv
+PACKAGE_EXTRA_ARCHS:tune-rva23u64 = "${PACKAGE_EXTRA_ARCHS:tune-riscv64gcv} ${RISCVPKGARCH:tune-rva20u64} ${RISCVPKGARCH:tune-rva22u64} ${RISCVPKGARCH:tune-rva23u64}"
