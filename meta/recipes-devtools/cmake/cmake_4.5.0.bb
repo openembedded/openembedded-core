@@ -15,6 +15,7 @@ LICENSE:append = " AND BSD-1-Clause AND MIT"
 LIC_FILES_CHKSUM:append = " \
     file://Utilities/cmjsoncpp/LICENSE;md5=5d73c165a0f9e86a1342f32d19ec5926 \
     file://Utilities/cmlibrhash/COPYING;md5=a8c2a557a5c53b1c12cddbee98c099af \
+    file://Utilities/cmrapidhash/LICENSE;md5=4ba32c08f2e0fce0078296c3d100fb93 \
 "
 
 # Strip ${prefix} from ${docdir}, set result into docdir_stripped

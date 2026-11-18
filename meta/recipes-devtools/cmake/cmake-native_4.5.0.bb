@@ -17,6 +17,7 @@ LIC_FILES_CHKSUM:append = " \
     file://Utilities/cmcurl/COPYING;md5=0515352b285b9c3f66464b135c9c0fdc \
     file://Utilities/cmnghttp2/COPYING;md5=764abdf30b2eadd37ce47dcbce0ea1ec \
     file://Utilities/cmcppdap/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57 \
+    file://Utilities/cmrapidhash/LICENSE;md5=4ba32c08f2e0fce0078296c3d100fb93 \
 "
 
 B = "${WORKDIR}/build"
@@ -24,6 +25,7 @@ do_configure[cleandirs] = "${B}"
 
 EXTRA_OECMAKE += "\
     -DCMAKE_LIBRARY_PATH=${STAGING_LIBDIR_NATIVE} \
+    -DCMAKE_INCLUDE_PATH=${STAGING_INCDIR_NATIVE} \
     -DBUILD_CursesDialog=1 \
     -DCMAKE_USE_SYSTEM_LIBRARY_JSONCPP=0 \
     -DCMAKE_USE_SYSTEM_LIBRARY_CPPDAP=0 \
