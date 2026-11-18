@@ -1,0 +1,73 @@
+From c8c3df8da9c6beb9855e773b7320051278c2c334 Mon Sep 17 00:00:00 2001
+From: Prasanth R <ragaprasanth@gmail.com>
+Date: Tue, 17 Nov 2026 10:12:23 +0900
+Subject: [PATCH] Use pthreads on Linux and make struct jent_notime_ctx public
+
+3.7.0 switched Linux to C11 <threads.h> and moved struct jent_notime_ctx
+out of jitterentropy.h. This breaks callers that install their own
+thread handler with jent_entropy_switch_notime_impl(), such as
+rng-tools: the start callback no longer takes a pthread start routine,
+and the context is an incomplete type.
+
+Upstream fixed this in commit a038d0c ("threads: always use pthreads on
+Linux, add a native Win32 backend"), on top of a rework of the thread
+code that 3.7.0 does not have. Only the Linux part is taken here:
+define JENT_PTHREAD on Linux, and move the pthread variant of
+struct jent_notime_ctx unchanged from src/jitterentropy-timer.c to
+jitterentropy.h, where upstream also has it. The Win32 backend and the
+rest of the rework are left out.
+
+Upstream-Status: Backport [https://github.com/smuellerDD/jitterentropy-library/commit/a038d0c372f83aba10f3850c5b122dc5ff8cdc8c]
+Signed-off-by: Prasanth R <prasanth.r@lineo.co.jp>
+
+---
+ jitterentropy.h           | 10 +++++++++-
+ src/jitterentropy-timer.c |  8 +-------
+ 2 files changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/jitterentropy.h b/jitterentropy.h
+index f935c09..27ad0ae 100644
+--- a/jitterentropy.h
++++ b/jitterentropy.h
+@@ -154,10 +154,18 @@ extern "C" {
+ #endif
+ #endif
+ 
+-#if defined(__MINGW32__) || defined(__APPLE__) || defined(__OpenBSD__) || defined(__FreeBSD__) || defined(__NetBSD__)
++#if defined(__MINGW32__) || defined(__APPLE__) || defined(__OpenBSD__) || defined(__FreeBSD__) || defined(__NetBSD__) || defined(__linux__)
+ #define JENT_PTHREAD
+ #endif
+ 
++#ifdef JENT_PTHREAD
++#include <pthread.h>
++struct jent_notime_ctx {
++	pthread_attr_t notime_pthread_attr;     /* pthreads library */
++	pthread_t notime_thread_id;             /* pthreads thread ID */
++};
++#endif
++
+ /* Forward declaration of opaque value */
+ struct rand_data;
+ 
+diff --git a/src/jitterentropy-timer.c b/src/jitterentropy-timer.c
+index 77f732e..2c974f5 100644
+--- a/src/jitterentropy-timer.c
++++ b/src/jitterentropy-timer.c
+@@ -24,13 +24,7 @@
+ /* Timer-less entropy source */
+ #ifdef JENT_CONF_ENABLE_INTERNAL_TIMER
+ 
+-#ifdef JENT_PTHREAD
+-#include <pthread.h>
+-struct jent_notime_ctx {
+-	pthread_attr_t notime_pthread_attr;     /* pthreads library */
+-	pthread_t notime_thread_id;             /* pthreads thread ID */
+-};
+-#else
++#ifndef JENT_PTHREAD
+ #include <threads.h>
+ struct jent_notime_ctx {
+ 	thrd_t notime_thread_id;                /* thread ID */
+-- 
+2.43.0
+
