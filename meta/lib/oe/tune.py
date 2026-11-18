@@ -4,16 +4,33 @@
 # SPDX-License-Identifier: GPL-2.0-only
 #
 
+# RISC-V profile name -> equivalent ISA string, i.e. the mandatory extensions of
+# each profile as ratified in the RISC-V Profiles specification
+# (https://github.com/riscv/riscv-profiles):
+#   RVA20U64, RVA22U64: RVA20/RVA22 Profiles, version 1.0
+#   RVA23U64: RVA23 Profiles, version 1.0
+# plus the extensions those imply (e.g. zmmul, zaamo, zca, zve*).
+#
+# Do not regenerate these from compiler output (e.g. gcc's -march expansion);
+# a newer compiler, or clang, may expand a profile differently. For example,
+# gcc's rva22u64 leaves out zihpm, which the specification makes mandatory.
+RISCV_PROFILES = {
+    'rva20u64': 'rv64imafdc_ziccamoa_ziccif_zicclsm_ziccrse_zicntr_zicsr_zmmul_za128rs_zaamo_zalrsc_zca_zcd',
+    'rva22u64': 'rv64imafdcb_zic64b_zicbom_zicbop_zicboz_ziccamoa_ziccif_zicclsm_ziccrse_zicntr_zicsr_zihintpause_zihpm_zmmul_za64rs_zaamo_zalrsc_zfhmin_zca_zcd_zba_zbb_zbs_zkt',
+    'rva23u64': 'rv64imafdcbv_zic64b_zicbom_zicbop_zicboz_ziccamoa_ziccif_zicclsm_ziccrse_zicntr_zicond_zicsr_zihintntl_zihintpause_zihpm_zimop_zmmul_za64rs_zaamo_zalrsc_zawrs_zfa_zfhmin_zca_zcb_zcd_zcmop_zba_zbb_zbs_zkt_zvbb_zve32f_zve32x_zve64d_zve64f_zve64x_zvfhmin_zvkb_zvkt_zvl128b_zvl32b_zvl64b_supm',
+}
+
 # riscv_isa_to_tune(isa)
 #
 # Automatically translate a RISC-V ISA string to TUNE_FEATURES
 #
 # Abbreviations, such as rv32g -> rv32imafd_zicsr_zifencei are supported.
 #
-# Profiles, such as rva22u64, are NOT supported, you must use ISA strings.
+# The profile names in RISCV_PROFILES, such as rva22u64, are also supported,
+# and are translated to the profile's mandatory extensions.
 #
 def riscv_isa_to_tune(isa):
-    _isa = isa.lower()
+    _isa = RISCV_PROFILES.get(isa.lower(), isa).lower()
 
     feature = []
     iter = 0

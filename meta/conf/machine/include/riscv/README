@@ -126,3 +126,6 @@ rv32g -> rv 32 i m a f d zicsr zifencei
 The helper can be called using oe.tune.riscv_isa_to_tune("<ISA>") such as
 oe.tune.riscv_isa_to_tune("rv64gc") which would return:
  rv 64 i m a f d c zicsr zifencei
+
+The RISC-V profile names listed in RISCV_PROFILES in lib/oe/tune.py, such as
+rva22u64, are also accepted, and return the profile's mandatory extensions.
