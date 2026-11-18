@@ -375,7 +375,7 @@ require conf/distro/include/no-gplv3.inc
         self.write_config('PV:pn-gitunpackoffline:append = "+${UNDEFVAL}"')
         result = bitbake('{}'.format(recipe_name), ignore_status=True)
         self.assertGreater(result.status, 0, "Build should have failed if ${ is in the path")
-        self.assertTrue(re.search("ERROR: Directory name /.* contains unexpanded bitbake variable. This may cause build failures and WORKDIR polution",
+        self.assertTrue(re.search("ERROR: Directory name /.* contains unexpanded bitbake variable. This may cause build failures and WORKDIR pollution",
                                   result.output), msg = "mkdirhier with unexpanded variable should have failed: %s" % result.output)
 
     def test_bb_env_bb_getvar_equality(self):
