@@ -121,9 +121,13 @@ TUNE_CCARGS = "${@d.getVar('TUNE_CCARGS:tune-${DEFAULTTUNE}') or '-march=${TUNE_
 TUNE_ARCH = "${TUNE_RISCV_ARCH}"
 
 # Construct TUNE_PKGARCH
-# This should result in a package are like:
+# As with ARMPKGARCH on arm, each tune sets its package arch as a literal in
+# RISCVPKGARCH:tune-<name>, so that it only changes when deliberately changed.
+# Tunes that don't set it fall back to TUNE_RISCV_PKGARCH, which is built from
+# TUNE_FEATURES above, e.g.:
 #    riscv32imac
-TUNE_PKGARCH = "${TUNE_RISCV_PKGARCH}"
+RISCVPKGARCH = "${@d.getVar('RISCVPKGARCH:tune-${DEFAULTTUNE}') or d.getVar('TUNE_RISCV_PKGARCH')}"
+TUNE_PKGARCH = "${RISCVPKGARCH}"
 
 # Misc settings
 # Fix: ld: unrecognized option '--hash-style=sysv'
