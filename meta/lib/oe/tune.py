@@ -11,6 +11,11 @@
 #   RVA23U64: RVA23 Profiles, version 1.0
 # plus the extensions those imply (e.g. zmmul, zaamo, zca, zve*).
 #
+# The profile names are also used in package archs, so each entry here is an
+# ABI claim: packages built for e.g. "rva22u64_zifencei" must keep meaning
+# exactly this extension set. Changing an entry changes what existing package
+# feeds mean.
+#
 # Do not regenerate these from compiler output (e.g. gcc's -march expansion);
 # a newer compiler, or clang, may expand a profile differently. For example,
 # gcc's rva22u64 leaves out zihpm, which the specification makes mandatory.
