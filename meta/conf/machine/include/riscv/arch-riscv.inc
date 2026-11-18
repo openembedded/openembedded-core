@@ -94,6 +94,31 @@ TUNEVALID[zifencei] = "Instruction-fetch fence extension"
 TUNE_RISCV_MARCH .= "${@bb.utils.contains("TUNE_FEATURES", "zifencei", "_zifencei", "", d)}"
 TUNE_RISCV_PKGARCH .= "${@bb.utils.contains("TUNE_FEATURES", "zifencei", "_zifencei", "", d)}"
 
+# zmmul, zaamo, zalrsc, zca and zcd are subsets of single-letter extensions
+# above (m, a, c and c with d), which compilers enable along with them. They
+# are only passed on when listed in TUNE_FEATURES, so that -march doesn't
+# change for existing tunes, and only added to the package arch when the
+# extension they're part of isn't enabled.
+TUNEVALID[zmmul] = "Integer multiplication (without division) extension"
+TUNE_RISCV_MARCH .= "${@bb.utils.contains("TUNE_FEATURES", "zmmul", "_zmmul", "", d)}"
+TUNE_RISCV_PKGARCH .= "${@bb.utils.contains("TUNE_FEATURES", "zmmul", bb.utils.contains("TUNE_FEATURES", "m", "", "_zmmul", d), "", d)}"
+
+TUNEVALID[zaamo] = "Atomic memory operations extension"
+TUNE_RISCV_MARCH .= "${@bb.utils.contains("TUNE_FEATURES", "zaamo", "_zaamo", "", d)}"
+TUNE_RISCV_PKGARCH .= "${@bb.utils.contains("TUNE_FEATURES", "zaamo", bb.utils.contains("TUNE_FEATURES", "a", "", "_zaamo", d), "", d)}"
+
+TUNEVALID[zalrsc] = "Load-reserved/store-conditional extension"
+TUNE_RISCV_MARCH .= "${@bb.utils.contains("TUNE_FEATURES", "zalrsc", "_zalrsc", "", d)}"
+TUNE_RISCV_PKGARCH .= "${@bb.utils.contains("TUNE_FEATURES", "zalrsc", bb.utils.contains("TUNE_FEATURES", "a", "", "_zalrsc", d), "", d)}"
+
+TUNEVALID[zca] = "Compressed integer instructions extension"
+TUNE_RISCV_MARCH .= "${@bb.utils.contains("TUNE_FEATURES", "zca", "_zca", "", d)}"
+TUNE_RISCV_PKGARCH .= "${@bb.utils.contains("TUNE_FEATURES", "zca", bb.utils.contains("TUNE_FEATURES", "c", "", "_zca", d), "", d)}"
+
+TUNEVALID[zcd] = "Compressed double-precision floating-point instructions extension"
+TUNE_RISCV_MARCH .= "${@bb.utils.contains("TUNE_FEATURES", "zcd", "_zcd", "", d)}"
+TUNE_RISCV_PKGARCH .= "${@bb.utils.contains("TUNE_FEATURES", "zcd", bb.utils.contains("TUNE_FEATURES", "c d", "", "_zcd", d), "", d)}"
+
 TUNEVALID[zba] = "Address bit manipulation extension"
 TUNE_RISCV_MARCH .= "${@bb.utils.contains_any("TUNE_FEATURES", "b zba", "_zba", "", d)}"
 TUNE_RISCV_PKGARCH .= "${@bb.utils.contains_any("TUNE_FEATURES", "b zba", "_zba", "", d)}"
