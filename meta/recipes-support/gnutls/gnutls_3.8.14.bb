@@ -54,6 +54,8 @@ EXTRA_OECONF = " \
     --with-default-trust-store-file=${sysconfdir}/ssl/certs/ca-certificates.crt \
 "
 
+LDFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', ' -Wl,--undefined-version', '', d)}"
+
 # Otherwise the tools try and use HOSTTOOLS_DIR/bash as a shell.
 export POSIX_SHELL = "${base_bindir}/sh"
 
