@@ -83,32 +83,14 @@ def llvm_features_from_tune(d):
     if 'cortexa57' in feat:
         f.append("+v8a")
     if 'rv' in feat:
-        if 'm' in feat:
-            f.append("+m")
-        if 'a' in feat:
-            f.append("+a")
-        if 'f' in feat:
-            f.append("+f")
-        if 'd' in feat:
-            f.append("+d")
-        if 'c' in feat:
-            f.append("+c")
-        if 'v' in feat:
-            f.append("+v")
-        if 'zicbom' in feat:
-            f.append("+zicbom")
-        if 'zicsr' in feat:
-            f.append("+zicsr")
-        if 'zifencei' in feat:
-            f.append("+zifencei")
-        if 'zba' in feat:
-            f.append("+zba")
-        if 'zbb' in feat:
-            f.append("+zbb")
-        if 'zbc' in feat:
-            f.append("+zbc")
-        if 'zbs' in feat:
-            f.append("+zbs")
+        # LLVM uses the same names as TUNE_FEATURES for RISC-V extensions, so
+        # pass on every single-letter (except the base i) and z, s or x
+        # extension, in TUNE_FEATURES order to keep the result stable. Other
+        # tune flags (e.g. "rv", "64" or core names) aren't extensions.
+        for e in dict.fromkeys(d.getVar('TUNE_FEATURES').split()):
+            if (len(e) == 1 and e.isalpha() and e != 'i') or \
+                    (len(e) > 1 and e[0] in 'zsx' and e.isalnum()):
+                f.append("+" + e)
     return f
 llvm_features_from_tune[vardepvalue] = "${@llvm_features_from_tune(d)}"
 
