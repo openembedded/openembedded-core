@@ -25,6 +25,8 @@ CVE_STATUS[CVE-2026-4775] = "fixed-version: Fixed since 4.7.2, NVD tracks this a
 
 inherit autotools multilib_header
 
+LDFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', ' -Wl,--undefined-version', '', d)}"
+
 CACHED_CONFIGUREVARS = "ax_cv_check_gl_libgl=no"
 
 PACKAGECONFIG ?= "cxx jpeg zlib lzma \
