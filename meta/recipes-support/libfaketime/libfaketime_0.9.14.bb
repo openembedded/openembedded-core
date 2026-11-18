@@ -4,12 +4,11 @@ HOMEPAGE = "https://github.com/wolfcw/libfaketime"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRCREV = "86b37fde2fed7336ea2d0c17928e3015a55d9b4a"
+SRCREV = "c88b79b4e9cc1c94294037b4677b69185861c2a1"
 
 SRC_URI = "git://github.com/wolfcw/libfaketime.git;branch=master;tag=v${PV};protocol=https \
-           file://0001-libfaketime.c-do-not-declare-__time64-when-D_TIME_BI.patch \
            file://0001-Mark-write-only-real_-pointers-as-unused.patch \
-"
+           "
 
 # The version script names the symbols that are defined with .symver
 LDFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'ld-is-lld', ' -Wl,--undefined-version', '', d)}"

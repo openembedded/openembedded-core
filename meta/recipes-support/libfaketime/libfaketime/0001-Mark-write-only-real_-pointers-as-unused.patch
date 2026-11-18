@@ -1,4 +1,4 @@
-From d0fd7b4be89feb6a8809216b0dc1d84299bbad96 Mon Sep 17 00:00:00 2001
+From acbf2bfedc297118ec8c8459fd2b4c6e189c14fd Mon Sep 17 00:00:00 2001
 From: Khem Raj <khem.raj@oss.qualcomm.com>
 Date: Mon, 7 Sep 2026 19:27:57 -0700
 Subject: [PATCH] Mark write-only real_* pointers as unused
@@ -22,19 +22,23 @@ Upstream-Status: Pending
 
 Signed-off-by: Khem Raj <khem.raj@oss.qualcomm.com>
 ---
- src/libfaketime.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ src/libfaketime.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
 diff --git a/src/libfaketime.c b/src/libfaketime.c
-index e674883..2addaab 100644
+index f3acdbf37a42..9f783e9557e1 100644
 --- a/src/libfaketime.c
 +++ b/src/libfaketime.c
-@@ -337,26 +337,26 @@ static __thread bool dont_fake = false;
+@@ -355,7 +355,7 @@ static bool command_excluded = false;
  /* pointers to real (not faked) functions */
  static int          (*real_stat)            (const char *, struct stat *);
  static int          (*real_fstat)           (int, struct stat *);
 -static int          (*real_lstat)           (const char *, struct stat *);
 +static int          (*real_lstat)           (const char *, struct stat *) __attribute__((unused));
+ #if defined(FAKE_STAT) && !defined(MACOS_DYLD_INTERPOSE)
+ static int          (*real_nftw)            (const char *,
+                                               int (*)(const char *, const struct stat *, int, struct FTW *),
+@@ -364,26 +364,26 @@ static int          (*real_nftw)            (const char *,
  #ifndef __ANDROID__
  static int          (*real_xstat)           (int, const char *, struct stat *);
  static int          (*real_fxstat)          (int, int, struct stat *);
@@ -46,11 +50,19 @@ index e674883..2addaab 100644
  #if !defined(__APPLE__) || !__DARWIN_ONLY_64_BIT_INO_T
  #ifndef __ANDROID__
 -static int          (*real_stat64)          (const char *, struct stat64 *);
+-static int          (*real_lstat64)         (const char *, struct stat64 *);
+-static int          (*real_fstat64)         (int, struct stat64 *);
+-static int          (*real_fstatat)         (int, const char *, struct stat *, int);
+-static int          (*real_fstatat64)       (int, const char *, struct stat64 *, int);
 -static int          (*real_xstat64)         (int, const char *, struct stat64 *);
 -static int          (*real_fxstat64)        (int, int , struct stat64 *);
 -static int          (*real_fxstatat64)      (int, int , const char *, struct stat64 *, int);
 -static int          (*real_lxstat64)        (int, const char *, struct stat64 *);
 +static int          (*real_stat64)          (const char *, struct stat64 *) __attribute__((unused));
++static int          (*real_lstat64)         (const char *, struct stat64 *) __attribute__((unused));
++static int          (*real_fstat64)         (int, struct stat64 *) __attribute__((unused));
++static int          (*real_fstatat)         (int, const char *, struct stat *, int) __attribute__((unused));
++static int          (*real_fstatat64)       (int, const char *, struct stat64 *, int) __attribute__((unused));
 +static int          (*real_xstat64)         (int, const char *, struct stat64 *) __attribute__((unused));
 +static int          (*real_fxstat64)        (int, int , struct stat64 *) __attribute__((unused));
 +static int          (*real_fxstatat64)      (int, int , const char *, struct stat64 *, int) __attribute__((unused));
