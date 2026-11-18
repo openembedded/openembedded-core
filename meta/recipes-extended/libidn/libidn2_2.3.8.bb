@@ -19,6 +19,7 @@ DEPENDS = "virtual/libiconv libunistring"
 inherit pkgconfig autotools gettext texinfo gtk-doc lib_package
 
 EXTRA_OECONF += "--disable-rpath \
+                 --enable-ld-version-script \
                  --with-libunistring-prefix=${STAGING_EXECPREFIXDIR} \
                  "
 
