@@ -22,27 +22,34 @@ Upstream-Status: Inappropriate [oe specific]
 Assisted-by: kiro:claude-opus-4.6
 Signed-off-by: Daniel Turull <daniel.turull@ericsson.com>
 ---
- src/basic/chase.c   | 21 +++++++++++++++-
- src/basic/fd-util.c | 61 +++++++++++++++++++++++++++++++++++++++++++--
+ src/basic/chase.c   | 21 +++++++++++++--
+ src/basic/fd-util.c | 63 +++++++++++++++++++++++++++++++++++++++++++--
  src/basic/fd-util.h |  1 +
- 3 files changed, 80 insertions(+), 3 deletions(-)
+ 3 files changed, 81 insertions(+), 4 deletions(-)
 
 diff --git a/src/basic/chase.c b/src/basic/chase.c
-index 23a523798e..08ef95b3dd 100644
+index ff879aefa5..1d6199d17b 100644
 --- a/src/basic/chase.c
 +++ b/src/basic/chase.c
-@@ -40,7 +40,9 @@
+@@ -45,7 +45,7 @@
          (CHASE_MUST_BE_DIRECTORY|CHASE_MUST_BE_REGULAR|CHASE_MUST_BE_SOCKET)
  
- static int chase_statx(int fd, struct statx *ret) {
+ static int chase_statx(int fd, ChaseFlags chase_flags, struct statx *ret) {
+-        int statx_flags = 0;
++        int statx_flags = 0, r;
+ 
+         /* Querying fresh attributes of a mount point root on a network file system (e.g. NFS) makes
+          * the kernel revalidate them with the server, which blocks if the server is unreachable.
+@@ -53,7 +53,7 @@ static int chase_statx(int fd, ChaseFlags chase_flags, struct statx *ret) {
+         if (FLAGS_SET(chase_flags, CHASE_NO_SYNC))
+                 statx_flags |= AT_STATX_DONT_SYNC;
+ 
 -        return xstatx_full(fd,
-+        int r;
-+
 +        r = xstatx_full(fd,
                          /* path= */ NULL,
-                         /* statx_flags= */ 0,
+                         statx_flags,
                          XSTATX_MNT_ID_BEST,
-@@ -48,6 +50,23 @@ static int chase_statx(int fd, struct statx *ret) {
+@@ -61,6 +61,23 @@ static int chase_statx(int fd, ChaseFlags chase_flags, struct statx *ret) {
                          /* optional_mask= */ 0,
                          /* mandatory_attributes= */ 0,
                          ret);
@@ -50,7 +57,7 @@ index 23a523798e..08ef95b3dd 100644
 +                uint64_t mnt_id;
 +
 +                /* Kernel lacks STATX_MNT_ID; fall back to /proc/self/fdinfo. */
-+                r = xstatx(fd, /* path= */ NULL, /* statx_flags= */ 0,
++                r = xstatx(fd, /* path= */ NULL, statx_flags,
 +                           STATX_TYPE|STATX_UID|STATX_INO,
 +                           ret);
 +                if (r < 0)
@@ -65,12 +72,24 @@ index 23a523798e..08ef95b3dd 100644
 +        return r;
  }
  
- static int chase_openat2(int root_fd, int dir_fd, const char *path, ChaseFlags chase_flags) {
+ static int chase_statx_is_root(const struct statx *stx, const struct statx *root_stx) {
 diff --git a/src/basic/fd-util.c b/src/basic/fd-util.c
-index c6e78c59b6..7f33d900e5 100644
+index 5c07983782..a4dc9f04e6 100644
 --- a/src/basic/fd-util.c
 +++ b/src/basic/fd-util.c
-@@ -1082,6 +1082,38 @@ int path_is_root_at(int dir_fd, const char *path) {
+@@ -12,9 +12,11 @@
+ #include "dirent-util.h"
+ #include "errno-util.h"
+ #include "fd-util.h"
++#include "fileio.h"
+ #include "format-util.h"
+ #include "fs-util.h"
+ #include "log.h"
++#include "parse-util.h"
+ #include "path-util.h"
+ #include "process-util.h"
+ #include "sort-util.h"
+@@ -1107,6 +1109,38 @@ int path_is_root_at(int dir_fd, const char *path) {
          return fds_inode_and_mount_same(dir_fd, XAT_FDROOT);
  }
  
@@ -109,7 +128,7 @@ index c6e78c59b6..7f33d900e5 100644
  int fds_inode_and_mount_same(int fd1, int fd2) {
          struct statx sx1, sx2;
          int r;
-@@ -1092,7 +1124,20 @@ int fds_inode_and_mount_same(int fd1, int fd2) {
+@@ -1117,7 +1151,20 @@ int fds_inode_and_mount_same(int fd1, int fd2) {
          r = xstatx(fd1, /* path = */ NULL, AT_EMPTY_PATH,
                     STATX_TYPE|STATX_INO|STATX_MNT_ID,
                     &sx1);
@@ -131,7 +150,7 @@ index c6e78c59b6..7f33d900e5 100644
                  return r;
  
          if (fd1 == fd2) /* Shortcut things if fds are the same (only after validating the fd) */
-@@ -1101,7 +1146,19 @@ int fds_inode_and_mount_same(int fd1, int fd2) {
+@@ -1126,7 +1173,19 @@ int fds_inode_and_mount_same(int fd1, int fd2) {
          r = xstatx(fd2, /* path = */ NULL, AT_EMPTY_PATH,
                     STATX_TYPE|STATX_INO|STATX_MNT_ID,
                     &sx2);
@@ -153,7 +172,7 @@ index c6e78c59b6..7f33d900e5 100644
  
          r = statx_mount_same(&sx1, &sx2);
 diff --git a/src/basic/fd-util.h b/src/basic/fd-util.h
-index 86bddb6dac..34370c8943 100644
+index caf948a218..0d7b89e6c2 100644
 --- a/src/basic/fd-util.h
 +++ b/src/basic/fd-util.h
 @@ -188,6 +188,7 @@ static inline int dir_fd_is_root_or_cwd(int dir_fd) {

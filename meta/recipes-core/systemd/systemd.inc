@@ -13,7 +13,7 @@ LICENSE:libsystemd = "LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://LICENSE.GPL2;md5=c09786363500a9acc29b147e6e72d2c6 \
                     file://LICENSE.LGPL2.1;md5=be0aaf4a380f73f7e00b420a007368f2"
 
-SRCREV = "8cc40e0c5e9234bf45084751ac53b1fbfe70b492"
+SRCREV = "63511d7283d7d0e2a2fc28075481afaf1a7be8f5"
 SRCBRANCH = "v262-stable"
 SRC_URI = "git://github.com/systemd/systemd.git;protocol=https;branch=${SRCBRANCH};tag=v${PV}"
 
