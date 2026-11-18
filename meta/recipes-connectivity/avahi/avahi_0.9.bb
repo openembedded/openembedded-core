@@ -87,22 +87,14 @@ do_compile:prepend() {
 
 RRECOMMENDS:${PN}:append:libc-glibc = " avahi-libnss-mdns"
 
-AVAHI_PTESTS = " \
-    avahi-common/strlst-test \
-    avahi-common/domain-test \
-    avahi-common/alternative-test \
-    avahi-common/timeval-test \
-    avahi-common/utf8-test \
-    avahi-core/dns-spin-test \
-    avahi-core/dns-test \
-    avahi-core/hashmap-test \
-"
-
 do_install_ptest() {
     install -d ${D}${PTEST_PATH}/tests
-    for t in ${AVAHI_PTESTS}; do
-        ${B}/libtool --mode=install install -m 0755 ${B}/$t \
-            ${D}${PTEST_PATH}/tests/$(basename $t)
+    for d in $(makefile-getvar ${B}/Makefile SUBDIRS); do
+        [ -f ${B}/$d/Makefile ] || continue
+        for t in $(makefile-getvar ${B}/$d/Makefile TESTS); do
+            ${B}/libtool --mode=install install -m 0755 ${B}/$d/$t \
+                ${D}${PTEST_PATH}/tests/$t
+        done
     done
 }
 
