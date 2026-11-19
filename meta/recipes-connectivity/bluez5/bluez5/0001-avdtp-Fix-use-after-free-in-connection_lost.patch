@@ -1,0 +1,44 @@
+From ac2cc2527bf20f516f22055c2844973ca0e0ec80 Mon Sep 17 00:00:00 2001
+From: Jinwang Li <jinwang.li@oss.qualcomm.com>
+Date: Mon, 16 Nov 2026 17:07:19 +0800
+Subject: [PATCH] avdtp: Fix use-after-free in connection_lost
+
+A sink may start reverse discovery when processing a remote stream
+configuration. If the signaling channel disconnects after the stream is
+configured and discovery holds the last setup reference, stream cleanup
+frees that setup before the pending discovery callback runs, causing a
+use-after-free.
+
+Complete discovery with the disconnect error before releasing streams
+so the callback runs while its setup is still valid.
+
+Fixes: 02877c5e98b8 ("a2dp: Add reverse discovery")
+Assisted-by: Claude:claude-sonnet-5
+
+Upstream-Status: Backport [https://github.com/bluez/bluez/commit/43de1efcb453ec401c2f2ae09682486b4f3e1ff3]
+Signed-off-by: Jinwang Li <jinwang.li@oss.qualcomm.com>
+---
+ profiles/audio/avdtp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/profiles/audio/avdtp.c b/profiles/audio/avdtp.c
+index 30f80a0c2..5ebc0c5cc 100644
+--- a/profiles/audio/avdtp.c
++++ b/profiles/audio/avdtp.c
+@@ -1159,11 +1159,11 @@ static void connection_lost(struct avdtp *session, int err)
+ 	ba2str(device_get_address(session->device), address);
+ 	DBG("Disconnected from %s", address);
+ 
++	finalize_discovery(session, err);
++
+ 	g_slist_foreach(session->streams, (GFunc) release_stream, session);
+ 	session->streams = NULL;
+ 
+-	finalize_discovery(session, err);
+-
+ 	avdtp_set_state(session, AVDTP_SESSION_STATE_DISCONNECTED);
+ 
+ 	avdtp_unref(session);
+-- 
+2.34.1
+
