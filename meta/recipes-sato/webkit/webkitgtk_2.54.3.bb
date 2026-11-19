@@ -32,7 +32,6 @@ DEPENDS += " \
           ruby-native \
           gperf-native \
           unifdef-native \
-          cairo \
           harfbuzz \
           jpeg \
           atk \
