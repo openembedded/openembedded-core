@@ -174,14 +174,11 @@ python do_compile() {
         if not loadable_file:
             bb.fatal("File for loadable %s not specified through FIT_LOADABLE_FILENAME[%s]" % (loadable, loadable))
 
-        loadable_loadaddress = d.getVarFlag('FIT_LOADABLE_LOADADDRESS', loadable)
-        if not loadable_loadaddress:
-            bb.fatal("Load address for loadable %s not specified through FIT_LOADABLE_LOADADDRESS[%s]" % (loadable, loadable))
-
         # Optional parameters
         loadable_arch = d.getVarFlag('FIT_LOADABLE_ARCH', loadable)
         loadable_compression = d.getVarFlag('FIT_LOADABLE_COMPRESSION', loadable)
         loadable_description = d.getVarFlag('FIT_LOADABLE_DESCRIPTION', loadable) or ("%s loadable" % loadable)
+        loadable_loadaddress = d.getVarFlag('FIT_LOADABLE_LOADADDRESS', loadable)
         loadable_entrypoint = d.getVarFlag('FIT_LOADABLE_ENTRYPOINT', loadable)
         loadable_os = d.getVarFlag('FIT_LOADABLE_OS', loadable)
         loadable_type = d.getVarFlag('FIT_LOADABLE_TYPE', loadable)
