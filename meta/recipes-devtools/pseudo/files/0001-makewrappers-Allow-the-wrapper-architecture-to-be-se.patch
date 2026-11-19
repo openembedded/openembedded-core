@@ -1,0 +1,149 @@
+From 979add31166eadc1954b32ff7cb6038fbd171e06 Mon Sep 17 00:00:00 2001
+From: Sunil Dora <sunilkumar.dora@windriver.com>
+Date: Fri, 30 Oct 2026 11:56:45 -0700
+Subject: [PATCH] makewrappers: Allow the wrapper architecture to be set for
+ cross builds
+
+Architecture specific modifiers in wrapfuncs.in, such as
+version-aarch64="GLIBC_2.17" on the xattr wrappers, are selected with
+platform.machine(), so they follow the machine running the script
+rather than the one pseudo is built for. An aarch64 pseudo cross built
+on x86_64 ends up with GLIBC_2.3 and the reverse with GLIBC_2.17, which
+shows up as pseudo not being reproducible between x86_64 and aarch64
+builders.
+
+Add a --target option to configure and pass it on to makewrappers,
+which uses the cpu part of the triplet for these modifiers. Without
+--target the build machine is used as before.
+
+[YOCTO #16376]
+
+Upstream-Status: Backport [https://git.yoctoproject.org/pseudo/commit/?id=979add31166eadc1954b32ff7cb6038fbd171e06]
+
+Signed-off-by: Sunil Dora <sunilkumar.dora@windriver.com>
+Message-Id: <20261030185645.765144-1-sunilkumar.dora@windriver.com>
+Signed-off-by: Mark Hatle <mark.hatle@amd.com>
+---
+ Makefile.in  |  3 ++-
+ configure    |  6 ++++++
+ makewrappers | 17 +++++++++++++++--
+ 3 files changed, 23 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 6640a73..9c6da77 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -34,6 +34,7 @@ BITS=@BITS@
+ ARCH_FLAGS=@ARCH_FLAGS@
+ MARK64=@MARK64@
+ RPATH=@RPATH@
++TARGET=@TARGET@
+ VERSION=1.99.0
+ 
+ LIB=@LIB@
+@@ -146,7 +147,7 @@ tables: enums/*.in maketables templatefile.py $(TABLES)
+ 	./maketables enums/*.in
+ 
+ wrappers: makewrappers templatefile.py $(TEMPLATES) ports/*/wrapfuncs.in
+-	CC="$(CC) $(CFLAGS) $(CFLAGS_PSEUDO)" ./makewrappers "xattr=$(XATTR)"
++	CC="$(CC) $(CFLAGS) $(CFLAGS_PSEUDO)" ./makewrappers --target="$(TARGET)" "xattr=$(XATTR)"
+ 
+ .SECONDARY: tables wrappers
+ 
+diff --git a/configure b/configure
+index 68c9962..b43809e 100755
+--- a/configure
++++ b/configure
+@@ -10,6 +10,7 @@
+ opt_prefix=
+ opt_libdir=
+ opt_suffix=
++opt_target=
+ opt_arch=x86
+ opt_bits=
+ opt_sqlite=/usr
+@@ -32,6 +33,7 @@ usage()
+     echo >&2 "  configure --prefix=..."
+     echo >&2 "           [--libdir=...]"
+     echo >&2 "           [--suffix=...]"
++    echo >&2 "           [--target=...]"
+     echo >&2 "           [--enable-memory-db]"
+     echo >&2 "           [--enable-epoll]"
+     echo >&2 "           [--enable-xattr]"
+@@ -153,6 +155,9 @@ do
+     --suffix=*)
+         opt_suffix=${arg#--suffix=}
+         ;;
++    --target=*)
++        opt_target=${arg#--target=}
++        ;;
+     --arch=*)
+         echo >&2 "WARNING: The --arch option is now deprecated. Use --cflags."
+         opt_arch=${arg#--arch=}
+@@ -341,6 +346,7 @@ sed -e '
+   s,@LIBDIR@,'"$opt_libdir"',g
+   s,@LIB@,'"$opt_lib"',g
+   s,@SUFFIX@,'"$opt_suffix"',g
++  s,@TARGET@,'"$opt_target"',g
+   s,@SQLITE@,'"$opt_sqlite"',g
+   s,@ARCH_FLAGS@,'"$arch_flags"',g
+   s,@DEFAULT_SQLITE@,'"$default_sqlite"',g
+diff --git a/makewrappers b/makewrappers
+index 81d2444..1ac46bf 100755
+--- a/makewrappers
++++ b/makewrappers
+@@ -15,6 +15,13 @@ import platform
+ import subprocess
+ from templatefile import TemplateFile
+ 
++# Set from --target=, empty means the machine running this script
++target_arch = ""
++
++def wrapper_arch():
++    """Architecture the wrappers are built for: the --target cpu or the build machine."""
++    return target_arch or platform.machine()
++
+ class ArgumentList:
+     """A (possibly empty) list of arguments"""
+ 
+@@ -316,11 +323,11 @@ class Function:
+             # Strip all leading/trailing whitespace
+             modifiers = {k.strip():v.strip() for k, v in modifiers.items()}
+ 
+-            arch = "-" + platform.machine()
++            arch = "-" + wrapper_arch()
+             # Sorted so that versions-foo appear after versions, so overrides are easy
+             for key in sorted(modifiers):
+                 value = modifiers[key].replace('<equals>', '==')
+-                # If the key is version-arm64 and we're on arm64 then rename this to version
++                # If the key is version-arm64 and we're building for arm64 then rename this to version
+                 if key.endswith(arch):
+                     key = key.replace(arch, "")
+                 setattr(self, key, value)
+@@ -664,10 +671,15 @@ def process_wrapfuncs(port):
+ 
+ def main(argv):
+     """Read in function definitions, write out files based on templates."""
++    global target_arch
+     funcs = []
+     sources = []
+ 
+     for arg in argv:
++        if arg.startswith('--target='):
++            # A GNU triplet such as aarch64-poky-linux, only the cpu part is used
++            target_arch = arg[len('--target='):].split('-')[0]
++            continue
+         if '=' not in arg:
+             print("Invalid argument '%s', must be of the form name=value" % arg)
+             exit(1)
+@@ -697,6 +709,7 @@ def main(argv):
+     port = Port('common', sources)
+ 
+     # the per-function stuff
++    print("Architecture for wrapper modifiers: %s" % wrapper_arch())
+     print("Writing functions...")
+     all_funcs = port.functions()
+     for name in sorted(all_funcs.keys()):
+-- 
+2.49.0
+
