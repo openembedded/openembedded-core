@@ -10,11 +10,6 @@ SRC_URI += "file://0001-Revert-singlehtml-deprecate-the-fix_refuris-helper-f.pat
 
 inherit python_flit_core pypi
 
-do_install:append () {
-	# The cache format of "{None, 'en', 'ja'}" doesn't seem to be consistent (dict ordering?)
-	rm -f ${D}${libdir}/${PYTHON_DIR}/site-packages/sphinx/writers/__pycache__/*latex*
-}
-
 RDEPENDS:${PN} = "\
     python3-alabaster \
     python3-babel \
