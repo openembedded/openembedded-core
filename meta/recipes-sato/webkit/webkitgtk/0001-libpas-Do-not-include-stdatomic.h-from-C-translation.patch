@@ -1,8 +1,8 @@
-From c018bf3bca4a42f9540e50e0f5080c38223c2ddf Mon Sep 17 00:00:00 2001
+From ed10e504c0a627769973d3078548bbd54ed750f9 Mon Sep 17 00:00:00 2001
 From: Pablo Saavedra <psaavedra@igalia.com>
 Date: Thu, 17 Sep 2026 12:05:38 +0200
-Subject: [PATCH] [libpas] Do not include <stdatomic.h> from C++ translation
- units https://bugs.webkit.org/show_bug.cgi?id=324345
+Subject: [PATCH] Do not include <stdatomic.h> from C++ translation units
+ https://bugs.webkit.org/show_bug.cgi?id=324345
 
 Reviewed by NOBODY (OOPS!).
 
@@ -42,7 +42,7 @@ Signed-off-by: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
  1 file changed, 2 insertions(+)
 
 diff --git a/Source/bmalloc/libpas/src/libpas/pas_utils.h b/Source/bmalloc/libpas/src/libpas/pas_utils.h
-index 9626340809303..e781d8fb12c8d 100644
+index 433b26f0..49117c2f 100644
 --- a/Source/bmalloc/libpas/src/libpas/pas_utils.h
 +++ b/Source/bmalloc/libpas/src/libpas/pas_utils.h
 @@ -42,7 +42,9 @@

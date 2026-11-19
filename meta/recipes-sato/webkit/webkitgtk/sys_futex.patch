@@ -1,4 +1,4 @@
-From addce4888885a925f7711efda729d94cea312fe0 Mon Sep 17 00:00:00 2001
+From d537da81bbec0c05e10525c0a29e0af9128c0ce4 Mon Sep 17 00:00:00 2001
 From: Khem Raj <raj.khem@gmail.com>
 Date: Wed, 18 Dec 2024 20:24:22 -0800
 Subject: [PATCH] Fix build on newer 32bit architectures with only 64bit time_t

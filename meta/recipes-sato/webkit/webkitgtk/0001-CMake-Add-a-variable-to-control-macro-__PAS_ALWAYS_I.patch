@@ -1,4 +1,4 @@
-From bf74a02e45b3e147d912833a4ec6ba489a28344d Mon Sep 17 00:00:00 2001
+From 73f7316ee08a5369555e3e631d48ba6a5a01cf9e Mon Sep 17 00:00:00 2001
 From: Kai Kang <kai.kang@windriver.com>
 Date: Fri, 11 Aug 2023 14:20:48 +0800
 Subject: [PATCH] Add a variable to control macro
