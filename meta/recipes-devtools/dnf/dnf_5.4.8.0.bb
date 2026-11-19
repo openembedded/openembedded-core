@@ -37,6 +37,7 @@ SRC_URI = "\
     file://0003-Do-not-hardcode-system_cachedir.patch \
     file://0004-add-support-for-gcc-12-and-below.patch \
     file://0005-libdnf-fix-arm-arch-mapping-issues-for-qemuarmv5.patch \
+    file://0001-Do-not-hardcode-etc-bash-completion-directory.patch \
 "
 SRC_URI:append:class-native = " file://0001-Do-not-hardcode-the-systemd-unit-directory.patch"
 SRCREV = "01329a46d840894d9fac207f06ed5bc37e752612"

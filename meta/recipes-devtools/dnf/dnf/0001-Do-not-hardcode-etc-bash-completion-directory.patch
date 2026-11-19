@@ -1,0 +1,27 @@
+From d5083de53bb01834eaac134a62b836d5cc7843e9 Mon Sep 17 00:00:00 2001
+From: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
+Date: Thu, 19 Nov 2026 13:07:24 +0000
+Subject: [PATCH] Do not hardcode /etc bash completion directory
+
+Same as dnf4's 0001-Do-not-hardcode-etc-and-systemd-unit-directories.patch,
+dropped in the dnf5 upgrade.
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Jaipaul Cheernam <jaipaul.cheernam@est.tech>
+---
+ dnf5/CMakeLists.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/dnf5/CMakeLists.txt b/dnf5/CMakeLists.txt
+index 8fcf59cf..4b79938b 100644
+--- a/dnf5/CMakeLists.txt
++++ b/dnf5/CMakeLists.txt
+@@ -60,7 +60,7 @@ find_package(bash-completion)
+ if(BASH_COMPLETION_FOUND)
+   message(STATUS "Using bash completion dir ${BASH_COMPLETION_COMPLETIONSDIR}")
+ else()
+-  set (BASH_COMPLETION_COMPLETIONSDIR "/etc/bash_completion.d")
++  set (BASH_COMPLETION_COMPLETIONSDIR "${CMAKE_INSTALL_FULL_SYSCONFDIR}/bash_completion.d")
+   message (STATUS "Using fallback bash completion dir ${BASH_COMPLETION_COMPLETIONSDIR}")
+ endif()
+ 
