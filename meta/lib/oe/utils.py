@@ -198,24 +198,6 @@ def prune_suffix(var, suffixes, d):
 
     return var
 
-def str_filter(f, str):
-    """
-    Take ``str``, as a space-separated list of values, and return a
-    space-separated list of all the values matching the regular expression ``f``
-    using :py:func:`re.match`.
-    """
-    from re import match
-    return " ".join([x for x in str.split() if match(f, x, 0)])
-
-def str_filter_out(f, str):
-    """
-    Take ``str``, as a space-separated list of values, and return a
-    space-separated list of all the values *not* matching the regular expression ``f``
-    using :py:func:`re.match`.
-    """
-    from re import match
-    return " ".join([x for x in str.split() if not match(f, x, 0)])
-
 def build_depends_string(depends, task):
     """
     Append a taskname ``task`` to a space-separated list of dependencies stored in
