@@ -1,0 +1,42 @@
+From b956b03412ff099c7bf2858ece95f856ebbb10f5 Mon Sep 17 00:00:00 2001
+From: Sumanth Gavini <sumanth.gavini@windriver.com>
+Date: Thu, 19 Nov 2026 13:44:22 +0000
+Subject: [PATCH] lib/headerfmt.cc: Remove format module
+
+There is no <format> until gcc 13.1, so remove the format module to make it
+work on hosts such as Debian 12 (gcc 12.2) and Ubuntu 22.04. rpm 6.1.0 uses
+std::format() in formatValue() since upstream commit 18a4d495e ("Eliminate
+variable length array (VLA) use in headerFormat()"), same as
+tools/elfdeps.cc which is already handled by
+0001-tools-elfdeps.cc-Remove-format-module.patch.
+
+Upstream-Status: Inappropriate [oe-core specific]
+Signed-off-by: Sumanth Gavini <sumanth.gavini@windriver.com>
+---
+ lib/headerfmt.cc | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/lib/headerfmt.cc b/lib/headerfmt.cc
+index a188d052b..132cb02da 100644
+--- a/lib/headerfmt.cc
++++ b/lib/headerfmt.cc
+@@ -4,7 +4,6 @@
+ 
+ #include "system.h"
+ 
+-#include <format>
+ #include <string>
+ #include <unordered_map>
+ 
+@@ -741,7 +740,7 @@ static bool formatValue(headerSprintfArgs hsa, sprintfTag tag, int element)
+     /* Handle field width + justification formatting if specified */
+     if (tag->format && *tag->format) {
+ 	char *tval = NULL;
+-	const std::string fmtbuf = std::format("%{}s", tag->format);
++	const std::string fmtbuf = std::string("%") + tag->format + "s";
+ 
+ 	rasprintf(&tval, fmtbuf.c_str(), val);
+ 	free(val);
+-- 
+2.54.0
+

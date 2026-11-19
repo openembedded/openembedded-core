@@ -11,6 +11,10 @@ Updated for rpm 6.0.2:
 Remove the changes for macros.in since it doesn't work for rpmbuild, rpmbuild
 is like cross build, will define the values in package_rpm.bbclass.
 
+Refreshed for rpm 6.1.0:
+Update the context for the new WITH_WEBSITE option line, no functional
+change.
+
 Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
 Signed-off-by: Sumanth Gavini <sumanth.gavini@windriver.com>
 ---
@@ -18,14 +22,15 @@ Signed-off-by: Sumanth Gavini <sumanth.gavini@windriver.com>
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index de0b578a6..9a3aba071 100644
+index e2a1c5c0b..7e821b1ee 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
-@@ -41,7 +41,7 @@ option(WITH_LIBELF "Build with libelf support" ON)
- option(WITH_LIBLZMA "Build with liblzma support" ON)
+@@ -41,7 +41,7 @@ option(WITH_LIBLZMA "Build with liblzma support" ON)
  option(WITH_DOXYGEN "Build API docs with doxygen" OFF)
+ option(WITH_WEBSITE "Build standalone website" OFF)
  
 -set(RPM_CONFIGDIR "${CMAKE_INSTALL_PREFIX}/lib/rpm" CACHE PATH "rpm home")
 +set(RPM_CONFIGDIR "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/rpm" CACHE PATH "rpm home")
  set(RPM_MACROSDIR "${RPM_CONFIGDIR}/macros.d")
  set(RPM_VENDOR "vendor" CACHE STRING "rpm vendor string")
+ 

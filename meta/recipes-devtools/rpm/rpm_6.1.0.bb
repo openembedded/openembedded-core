@@ -22,9 +22,9 @@ HOMEPAGE = "http://www.rpm.org"
 
 # libraries are also LGPL - how to express this?
 LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://COPYING;md5=066ecde17828e5c8911ec9eae8be78f4"
+LIC_FILES_CHKSUM = "file://COPYING;md5=173bb5fcd0680812f4771daa00511604"
 
-SRC_URI = "git://github.com/rpm-software-management/rpm;protocol=https;branch=rpm-6.0.x;tag=${BP}-release \
+SRC_URI = "git://github.com/rpm-software-management/rpm;protocol=https;branch=rpm-6.1.x;tag=${BP}-release \
            file://0001-Do-not-add-an-unsatisfiable-dependency-when-building.patch \
            file://0001-Do-not-read-config-files-from-HOME.patch \
            file://0001-When-cross-installing-execute-package-scriptlets-wit.patch \
@@ -38,13 +38,14 @@ SRC_URI = "git://github.com/rpm-software-management/rpm;protocol=https;branch=rp
            file://0001-CMakeLists.txt-look-for-lua-with-pkg-config-rather-t.patch \
            file://0002-rpmio-rpmglob.c-avoid-using-GLOB_BRACE-if-undefined-.patch \
            file://0001-tools-elfdeps.cc-Remove-format-module.patch \
+           file://0001-lib-headerfmt.cc-Remove-format-module.patch \
            file://0001-macros.in-Set-_pkgverify_level-to-digest-as-RCPM-4.2.patch \
            file://0003-Do-not-install-the-pkgconfig-dependency-generator.patch \
            file://0017-critically-fail-if-post-install-fails.patch \
            "
 
 PE = "1"
-SRCREV = "a7f89afb57a98f6419d0eff35ca792198293b682"
+SRCREV = "f832c7e69945248dd5bcfcacfd10c176ee300fa2"
 
 DEPENDS = "lua libgcrypt file popt xz bzip2 elfutils python3 sqlite3 zstd scdoc-native"
 DEPENDS:append:class-native = " file-replacement-native bzip2-replacement-native"
@@ -184,6 +185,7 @@ FILES:${PN}-build = "\
     ${libdir}/rpm/mkinstalldirs \
     ${libdir}/rpm/macros.p* \
     ${libdir}/rpm/fileattrs/* \
+    ${bindir}/rpm-setup-autosign \
     ${libdir}/rpm/rpm-setup-autosign \
 "
 
