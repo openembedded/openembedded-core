@@ -8,6 +8,7 @@ SRC_URI += "https://static.rust-lang.org/dist/rustc-${RUST_VERSION}-src.tar.xz;n
             file://0003-cargo-omit-host-triple-from-unit-metadata-hash.patch;patchdir=${RUSTSRC} \
             file://0004-Re-bless-tests-adjust-for-new-Cargo-lints.patch;patchdir=${RUSTSRC} \
             file://0005-rustc_llvm-drop-native-sysroot-L-when-cross-building.patch;patchdir=${RUSTSRC} \
+            file://0006-alloctests-use-thread-local-in-c_str_alloc_error.patch;patchdir=${RUSTSRC} \
 "
 SRC_URI[rust.sha256sum] = "90dab90b8084eb57c35ae2b1d0b70c8e5138ace6023b22c60a5a400f586f63b2"
 

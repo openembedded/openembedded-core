@@ -1,0 +1,64 @@
+From a292cb16d5cfc32923be91c86afaf727682a38dc Mon Sep 17 00:00:00 2001
+From: Jules Bertholet <julesbertholet@quoi.xyz>
+Date: Mon, 16 Nov 2026 09:24:03 -0500
+Subject: [PATCH] alloctests: use thread-local in `c_str_alloc_error`
+
+Upstream-Status: Backport [https://github.com/rust-lang/rust/commit/a292cb16d5cfc32923be91c86afaf727682a38dc]
+Signed-off-by: Deepesh Varatharajan <Deepesh.Varatharajan@windriver.com>
+
+diff --git a/library/alloctests/tests/c_str_alloc_error.rs b/library/alloctests/tests/c_str_alloc_error.rs
+index 1e7d54d75b3..fc572169583 100644
+--- a/library/alloctests/tests/c_str_alloc_error.rs
++++ b/library/alloctests/tests/c_str_alloc_error.rs
+@@ -15,20 +15,22 @@
+ #![feature(alloc_error_hook)]
+ 
+ use std::alloc::{GlobalAlloc, Layout, System, set_alloc_error_hook};
++use std::cell::Cell;
+ use std::ffi::CString;
+ use std::panic::{AssertUnwindSafe, catch_unwind};
+-use std::sync::atomic::{AtomicBool, Ordering};
+ 
+ // Once armed, the first allocation of 8 bytes or more fails and disarms, so the
+ // reallocation inside `clone_into`'s grow path fails while the runtime's own
+ // smaller allocations keep succeeding.
+ struct OneShotFailingAlloc;
+ 
+-static ARMED: AtomicBool = AtomicBool::new(false);
++thread_local! {
++    static ARMED: Cell<bool> = const { Cell::new(false) };
++}
+ 
+ unsafe impl GlobalAlloc for OneShotFailingAlloc {
+     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
+-        if layout.size() >= 8 && ARMED.swap(false, Ordering::SeqCst) {
++        if layout.size() >= 8 && ARMED.replace(false) {
+             return core::ptr::null_mut();
+         }
+         unsafe { System.alloc(layout) }
+@@ -39,7 +41,7 @@ unsafe fn dealloc(&self, ptr: *mut u8, layout: Layout) {
+     }
+ 
+     unsafe fn realloc(&self, ptr: *mut u8, layout: Layout, new_size: usize) -> *mut u8 {
+-        if new_size >= 8 && ARMED.swap(false, Ordering::SeqCst) {
++        if new_size >= 8 && ARMED.replace(false) {
+             return core::ptr::null_mut();
+         }
+         unsafe { System.realloc(ptr, layout, new_size) }
+@@ -59,11 +61,11 @@ fn clone_into_alloc_failure_leaves_target_valid() {
+     let src = CString::new("a fairly long value").unwrap();
+     let mut target = CString::new("x").unwrap();
+ 
+-    ARMED.store(true, Ordering::SeqCst);
++    ARMED.set(true);
+     // Under Miri the failing allocator is honored, so this reallocation unwinds; in a
+     // normal build the allocator can't intercept it and `clone_into` just succeeds.
+     let res = catch_unwind(AssertUnwindSafe(|| src.as_c_str().clone_into(&mut target)));
+-    ARMED.store(false, Ordering::SeqCst);
++    ARMED.set(false);
+ 
+     if cfg!(miri) {
+         assert!(res.is_err(), "clone_into should have unwound on the alloc failure");
+-- 
+2.49.0
+
