@@ -320,9 +320,12 @@ SKIPPED_TESTS += " \
 # test_timerfd_ns_TFS_TIMER_ABSTIME was observed failing in Bugzilla YP 16470.
 # There are actually several other tests in the suite that all look prone to
 # load variability, so skip the whole test class.
-SKIPPED_TESTS:append = " \
-    --ignore TimerfdTests \
-"
+SKIPPED_TESTS += "--ignore TimerfdTests"
+
+# Skip a test that changes the system time
+# https://bugzilla.yoctoproject.org/show_bug.cgi?id=15783
+# https://github.com/python/cpython/issues/162280
+SKIPPED_TESTS += "--ignore test.test_time.TimeTestCase.test_monotonic_settime"
 
 # https://bugzilla.yoctoproject.org/show_bug.cgi?id=16348
 SKIPPED_TESTS:append:libc-musl = " \
