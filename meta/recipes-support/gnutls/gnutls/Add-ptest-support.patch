@@ -1,4 +1,4 @@
-From 6abc86acecff5a30173eb78a971ec5b65f77e1de Mon Sep 17 00:00:00 2001
+From 6d524052b77e431902c8216e9964c6cb955feca6 Mon Sep 17 00:00:00 2001
 From: Ravineet Singh <ravineet.a.singh@est.tech>
 Date: Tue, 10 Jan 2023 16:11:10 +0100
 Subject: [PATCH] gnutls: add ptest support
@@ -12,12 +12,12 @@ Signed-off-by: Ravineet Singh <ravineet.a.singh@est.tech>
  3 files changed, 11 insertions(+)
 
 diff --git a/Makefile.am b/Makefile.am
-index 843193f..816b09f 100644
+index d04e475..893f750 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -197,6 +197,9 @@ dist-hook:
- distcheck-hook:
- 	@test -d "$(top_srcdir)/po/.reference" || { echo "PO files are not downloaded; run ./bootstrap without --skip-po"; exit 1; }
+@@ -205,6 +205,9 @@ distcheck-hook:
+ 		$(MAKE) -C $(top_srcdir) abi-check-latest; \
+ 	fi
  
 +install-ptest:
 +	 $(MAKE) -C tests DESTDIR=$(DESTDIR)/tests $@
@@ -26,10 +26,10 @@ index 843193f..816b09f 100644
  
  include $(top_srcdir)/cligen/cligen.mk
 diff --git a/configure.ac b/configure.ac
-index 1744813..efb9e34 100644
+index 2e51385..52d531d 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -1413,6 +1413,8 @@ AC_SUBST(LIBGNUTLS_CFLAGS)
+@@ -1411,6 +1411,8 @@ AC_SUBST(LIBGNUTLS_CFLAGS)
  
  AM_CONDITIONAL(NEEDS_LIBRT, test "$gnutls_needs_librt" = "yes")
  
@@ -39,10 +39,10 @@ index 1744813..efb9e34 100644
  
  hw_features=
 diff --git a/tests/Makefile.am b/tests/Makefile.am
-index 189d068..8430b05 100644
+index b55eaf0..e3713b2 100644
 --- a/tests/Makefile.am
 +++ b/tests/Makefile.am
-@@ -745,6 +745,12 @@ SH_LOG_COMPILER = $(SHELL)
+@@ -693,6 +693,12 @@ SH_LOG_COMPILER = $(SHELL)
  AM_VALGRINDFLAGS = --suppressions=$(srcdir)/suppressions.valgrind
  LOG_COMPILER = $(LOG_VALGRIND)
  

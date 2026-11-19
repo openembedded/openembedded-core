@@ -1,4 +1,4 @@
-From c4f6cb380471b5e5478ae6f7f8c5604a6a64ec1c Mon Sep 17 00:00:00 2001
+From f564b05747598c92655ef5bea7e49acc48cb447d Mon Sep 17 00:00:00 2001
 From: Lei Maohui <leimaohui@fujitsu.com>
 Date: Mon, 23 May 2022 10:44:43 +0900
 Subject: [PATCH] Creating .hmac file should be excuted in target environment,
@@ -11,10 +11,10 @@ Signed-off-by: Lei Maohui <leimaohui@fujitsu.com>
  1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/lib/Makefile.am b/lib/Makefile.am
-index a50d311..193ea19 100644
+index 2382952..f1f0d67 100644
 --- a/lib/Makefile.am
 +++ b/lib/Makefile.am
-@@ -275,8 +275,7 @@ hmac_file = .libs/.$(gnutls_so).hmac
+@@ -267,8 +267,7 @@ hmac_file = .libs/.$(gnutls_so).hmac
  
  all-local: $(hmac_file)
  

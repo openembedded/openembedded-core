@@ -14,7 +14,7 @@ LIC_FILES_CHKSUM = "file://README.md;beginline=181;endline=205;md5=e159ff2a6e9cc
                     file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464 \
                     file://COPYING.LESSERv2;md5=4bf661c1e3793e55c8d1051bc5e0ae21"
 
-DEPENDS = "nettle gmp virtual/libiconv libunistring"
+DEPENDS = "nettle gmp virtual/libiconv libunistring libtasn1"
 
 SHRT_VER = "${@d.getVar('PV').split('.')[0]}.${@d.getVar('PV').split('.')[1]}"
 
@@ -23,22 +23,19 @@ SRC_URI = "https://www.gnupg.org/ftp/gcrypt/gnutls/v${SHRT_VER}/gnutls-${PV}.tar
            file://0001-Creating-.hmac-file-should-be-excuted-in-target-envi.patch \
            file://run-ptest \
            file://Add-ptest-support.patch \
-           file://0001-tests-pkcs11-trust-list-fault-fix-issues-in-linking.patch \
-           file://0001-tests-mini-dtls-framents-link-to-gnulib.patch \
            "
 
-SRC_URI[sha256sum] = "ffed8ec1bf09c2426d4f14aae377de4753b53e537d685e604e99a8b16ca9c97e"
+SRC_URI[sha256sum] = "7e2d258071f5db9620aa7ff34259331d004f7beafa3eb18560cfaf60acfbf02a"
 
 inherit autotools texinfo pkgconfig gettext lib_package gtk-doc ptest
 
-PACKAGECONFIG ??= "libidn libtasn1 ${@bb.utils.filter('DISTRO_FEATURES', 'seccomp', d)}"
+PACKAGECONFIG ??= "libidn ${@bb.utils.filter('DISTRO_FEATURES', 'seccomp', d)}"
 PACKAGECONFIG:append:class-native = " p11-kit"
 
 # You must also have CONFIG_SECCOMP enabled in the kernel for
 # seccomp to work.
 PACKAGECONFIG[seccomp] = "--with-libseccomp-prefix=${STAGING_DIR_HOST},ac_cv_libseccomp=no,libseccomp"
 PACKAGECONFIG[libidn] = "--with-idn,--without-idn,libidn2"
-PACKAGECONFIG[libtasn1] = "--without-included-libtasn1,--with-included-libtasn1,libtasn1"
 PACKAGECONFIG[p11-kit] = "--with-p11-kit,--without-p11-kit,p11-kit"
 PACKAGECONFIG[tpm] = "--with-tpm,--without-tpm,trousers"
 PACKAGECONFIG[fips] = "--enable-fips140-mode --with-libdl-prefix=${STAGING_DIR_HOST}"
@@ -60,9 +57,12 @@ EXTRA_OECONF = " \
 # Otherwise the tools try and use HOSTTOOLS_DIR/bash as a shell.
 export POSIX_SHELL = "${base_bindir}/sh"
 
+# Regenerate bundled m4 files from the sysroot; since 3.8.14 some are
+# shipped read-only, which breaks aclocal.
 do_configure:prepend() {
-	for dir in . lib; do
-		rm -f ${dir}/aclocal.m4 ${dir}/m4/libtool.m4 ${dir}/m4/lt*.m4
+	for dir in ${S} ${S}/lib; do
+		rm -f ${dir}/aclocal.m4 ${dir}/m4/libtool.m4 ${dir}/m4/lt*.m4 \
+		      ${dir}/m4/gtk-doc.m4 ${dir}/m4/pkg.m4
 	done
 }
 
