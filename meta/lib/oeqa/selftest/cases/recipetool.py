@@ -5,11 +5,13 @@
 #
 
 import errno
+import json
 import os
 import shutil
 import tempfile
 import urllib.parse
 
+import oe.npm
 import oe.spdx_license
 
 from oeqa.utils.commands import runCmd, bitbake, get_bb_var
@@ -452,15 +454,25 @@ class RecipetoolCreateTests(RecipetoolBase):
         urls.append('npm://registry.npmjs.org/;package=@savoirfairelinux/node-server-example;version=${PV}'
                     ';sha512sum=f2dd7d88cb9a129fbb97eb87a8b5103bab24f783420fd7587f8000a355a12bf7'
                     '83f1263230afc588123958b73e36bb241f63eaf08119aac5aa2a870bc4de9223')
-        urls.append('npmsw://${THISDIR}/${BPN}/npm-shrinkwrap.json')
+        urls.append('file://npm-shrinkwrap.json;subdir=npm')
         checkvars['SRC_URI'] = set(urls)
         checkvars['S'] = '${UNPACKDIR}/npm'
         checkvars['LICENSE:${PN}'] = 'MIT'
         checkvars['LICENSE:${PN}-base64'] = 'Unknown'
         checkvars['LICENSE:${PN}-accepts'] = 'MIT'
         checkvars['LICENSE:${PN}-inherits'] = 'ISC'
-        inherits = ['npm']
+        inherits = ['npm', 'npm-update-dependencies']
         self._test_recipe_contents(recipefile, checkvars, inherits)
+
+        # The update task writes one SRC_URI entry for each dependency
+        with open(shrinkwrap) as f:
+            expected = oe.npm.shrinkwrap_src_uri(json.load(f), 'npm')
+        deps_require_file = os.path.join(temprecipe, 'savoirfairelinux-node-server-example-npm-deps.inc')
+        self.assertFileExists(deps_require_file)
+        checkvars = {'SRC_URI': set(expected)}
+        self._test_recipe_contents(deps_require_file, checkvars, [])
+        self.assertTrue(any(url.startswith('npm://registry.npmjs.org/;package=accepts;')
+                            and url.endswith(';destsuffix=npm/node_modules/accepts') for url in expected))
 
     def test_recipetool_create_github(self):
         # Basic test to see if github URL mangling works. Deliberately use an
