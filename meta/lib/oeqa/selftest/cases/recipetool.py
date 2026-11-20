@@ -454,7 +454,7 @@ class RecipetoolCreateTests(RecipetoolBase):
                     '83f1263230afc588123958b73e36bb241f63eaf08119aac5aa2a870bc4de9223')
         urls.append('npmsw://${THISDIR}/${BPN}/npm-shrinkwrap.json')
         checkvars['SRC_URI'] = set(urls)
-        checkvars['S'] = '${WORKDIR}/npm'
+        checkvars['S'] = '${UNPACKDIR}/npm'
         checkvars['LICENSE:${PN}'] = 'MIT'
         checkvars['LICENSE:${PN}-base64'] = 'Unknown'
         checkvars['LICENSE:${PN}-accepts'] = 'MIT'
