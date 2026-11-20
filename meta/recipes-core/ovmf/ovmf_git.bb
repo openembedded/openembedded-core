@@ -20,6 +20,8 @@ SRC_URI = "gitsm://github.com/tianocore/edk2.git;branch=master;protocol=https;ta
            file://0003-debug-prefix-map.patch \
            file://0004-reproducible.patch \
            file://0005-CryptoPkg-IntrinsicLib-fix-memcpy-alias-prototype-fo.patch \
+           file://CVE-2026-111497_p1.patch;patchdir=BaseTools/Source/C/BrotliCompress/brotli \
+           file://CVE-2026-111497_p2.patch;patchdir=MdeModulePkg/Library/BrotliCustomDecompressLib/brotli \
            "
 
 PV = "edk2-stable202605"
