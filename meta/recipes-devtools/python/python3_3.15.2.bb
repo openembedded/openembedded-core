@@ -12,7 +12,6 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://get_module_deps3.py \
            file://python3-manifest.json \
            file://check_build_completeness.py \
-           file://reformat_sysconfig.py \
            file://0001-Makefile.pre-use-qemu-wrapper-when-gathering-profile.patch \
            file://0001-test_locale.py-correct-the-test-output-format.patch \
            file://makerace.patch \
@@ -217,9 +216,6 @@ do_install:append:class-native() {
 }
 
 do_install:append() {
-        for c in ${D}/${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata*.py; do
-            python3 ${UNPACKDIR}/reformat_sysconfig.py $c
-        done
         rm -f ${D}${libdir}/python${PYTHON_MAJMIN}/__pycache__/_sysconfigdata*.cpython*
 
         mkdir -p ${D}${libdir}/python-sysconfigdata
@@ -386,10 +382,8 @@ py_package_preprocess () {
                 ${PKGD}/${libdir}/python${PYTHON_MAJMIN}/_sysconfig_vars*.json \
                 ${PKGD}/${bindir}/python${PYTHON_MAJMIN}-config
 
-        # Reformat and recompile _sysconfigdata after modifying it so that it remains
-        # reproducible
+        # Recompile _sysconfigdata after modifying it
         for c in ${PKGD}/${libdir}/python${PYTHON_MAJMIN}/_sysconfigdata*.py; do
-            python3 ${UNPACKDIR}/reformat_sysconfig.py $c
             python3 -mcompileall $c -s ${PKGD} -p /
         done
 
