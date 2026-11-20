@@ -12,6 +12,9 @@ mkdir -p "$PYTEST_DEBUG_TEMPROOT"
 # include gcc as a ptest dependency, so skip that. test_big_arrays uses up a
 # large amount of storage, so skip that too.
 # remove test_validate_transcendentals if
-# https://github.com/numpy/numpy/issues/27460 is resolved
-pytest --automake -m "not slow" -k "not test_mem_policy and not test_big_arrays and not test_validate_transcendentals" @PYTHON_SITEPACKAGES_DIR@/numpy
+# https://github.com/numpy/numpy/issues/27460 is resolved.
+# Set the rootdir explicitly so that pytest doesn't use a common ancestor of the
+# ptest directory and test path for it, which slows down the ptest suite's
+# runtime
+pytest --automake --rootdir=@PYTHON_SITEPACKAGES_DIR@ -m "not slow" -k "not test_mem_policy and not test_big_arrays and not test_validate_transcendentals" @PYTHON_SITEPACKAGES_DIR@/numpy
 rm -rf "$PYTEST_DEBUG_TEMPROOT"
