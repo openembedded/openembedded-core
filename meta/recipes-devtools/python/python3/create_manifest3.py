@@ -30,12 +30,6 @@
 # Its also important to note that this method only works for python files, and shared
 # libraries. Static libraries, header files and binaries need to be dealt with manually.
 #
-# This script differs from its python2 version mostly on how shared libraries are handled
-# The manifest file for python3 has an extra field which contains the cached files for
-# each package.
-# Tha method to handle cached files does not work when a module includes a folder which
-# itself contains the pycache folder, gladly this is almost never the case.
-#
 # Author: Alejandro Enedino Hernandez Samaniego <alejandro at enedino dot org>
 
 
@@ -72,12 +66,6 @@ allfolders = []
 def isFolder(value):
     value = value.replace('${PYTHON_MAJMIN}',pyversion)
     if os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib')) or os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib64')) or os.path.isdir(value.replace('${libdir}',nativelibfolder+'/usr/lib32')):
-        return True
-    else:
-        return False
-
-def isCached(item):
-    if '__pycache__' in item:
         return True
     else:
         return False
@@ -132,12 +120,8 @@ for coredep in output.split():
     if is_dependency_skipped(old_manifest['core'], "core", coredep):
         continue
     coredep = coredep.replace(pyversion,'${PYTHON_MAJMIN}')
-    if isCached(coredep):
-        if coredep not in old_manifest['core']['cached']:
-            old_manifest['core']['cached'].append(coredep)
-    else:
-        if coredep not in old_manifest['core']['files']:
-            old_manifest['core']['files'].append(coredep)
+    if coredep not in old_manifest['core']['files']:
+        old_manifest['core']['files'].append(coredep)
 
 
 # The second step is to loop through the existing files contained in the core package
@@ -148,12 +132,8 @@ for coredep in output.split():
 
 for filedep in old_manifest['core']['files']:
     if isFolder(filedep):
-        if isCached(filedep):
-            if filedep not in old_manifest['core']['cached']:
-                old_manifest['core']['cached'].append(filedep)
-        else:
-            if filedep not in old_manifest['core']['files']:
-                old_manifest['core']['files'].append(filedep)
+        if filedep not in old_manifest['core']['files']:
+            old_manifest['core']['files'].append(filedep)
         continue
     if '${bindir}' in filedep:
         if filedep not in old_manifest['core']['files']:
@@ -186,12 +166,8 @@ for filedep in old_manifest['core']['files']:
             continue
         pymodule_dep = pymodule_dep.replace(pyversion,'${PYTHON_MAJMIN}')
 
-        if isCached(pymodule_dep):
-            if pymodule_dep not in old_manifest['core']['cached']:
-                old_manifest['core']['cached'].append(pymodule_dep)
-        else:
-            if pymodule_dep not in old_manifest['core']['files']:
-                old_manifest['core']['files'].append(pymodule_dep)
+        if pymodule_dep not in old_manifest['core']['files']:
+            old_manifest['core']['files'].append(pymodule_dep)
 
 
 # At this point we are done with the core package.
@@ -247,12 +223,10 @@ for pypkg in old_manifest:
     if "skip_depends" in old_manifest[pypkg]:
         new_manifest[pypkg]['skip_depends'] = old_manifest[pypkg]['skip_depends']
     new_manifest[pypkg]['files'] = []
-    new_manifest[pypkg]['cached'] = old_manifest[pypkg]['cached']
 
     # All packages should depend on core
     if pypkg != 'core':
         new_manifest[pypkg]['rdepends'].append('core')
-        new_manifest[pypkg]['cached'] = []
 
     print('\n')
     print('--------------------------')
@@ -352,7 +326,7 @@ for pypkg in old_manifest:
                     for pypkg_with_folder in hasfolders:
                         if (folderFound == False):
                             # print('Checking folder %s on package %s' % (pymodule_dep,pypkg_with_folder))
-                            for folder_dep in old_manifest[pypkg_with_folder]['files'] or folder_dep in old_manifest[pypkg_with_folder]['cached']:
+                            for folder_dep in old_manifest[pypkg_with_folder]['files']:
                                 if folder_dep == folder:
                                     print ('%s directory found in %s' % (folder, pypkg_with_folder))
                                     folderFound = True
@@ -369,16 +343,13 @@ for pypkg in old_manifest:
 
             # No directories beyond this point
             # We might already have this module on the dictionary since it could depend on a (previously checked) module
-            if pymodule_dep not in new_manifest[pypkg]['files'] and pymodule_dep not in new_manifest[pypkg]['cached']:
+            if pymodule_dep not in new_manifest[pypkg]['files']:
                 # Handle core as a special package, we already did it so we pass it to NEW data structure directly
                 if pypkg == 'core':
                     print('Adding %s to %s FILES' % (pymodule_dep, pypkg))
                     if pymodule_dep.endswith('*'):
                         wildcards.append(pymodule_dep)
-                    if isCached(pymodule_dep):
-                        new_manifest[pypkg]['cached'].append(pymodule_dep)
-                    else:
-                        new_manifest[pypkg]['files'].append(pymodule_dep)
+                    new_manifest[pypkg]['files'].append(pymodule_dep)
 
                     # Check for repeated files
                     if pymodule_dep not in allfiles:
@@ -396,7 +367,7 @@ for pypkg in old_manifest:
                     for possible_rdep in old_manifest:
                         # Debug
                         # print('Checking %s ' % pymodule_dep + ' in %s' % possible_rdep)
-                        if pymodule_dep in old_manifest[possible_rdep]['files'] or pymodule_dep in old_manifest[possible_rdep]['cached']:
+                        if pymodule_dep in old_manifest[possible_rdep]['files']:
                             # Since were nesting, we need to check its not the same pypkg
                             if(possible_rdep != pypkg):
                                 if possible_rdep not in new_manifest[pypkg]['rdepends']:
@@ -411,10 +382,7 @@ for pypkg in old_manifest:
                       # A module shouldn't contain itself (${libdir}/python3/sqlite3 shouldnt be on sqlite3 files)
                       if os.path.basename(pymodule_dep) != pypkg:
                         reportFILES.append(('Adding %s to %s FILES\n' % (pymodule_dep, pypkg)))
-                        if isCached(pymodule_dep):
-                            new_manifest[pypkg]['cached'].append(pymodule_dep)
-                        else:
-                            new_manifest[pypkg]['files'].append(pymodule_dep)
+                        new_manifest[pypkg]['files'].append(pymodule_dep)
                         if pymodule_dep.endswith('*'):
                             wildcards.append(pymodule_dep)
                         if pymodule_dep not in allfiles:
@@ -441,7 +409,6 @@ print(hasfolders)
 # Sort it just so it looks nicer
 for pypkg in new_manifest:
     new_manifest[pypkg]['files'].sort()
-    new_manifest[pypkg]['cached'].sort()
     new_manifest[pypkg]['rdepends'].sort()
     new_manifest[pypkg]['rprovides'].sort()
     # Remove empty sections

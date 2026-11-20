@@ -1,0 +1,26 @@
+Don't compile the standard library to .pyc files, we'll do that at packaging instead.
+
+Upstream-Status: Inappropriate [https://github.com/python/cpython/issues/160835]
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+
+diff --git i/Makefile.pre.in w/Makefile.pre.in
+index 243959a..89c4805 100644
+--- i/Makefile.pre.in
++++ w/Makefile.pre.in
+@@ -2922,16 +2922,6 @@ libinstall:	all $(srcdir)/Modules/xxmodule.c libainstall
+ 		echo "Applying app store compliance patch"; \
+ 		patch --force --reject-file "$(abs_builddir)/app-store-compliance.rej" --strip 2 --directory "$(DESTDIR)$(LIBDEST)" --input "$(abs_srcdir)/$(APP_STORE_COMPLIANCE_PATCH)" || true ; \
+ 	fi
+-	@ # Build PYC files for the 3 optimization levels (0, 1, 2)
+-	-PYTHONPATH=$(DESTDIR)$(LIBDEST) $(RUNSHARED_FOR_BUILD) \
+-		$(PYTHON_FOR_BUILD) -Wi $(DESTDIR)$(LIBDEST)/compileall.py \
+-		-o 0 -o 1 -o 2 $(COMPILEALL_OPTS) -d $(LIBDEST) -f \
+-		-x 'bad_coding|badsyntax|site-packages' \
+-		$(DESTDIR)$(LIBDEST)
+-	-PYTHONPATH=$(DESTDIR)$(LIBDEST) $(RUNSHARED_FOR_BUILD) \
+-		$(PYTHON_FOR_BUILD) -Wi $(DESTDIR)$(LIBDEST)/compileall.py \
+-		-o 0 -o 1 -o 2 $(COMPILEALL_OPTS) -d $(LIBDEST)/site-packages -f \
+-		-x badsyntax $(DESTDIR)$(LIBDEST)/site-packages
+ 
+ # bpo-21536: Misc/python-config.sh is generated in the build directory
+ # from $(srcdir)Misc/python-config.sh.in.

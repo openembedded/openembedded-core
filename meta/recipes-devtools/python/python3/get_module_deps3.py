@@ -140,20 +140,5 @@ for item in dif:
     # Prints out result, which is what will be used by create_manifest
     print (dep_path)
 
-
-    cpython_tag = sys.implementation.cache_tag
-    cached = ''
-    if debug == True:
-        log.write('\nGetting cached attribute for %s\n' % item)
-    cached = sys.modules['%s' % item].__spec__.cached
-    if cached is not None:
-        if debug == True:
-            log.write(cached + '\n')
-        cached = fix_path(cached)
-        cached = cached.replace(cpython_tag,'*')
-        if "_sysconfigdata" in cached:
-            cached = cached.replace(sysconfig._get_sysconfigdata_name(), "_sysconfigdata*")
-        print (cached)
-
 if debug == True:
     log.close()
