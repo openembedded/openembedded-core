@@ -24,6 +24,8 @@ SRC_URI = "http://www.python.org/ftp/python/${PV}/Python-${PV}.tar.xz \
            file://0001-3.15-gh-158097-Make-test_staggered_race_with_eager_t.patch \
            file://0001-3.15-gh-160924-Don-t-run-the-build-Python-with-RUNSH.patch \
            file://0001-gh-160881-Fix-test_is_python_process_non_python_subp.patch \
+           file://0001-3.15-gh-160704-Restore-C11-C17-static_assert-fallback.patch \
+           file://0001-3.15-gh-154643-Only-use-_Py_STDC_VERSION-when-defined.patch \
            "
 SRC_URI:append:class-native = " \
            file://0001-Lib-sysconfig.py-use-prefix-value-from-build-configu.patch \
