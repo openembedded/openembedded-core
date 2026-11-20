@@ -413,6 +413,18 @@ def is_package(url):
         return True
     return False
 
+def get_npm_checksum(registry, package, version):
+    """Get the checksum of an npm package from the registry.
+
+    The npm fetcher needs a checksum before the download. When a new recipe
+    is created, the registry is the only source of this checksum.
+    """
+    import urllib.request
+    from bb.fetch.npm import npm_integrity
+    url = "https://%s/%s/%s" % (registry.strip("/"), package, version)
+    with urllib.request.urlopen(url, timeout=60) as response:
+        return npm_integrity(json.load(response)["dist"]["integrity"])
+
 def create_recipe(args):
     import bb.process
     import tempfile
@@ -523,6 +535,15 @@ def create_recipe(args):
         # Assume 'master' branch if not set
         if scheme in ['git', 'gitsm'] and 'branch' not in params and 'nobranch' not in params:
             params['branch'] = 'master'
+        npm_checksum = {}
+        if scheme == 'npm' and not any(p in params for p in bb.fetch.npm.CHECKSUM_PARMS):
+            try:
+                checksum_name, checksum = get_npm_checksum(network + path, params.get('package', ''), params.get('version', ''))
+            except Exception as e:
+                logger.error('Unable to get the checksum of %s from the registry: %s' % (srcuri, e))
+                sys.exit(1)
+            npm_checksum[checksum_name] = checksum
+            params.update(npm_checksum)
         fetchuri = bb.fetch.encodeurl((scheme, network, path, user, passwd, params))
 
         tmpparent = tinfoil.config_data.getVar('BASE_WORKDIR')
@@ -587,6 +608,7 @@ def create_recipe(args):
         # Since we might have a value in srcbranch, we need to
         # recontruct the srcuri to include 'branch' in params.
         scheme, network, path, user, passwd, params = bb.fetch.decodeurl(srcuri)
+        params.update(npm_checksum)
         if scheme in ['git', 'gitsm']:
             params['branch'] = srcbranch or 'master'
 

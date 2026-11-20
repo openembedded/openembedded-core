@@ -449,7 +449,9 @@ class RecipetoolCreateTests(RecipetoolBase):
         checkvars['HOMEPAGE'] = 'https://github.com/savoirfairelinux/node-server-example#readme'
         checkvars['LICENSE'] = 'BSD-3-Clause AND ISC AND MIT AND Unknown'
         urls = []
-        urls.append('npm://registry.npmjs.org/;package=@savoirfairelinux/node-server-example;version=${PV}')
+        urls.append('npm://registry.npmjs.org/;package=@savoirfairelinux/node-server-example;version=${PV}'
+                    ';sha512sum=f2dd7d88cb9a129fbb97eb87a8b5103bab24f783420fd7587f8000a355a12bf7'
+                    '83f1263230afc588123958b73e36bb241f63eaf08119aac5aa2a870bc4de9223')
         urls.append('npmsw://${THISDIR}/${BPN}/npm-shrinkwrap.json')
         checkvars['SRC_URI'] = set(urls)
         checkvars['S'] = '${WORKDIR}/npm'
