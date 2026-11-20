@@ -433,6 +433,8 @@ def create_diff_gz(d, src_orig, src, ar_outdir):
     if not os.path.isdir(src) or not os.path.isdir(src_orig):
         return
 
+    bb.note('Creating diff gz...')
+
     # The diff --exclude can't exclude the file with path, so we copy
     # the patched source, and remove the files that we'd like to
     # exclude.
@@ -489,7 +491,9 @@ python do_unpack_and_patch() {
     if d.getVarFlag('ARCHIVER_MODE', 'diff') == '1':
         src = d.getVar('S').rstrip('/')
         src_orig = '%s.orig' % src
-        oe.path.copytree(src, src_orig)
+        # A recipe without sources may have no S
+        if os.path.isdir(src):
+            oe.path.copytree(src, src_orig)
 
     if bb.data.inherits_class('dos2unix', d):
         bb.build.exec_func('do_convert_crlf_to_lf', d)
@@ -500,7 +504,6 @@ python do_unpack_and_patch() {
 
     # Create the patches
     if d.getVarFlag('ARCHIVER_MODE', 'diff') == '1':
-        bb.note('Creating diff gz...')
         create_diff_gz(d, src_orig, src, ar_outdir)
         bb.utils.remove(src_orig, recurse=True)
 }
