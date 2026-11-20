@@ -955,6 +955,11 @@ def create_recipe(args):
     for task in run_tasks:
         logger.info("Running task %s" % task)
         tinfoil.build_file_sync(outfile, task)
+    if run_tasks:
+        # Remove the work directory and the stamps of these tasks. Else a
+        # later build of the recipe can trust the stamps, also when devtool
+        # has removed the work directory in the meantime.
+        tinfoil.build_file_sync(outfile, "clean")
 
     if tempsrc:
         if args.keep_temp:
