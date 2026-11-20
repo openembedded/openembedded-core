@@ -111,6 +111,24 @@ def npm_pack(env, srcdir, workdir, excludes=None):
 
     return (tarball, j)
 
+def npm_check_src_uri(d, shrinkwrap):
+    """Check that SRC_URI has one entry for each dependency of the shrinkwrap file"""
+    import oe.npm
+
+    destdir = os.path.relpath(d.getVar("S"), d.getVar("UNPACKDIR"))
+    dev = bb.utils.to_boolean(d.getVar("NPM_INSTALL_DEV"), False)
+    try:
+        expected = oe.npm.shrinkwrap_src_uri(shrinkwrap, destdir, dev)
+    except ValueError as e:
+        bb.fatal("npm-shrinkwrap.json: %s" % e)
+
+    missing, extra = oe.npm.src_uri_differences(expected, d.getVar("SRC_URI").split())
+    if missing or extra:
+        bb.fatal("SRC_URI does not match npm-shrinkwrap.json (%d missing, %d extra entries). "
+                 "Inherit npm-update-dependencies and run 'bitbake -c update_npm_deps %s'.\n%s"
+                 % (len(missing), len(extra), d.getVar("PN"),
+                    "\n".join(["missing: " + url for url in missing] + ["extra: " + url for url in extra])))
+
 python npm_do_configure() {
     """
     Step one: configure the npm cache and the main npm package
@@ -176,6 +194,12 @@ python npm_do_configure() {
     if has_shrinkwrap_file:
        if int(orig_shrinkwrap.get("lockfileVersion", 0)) < 2:
            bb.fatal("%s: lockfileVersion version 2 or later is required" % orig_shrinkwrap_file)
+
+       # externalsrc removes the dependencies from SRC_URI: the external
+       # source tree must contain them
+       if not d.getVar("EXTERNALSRC") and \
+               not any(url.startswith("npmsw://") for url in d.getVar("SRC_URI").split()):
+           npm_check_src_uri(d, orig_shrinkwrap)
 
        cached_shrinkwrap = copy.deepcopy(orig_shrinkwrap)
        for package in orig_shrinkwrap["packages"]:
