@@ -70,6 +70,17 @@ PACKAGECONFIG[libunistring] = "--with-libunistring-prefix=${STAGING_DIR_HOST},--
 PACKAGECONFIG[msgcat-curses] = "--with-libncurses-prefix=${STAGING_DIR_HOST},--disable-curses,ncurses,"
 PACKAGECONFIG[selinux] = "--with-selinux,--without-selinux --disable-acl,attr libselinux"
 
+
+do_configure:append() {
+    touch "${S}/gettext-runtime/intl/aclocal.m4"
+    touch "${S}/gettext-runtime/intl/configure"
+    touch "${S}/gettext-runtime/intl/config.h.in"
+    touch "${S}/gettext-runtime/intl/Makefile.in"
+    touch "${B}/gettext-runtime/intl/config.status"
+    touch "${B}/gettext-runtime/intl/config.h"
+    touch "${B}/gettext-runtime/intl/Makefile"
+}
+
 do_install:append:libc-musl () {
 	rm -f ${D}${libdir}/charset.alias
 	rm -f ${D}${includedir}/libintl.h
