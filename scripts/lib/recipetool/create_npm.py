@@ -282,7 +282,8 @@ class NpmRecipeHandler(RecipeHandler):
         bb.note("Handling licences ...")
         (licfiles, packages, fallback_licenses) = self._handle_licenses(srctree, shrinkwrap_file, dev)
         licvalues = match_licenses(licfiles, srctree, d)
-        split_pkg_licenses(licvalues, packages, lines_after, fallback_licenses)
+        split_pkg_licenses(licvalues, packages, lines_after,
+                           {pkg: " AND ".join(lics) for pkg, lics in fallback_licenses.items()})
         fallback_licenses_flat = sorted(set(license for sublist in fallback_licenses.values() for license in sublist))
         extravalues["LIC_FILES_CHKSUM"] = generate_common_licenses_chksums(fallback_licenses_flat, d)
         extravalues["LICENSE"] = " AND ".join(fallback_licenses_flat)
