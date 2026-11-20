@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://README.md;beginline=91;endline=97;md5=ceff7fd286eb6d8
 
 SRC_URI = "${CPAN_MIRROR}/authors/id/T/TI/TIMLEGGE/Convert-ASN1-${PV}.tar.gz"
 
-SRC_URI[sha256sum] = "50439aedff4b403f24c9373eefd3c25770e33a9190d93a331e7a744f8b4e7cd3"
+SRC_URI[sha256sum] = "012b90bbb931e049340a114dbc510f845309d9ca76cc6c4fad751d317b4bf0fa"
 
 S = "${UNPACKDIR}/Convert-ASN1-${PV}"
 
@@ -17,6 +17,12 @@ EXTRA_PERLFLAGS = "-I ${PERLHOSTLIB}"
 
 RDEPENDS:${PN} += "perl-module-exporter perl-module-constant perl-module-encode perl-module-encode-encoding perl-module-utf8 \
                    perl-module-socket perl-module-time-local perl-module-posix perl-module-scalar-util perl-module-test-more"
-RDEPENDS:${PN}-ptest += "perl-module-math-bigint perl-module-io-socket perl-module-data-dumper perl-module-math-bigint-calc"
+RDEPENDS:${PN}-ptest += "\
+    perl-module-data-dumper \
+    perl-module-io-socket \
+    perl-module-lib \
+    perl-module-math-bigint \
+    perl-module-math-bigint-calc \
+"
 
 BBCLASSEXTEND = "native"
