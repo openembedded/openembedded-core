@@ -23,6 +23,12 @@ logger = logging.getLogger('recipetool')
 
 TINFOIL = None
 
+def npm_recipe_name(package):
+    """Get a recipe or package name from an npm package name"""
+    # npm_package() keeps the "@" of a scope for unique download file names.
+    # An override cannot have it.
+    return npm_package(package).lstrip("@").strip("-")
+
 def tinfoil_init(instance):
     """Initialize tinfoil"""
     global TINFOIL
@@ -147,7 +153,7 @@ class NpmRecipeHandler(RecipeHandler):
         # Handle the dependencies
         def _handle_dependency(name, params, destdir):
             deptree = destdir.split('node_modules/')
-            suffix = "-".join([npm_package(dep) for dep in deptree])
+            suffix = "-".join([npm_recipe_name(dep) for dep in deptree])
             packages["${PN}" + suffix] = destdir
             _get_package_licenses(destdir, "${PN}" + suffix)
 
@@ -171,7 +177,7 @@ class NpmRecipeHandler(RecipeHandler):
         peer_deps = packages.get("", {}).get("peerDependencies", {})
 
         for peer_dep in peer_deps:
-            peer_dep_yocto_name = npm_package(peer_dep)
+            peer_dep_yocto_name = npm_recipe_name(peer_dep)
             bb.warn(peer_dep + " is a peer dependencie of the actual package. " +
             "Please add this peer dependencie to the RDEPENDS variable as %s and generate its recipe with devtool"
             % peer_dep_yocto_name)
@@ -195,7 +201,7 @@ class NpmRecipeHandler(RecipeHandler):
         if "name" not in data or "version" not in data:
             return False
 
-        extravalues["PN"] = npm_package(data["name"])
+        extravalues["PN"] = npm_recipe_name(data["name"])
         extravalues["PV"] = data["version"]
 
         if "description" in data:
