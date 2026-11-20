@@ -189,6 +189,10 @@
     },
     "core": {
         "summary": "Python interpreter and core modules",
+        "rprovides": [
+            "fcntl",
+            "pkgutil"
+        ],
         "rdepends": [],
         "skip_depends": {
             "core": [
@@ -638,14 +642,6 @@
         ],
         "cached": []
     },
-    "fcntl": {
-        "summary": "Python's fcntl interface",
-        "rdepends": [
-            "core"
-        ],
-        "files": [],
-        "cached": []
-    },
     "gdbm": {
         "summary": "Python GNU database support",
         "rdepends": [
@@ -814,7 +810,6 @@
             "doctest",
             "email",
             "ensurepip",
-            "fcntl",
             "html",
             "idle",
             "image",
@@ -830,7 +825,6 @@
             "netserver",
             "numbers",
             "pickle",
-            "pkgutil",
             "plistlib",
             "pprint",
             "profile",
@@ -966,14 +960,6 @@
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/pickletools.*.pyc",
             "${libdir}/python${PYTHON_MAJMIN}/__pycache__/shelve.*.pyc"
         ]
-    },
-    "pkgutil": {
-        "summary": "Python package extension utility support",
-        "rdepends": [
-            "core"
-        ],
-        "files": [],
-        "cached": []
     },
     "plistlib": {
         "summary": "Generate and parse Mac OS X .plist files",
