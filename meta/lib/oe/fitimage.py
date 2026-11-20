@@ -407,9 +407,11 @@ class ItsNodeRootKernel(ItsNode):
         opt_props = {
             "data": '/incbin/("' + filepath + '")',
             "arch": arch if arch is not None else self._arch,
-            "os": fit_os if fit_os is not None else self._os,
         }
 
+
+        if fit_os:
+            opt_props["os"] = fit_os
         if load:
             opt_props["load"] = f"<{load}>"
         if entry:
