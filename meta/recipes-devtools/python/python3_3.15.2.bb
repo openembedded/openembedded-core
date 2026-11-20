@@ -433,6 +433,10 @@ python(){
         pypackage = pn + '-' + key + '-native'
         if pypackage not in rprovides:
               rprovides.append(pypackage)
+        for subkey in python_manifest[key].get('rprovides', ()):
+            pypackage = pn + '-' + subkey + '-native'
+            if pypackage not in rprovides:
+                rprovides.append(pypackage)
 
     d.setVar('RPROVIDES:class-native', ' '.join(rprovides))
 
@@ -465,6 +469,11 @@ python(){
             if '${PN}' in value:
                 value=value.split('-', 1)[1]
             d.appendVar('RDEPENDS:' + pypackage, ' ' + pn + '-' + value)
+
+        for value in python_manifest[key].get('rprovides', ()):
+            if '${PN}' in value:
+                value=value.split('-', 1)[1]
+            d.appendVar('RPROVIDES:' + pypackage, ' ' + pn + '-' + value)
 
         for value in python_manifest[key].get('rrecommends', ()):
             if '${PN}' in value:

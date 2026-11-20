@@ -229,9 +229,20 @@ for pypkg in old_manifest:
 # will RDEPEND on it
 
 for pypkg in old_manifest:
+    # Handle special cases, we assume that when they were manually added
+    # to the manifest we knew what we were doing.
+    special_packages = ['misc', 'modules', 'dev', 'tests']
+    if pypkg in special_packages or 'staticdev' in pypkg:
+        print_indent('Passing %s package directly' % pypkg, 2)
+        new_manifest[pypkg] = old_manifest[pypkg]
+        if 'rprovides' not in new_manifest[pypkg]:
+            new_manifest[pypkg]['rprovides'] = []
+        continue
+
     # Use an empty dict as data structure to hold data for each package and fill it up
     new_manifest[pypkg] = {}
     new_manifest[pypkg]['summary'] = old_manifest[pypkg]['summary']
+    new_manifest[pypkg]['rprovides'] = old_manifest[pypkg].get('rprovides', [])
     new_manifest[pypkg]['rdepends'] = []
     if "skip_depends" in old_manifest[pypkg]:
         new_manifest[pypkg]['skip_depends'] = old_manifest[pypkg]['skip_depends']
@@ -247,14 +258,6 @@ for pypkg in old_manifest:
     print('--------------------------')
     print('Handling package %s' % pypkg)
     print('--------------------------')
-
-    # Handle special cases, we assume that when they were manually added 
-    # to the manifest we knew what we were doing.
-    special_packages = ['misc', 'modules', 'dev', 'tests']
-    if pypkg in special_packages or 'staticdev' in pypkg:
-        print_indent('Passing %s package directly' % pypkg, 2)
-        new_manifest[pypkg] = old_manifest[pypkg]
-        continue
 
     for filedep in old_manifest[pypkg]['files']:
         # We already handled core on the first pass, we can ignore it now
@@ -440,6 +443,10 @@ for pypkg in new_manifest:
     new_manifest[pypkg]['files'].sort()
     new_manifest[pypkg]['cached'].sort()
     new_manifest[pypkg]['rdepends'].sort()
+    new_manifest[pypkg]['rprovides'].sort()
+    # Remove empty sections
+    if not new_manifest[pypkg]['rprovides']:
+        new_manifest[pypkg].pop('rprovides')
 
 # Create the manifest from the data structure that was built
 with open('python3-manifest.json.new','w') as outfile:
