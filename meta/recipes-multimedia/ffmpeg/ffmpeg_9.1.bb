@@ -23,11 +23,10 @@ LIC_FILES_CHKSUM = "file://COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
                     "
 
 SRC_URI = "https://www.ffmpeg.org/releases/${BP}.tar.xz \
-           file://0002-ffbuild-common.mak-ensure-target-directories-are-cre.patch \
            file://makerace.patch \
            "
 
-SRC_URI[sha256sum] = "8c3850283eb25fa026482078a04051e0be17347b09ef81a0849bec15a96e002e"
+SRC_URI[sha256sum] = "1a4d394ae63d190a526cd052eb4415c156b5c5e2df37efab41a7de0b8fde2433"
 
 # Build fails when thumb is enabled: https://bugzilla.yoctoproject.org/show_bug.cgi?id=7717
 ARM_INSTRUCTION_SET:armv4 = "arm"
