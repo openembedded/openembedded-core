@@ -86,7 +86,7 @@ class QemuTinyRunner(QemuRunner):
         else:
             os.environ["DEPLOY_DIR_IMAGE"] = self.deploy_dir_image
         if self.tmpfsdir:
-            env["RUNQEMU_TMPFS_DIR"] = self.tmpfsdir
+            os.environ["RUNQEMU_TMPFS_DIR"] = self.tmpfsdir
 
 
         # Set this flag so that Qemu doesn't do any grabs as SDL grabs interact
