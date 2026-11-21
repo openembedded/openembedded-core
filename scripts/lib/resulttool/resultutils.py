@@ -119,7 +119,7 @@ def filter_resultsdata(results, resultid):
     newresults = {}
     for r in results:
         for i in results[r]:
-            if i == resultsid:
+            if i == resultid:
                  newresults[r] = {}
                  newresults[r][i] = results[r][i]
     return newresults
