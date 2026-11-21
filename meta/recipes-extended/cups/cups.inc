@@ -13,6 +13,7 @@ SRC_URI = "${GITHUB_BASE_URI}/download/v${PV}/cups-${PV}-source.tar.gz \
            file://0002-don-t-try-to-run-generated-binaries.patch \
            file://libexecdir.patch \
            file://0004-cups-fix-multilib-install-file-conflicts.patch \
+           file://0005-Fix-regression-with-temporary-queues.patch \
            file://volatiles.99_cups \
            file://cups-volatiles.conf \
            "
