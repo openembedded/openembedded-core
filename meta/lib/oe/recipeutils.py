@@ -1186,7 +1186,7 @@ def get_recipe_upgrade_status(recipes=None, stable_upgrade=False):
 
             unreliable = data.getVar('UPSTREAM_CHECK_UNRELIABLE')
             if unreliable == "1":
-                bb.note(" Skip package %s as upstream check unreliable" % pn)
+                bb.note(" Skip package %s as upstream check unreliable" % data.getVar('PN'))
                 continue
 
             data_copy = bb.data.init()
