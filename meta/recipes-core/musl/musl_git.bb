@@ -4,7 +4,7 @@
 require musl.inc
 inherit linuxloader multilib_header
 
-SRCREV = "c4e1bb3994c14ed5112c894d15a451bf00f0d501"
+SRCREV = "7813e9119eb5fe681b6750b8a033a0490bca0941"
 
 BASEVER = "1.2.6"
 
