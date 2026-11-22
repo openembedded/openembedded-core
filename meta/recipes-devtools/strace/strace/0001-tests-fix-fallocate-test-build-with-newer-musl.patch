@@ -1,0 +1,47 @@
+From 66b1687dd6b60b0c6fd957f11eb66f5ce7edc7d6 Mon Sep 17 00:00:00 2001
+From: Khem Raj <raj.khem@gmail.com>
+Date: Sat, 21 Nov 2026 16:12:50 -0800
+Subject: [PATCH] tests: fix fallocate test build with newer musl
+
+The test assumed that if <fcntl.h> defines FALLOC_FL_WRITE_ZEROES it
+also defines every other FALLOC_FL_* constant, as glibc does by
+including <linux/falloc.h>.  musl now defines FALLOC_FL_WRITE_ZEROES
+and the other operation flags in <fcntl.h> itself, but not the
+deprecated FALLOC_FL_NO_HIDE_STALE, so the build fails:
+
+  src/xlat/falloc_flags.h:24:7: error: use of undeclared identifier 'FALLOC_FL_NO_HIDE_STALE'
+
+Include <linux/falloc.h> unless both FALLOC_FL_WRITE_ZEROES and
+FALLOC_FL_NO_HIDE_STALE are already defined, and also undefine
+FALLOC_FL_WRITE_ZEROES before including it.
+
+* tests/fallocate.c: Check FALLOC_FL_NO_HIDE_STALE as well, undefine
+FALLOC_FL_WRITE_ZEROES.
+
+Upstream-Status: Submitted [https://github.com/strace/strace/pull/441]
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ tests/fallocate.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/tests/fallocate.c b/tests/fallocate.c
+index 2c28ad8..34d2839 100644
+--- a/tests/fallocate.c
++++ b/tests/fallocate.c
+@@ -18,7 +18,7 @@
+ # include <fcntl.h>
+ # include <stdio.h>
+ 
+-# ifndef FALLOC_FL_WRITE_ZEROES
++# if !defined FALLOC_FL_WRITE_ZEROES || !defined FALLOC_FL_NO_HIDE_STALE
+ /* Avoid conflicts between <fcntl.h> and <linux/falloc.h>.  */
+ #  undef FALLOC_FL_KEEP_SIZE
+ #  undef FALLOC_FL_PUNCH_HOLE
+@@ -27,6 +27,7 @@
+ #  undef FALLOC_FL_ZERO_RANGE
+ #  undef FALLOC_FL_INSERT_RANGE
+ #  undef FALLOC_FL_UNSHARE_RANGE
++#  undef FALLOC_FL_WRITE_ZEROES
+ #  include <linux/falloc.h>
+ # endif
+ 
