@@ -17,7 +17,7 @@ def create_socket(url, d):
 def get_links_from_url(url, d):
     "Return all the href links found on the web location"
 
-    from bs4 import BeautifulSoup, SoupStrainer
+    from bb._vendor.bs4 import BeautifulSoup, SoupStrainer
 
     soup = BeautifulSoup(create_socket(url,d), "html.parser", parse_only=SoupStrainer("a"))
     hyperlinks = []

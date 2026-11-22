@@ -62,10 +62,6 @@ class TestOpenSUSE(TestCase):
 <a href="./15.6/">15.6/</a> <a href="./16.0/">16.0/</a> <a href="./42.3/">42.3/</a>"""
 
     def test_links_relative_to_current_directory(self):
-        try:
-            from bs4 import BeautifulSoup, SoupStrainer
-        except ImportError:
-            self.skipTest("bs4 is not available")
         with mock.patch.object(oe.distro_check, "create_socket", return_value=io.BytesIO(self.LISTING)):
             links = oe.distro_check.get_links_from_url("http://example.com/leap/", None)
         self.assertEqual(links, ["..", "15.0-Current", "15.6", "16.0", "42.3"])
