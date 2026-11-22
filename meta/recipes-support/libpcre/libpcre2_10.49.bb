@@ -48,8 +48,8 @@ PACKAGES =+ "libpcre2-16 libpcre2-32 pcre2grep pcre2grep-doc pcre2test pcre2test
 
 SUMMARY:pcre2grep = "grep utility that uses perl 5 compatible regexes"
 SUMMARY:pcre2grep-doc = "grep utility that uses perl 5 compatible regexes - docs"
-SUMMARY:pcre2test = "program for testing Perl-comatible regular expressions"
-SUMMARY:pcre2test-doc = "program for testing Perl-comatible regular expressions - docs"
+SUMMARY:pcre2test = "program for testing Perl-compatible regular expressions"
+SUMMARY:pcre2test-doc = "program for testing Perl-compatible regular expressions - docs"
 
 FILES:libpcre2-16 = "${libdir}/libpcre2-16.so.*"
 FILES:libpcre2-32 = "${libdir}/libpcre2-32.so.*"
