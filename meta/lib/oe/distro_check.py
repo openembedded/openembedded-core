@@ -164,10 +164,15 @@ def find_latest_ubuntu_release(d):
 def get_latest_released_ubuntu_source_package_list(d):
     "Returns list of all the name os packages in the latest ubuntu distro"
     latest = find_latest_ubuntu_release(d)
-    url = "http://archive.ubuntu.com/ubuntu/dists/%s/main/source/Sources.gz" % latest
-    package_names = get_debian_style_source_package_list(url, "main", d)
-    url = "http://archive.ubuntu.com/ubuntu/dists/%s-updates/main/source/Sources.gz" % latest
-    package_names |= get_debian_style_source_package_list(url, "updates", d)
+    # Ubuntu's main only holds the packages Canonical supports; most of
+    # what Debian has in main is in Ubuntu's universe.
+    # (AI-generated: Claude Opus 5.5)
+    package_names = set()
+    for component in ("main", "universe"):
+        url = "http://archive.ubuntu.com/ubuntu/dists/%s/%s/source/Sources.gz" % (latest, component)
+        package_names |= get_debian_style_source_package_list(url, component, d)
+        url = "http://archive.ubuntu.com/ubuntu/dists/%s-updates/%s/source/Sources.gz" % (latest, component)
+        package_names |= get_debian_style_source_package_list(url, "updates", d)
     return latest, package_names
 
 def create_distro_packages_list(distro_check_dir, d):

@@ -57,6 +57,30 @@ class TestFindLatestUbuntuRelease(TestCase):
         with mock.patch.object(oe.distro_check, "create_socket", return_value=io.BytesIO(META_RELEASE)):
             self.assertEqual(oe.distro_check.find_latest_ubuntu_release(None), "resolute")
 
+class TestUbuntuPackageList(TestCase):
+    def test_main_and_universe(self):
+        """
+        The Ubuntu list has the packages in universe as well as main, from
+        the release and from its updates.
+        """
+        sources = {
+            "resolute/main": b"Package: bash\n",
+            "resolute/universe": b"Package: nasm\n",
+            "resolute-updates/main": b"Package: openssl\n",
+            "resolute-updates/universe": b"Package: nginx\n",
+        }
+
+        def fake_socket(url, d):
+            dist, component = url.split("/dists/")[1].split("/")[:2]
+            return io.BytesIO(gzip.compress(sources[dist + "/" + component]))
+
+        with mock.patch.object(oe.distro_check, "find_latest_ubuntu_release", return_value="resolute"), \
+                mock.patch.object(oe.distro_check, "create_socket", side_effect=fake_socket):
+            latest, names = oe.distro_check.get_latest_released_ubuntu_source_package_list(None)
+
+        self.assertEqual(latest, "resolute")
+        self.assertEqual(names, {"bash:main", "nasm:universe", "openssl:updates", "nginx:updates"})
+
 class TestOpenSUSE(TestCase):
     LISTING = b"""<a href="../">..</a> <a href="./15.0-Current/">15.0-Current/</a>
 <a href="./15.6/">15.6/</a> <a href="./16.0/">16.0/</a> <a href="./42.3/">42.3/</a>"""
