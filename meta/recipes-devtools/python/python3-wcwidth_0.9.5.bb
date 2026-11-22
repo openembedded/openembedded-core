@@ -4,7 +4,7 @@ HOMEPAGE = "https://github.com/jquast/wcwidth"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b15979c39a2543892fca8cd86b4b52cb"
 
-SRC_URI[sha256sum] = "fd8d57d3cdfe570e3265c8fab1885c24e34ef40889c0759c0c304a19e9835954"
+SRC_URI[sha256sum] = "713534e2ecb16e0fc39f19e0a5dda997da76d010953e9e8f803e7971f8accd80"
 
 inherit pypi python_hatchling ptest-python-pytest
 
