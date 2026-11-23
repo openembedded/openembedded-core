@@ -76,6 +76,7 @@ SRC_URI = "${BASEURI} \
            file://0001-Fix-check-for-working-assembler-gdwarf-4-option.patch \
 	   file://0026-CVE-2026-102010.patch \
 	   file://0027-CVE-2026-125709.patch \
+	   file://0028-CVE-2026-115456.patch \
 "
 
 UNPACKDIR = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/sources"
