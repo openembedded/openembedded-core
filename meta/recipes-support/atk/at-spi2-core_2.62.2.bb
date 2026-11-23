@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=4fbd65380cdd255951079008b364516c"
 
 CVE_PRODUCT += "at-spi2-atk"
 
-SRC_URI[archive.sha256sum] = "cca6b6a86e4389d89b370288761ce2385ddeceb10c4412da78689bc30c88af2d"
+SRC_URI[archive.sha256sum] = "7ce81820ddf873b8d930177e0790f730f60d22d8e0acee9ba8f75d8202598de3"
 
 DEPENDS = " \
 	dbus \
