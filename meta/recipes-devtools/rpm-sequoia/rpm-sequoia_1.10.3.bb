@@ -23,6 +23,10 @@ SRCREV = "8e0b76e1e75c83d7d8e6f38976b0c83b52ebe7ee"
 
 require ${BPN}-crates.inc
 
+# policy::tests::signature is flaky in 1.10.3
+# https://github.com/rpm-software-management/rpm-sequoia/issues/119
+RUST_TEST_ARGS = "--skip policy::tests::signature"
+
 CARGO_BUILD_FLAGS += "--no-default-features --features crypto-openssl"
 CARGO_INSTALL_LIBRARIES = "1"
 
