@@ -59,6 +59,7 @@ PACKAGECONFIG ??= " \
     gshadow \
     hibernate \
     hostnamed \
+    hwdb \
     idn \
     ima \
     kmod \
@@ -137,6 +138,7 @@ PACKAGECONFIG[homed] = "-Dhomed=enabled,-Dhomed=disabled"
 PACKAGECONFIG[gshadow] = "-Dgshadow=true,-Dgshadow=false"
 PACKAGECONFIG[hibernate] = "-Dhibernate=true,-Dhibernate=false"
 PACKAGECONFIG[hostnamed] = "-Dhostnamed=true,-Dhostnamed=false"
+PACKAGECONFIG[hwdb] = "-Dhwdb=true,-Dhwdb=false"
 PACKAGECONFIG[idn] = "-Didn=true,-Didn=false"
 PACKAGECONFIG[ima] = "-Dima=true,-Dima=false"
 # importd requires journal-upload/xz/zlib/bzip2/gcrypt
@@ -759,7 +761,7 @@ RDEPENDS:${PN} += "systemd-serialgetty"
 RDEPENDS:${PN} += "volatile-binds"
 
 RRECOMMENDS:${PN} += "${PN}-extra-utils \
-                      udev-hwdb \
+                      ${@bb.utils.contains('PACKAGECONFIG', 'hwdb', 'udev-hwdb', '', d)} \
                       e2fsprogs-e2fsck \
                       kernel-module-autofs4 kernel-module-unix kernel-module-ipv6 kernel-module-sch-fq-codel \
                       os-release \
