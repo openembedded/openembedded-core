@@ -92,8 +92,9 @@ TUNE_RISCV_PKGARCH - This is the PKGARCH value generated from TUNE_FEATURES.
 RISCVPKGARCH - This is the package arch actually used.  As with ARMPKGARCH
                on arm, each tune sets it as a literal in
                RISCVPKGARCH:tune-<name>, so that it only changes when
-               deliberately changed.  Tunes that don't set it fall back to
-               TUNE_RISCV_PKGARCH.
+               deliberately changed. Tunes that don't set it fall back to
+               TUNE_RISCV_PKGARCH. The sanity check errors if the package
+               arch is longer than 64 characters.
 
 The standard variables are defined as:
 

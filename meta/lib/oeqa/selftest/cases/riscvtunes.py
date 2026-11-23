@@ -93,22 +93,24 @@ class RiscvTunesTests(OESelftestTestCase):
     def test_riscv_pkgarch_fallback(self):
         """
         Check that custom tunes which don't set RISCVPKGARCH:tune-<name> get
-        TUNE_RISCV_PKGARCH as their package arch, and that it's an error if
-        that is too long.
+        TUNE_RISCV_PKGARCH as their package arch, and that the sanity checks
+        reject it if that is too long.
         """
         def config(tune, features):
             return self._machine_config() + \
                    'AVAILTUNES += "%s"\n' \
                    'TUNE_FEATURES:tune-%s = "%s"\n' \
-                   'DEFAULTTUNE = "%s"\n' % (tune, tune, features, tune)
+                   'PACKAGE_EXTRA_ARCHS:tune-%s = "${RISCVPKGARCH}"\n' \
+                   'DEFAULTTUNE = "%s"\n' % (tune, tune, features, tune, tune)
 
         self.write_config(config('rv64imac-zicond', riscv_isa_to_tune('rv64imac_zicond')))
         self.assertEqual(get_bb_var('TUNE_PKGARCH'), 'riscv64imac_zicond')
 
+        # Use 'bitbake -p' to parse, so that sanity checks are triggered
         self.write_config(config('rva22-zicond', riscv_isa_to_tune('rva22u64') + ' zicond'))
-        result = bitbake('-e', ignore_status=True)
+        result = bitbake('-p', ignore_status=True)
         self.assertNotEqual(result.status, 0)
-        self.assertIn('Set RISCVPKGARCH:tune-rva22-zicond to a shorter name', result.output)
+        self.assertIn('for DEFAULTTUNE (rva22-zicond) is longer than 64 characters', result.output)
 
     def test_riscv_unusual_tunes(self):
         """

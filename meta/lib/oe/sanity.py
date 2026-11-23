@@ -279,6 +279,15 @@ def check_sanity_validmachine(sanity_data):
     if tunefound == False:
         messages = messages + "Error, the PACKAGE_ARCHS variable (%s) for DEFAULTTUNE (%s) does not contain TUNE_PKGARCH (%s)." % (pkgarchs, defaulttune, tunepkg)
 
+    # Very long package archs (e.g. RISC-V tunes falling back to the full ISA
+    # string) can exceed allowable lengths for build and sstate paths, so alert
+    # the user if this is the case.
+    if len(tunepkg) > 64:
+        messages = messages + ("Error, TUNE_PKGARCH (%s) for DEFAULTTUNE (%s) is "
+                               "longer than 64 characters. Set a shorter package "
+                               "arch for the tune (e.g. RISCVPKGARCH:tune-%s on "
+                               "RISC-V).\n" % (tunepkg, defaulttune, defaulttune))
+
     return messages
 
 # Patch before 2.7 can't handle all the features in git-style diffs.  Some
