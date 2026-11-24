@@ -3,14 +3,14 @@ HOMEPAGE = "http://man-db.nongnu.org/"
 DESCRIPTION = "man-db is an implementation of the standard Unix documentation system accessed using the man command. It uses a Berkeley DB database in place of the traditional flat-text whatis databases."
 LICENSE = "GPL-2.0-or-later AND GPL-3.0-or-later AND LGPL-2.1-or-later"
 LIC_FILES_CHKSUM = "file://COPYING;md5=1ebbd3e34237af26da5dc08a4e440464 \
-                    file://docs/COPYING.GPLv2;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-                    file://docs/COPYING.LIB;md5=4fbd65380cdd255951079008b364516c \
-                   "
+                    file://docs/COPYING.GPLv2;md5=570a9b3749dd0463a1778803b12a6dce \
+                    file://docs/COPYING.LIB;md5=4bf661c1e3793e55c8d1051bc5e0ae21 \
+                    "
 
 SRC_URI = "${SAVANNAH_NONGNU_MIRROR}/man-db/man-db-${PV}.tar.xz \
            file://99_mandb \
            "
-SRC_URI[sha256sum] = "8afebb6f7eb6bb8542929458841f5c7e6f240e30c86358c1fbcefbea076c87d9"
+SRC_URI[sha256sum] = "7c10ac705433c740af91264fc29eee471090ead63a408541ab9736284a8c9deb"
 
 DEPENDS = "libpipeline gdbm groff-native base-passwd"
 RDEPENDS:${PN} += "base-passwd"
