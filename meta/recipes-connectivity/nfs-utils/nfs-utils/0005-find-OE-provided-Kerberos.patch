@@ -1,4 +1,4 @@
-From 43a992e7bb491fd6e7e50861c9eaf0c549e98293 Mon Sep 17 00:00:00 2001
+From d763f11e44f2d1b834fbcf3d805915b0a7dba720 Mon Sep 17 00:00:00 2001
 From: Daniel McGregor <daniel.mcgregor@vecima.com>
 Date: Wed, 8 Nov 2023 16:24:20 -0600
 Subject: [PATCH] find OE provided Kerberos

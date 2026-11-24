@@ -25,7 +25,7 @@ SRC_URI = "${KERNELORG_MIRROR}/linux/utils/nfs-utils/${PV}/nfs-utils-${PV}.tar.x
            file://0005-find-OE-provided-Kerberos.patch \
            "
 
-SRC_URI[sha256sum] = "7dbc05eb8b32828b322872b759a62cb3979cb4118f344dd8616813d1390e84e0"
+SRC_URI[sha256sum] = "a54163d8dd589fc87048c6029011bda101a580c27770a377558be2422a976afb"
 
 # Only kernel-module-nfsd is required here (but can be built-in)  - the nfsd module will
 # pull in the remainder of the dependencies.
@@ -67,7 +67,7 @@ PACKAGECONFIG[nfsv4] = "--enable-nfsv4 --enable-nfsdcltrack,--disable-nfsv4 --di
 PACKAGECONFIG[nfsdctl] = "--enable-nfsdctl,--disable-nfsdctl,libnl readline,"
 PACKAGECONFIG[systemd] = "--with-systemd=${systemd_unitdir}/system,--without-systemd"
 
-PACKAGES =+ "${PN}-client ${PN}-mount ${PN}-stats ${PN}-rpcctl"
+PACKAGES =+ "${PN}-client ${PN}-mount ${PN}-stats ${PN}-rpcctl ${PN}-iomode-advisor"
 
 CONFFILES:${PN}-client += "${localstatedir}/lib/nfs/etab \
 			   ${localstatedir}/lib/nfs/rmtab \
@@ -110,6 +110,9 @@ RDEPENDS:${PN}-stats = "python3-core"
 
 FILES:${PN}-rpcctl = "${sbindir}/rpcctl"
 RDEPENDS:${PN}-rpcctl = "python3-core"
+
+FILES:${PN}-iomode-advisor = "${sbindir}/nfsd-iomode-advisor"
+RDEPENDS:${PN}-iomode-advisor = "python3-core"
 
 FILES:${PN}-staticdev += "${libdir}/libnfsidmap/*.a"
 
