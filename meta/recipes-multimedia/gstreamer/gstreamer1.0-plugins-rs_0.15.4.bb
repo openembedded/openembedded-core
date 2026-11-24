@@ -5,8 +5,9 @@ LICENSE = "Apache-2.0 OR MPL-2.0"
 
 SRC_URI += "\
 git://gitlab.freedesktop.org/gstreamer/gst-plugins-rs;protocol=https;tag=${PV};nobranch=1;name=default \
+file://0001-Update-Cargo.lock-for-non-git-dependencies.patch \
 "
-SRCREV = "6302bea23b53e6461c104f9543df887a63b2d6ec"
+SRCREV = "1afff3711855238433862c0ce3bf34918e500386"
 UPSTREAM_CHECK_GITTAGREGEX = "^(?P<pver>\d+(\.\d+)+)(\^\{\})?$"
 
 LIC_FILES_CHKSUM =  " \
