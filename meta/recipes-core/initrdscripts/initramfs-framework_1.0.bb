@@ -1,8 +1,6 @@
 SUMMARY = "Modular initramfs system"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-RDEPENDS:${PN}-base += "${VIRTUAL-RUNTIME_base-utils}"
-RRECOMMENDS:${PN}-base = "${VIRTUAL-RUNTIME_base-utils-syslog}"
 
 SRC_URI = "file://init \
            file://exec \
@@ -67,8 +65,9 @@ PACKAGES = "${PN}-base \
             initramfs-module-overlayroot \
            "
 
-FILES:${PN}-base = "/init /init.d/99-finish /dev"
-
+SUMMARY:${PN}-base = "${SUMMARY}"
+RDEPENDS:${PN}-base += "${VIRTUAL-RUNTIME_base-utils}"
+RRECOMMENDS:${PN}-base = "${VIRTUAL-RUNTIME_base-utils-syslog}"
 # 99-finish in base depends on some other module which mounts
 # the rootfs, like 90-rootfs. To replace that default, use
 # BAD_RECOMMENDATIONS += "initramfs-module-rootfs" in your
@@ -76,6 +75,7 @@ FILES:${PN}-base = "/init /init.d/99-finish /dev"
 # something that runs earlier (for example, a 89-my-rootfs)
 # and mounts the rootfs. Then 90-rootfs will proceed immediately.
 RRECOMMENDS:${PN}-base += "initramfs-module-rootfs"
+FILES:${PN}-base = "/init /init.d/99-finish /dev"
 
 SUMMARY:initramfs-module-exec = "initramfs support for easy execution of applications"
 RDEPENDS:initramfs-module-exec = "${PN}-base"
