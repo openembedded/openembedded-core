@@ -11,7 +11,7 @@ SRC_URI = " \
     git://github.com/hyperrealm/libconfig.git;protocol=https;branch=master;tag=v${PV} \
     file://run-ptest \
 "
-SRCREV = "a42cb47c1526a4f2ed025fcbb2289863375bc898"
+SRCREV = "a211339ea575bb1253e3e24eee47089249f6bda1"
 
 # needed when we modify grammar.y with patches
 DEPENDS += "bison-native flex-native"
