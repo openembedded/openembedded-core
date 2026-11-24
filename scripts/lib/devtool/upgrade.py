@@ -241,6 +241,9 @@ def _extract_new_source(newpv, srctree, no_patch, srcrev, srcbranch, branch, kee
         srcsubdir_rel = params.get('destsuffix', 'git')
         if not srcbranch:
             check_branch, check_branch_err = __run('git branch -r --contains %s' % srcrev)
+            if not check_branch.strip():
+                # srcrev is not on any remote branch (e.g. it is only reachable from a tag)
+                raise DevtoolError('Revision %s was not found on any remote branch.\nIt may only be reachable through a tag' % srcrev)
             get_branch = [x.strip() for x in check_branch.splitlines()]
             # Remove HEAD reference point and drop remote prefix
             get_branch = [x.split('/', 1)[1] for x in get_branch if not x.startswith('origin/HEAD')]
