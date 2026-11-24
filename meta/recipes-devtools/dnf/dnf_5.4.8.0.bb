@@ -39,7 +39,6 @@ SRC_URI = "\
     file://0005-libdnf-fix-arm-arch-mapping-issues-for-qemuarmv5.patch \
     file://0001-Do-not-hardcode-etc-bash-completion-directory.patch \
 "
-SRC_URI:append:class-native = " file://0001-Do-not-hardcode-the-systemd-unit-directory.patch"
 SRCREV = "01329a46d840894d9fac207f06ed5bc37e752612"
 
 inherit bash-completion cmake gettext pkgconfig siteinfo systemd
@@ -99,6 +98,7 @@ EXTRA_OECMAKE:append:class-native = " \
     -DWITH_DNF5_PLUGINS=OFF \
     -DWITH_PLUGIN_MANIFEST=OFF \
     -DWITH_SYSTEMD=OFF \
+    -DSYSTEMD_DIR=${systemd_system_unitdir} \
 "
 
 # Create a symlink called 'dnf' as 'make install' does not do it, but
