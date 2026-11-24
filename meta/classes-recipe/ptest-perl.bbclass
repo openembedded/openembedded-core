@@ -23,7 +23,7 @@ FILES:${PN}-ptest:prepend = "${PTEST_PATH}/t/* ${PTEST_PATH}/run-ptest "
 
 RDEPENDS:${PN}-ptest:prepend = "perl "
 
-addtask install_ptest_perl after do_install_ptest_base before do_package
+addtask install_ptest_perl after do_install_ptest_base before do_package do_populate_sysroot
 
 python () {
     if not bb.data.inherits_class('native', d) and not bb.data.inherits_class('cross', d):
