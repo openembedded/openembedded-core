@@ -1,4 +1,4 @@
-From 4ff364c3df99b02e658ac2b3d2eec7139c494612 Mon Sep 17 00:00:00 2001
+From 9d292205d6966d19ceaae10fe021145ca6ee8116 Mon Sep 17 00:00:00 2001
 From: Hemanth Kumar M D <Hemanth.KumarMD@windriver.com>
 Date: Tue, 28 Apr 2026 03:22:40 -0700
 Subject: [PATCH] rxvt-unicode: fix gcc16/c++20
@@ -56,6 +56,3 @@ index d08b1bb..ec69cc1 100644
  {
    return (long(a) * long(100 - p) + long(b) * long(p) + 50) / 100;
  }
--- 
-2.49.0
-

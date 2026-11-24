@@ -1,9 +1,18 @@
-Upstream-Status: Pending
+From 74481f4ed205ab215f8dd467263776ca4f9531c0 Mon Sep 17 00:00:00 2001
+From: Dongxiao Xu <dongxiao.xu@intel.com>
+Date: Tue, 19 Apr 2011 14:58:37 +0800
+Subject: [PATCH] rxvt-unicode: upgrade to version 9.10
 
-diff -ruN rxvt-unicode-9.10-orig//src/screen.C rxvt-unicode-9.10/src/screen.C
---- rxvt-unicode-9.10-orig//src/screen.C	2011-04-19 13:34:01.327664984 +0800
-+++ rxvt-unicode-9.10/src/screen.C	2011-04-19 13:34:47.037665001 +0800
-@@ -3152,7 +3152,7 @@
+Upstream-Status: Pending
+---
+ src/screen.C | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/screen.C b/src/screen.C
+index 8fdfad9..9a9e3b5 100644
+--- a/src/screen.C
++++ b/src/screen.C
+@@ -2941,7 +2941,7 @@ rxvt_term::selection_grab (Time tm, bool clipboard) noexcept
        return false;
      }
  
@@ -12,7 +21,7 @@ diff -ruN rxvt-unicode-9.10-orig//src/screen.C rxvt-unicode-9.10/src/screen.C
    XTextProperty ct;
  
    if (XwcTextListToTextProperty (dpy, &selection.text, 1, XStringStyle, &ct) >= 0)
-@@ -3734,9 +3734,11 @@
+@@ -3524,9 +3524,11 @@ rxvt_term::selection_send (const XSelectionRequestEvent &rq) noexcept
          }
        else
  #endif
