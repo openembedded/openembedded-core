@@ -1,0 +1,49 @@
+From 4f756debee55260106524bce5d12fb4c6ef5946e Mon Sep 17 00:00:00 2001
+From: Khem Raj <khem.raj@oss.qualcomm.com>
+Date: Fri, 16 Oct 2026 08:14:03 +0000
+Subject: [PATCH] tclExecute: Range check lseq count before converting to
+ integer
+
+GenerateArithSeries() casts a double count to Tcl_WideInt and then
+checks whether the result is integral. For Inf or values outside the
+Tcl_WideInt range the cast is undefined behavior; with clang the check
+passes and the count becomes WIDE_MIN, so "lseq 1e5555" returns an
+empty list instead of raising "expected integer", failing lseq-4.21.1.
+
+Only take the integer conversion when the value is within range, and
+otherwise leave it as a double so TclNewArithSeriesObj() reports the
+error.
+
+Upstream-Status: Submitted [https://core.tcl-lang.org/tcl/tktview/97dbd7a4e9290821f20233c144077801424433e4]
+AI-Generated: Uses Claude Code
+Signed-off-by: Khem Raj <khem.raj@oss.qualcomm.com>
+---
+ generic/tclExecute.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/generic/tclExecute.c b/generic/tclExecute.c
+index fd43b87..97d76ab 100644
+--- a/generic/tclExecute.c
++++ b/generic/tclExecute.c
+@@ -9404,7 +9404,17 @@ GenerateArithSeries(
+ 	switch (type) {
+ 	case TCL_NUMBER_DOUBLE: {
+ 	    double dCount = *((const double *) ptr);
+-	    Tcl_WideInt wCount = (Tcl_WideInt) dCount;
++	    Tcl_WideInt wCount;
++
++	    /*
++	     * Casting an out of range double (including Inf) to an integer
++	     * is undefined behavior, and compilers may fold the check below
++	     * into a plain "is integral" test, so do the range check first.
++	     */
++	    if (!(dCount > (double) WIDE_MIN && dCount < (double) WIDE_MAX)) {
++		break;
++	    }
++	    wCount = (Tcl_WideInt) dCount;
+ 	    if (dCount - wCount == 0.0) {
+ 		Tcl_DecrRefCount(count);
+ 		// Switch to the object holding integer version of the count.
+-- 
+2.43.0
+

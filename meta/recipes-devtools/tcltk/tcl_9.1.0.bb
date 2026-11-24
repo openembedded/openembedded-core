@@ -21,6 +21,7 @@ SRC_URI = "${SOURCEFORGE_MIRROR}/tcl/tcl-core${PV}-src.tar.gz \
            file://0002-tcl-fix-a-build-issue.patch \
            file://0003-tcl-install-tcl-to-lib64-instead-of-lib-on-64bit-tar.patch \
            file://0004-tcl-update-the-header-location.patch \
+           file://0005-tclExecute-Range-check-lseq-count-before-converting-.patch \
            "
 SRC_URI[sha256sum] = "ba11ae7035ec4b0caf2c489b20d5aa2abb1cf001a7e65b0fa2fbac86908c643b"
 
