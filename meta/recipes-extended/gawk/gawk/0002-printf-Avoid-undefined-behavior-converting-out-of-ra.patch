@@ -1,0 +1,70 @@
+From e00db6a8ee76f2618f38c0dde477cb111fb0df41 Mon Sep 17 00:00:00 2001
+From: Khem Raj <khem.raj@oss.qualcomm.com>
+Date: Fri, 16 Oct 2026 08:14:03 +0000
+Subject: [PATCH] printf: Avoid undefined behavior converting out of range
+ doubles
+
+format_int() casts the value to uintmax_t (or intmax_t) and then
+checks whether converting it back yields the original value to decide
+if it fits. A double that is out of range for the integer type makes
+the conversion itself undefined behavior, and clang folds the
+round-trip check away, so e.g. sprintf("%x", 2^64) prints
+0x8000000000000000 instead of falling back to %g. This makes the
+intformat test fail when gawk is built with clang.
+
+Check the range before doing the conversion instead.
+
+Upstream-Status: Pending
+Reported upstream: https://lists.gnu.org/archive/html/bug-gawk/2026-11/msg00028.html
+
+Signed-off-by: Khem Raj <khem.raj@oss.qualcomm.com>
+---
+ printf.c | 29 ++++++++++++-----------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
+
+diff --git a/printf.c b/printf.c
+index 0264692..dd80b80 100644
+--- a/printf.c
++++ b/printf.c
+@@ -925,26 +925,21 @@ format_integer_digits(NODE *arg, struct flags *flags, bool *used_float)
+ 		// octal or hex or unsigned decimal
+ 		chbuf = (flags->format == 'X' ? Uchbuf : lchbuf);
+
+-		if (tmpval < 0) {
+-			uval = (uintmax_t) (intmax_t) tmpval;
+-			if ((AWKNUM)(intmax_t)uval != double_to_int(tmpval)) {
+-				flags->format = 'g';
+-				free((void *) buf);
+-				*used_float = true;
+-
+-				return format_float(arg, flags);
+-			}
+-		} else {
+-			uval = (uintmax_t) tmpval;
+-			if ((AWKNUM)uval != double_to_int(tmpval)) {
+-				flags->format = 'g';
+-				free((void *) buf);
+-				*used_float = true;
++		if (tmpval < 0
++		    ? tmpval < (double) INTMAX_MIN
++		    : tmpval >= -2.0 * (double) INTMAX_MIN) {
++			flags->format = 'g';
++			free((void *) buf);
++			*used_float = true;
+
+-				return format_float(arg, flags);
+-			}
++			return format_float(arg, flags);
+ 		}
+
++		if (tmpval < 0)
++			uval = (uintmax_t) (intmax_t) tmpval;
++		else
++			uval = (uintmax_t) tmpval;
++
+ 		// generate the digits backwards.
+ 		do {
+ 			if (cp >= buf + buflen)
+--
+2.43.0
+
