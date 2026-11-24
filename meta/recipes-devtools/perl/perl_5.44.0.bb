@@ -15,6 +15,8 @@ SRC_URI = "https://www.cpan.org/src/5.0/perl-${PV}.tar.gz;name=perl \
            file://perl-dynloader.patch \
            file://0002-Constant-Fix-up-shebang.patch \
            file://0001-cpan-Sys-Syslog-Makefile.PL-Fix-_PATH_LOG-for-determ.patch \
+           file://CVE-2026-15534_p1.patch \
+           file://CVE-2026-15534_p2.patch \
            "
 SRC_URI:append:class-native = " \
            file://perl-configpm-switch.patch \
