@@ -1,0 +1,53 @@
+From 58f575a1947f4e6e9ef6db91e8df91c6e847c864 Mon Sep 17 00:00:00 2001
+From: Khem Raj <khem.raj@oss.qualcomm.com>
+Date: Sun, 8 Nov 2026 08:10:29 -0800
+Subject: [PATCH] openssl: Set a session ID context on the server
+
+Since OpenSSL 4.1 a TLS 1.3 server without a session ID context stops
+issuing session tickets (openssl/openssl#31964), so clients never resume
+and /tls/openssl/connection/session/resume_multiple_times fails:
+
+  'reused' should be TRUE
+
+Set a fixed session ID context on the server SSL_CTX.
+
+Upstream-Status: Submitted [https://gitlab.gnome.org/GNOME/glib-networking/-/merge_requests/296]
+Signed-off-by: Khem Raj <khem.raj@oss.qualcomm.com>
+---
+ tls/openssl/gtlsserverconnection-openssl.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/tls/openssl/gtlsserverconnection-openssl.c b/tls/openssl/gtlsserverconnection-openssl.c
+index 09b57f9..4cb965b 100644
+--- a/tls/openssl/gtlsserverconnection-openssl.c
++++ b/tls/openssl/gtlsserverconnection-openssl.c
+@@ -339,6 +339,8 @@ set_signature_algorithm_list (GTlsServerConnectionOpenssl *server)
+   SSL_CTX_set1_sigalgs_list (server->ssl_ctx, signature_algorithm_list);
+ }
+
++#define SESSION_ID_CONTEXT "glib-networking"
++
+ static void
+ set_curve_list (GTlsServerConnectionOpenssl *server)
+ {
+@@ -402,6 +404,20 @@ g_tls_server_connection_openssl_initable_init (GInitable       *initable,
+             SSL_OP_NO_TLSv1_1;
+   SSL_CTX_set_options (server->ssl_ctx, options);
+
++  /* Since OpenSSL 4.1, a TLS 1.3 server without a session ID context does not
++   * issue session tickets, so clients could never resume.
++   */
++  if (!SSL_CTX_set_session_id_context (server->ssl_ctx,
++                                       (const unsigned char *)SESSION_ID_CONTEXT,
++                                       sizeof (SESSION_ID_CONTEXT) - 1))
++    {
++      ERR_error_string_n (ERR_get_error (), error_buffer, sizeof (error_buffer));
++      g_set_error (error, G_TLS_ERROR, G_TLS_ERROR_MISC,
++                   _("Could not create TLS context: %s"),
++                   error_buffer);
++      return FALSE;
++    }
++
+   SSL_CTX_add_session (server->ssl_ctx, server->session);
+
+   set_signature_algorithm_list (server);

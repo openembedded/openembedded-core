@@ -30,6 +30,9 @@ inherit gnomebase gettext upstream-version-is-even gio-module-cache ptest-gnome
 
 SRC_URI += "\
             file://run-ptest \
+            file://0001-openssl-Fix-socket-timeouts-and-close-with-OpenSSL-4.patch \
+            file://0002-openssl-Set-a-session-ID-context-on-the-server.patch \
+            file://0003-tests-Add-a-subjectAltName-to-server-self.pem.patch \
             "
 
 FILES:${PN} += "\
