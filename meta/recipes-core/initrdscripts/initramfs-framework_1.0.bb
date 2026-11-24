@@ -1,8 +1,8 @@
 SUMMARY = "Modular initramfs system"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420"
-RDEPENDS:${PN} += "${VIRTUAL-RUNTIME_base-utils}"
-RRECOMMENDS:${PN} = "${VIRTUAL-RUNTIME_base-utils-syslog}"
+RDEPENDS:${PN}-base += "${VIRTUAL-RUNTIME_base-utils}"
+RRECOMMENDS:${PN}-base = "${VIRTUAL-RUNTIME_base-utils-syslog}"
 
 SRC_URI = "file://init \
            file://exec \
