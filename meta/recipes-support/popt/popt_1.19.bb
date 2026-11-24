@@ -15,6 +15,7 @@ SRC_URI = "http://ftp.rpm.org/popt/releases/popt-1.x/${BP}.tar.gz \
            file://CVE-2026-18839-01.patch \
            file://CVE-2026-18839-02.patch \
            file://0001-Fix-test-output-format.patch \
+           file://0001-libpopt.vers-Do-not-export-_init-and-_fini.patch \
            "
 SRC_URI[sha256sum] = "c25a4838fc8e4c1c8aacb8bd620edb3084a3d63bf8987fdad3ca2758c63240f9"
 
