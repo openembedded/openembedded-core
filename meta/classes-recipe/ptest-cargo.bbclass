@@ -115,12 +115,11 @@ python do_install_ptest_cargo() {
     if not script_exists:
         os.chmod(ptest_script, 0o755)
 
-    # this is chown -R root:root ${D}${PTEST_PATH}
+    # Equivalent to 'chown -R root:root ${D}${PTEST_PATH}, which doesn't follow
+    # symlinks
     for root, dirs, files in os.walk(ptest_dir):
-        for d in dirs:
-            shutil.chown(os.path.join(root, d), "root", "root")
-        for f in files:
-            shutil.chown(os.path.join(root, f), "root", "root")
+        for name in dirs + files:
+            os.lchown(os.path.join(root, name), 0, 0)
 }
 
 do_compile_ptest_cargo[dirs] = "${B}"
