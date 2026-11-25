@@ -330,7 +330,7 @@
             "${libdir}/python${PYTHON_MAJMIN}/warnings.py",
             "${libdir}/python${PYTHON_MAJMIN}/weakref.py",
             "${libdir}/python${PYTHON_MAJMIN}/zipimport.py",
-            "${prefix}/lib/python${PYTHON_MAJMIN}/config*/*[!.a]"
+            "${libdir}/python${PYTHON_MAJMIN}/config*/*[!.a]"
         ]
     },
     "crypt": {
