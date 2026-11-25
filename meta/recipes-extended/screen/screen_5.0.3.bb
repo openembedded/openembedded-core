@@ -20,7 +20,7 @@ SRC_URI = "${GNU_MIRROR}/screen/screen-${PV}.tar.gz \
            ${@bb.utils.contains('DISTRO_FEATURES', 'pam', 'file://screen.pam', '', d)} \
            "
 
-SRC_URI[sha256sum] = "ca9a2c7e240919bc7ac12124593ae4529bb4eb5f7349d8857829b7e3f0b3b332"
+SRC_URI[sha256sum] = "941c98ffecdca4bff4bbd1cd6f08fbd18967353affc46521040a999dafbd39a2"
 
 inherit autotools-brokensep texinfo
 
