@@ -17,7 +17,7 @@ SRC_URI = "git://github.com/facebook/zstd.git;branch=release;protocol=https;tag=
            file://0001-cli-tests-skip-zstd-max-level-when-memory-is-insuffi.patch \
            "
 
-SRCREV = "f8745da6ff1ad1e7bab384bd1f9d742439278e99"
+SRCREV = "916e8e70b33317d469a41ee837e47317807815c8"
 UPSTREAM_CHECK_GITTAGREGEX = "v(?P<pver>\d+(\.\d+)+)"
 
 CVE_PRODUCT = "zstandard"
@@ -81,4 +81,5 @@ do_install_ptest() {
     rm -f ${D}${PTEST_PATH}/tests/cli-tests/compression/levels.sh.stderr.exact
 }
 
-RDEPENDS:${PN}-ptest += "bash grep less python3-core python3-modules"
+# we need coreutils' dd for the cli-tests because busybox's dd doesn't support "status=none"
+RDEPENDS:${PN}-ptest += "bash grep less python3-core python3-modules coreutils"

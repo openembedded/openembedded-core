@@ -1,4 +1,4 @@
-From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From 5182d7671cb65346b55d3ff8eda6388f876a7431 Mon Sep 17 00:00:00 2001
 From: Pratik Farkase <pratik.farkase@est.tech>
 Date: Thu, 27 Aug 2026 12:00:00 +0000
 Subject: [PATCH] cli-tests: skip zstd --max level when memory is insufficient
@@ -15,7 +15,7 @@ Signed-off-by: Pratik Farkase <pratik.farkase@est.tech>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tests/cli-tests/compression/levels.sh b/tests/cli-tests/compression/levels.sh
-index b8230f2..7846d3e 100755
+index b8230f2a3..7846d3ec0 100755
 --- a/tests/cli-tests/compression/levels.sh
 +++ b/tests/cli-tests/compression/levels.sh
 @@ -16,8 +16,8 @@ zstd --fast=10 file -o file-f10.zst -q
