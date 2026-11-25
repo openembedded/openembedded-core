@@ -87,7 +87,7 @@ do_install_ptest:append() {
 	# the api tests look for the required files in rsvg folder, so simulate it
 	# with a symlink that points to the current folder
 	ln -s . ${D}${PTEST_PATH}/rsvg
-	ln -s ptest ${D}${PTEST_PATH}/../rsvg
+	ln -snf ptest ${D}${PTEST_PATH}/../rsvg
 }
 
 PACKAGES =+ "librsvg-gtk rsvg"
