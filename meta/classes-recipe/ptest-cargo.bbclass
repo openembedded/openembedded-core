@@ -123,21 +123,19 @@ python do_install_ptest_cargo() {
             shutil.chown(os.path.join(root, f), "root", "root")
 }
 
-do_install_ptest_cargo[dirs] = "${B}"
-do_install_ptest_cargo[doc] = "Create or update the run-ptest script with rust test binaries generated"
 do_compile_ptest_cargo[dirs] = "${B}"
 do_compile_ptest_cargo[doc] = "Generate rust test binaries through cargo"
 
 addtask compile_ptest_cargo after do_compile            before do_compile_ptest_base
-addtask install_ptest_cargo after do_install_ptest_base before do_package
+
+# Run as part of do_install_ptest_base so its cleandirs always provides a fresh
+# run-ptest to append to. As a separate task, a signature change (e.g.
+# RUST_TEST_ARGS) re-ran only this step, appending a second block after the
+# first "exit $rc".
+do_install_ptest_base[postfuncs] += "do_install_ptest_cargo"
 
 python () {
-    if not bb.data.inherits_class('native', d) and not bb.data.inherits_class('cross', d):
-        d.setVarFlag('do_install_ptest_cargo', 'fakeroot', '1')
-        d.setVarFlag('do_install_ptest_cargo', 'umask', '022')
-
     # Remove all '*ptest_cargo' tasks when ptest is not enabled
     if not(d.getVar('PTEST_ENABLED') == "1"):
-        for i in ['do_compile_ptest_cargo', 'do_install_ptest_cargo']:
-            bb.build.deltask(i, d)
+        bb.build.deltask('do_compile_ptest_cargo', d)
 }
