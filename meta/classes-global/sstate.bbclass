@@ -4,7 +4,7 @@
 # SPDX-License-Identifier: MIT
 #
 
-SSTATE_VERSION = "14"
+SSTATE_VERSION = "15"
 
 SSTATE_ZSTD_CLEVEL ??= "8"
 
@@ -69,7 +69,7 @@ SSTATE_ALLOW_OVERLAP_FILES += "${DEPLOY_DIR_IMAGE}/microcode"
 
 SSTATE_SCAN_FILES ?= "*.la *-config *_config postinst-*"
 SSTATE_SCAN_CMD ??= 'find ${SSTATE_BUILDDIR} \( -name "${@"\" -o -name \"".join(d.getVar("SSTATE_SCAN_FILES").split())}" \) -type f'
-SSTATE_SCAN_CMD_NATIVE ??= 'grep -Irl -e ${RECIPE_SYSROOT} -e ${RECIPE_SYSROOT_NATIVE} -e ${HOSTTOOLS_DIR} ${SSTATE_BUILDDIR}'
+SSTATE_SCAN_CMD_NATIVE ??= 'grep -Irl -e ${RECIPE_SYSROOT} -e ${RECIPE_SYSROOT_NATIVE} -e ${RECIPE_HOSTTOOLS_DIR} -e ${HOSTTOOLS_DIR} ${SSTATE_BUILDDIR}'
 SSTATE_HASHEQUIV_FILEMAP ?= " \
     populate_sysroot:*/postinst-useradd-*:${TMPDIR} \
     populate_sysroot:*/postinst-useradd-*:${COREBASE} \
@@ -99,7 +99,7 @@ SSTATECREATEFUNCS[vardeps] = "SSTATE_SCAN_FILES"
 SSTATEPOSTCREATEFUNCS = ""
 SSTATEPREINSTFUNCS = ""
 SSTATEPOSTUNPACKFUNCS = "sstate_hardcode_path_unpack"
-EXTRA_STAGING_FIXMES ?= "HOSTTOOLS_DIR"
+EXTRA_STAGING_FIXMES ?= "RECIPE_HOSTTOOLS_DIR HOSTTOOLS_DIR"
 
 # Check whether sstate exists for tasks that support sstate and are in the
 # locked signatures file.

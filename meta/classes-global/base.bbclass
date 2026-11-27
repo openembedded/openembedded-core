@@ -153,7 +153,7 @@ def setup_hosttools_dir(dest, toolsvar, d, fatal=True):
                 notfound.append(tool)
 
     if notfound and fatal:
-        bb.fatal("The following required tools (as specified by HOSTTOOLS) appear to be unavailable in PATH, please install them in order to proceed:\n  %s" % " ".join(notfound))
+        bb.fatal("The following required tools (as specified by %s) appear to be unavailable in PATH, please install them in order to proceed:\n  %s" % (toolsvar, " ".join(notfound)))
 
 # We can't use vardepvalue against do_fetch directly since that would overwrite
 # the other task dependencies so we use an indirect function.
@@ -289,6 +289,15 @@ def buildcfg_neededvars(d):
     if pesteruser:
         bb.fatal('The following variable(s) were not set: %s\nPlease set them directly, or choose a MACHINE or DISTRO that sets them.' % ', '.join(pesteruser))
 
+addhandler base_task_eventhandler
+base_task_eventhandler[eventmask] = "bb.build.TaskStarted"
+python base_task_eventhandler() {
+    if d.getVar('RECIPE_HOSTTOOLS'):
+        toolsdir = d.getVar('RECIPE_HOSTTOOLS_DIR')
+        with bb.utils.fileslocked([toolsdir + ".lock"]):
+            setup_hosttools_dir(toolsdir, 'RECIPE_HOSTTOOLS', d)
+}
+
 addhandler base_eventhandler
 base_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.MultiConfigParsed bb.event.BuildStarted bb.event.RecipePreFinalise bb.event.RecipeParsed bb.event.RecipePreDeferredInherits"
 python base_eventhandler() {
@@ -383,6 +392,7 @@ base_do_configure() {
 		echo ${BB_TASKHASH} > ${CONFIGURESTAMPFILE}
 	fi
 }
+do_configure[vardeps] += "RECIPE_HOSTTOOLS HOSTTOOLS"
 
 addtask compile after do_configure
 do_compile[dirs] = "${B}"
