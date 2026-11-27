@@ -298,6 +298,33 @@ python base_task_eventhandler() {
             setup_hosttools_dir(toolsdir, 'RECIPE_HOSTTOOLS', d)
 }
 
+addhandler base_recipetools_eventhandler
+base_recipetools_eventhandler[eventmask] = "bb.runqueue.RecipeCheckEvent"
+python base_recipetools_eventhandler() {
+    recipedata = e.recipedata
+    needed = set()
+    for recipe in recipedata:
+        tools = recipedata[recipe]["RECIPE_HOSTTOOLS"].split()
+        for tool in tools:
+            needed.add(tool)
+
+    origbbenv = d.getVar("BB_ORIGENV", False)
+    path = origbbenv.getVar("PATH")
+    # Need to ignore our own scripts directories to avoid circular links
+    for p in path.split(":"):
+        if p.endswith("/scripts"):
+            path = path.replace(p, "/ignoreme")
+    notfound = set()
+    for tool in needed:
+        # Prefer gnu-prefixed binaries, if available
+        srctool = (bb.utils.which(path, "gnu" + tool, executable=True) or
+                   bb.utils.which(path, tool, executable=True))
+        if not srctool:
+            notfound.add(tool)
+    if notfound:
+        bb.fatal("Tool(s) '%s' are needed by recipes due to be built but are not available on this system. Please add them first." % (" ".join(notfound)))
+}
+
 addhandler base_eventhandler
 base_eventhandler[eventmask] = "bb.event.ConfigParsed bb.event.MultiConfigParsed bb.event.BuildStarted bb.event.RecipePreFinalise bb.event.RecipeParsed bb.event.RecipePreDeferredInherits"
 python base_eventhandler() {
